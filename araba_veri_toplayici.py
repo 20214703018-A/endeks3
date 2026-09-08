@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GEOPROP AI - Eksiksiz Araç Verisi Toplayıcısı (Arabam.com 35+ Veri Alanı)
-========================================================================
-Arabam.com üzerindeki taşıt ilanlarını hiçbir veriyi atlamadan, %100 eksiksiz toplar:
-- İlan Başlığı, Fiyat, Kategori, Marka, Seri, Model, Paket, Segment
-- Yıl, KM, Vites, Yakıt, Kasa Tipi, Renk, Motor Hacmi (cc), Motor Gücü (hp), Çekiş
-- Ortalama Yakıt Tüketimi, Yakıt Deposu, Araç Durumu
-- Ağır Hasar Durumu, Boya-Değişen Özeti ve 13 Parçalık Ekspertiz Matrisi (JSON)
-- Satıcı Tipi, Mağaza Adı, Yetkili Kişi, Yetki Belge No, Maskesiz Gerçek Telefon, Üyelik Süresi
-- Tam Açıklama Metni
-- Tüm Yüksek Çözünürlüklü (HD 1280x960) Fotoğraf Linkleri (JSON)
-- İl, İlçe, Mahalle ve Tam Konum
-- Veriler SQLite (`arabam_vasita_piyasasi.sqlite`) ve UTF-8 BOM CSV'ye aktarılır.
+GEOPROP AI - Standartlaştırılmış & Temiz Ayrıştırılmış Araç Verisi Toplayıcısı
+=============================================================================
+Arabam.com üzerindeki taşıt verilerini:
+1. KVKK ve gizlilik standartlarına tam uyumlu olarak (İlan No, URL, Başlık, Satıcı,
+   Telefon, Yetki Belgesi, Görseller ve Açıklama Metni OLMADAN) toplar.
+2. Tüm verileri daha sonra veri analizi, Excel filtreleme, SQL sorguları ve makine
+   öğrenmesi / değerleme modellerinde doğrudan kullanılabilmesi için TİP DÖNÜŞÜMLÜ
+   ve STANDARTLAŞTIRILMIŞ olarak ayrıştırır:
+   - Tarihler: ISO 'YYYY-MM-DD'
+   - Sayısal Alanlar: Temiz INTEGER ve FLOAT (KM, Fiyat, CC, HP, Tüketim, Depo)
+   - 13 Ayrı Ekspertiz Kolonu: hasar_kaput, hasar_tavan, hasar_bagaj, vb.
+   - Hasar İstatistikleri: boyali_parca_sayisi, degisen_parca_sayisi, tamami_orijinal
+3. GitHub Actions 40 sanal makine paralel matrisi ile 81 ili dakikalar içinde tarar.
 """
 
 import os
@@ -22,6 +23,7 @@ import json
 import time
 import sqlite3
 import argparse
+import hashlib
 import concurrent.futures
 from pathlib import Path
 from datetime import datetime
@@ -30,7 +32,7 @@ try:
     from curl_cffi import requests
     from bs4 import BeautifulSoup
 except ImportError:
-    print("Gereksinimler eksik! Lütfen 'pip install curl_cffi beautifulsoup4' komutunu çalıştırın.")
+    print("Gereksinimler eksik! 'pip install curl_cffi beautifulsoup4' çalıştırın.")
     sys.exit(1)
 
 # Dizin Yolları
@@ -38,7 +40,6 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "collector" / "data" if (BASE_DIR / "collector").exists() else BASE_DIR / "data"
 CSV_DIR = DATA_DIR / "csv_ciktilari"
 DB_PATH = DATA_DIR / "arabam_vasita_piyasasi.sqlite"
-IMG_DIR = DATA_DIR / "arac_resimleri"
 
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 CSV_DIR.mkdir(parents=True, exist_ok=True)
@@ -53,20 +54,25 @@ ECONOMY_BRANDS = {
     "chery", "geely", "mg", "citroen", "peugeot"
 }
 
-PART_NAME_MAP = {
-    "B01001": "Motor Kaputu",
-    "B0601": "Tavan",
-    "B0201": "Arka Kaput (Bagaj)",
-    "B01201": "Ön Tampon",
-    "B01301": "Arka Tampon",
-    "B0101": "Sağ Arka Çamurluk",
-    "B0301": "Sol Arka Çamurluk",
-    "B0401": "Sağ Arka Kapı",
-    "B0501": "Sağ Ön Kapı",
-    "B0701": "Sol Arka Kapı",
-    "B0801": "Sol Ön Kapı",
-    "B0901": "Sağ Ön Çamurluk",
-    "B01101": "Sol Ön Çamurluk"
+PART_ID_MAP = {
+    "B01001": "hasar_kaput",
+    "B0601": "hasar_tavan",
+    "B0201": "hasar_bagaj",
+    "B01201": "hasar_on_tampon",
+    "B01301": "hasar_arka_tampon",
+    "B0501": "hasar_sag_on_camurluk",
+    "B01101": "hasar_sol_on_camurluk",
+    "B0401": "hasar_sag_on_kapi",
+    "B0801": "hasar_sol_on_kapi",
+    "B0301": "hasar_sag_arka_kapi",
+    "B0701": "hasar_sol_arka_kapi",
+    "B0101": "hasar_sag_arka_camurluk",
+    "B0901": "hasar_sol_arka_camurluk"
+}
+
+AY_SOZLUGU = {
+    'ocak': '01', 'şubat': '02', 'mart': '03', 'nisan': '04', 'mayıs': '05', 'haziran': '06',
+    'temmuz': '07', 'ağustos': '08', 'eylül': '09', 'ekim': '10', 'kasım': '11', 'aralık': '12'
 }
 
 def log(msg, level="INFO"):
@@ -74,8 +80,84 @@ def log(msg, level="INFO"):
     symbols = {"INFO": "[*]", "SUCCESS": "[✓]", "WARN": "[!]", "ERROR": "[✗]"}
     print(f"{ts} {symbols.get(level, '[*]')} {msg}", flush=True)
 
+# -------------------------------------------------------------
+# YARDIMCI VE STANDARTLAŞTIRMA PARSER FONKSİYONLARI
+# -------------------------------------------------------------
+
+def parse_iso_tarih(tarih_metni, raw_kod=None):
+    """Metin veya sayısal tarihi standart 'YYYY-MM-DD' ISO formatına dönüştürür."""
+    if raw_kod and len(str(raw_kod)) == 8 and str(raw_kod).isdigit():
+        rk = str(raw_kod)
+        return f"{rk[:4]}-{rk[4:6]}-{rk[6:8]}"
+    
+    parts = str(tarih_metni).strip().split()
+    if len(parts) >= 3 and parts[0].isdigit() and parts[2].isdigit():
+        gun = f"{int(parts[0]):02d}"
+        ay = AY_SOZLUGU.get(parts[1].lower(), "01")
+        yil = parts[2]
+        return f"{yil}-{ay}-{gun}"
+    
+    return datetime.now().strftime("%Y-%m-%d")
+
+def parse_integer(val, default=0):
+    """Rakam dışındaki karakterleri temizleyerek güvenli tam sayı üretir."""
+    if not val:
+        return default
+    temiz = re.sub(r"[^\d]", "", str(val))
+    return int(temiz) if temiz else default
+
+def parse_float(val, default=0.0):
+    """Ondalıklı tüketim vb. metinlerini temiz float'a çevirir."""
+    if not val:
+        return default
+    m = re.search(r"([\d]+(?:[\.,]\d+)?)", str(val))
+    if m:
+        try:
+            return float(m.group(1).replace(",", "."))
+        except ValueError:
+            pass
+    return default
+
+def parse_motor_cc(val):
+    """'1598 cc' veya '1401 - 1600 cm3' metinlerinden üst CC değerini alır."""
+    if not val:
+        return None
+    temiz = re.sub(r"(?:cm3|cc|lt|hp|kw)", "", str(val), flags=re.IGNORECASE)
+    sayilar = [int(x) for x in re.findall(r"\b\d+\b", temiz) if int(x) > 100]
+    if len(sayilar) >= 2:
+        return sayilar[-1] # Aralık ise üst sınırı al
+    elif len(sayilar) == 1:
+        return sayilar[0]
+    return None
+
+def parse_motor_hp(val):
+    """'120 hp' veya '101 - 125 HP' metinlerinden beygir gücünü tam sayı alır."""
+    if not val:
+        return None
+    temiz = re.sub(r"(?:hp|bg|kw|ps)", "", str(val), flags=re.IGNORECASE)
+    sayilar = [int(x) for x in re.findall(r"\b\d+\b", temiz) if int(x) > 10]
+    if len(sayilar) >= 2:
+        return sayilar[-1]
+    elif len(sayilar) == 1:
+        return sayilar[0]
+    return None
+
+def standardize_kasa(kasa_str):
+    """'Hatchback/5' veya 'Sedan' metinlerini standart ana kasa tiplerine normalize eder."""
+    if not kasa_str:
+        return "Bilinmeyen"
+    k = kasa_str.lower()
+    if "hatchback" in k: return "Hatchback"
+    if "sedan" in k: return "Sedan"
+    if "suv" in k or "arazi" in k: return "SUV"
+    if "station" in k: return "Station Wagon"
+    if "coupe" in k: return "Coupe"
+    if "cabrio" in k: return "Cabrio"
+    if "minivan" in k or "panelvan" in k: return "Minivan/Van"
+    return kasa_str.strip()
+
 def init_db(db_path=None):
-    """Veritabanını 35+ eksiksiz kolon içeren zenginleştirilmiş şema ile hazırlar."""
+    """Veritabanını analitik sorgulamaya hazır, 13 hasar kolonu içeren şemayla kurar."""
     target_db = db_path or DB_PATH
     conn = sqlite3.connect(target_db)
     c = conn.cursor()
@@ -83,10 +165,7 @@ def init_db(db_path=None):
     c.execute("""
     CREATE TABLE IF NOT EXISTS arabam_ilanlari (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        ilan_no TEXT UNIQUE,
-        ilan_url TEXT,
-        baslik TEXT,
-        ilan_tarihi TEXT,
+        arac_id TEXT UNIQUE,
         il TEXT,
         ilce TEXT,
         mahalle TEXT,
@@ -104,78 +183,44 @@ def init_db(db_path=None):
         yakit_tipi TEXT,
         kasa_tipi TEXT,
         renk TEXT,
-        motor_hacmi_cc TEXT,
-        motor_gucu_hp TEXT,
+        motor_hacmi_cc INTEGER,
+        motor_gucu_hp INTEGER,
         cekis TEXT,
         arac_durumu TEXT,
-        ort_yakit_tuketimi TEXT,
-        yakit_deposu_lt TEXT,
-        agir_hasarli TEXT,
+        ort_yakit_tuketimi REAL,
+        yakit_deposu_lt INTEGER,
+        agir_hasarli INTEGER DEFAULT 0, -- 1: Evet, 0: Hayır
+        tamami_orijinal INTEGER DEFAULT 0, -- 1: Evet, 0: Hayır
+        boyali_parca_sayisi INTEGER DEFAULT 0,
+        degisen_parca_sayisi INTEGER DEFAULT 0,
+        lokal_boyali_parca_sayisi INTEGER DEFAULT 0,
         boya_degisen_ozet TEXT,
-        hasar_parcalari_json TEXT,
+        -- 13 Parça Hasar Detayları
+        hasar_kaput TEXT DEFAULT 'Belirtilmemiş',
+        hasar_tavan TEXT DEFAULT 'Belirtilmemiş',
+        hasar_bagaj TEXT DEFAULT 'Belirtilmemiş',
+        hasar_on_tampon TEXT DEFAULT 'Belirtilmemiş',
+        hasar_arka_tampon TEXT DEFAULT 'Belirtilmemiş',
+        hasar_sag_on_camurluk TEXT DEFAULT 'Belirtilmemiş',
+        hasar_sol_on_camurluk TEXT DEFAULT 'Belirtilmemiş',
+        hasar_sag_on_kapi TEXT DEFAULT 'Belirtilmemiş',
+        hasar_sol_on_kapi TEXT DEFAULT 'Belirtilmemiş',
+        hasar_sag_arka_kapi TEXT DEFAULT 'Belirtilmemiş',
+        hasar_sol_arka_kapi TEXT DEFAULT 'Belirtilmemiş',
+        hasar_sag_arka_camurluk TEXT DEFAULT 'Belirtilmemiş',
+        hasar_sol_arka_camurluk TEXT DEFAULT 'Belirtilmemiş',
         fiyat_tl INTEGER,
         para_birimi TEXT DEFAULT 'TL',
-        takasa_uygun TEXT,
-        satici_tipi TEXT,
-        satici_adi TEXT,
-        yetkili_kisi TEXT,
-        yetki_belge_no TEXT,
-        telefon TEXT,
-        uyelik_bilgisi TEXT,
-        magaza_url TEXT,
-        aciklama TEXT,
-        fotograf_sayisi INTEGER DEFAULT 0,
-        kapak_fotografi TEXT,
-        fotograflar_json TEXT,
+        takasa_uygun INTEGER DEFAULT 0, -- 1: Evet, 0: Hayır
+        satici_tipi TEXT, -- 'Galeriden', 'Sahibinden', 'Yetkili Bayi'
+        ilan_tarihi TEXT, -- ISO 'YYYY-MM-DD'
         guncellenme_yili INTEGER DEFAULT 2026,
         veri_donemi TEXT DEFAULT '2026-Q3 (Güncel)',
         eklenme_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
 
-    # Var olan veritabanı şemasına eksik kolonlar varsa dinamik ekle (Upgrade)
-    c.execute("PRAGMA table_info(arabam_ilanlari)")
-    existing_cols = {row[1] for row in c.fetchall()}
-
-    new_columns = [
-        ("tam_konum", "TEXT"),
-        ("kategori", "TEXT"),
-        ("breadcrumb", "TEXT"),
-        ("refah_segmenti", "TEXT"),
-        ("vites_tipi", "TEXT"),
-        ("yakit_tipi", "TEXT"),
-        ("kasa_tipi", "TEXT"),
-        ("motor_hacmi_cc", "TEXT"),
-        ("motor_gucu_hp", "TEXT"),
-        ("cekis", "TEXT"),
-        ("arac_durumu", "TEXT"),
-        ("ort_yakit_tuketimi", "TEXT"),
-        ("yakit_deposu_lt", "TEXT"),
-        ("agir_hasarli", "TEXT"),
-        ("boya_degisen_ozet", "TEXT"),
-        ("hasar_parcalari_json", "TEXT"),
-        ("para_birimi", "TEXT DEFAULT 'TL'"),
-        ("takasa_uygun", "TEXT"),
-        ("satici_adi", "TEXT"),
-        ("yetkili_kisi", "TEXT"),
-        ("yetki_belge_no", "TEXT"),
-        ("telefon", "TEXT"),
-        ("uyelik_bilgisi", "TEXT"),
-        ("magaza_url", "TEXT"),
-        ("aciklama", "TEXT"),
-        ("fotograf_sayisi", "INTEGER DEFAULT 0"),
-        ("kapak_fotografi", "TEXT"),
-        ("fotograflar_json", "TEXT")
-    ]
-
-    for col_name, col_type in new_columns:
-        if col_name not in existing_cols:
-            try:
-                c.execute(f"ALTER TABLE arabam_ilanlari ADD COLUMN {col_name} {col_type}")
-            except Exception:
-                pass
-
-    # İlçe ve Bölge Araç Refah Endeksi Tablosu
+    # İlçe Bazlı Araç Refah Endeksi Tablosu
     c.execute("""
     CREATE TABLE IF NOT EXISTS ilce_arac_refah_endeksi (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -200,8 +245,8 @@ def init_db(db_path=None):
     conn.commit()
     conn.close()
 
-class EksiksizArabaToplayici:
-    """Arabam.com tüm taşıt verilerini eksiksiz toplayan motor."""
+class AnonimArabaToplayici:
+    """Yalnızca analitik taşıt verilerini temiz ayrıştırarak toplayan motor."""
 
     def __init__(self, db_path=None, max_threads=6):
         self.db_path = db_path or DB_PATH
@@ -214,19 +259,19 @@ class EksiksizArabaToplayici:
             "Referer": "https://www.arabam.com/",
             "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7"
         }
-        self.mevcut_ilanlar = self._mevcut_ilan_nolari_yukle()
+        self.mevcut_araclar = self._mevcut_arac_idleri_yukle()
 
-    def _mevcut_ilan_nolari_yukle(self):
-        """Daha önce toplanmış ilan numaralarını küme olarak hafızaya alır."""
+    def _mevcut_arac_idleri_yukle(self):
+        """Daha önce kaydedilmiş anonim araç ID'lerini küme olarak yükler."""
         conn = sqlite3.connect(self.db_path)
         c = conn.cursor()
-        c.execute("SELECT ilan_no FROM arabam_ilanlari WHERE aciklama IS NOT NULL AND aciklama != ''")
+        c.execute("SELECT arac_id FROM arabam_ilanlari WHERE arac_id IS NOT NULL")
         rows = {r[0] for r in c.fetchall() if r[0]}
         conn.close()
         return rows
 
     def arama_sayfasindan_ilan_linkleri_al(self, kategori="otomobil", plaka=None, sayfa=1):
-        """Arama sonuç sayfasındaki 20 ilanın linklerini ve özet bilgilerini toplar."""
+        """Arama sayfasındaki araç linklerini ve anonim ID'lerini tespit eder."""
         if plaka:
             url = f"https://www.arabam.com/ikinci-el/{kategori}?city={plaka}&page={sayfa}"
         else:
@@ -252,55 +297,43 @@ class EksiksizArabaToplayici:
                 if not ilan_no:
                     continue
 
+                arac_id = hashlib.sha256(ilan_no.encode()).hexdigest()[:16]
                 tam_url = f"https://www.arabam.com{href}" if href.startswith("/") else href
-                ilan_linkleri.append((ilan_no, tam_url))
+                ilan_linkleri.append((arac_id, tam_url))
 
             return ilan_linkleri
         except Exception as e:
             log(f"Arama sayfası çekilemedi ({url}): {e}", "ERROR")
             return []
 
-    def ilan_detayini_eksiksiz_cek(self, ilan_no, ilan_url):
+    def arac_verilerini_cek_ve_parse_et(self, arac_id, ilan_url):
         """
-        Tek bir ilanın detay sayfasına girerek tüm 35+ veri alanını ayıklar.
+        Detay sayfasından HASSAS BİLGİLERİ DIŞLAR ve verileri analitik formatta parse eder.
         """
         thread_session = requests.Session(impersonate="chrome120")
         try:
             r = thread_session.get(ilan_url, headers=self.headers, timeout=20)
             if r.status_code != 200:
-                log(f"İlan {ilan_no} HTTP {r.status_code} verdi.", "WARN")
                 return None
 
             html = r.text
             soup = BeautifulSoup(html, "html.parser")
 
-            # 1. Sayfa İçi JSON Scriptlerini Ayıkla
             dl_data = {}
-            product_detail = {}
             damage_list = []
 
+            # JSON Scriptlerini tara
             for s in soup.find_all("script"):
                 stext = s.string or ""
                 if not stext:
                     continue
 
-                # dataLayer.push({...})
                 if "dataLayer.push" in stext and "CD_marka" in stext:
                     for m in re.finditer(r"'([^']+)'\s*:\s*([^,\}\n]+)", stext):
                         k = m.group(1).strip()
                         v = m.group(2).strip().strip("'").strip('"')
                         dl_data[k] = v
 
-                # window.productDetail = {...};
-                if "window.productDetail" in stext:
-                    m_pd = re.search(r"window\.productDetail\s*=\s*(\{.*?\});", stext)
-                    if m_pd:
-                        try:
-                            product_detail = json.loads(m_pd.group(1))
-                        except Exception:
-                            pass
-
-                # window.damage = [...];
                 if "window.damage" in stext:
                     m_dmg = re.search(r"window\.damage\s*=\s*(\[.*?\]);", stext)
                     if m_dmg:
@@ -309,39 +342,9 @@ class EksiksizArabaToplayici:
                         except Exception:
                             pass
 
-            # 2. İlan Başlığı
-            baslik = ""
-            h1 = soup.find("h1")
-            if h1:
-                baslik = h1.get_text(strip=True)
-            elif product_detail.get("ModelName"):
-                baslik = product_detail["ModelName"]
-            elif dl_data.get("CD_model"):
-                baslik = dl_data["CD_model"]
-
-            # 3. Tarih
-            ilan_tarihi = (
-                product_detail.get("DateString")
-                or dl_data.get("CD_ilan_tarihi")
-                or datetime.now().strftime("%d %B %Y")
-            )
-
-            # 4. Fiyat
-            fiyat_tl = 0
-            price_el = soup.select_one("div.product-price, div.price, span.price")
-            if price_el:
-                price_digits = re.sub(r"[^\d]", "", price_el.get_text(strip=True))
-                if price_digits:
-                    fiyat_tl = int(price_digits)
-            if not fiyat_tl and dl_data.get("CD_Fiyat"):
-                try:
-                    fiyat_tl = int(dl_data["CD_Fiyat"])
-                except ValueError:
-                    pass
-
-            # 5. Konum Bilgileri (İl, İlçe, Mahalle)
-            il = dl_data.get("CD_il", "")
-            ilce = dl_data.get("CD_ilce", "")
+            # 1. Konum Ayrıştırma
+            il = dl_data.get("CD_il", "").strip()
+            ilce = dl_data.get("CD_ilce", "").strip()
             mahalle = ""
             tam_konum = ""
 
@@ -360,15 +363,14 @@ class EksiksizArabaToplayici:
                         if m_ilce:
                             ilce = m_ilce.group(1).strip()
 
-            # 6. Taşıt Kimlik ve Segment Bilgileri
-            kategori = dl_data.get("CD_kategori", "Otomobil")
-            marka = dl_data.get("CD_marka") or dl_data.get("CD_Marka", "")
-            seri = dl_data.get("CD_seri", "")
-            model = dl_data.get("CD_model", "")
-            breadcrumb = dl_data.get("CD_Detail_Breadcrumb", "")
-            segment = dl_data.get("CD_Detail_CarSegment", "")
+            # 2. Araç Kimlik ve Segment
+            kategori = dl_data.get("CD_kategori", "Otomobil").strip()
+            marka = (dl_data.get("CD_marka") or dl_data.get("CD_Marka", "")).strip()
+            seri = dl_data.get("CD_seri", "").strip()
+            model = dl_data.get("CD_model", "").strip()
+            breadcrumb = dl_data.get("CD_Detail_Breadcrumb", "").strip()
+            segment = dl_data.get("CD_Detail_CarSegment", "").strip()
 
-            # Refah Segmenti Tespiti
             marka_lower = marka.lower()
             if any(b in marka_lower for b in LUXURY_BRANDS):
                 refah_segmenti = "Lüks/Premium"
@@ -377,114 +379,100 @@ class EksiksizArabaToplayici:
             else:
                 refah_segmenti = "Orta"
 
-            # 7. Teknik Özellikler
-            yil_str = dl_data.get("CD_yil", "")
-            yil = int(re.sub(r"[^\d]", "", yil_str)) if re.sub(r"[^\d]", "", yil_str) else 2020
+            # 3. Sayısal Alanlar (Yıl, KM, Fiyat)
+            yil = parse_integer(dl_data.get("CD_yil"), default=2020)
+            km = parse_integer(dl_data.get("CD_kilometre"), default=0)
 
-            km_str = dl_data.get("CD_kilometre", "")
-            km = int(re.sub(r"[^\d]", "", km_str)) if re.sub(r"[^\d]", "", km_str) else 0
+            fiyat_tl = 0
+            price_el = soup.select_one("div.product-price, div.price, span.price")
+            if price_el:
+                fiyat_tl = parse_integer(price_el.get_text(strip=True))
+            if not fiyat_tl and dl_data.get("CD_Fiyat"):
+                fiyat_tl = parse_integer(dl_data.get("CD_Fiyat"))
 
-            vites_tipi = dl_data.get("CD_vites_tipi", "")
-            yakit_tipi = dl_data.get("CD_yakit_tipi", "")
-            kasa_tipi = dl_data.get("CD_kasa_tipi", "")
-            renk = dl_data.get("CD_renk", "")
-            motor_hacmi = dl_data.get("CD_motor_hacmi", "")
-            motor_gucu = dl_data.get("CD_motor_gucu", "")
-            cekis = dl_data.get("CD_cekis", "")
-            arac_durumu = dl_data.get("CD_arac_durumu", "İkinci El")
-            ort_yakit = dl_data.get("CD_ort._yakit_tuketimi", "")
-            yakit_deposu = dl_data.get("CD_yakit_deposu", "")
+            # 4. Motor ve Şanzıman Alanları
+            vites_tipi = dl_data.get("CD_vites_tipi", "").strip()
+            yakit_tipi = dl_data.get("CD_yakit_tipi", "").strip()
+            kasa_tipi = standardize_kasa(dl_data.get("CD_kasa_tipi"))
+            renk = dl_data.get("CD_renk", "").strip()
 
-            # 8. Hasar ve Ekspertiz Dökümü
-            agir_hasarli = dl_data.get("CD_agir_hasarli", "Hayır")
-            boya_degisen_ozet = dl_data.get("CD_boya-degisen", "")
-            takasa_uygun = dl_data.get("CD_takasa_uygun", "")
+            motor_cc = parse_motor_cc(dl_data.get("CD_motor_hacmi"))
+            motor_hp = parse_motor_hp(dl_data.get("CD_motor_gucu"))
+            cekis = dl_data.get("CD_cekis", "").strip()
+            arac_durumu = dl_data.get("CD_arac_durumu", "İkinci El").strip()
 
-            hasar_parcalari_list = []
+            ort_yakit = parse_float(dl_data.get("CD_ort._yakit_tuketimi"))
+            yakit_deposu = parse_integer(dl_data.get("CD_yakit_deposu"), default=0)
+
+            # 5. Hasar & Ekspertiz Durumu (13 Kolon ve İstatistikler)
+            agir_hasarli_raw = dl_data.get("CD_agir_hasarli", "Hayır").strip()
+            agir_hasarli = 1 if "evet" in agir_hasarli_raw.lower() else 0
+
+            boya_ozet = dl_data.get("CD_boya-degisen", "").strip()
+            boya_ozet_lower = boya_ozet.lower()
+
+            tamami_orijinal = 1 if ("tamamı orjinal" in boya_ozet_lower or "hatasız" in boya_ozet_lower) else 0
+
+            # 13 Parçanın Bireysel Kolon Değerlerini Doldur
+            hasar_parcalari = {
+                "hasar_kaput": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_tavan": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_bagaj": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_on_tampon": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_arka_tampon": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_sag_on_camurluk": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_sol_on_camurluk": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_sag_on_kapi": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_sol_on_kapi": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_sag_arka_kapi": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_sol_arka_kapi": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_sag_arka_camurluk": "Orijinal" if tamami_orijinal else "Belirtilmemiş",
+                "hasar_sol_arka_camurluk": "Orijinal" if tamami_orijinal else "Belirtilmemiş"
+            }
+
+            boyali_sayisi = 0
+            degisen_sayisi = 0
+            lokal_sayisi = 0
+
             if damage_list:
                 for d in damage_list:
-                    pcode = d.get("Code", "")
-                    pname = d.get("Name") or PART_NAME_MAP.get(pcode, pcode)
-                    pstatus = d.get("ValueDescription", "Belirtilmemiş")
-                    hasar_parcalari_list.append({
-                        "kod": pcode,
-                        "parca": pname,
-                        "durum": pstatus,
-                        "durum_kodu": d.get("Value", "")
-                    })
-            hasar_parcalari_json = json.dumps(hasar_parcalari_list, ensure_ascii=False) if hasar_parcalari_list else ""
+                    code = d.get("Code", "")
+                    col_name = PART_ID_MAP.get(code)
+                    status_text = d.get("ValueDescription", "Belirtilmemiş").strip()
+                    val_text = d.get("ValueText", "").lower()
 
-            # 9. Satıcı ve İletişim Bilgileri
-            member_obj = product_detail.get("Member") or {}
-            default_firm = member_obj.get("DefaultFirm") or {}
+                    if col_name:
+                        hasar_parcalari[col_name] = status_text
 
-            satici_tipi = dl_data.get("CD_kimden") or member_obj.get("MemberType", {}).get("Description", "Galeriden")
-            satici_adi = (
-                dl_data.get("CD_galeri_name")
-                or default_firm.get("FirmName")
-                or member_obj.get("MemberName", "")
-            )
-            yetkili_kisi = default_firm.get("AuthorizedPerson", "")
-            yetki_belge_no = default_firm.get("AuthorizationLicenseCode", "")
-            telefon = product_detail.get("MobilePhone") or product_detail.get("Phone", "")
+                    if "paint" in val_text or "boyalı" in status_text.lower():
+                        if "local" in val_text or "lokal" in status_text.lower():
+                            lokal_sayisi += 1
+                        else:
+                            boyali_sayisi += 1
+                    elif "change" in val_text or "değişmiş" in status_text.lower():
+                        degisen_sayisi += 1
 
-            # Üyelik kıdemi
-            member_since = member_obj.get("MemberSince", 0)
-            member_status = member_obj.get("MembershipStatusName", "")
-            uyelik_bilgisi = f"{member_status} ({member_since}. Yıl)".strip() if member_since else member_status
+            # Özette belirtilen sayıları da kontrol et
+            if boyali_sayisi == 0:
+                m_b = re.search(r"(\d+)\s*boyalı", boya_ozet_lower)
+                if m_b: boyali_sayisi = int(m_b.group(1))
+            if degisen_sayisi == 0:
+                m_d = re.search(r"(\d+)\s*değişen", boya_ozet_lower)
+                if m_d: degisen_sayisi = int(m_d.group(1))
 
-            # Mağaza URL
-            firm_slug = default_firm.get("FirmUrl", "")
-            magaza_url = f"https://www.arabam.com/galeri/{firm_slug}" if firm_slug else ""
+            if boyali_sayisi > 0 or degisen_sayisi > 0:
+                tamami_orijinal = 0
 
-            # Fallback Satıcı Kutusu HTML Taraması
-            owner_box = soup.select_one("div.advert-owner-information-container, div.advert-owner-information")
-            if owner_box:
-                if not yetki_belge_no and "Yetki Belge No:" in owner_box.text:
-                    m_yb = re.search(r"Yetki Belge No:\s*([A-Za-z0-9]+)", owner_box.text)
-                    if m_yb:
-                        yetki_belge_no = m_yb.group(1)
-                if not satici_adi:
-                    s_first = owner_box.find(["h2", "h3", "strong", "span"])
-                    if s_first:
-                        satici_adi = s_first.get_text(strip=True)
+            # 6. Ticari ve Tarih Alanları
+            takas_raw = dl_data.get("CD_takasa_uygun", "").strip().lower()
+            takasa_uygun = 1 if "uygun" in takas_raw and "değil" not in takas_raw else 0
 
-            # 10. Tam Açıklama Metni
-            desc_el = soup.select_one("#description, div.tab-description, div.product-description")
-            aciklama = desc_el.get_text("\n", strip=True) if desc_el else ""
+            satici_tipi = dl_data.get("CD_kimden") or ("Galeriden" if "galeri" in ilan_url else "Sahibinden")
 
-            # 11. Fotoğraflar
-            foto_list = []
-            # Önce productDetail içindeki tam çözünürlüklü fotoğrafları al
-            raw_photos = product_detail.get("Photos") or []
-            if raw_photos:
-                for p in raw_photos:
-                    u = p.get("Url", "")
-                    if u:
-                        # Formatlama ({0} -> 1280x960 veya 800x600)
-                        hd_u = u.replace("{0}", "1280x960")
-                        foto_list.append(hd_u)
+            iso_tarih = parse_iso_tarih(dl_data.get("CD_ilan_tarihi"), dl_data.get("CD_ilanTarihi"))
 
-            # Fallback: HTML img etiketleri
-            if not foto_list:
-                seen_srcs = set()
-                for img in soup.select("img[src*='arbstorage'], img[data-src*='arbstorage']"):
-                    src = img.get("data-src") or img.get("src") or ""
-                    if "ilanfotograflari" in src:
-                        hd_src = re.sub(r"_\d+x\d+\.", "_1280x960.", src)
-                        if hd_src not in seen_srcs:
-                            seen_srcs.add(hd_src)
-                            foto_list.append(hd_src)
-
-            fotograf_sayisi = len(foto_list)
-            kapak_fotografi = foto_list[0] if foto_list else ""
-            fotograflar_json = json.dumps(foto_list, ensure_ascii=False) if foto_list else ""
-
-            return {
-                "ilan_no": str(ilan_no),
-                "ilan_url": ilan_url,
-                "baslik": baslik,
-                "ilan_tarihi": ilan_tarihi,
+            kayit = {
+                "arac_id": arac_id,
                 "il": il,
                 "ilce": ilce,
                 "mahalle": mahalle,
@@ -502,37 +490,34 @@ class EksiksizArabaToplayici:
                 "yakit_tipi": yakit_tipi,
                 "kasa_tipi": kasa_tipi,
                 "renk": renk,
-                "motor_hacmi_cc": motor_hacmi,
-                "motor_gucu_hp": motor_gucu,
+                "motor_hacmi_cc": motor_cc,
+                "motor_gucu_hp": motor_hp,
                 "cekis": cekis,
                 "arac_durumu": arac_durumu,
                 "ort_yakit_tuketimi": ort_yakit,
                 "yakit_deposu_lt": yakit_deposu,
                 "agir_hasarli": agir_hasarli,
-                "boya_degisen_ozet": boya_degisen_ozet,
-                "hasar_parcalari_json": hasar_parcalari_json,
+                "tamami_orijinal": tamami_orijinal,
+                "boyali_parca_sayisi": boyali_sayisi,
+                "degisen_parca_sayisi": degisen_sayisi,
+                "lokal_boyali_parca_sayisi": lokal_sayisi,
+                "boya_degisen_ozet": boya_ozet,
                 "fiyat_tl": fiyat_tl,
                 "para_birimi": "TL",
                 "takasa_uygun": takasa_uygun,
                 "satici_tipi": satici_tipi,
-                "satici_adi": satici_adi,
-                "yetkili_kisi": yetkili_kisi,
-                "yetki_belge_no": yetki_belge_no,
-                "telefon": telefon,
-                "uyelik_bilgisi": uyelik_bilgisi,
-                "magaza_url": magaza_url,
-                "aciklama": aciklama,
-                "fotograf_sayisi": fotograf_sayisi,
-                "kapak_fotografi": kapak_fotografi,
-                "fotograflar_json": fotograflar_json
+                "ilan_tarihi": iso_tarih
             }
+            kayit.update(hasar_parcalari)
+            return kayit
+
         except Exception as e:
-            log(f"İlan detay çıkarma hatası ({ilan_url}): {e}", "ERROR")
+            log(f"Ayrıştırma hatası ({arac_id}): {e}", "ERROR")
             return None
 
-    def ilani_veritabanina_kaydet(self, d):
-        """Çıkarılan tüm alanları SQLite veritabanına yazar."""
-        if not d or not d.get("ilan_no"):
+    def araci_kaydet(self, d):
+        """Ayrıştırılmış temiz kaydı SQLite veritabanına yazar."""
+        if not d or not d.get("arac_id"):
             return False
 
         conn = sqlite3.connect(self.db_path)
@@ -540,52 +525,53 @@ class EksiksizArabaToplayici:
         try:
             c.execute("""
             INSERT OR REPLACE INTO arabam_ilanlari (
-                ilan_no, ilan_url, baslik, ilan_tarihi,
-                il, ilce, mahalle, tam_konum,
+                arac_id, il, ilce, mahalle, tam_konum,
                 kategori, marka, seri, model, breadcrumb, segment, refah_segmenti,
                 yil, km, vites_tipi, yakit_tipi, kasa_tipi, renk,
                 motor_hacmi_cc, motor_gucu_hp, cekis, arac_durumu, ort_yakit_tuketimi, yakit_deposu_lt,
-                agir_hasarli, boya_degisen_ozet, hasar_parcalari_json,
-                fiyat_tl, para_birimi, takasa_uygun,
-                satici_tipi, satici_adi, yetkili_kisi, yetki_belge_no, telefon, uyelik_bilgisi, magaza_url,
-                aciklama, fotograf_sayisi, kapak_fotografi, fotograflar_json,
+                agir_hasarli, tamami_orijinal, boyali_parca_sayisi, degisen_parca_sayisi, lokal_boyali_parca_sayisi,
+                boya_degisen_ozet,
+                hasar_kaput, hasar_tavan, hasar_bagaj, hasar_on_tampon, hasar_arka_tampon,
+                hasar_sag_on_camurluk, hasar_sol_on_camurluk, hasar_sag_on_kapi, hasar_sol_on_kapi,
+                hasar_sag_arka_kapi, hasar_sol_arka_kapi, hasar_sag_arka_camurluk, hasar_sol_arka_camurluk,
+                fiyat_tl, para_birimi, takasa_uygun, satici_tipi, ilan_tarihi,
                 guncellenme_yili, veri_donemi
             ) VALUES (
-                ?, ?, ?, ?,
-                ?, ?, ?, ?,
+                ?, ?, ?, ?, ?,
                 ?, ?, ?, ?, ?, ?, ?,
                 ?, ?, ?, ?, ?, ?,
                 ?, ?, ?, ?, ?, ?,
-                ?, ?, ?,
-                ?, ?, ?,
-                ?, ?, ?, ?, ?, ?, ?,
+                ?, ?, ?, ?, ?,
+                ?,
+                ?, ?, ?, ?, ?,
                 ?, ?, ?, ?,
+                ?, ?, ?, ?,
+                ?, ?, ?, ?, ?,
                 2026, '2026-Q3 (Güncel)'
             )
             """, (
-                d["ilan_no"], d["ilan_url"], d["baslik"], d["ilan_tarihi"],
-                d["il"], d["ilce"], d["mahalle"], d["tam_konum"],
+                d["arac_id"], d["il"], d["ilce"], d["mahalle"], d["tam_konum"],
                 d["kategori"], d["marka"], d["seri"], d["model"], d["breadcrumb"], d["segment"], d["refah_segmenti"],
                 d["yil"], d["km"], d["vites_tipi"], d["yakit_tipi"], d["kasa_tipi"], d["renk"],
                 d["motor_hacmi_cc"], d["motor_gucu_hp"], d["cekis"], d["arac_durumu"], d["ort_yakit_tuketimi"], d["yakit_deposu_lt"],
-                d["agir_hasarli"], d["boya_degisen_ozet"], d["hasar_parcalari_json"],
-                d["fiyat_tl"], d["para_birimi"], d["takasa_uygun"],
-                d["satici_tipi"], d["satici_adi"], d["yetkili_kisi"], d["yetki_belge_no"], d["telefon"], d["uyelik_bilgisi"], d["magaza_url"],
-                d["aciklama"], d["fotograf_sayisi"], d["kapak_fotografi"], d["fotograflar_json"]
+                d["agir_hasarli"], d["tamami_orijinal"], d["boyali_parca_sayisi"], d["degisen_parca_sayisi"], d["lokal_boyali_parca_sayisi"],
+                d["boya_degisen_ozet"],
+                d["hasar_kaput"], d["hasar_tavan"], d["hasar_bagaj"], d["hasar_on_tampon"], d["hasar_arka_tampon"],
+                d["hasar_sag_on_camurluk"], d["hasar_sol_on_camurluk"], d["hasar_sag_on_kapi"], d["hasar_sol_on_kapi"],
+                d["hasar_sag_arka_kapi"], d["hasar_sol_arka_kapi"], d["hasar_sag_arka_camurluk"], d["hasar_sol_arka_camurluk"],
+                d["fiyat_tl"], d["para_birimi"], d["takasa_uygun"], d["satici_tipi"], d["ilan_tarihi"]
             ))
             conn.commit()
-            self.mevcut_ilanlar.add(d["ilan_no"])
+            self.mevcut_araclar.add(d["arac_id"])
             return True
         except Exception as e:
-            log(f"Veritabanı yazma hatası ({d.get('ilan_no')}): {e}", "ERROR")
+            log(f"Veritabanı yazma hatası ({d.get('arac_id')}): {e}", "ERROR")
             return False
         finally:
             conn.close()
 
     def calistir_toplu_tarama(self, plakalar=None, kategoriler=None, sayfa_sayisi=3, genel=False):
-        """
-        Çok iş parçacıklı tam kapsamlı araç veri toplama orkestrasyonu.
-        """
+        """Toplu tarama orkestrasyonu."""
         kategoriler = kategoriler or ["otomobil"]
         toplam_basarili = 0
 
@@ -603,95 +589,55 @@ class EksiksizArabaToplayici:
 
         log(f"Toplam {len(hedef_listeler)} arama sayfası taranacak...", "INFO")
 
-        # 1. Aşama: İlan Linklerini Keşfet
-        bulunan_ilanlar = []
-        gorulen_nolar = set(self.mevcut_ilanlar)
+        # 1. Aşama: Link Keşfi
+        bulunanlar = []
+        gorulenler = set(self.mevcut_araclar)
 
         for kat, plaka, sayfa in hedef_listeler:
             etiket = f"Plaka {plaka}" if plaka else "Genel"
             links = self.arama_sayfasindan_ilan_linkleri_al(kategori=kat, plaka=plaka, sayfa=sayfa)
-            yeni_sayi = 0
-            for ino, u in links:
-                if ino not in gorulen_nolar:
-                    gorulen_nolar.add(ino)
-                    bulunan_ilanlar.append((ino, u))
-                    yeni_sayi += 1
-            log(f"  {etiket} [{kat}] Sayfa {sayfa}: {len(links)} ilan bulundu ({yeni_sayi} yeni).", "INFO")
+            yeni_adet = 0
+            for aid, u in links:
+                if aid not in gorulenler:
+                    gorulenler.add(aid)
+                    bulunanlar.append((aid, u))
+                    yeni_adet += 1
+            log(f"  {etiket} [{kat}] Sayfa {sayfa}: {len(links)} araç bulundu ({yeni_adet} yeni).", "INFO")
             time.sleep(0.3)
 
-        log(f"Arama tamamlandı. Toplam {len(bulunan_ilanlar)} yeni ilanın detayları eksiksiz çekilecek.", "SUCCESS")
-
-        if not bulunan_ilanlar:
-            log("Taranacak yeni ilan bulunamadı (Tüm ilanlar zaten güncel veritabanında).", "INFO")
+        if not bulunanlar:
+            log("Taranacak yeni araç bulunamadı (Tümü veritabanında mevcut).", "INFO")
             return 0
 
-        # 2. Aşama: Çok İş Parçacıklı Eksiksiz Detay Çekimi
-        t_baslangic = time.time()
+        log(f"Detay çekimi başlıyor: {len(bulunanlar)} araç ayrıştırılacak (Worker Threads: {self.max_threads})...", "INFO")
+
+        # 2. Aşama: Detay Çekimi ve Temiz Parse
+        t_basla = time.time()
         with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_threads) as executor:
-            future_to_ilan = {
-                executor.submit(self.ilan_detayini_eksiksiz_cek, ino, u): (ino, u)
-                for ino, u in bulunan_ilanlar
+            future_to_arac = {
+                executor.submit(self.arac_verilerini_cek_ve_parse_et, aid, u): (aid, u)
+                for aid, u in bulunanlar
             }
 
-            for i, future in enumerate(concurrent.futures.as_completed(future_to_ilan), 1):
-                ino, u = future_to_ilan[future]
+            for i, future in enumerate(concurrent.futures.as_completed(future_to_arac), 1):
+                aid, u = future_to_arac[future]
                 try:
                     veri = future.result()
                     if veri:
-                        self.ilani_veritabanina_kaydet(veri)
+                        self.araci_kaydet(veri)
                         toplam_basarili += 1
-                        hasar_adet = len(json.loads(veri["hasar_parcalari_json"])) if veri["hasar_parcalari_json"] else 0
-                        foto_adet = veri["fotograf_sayisi"]
-                        tel_durum = "Tel Var" if veri["telefon"] else "Tel Yok"
-                        log(f"  [{i}/{len(bulunan_ilanlar)}] İlan {ino} eklendi: {veri['marka']} {veri['model']} | {veri['fiyat_tl']:,} TL | {hasar_adet} Ekspertiz Parçası | {foto_adet} HD Foto | {tel_durum}", "SUCCESS")
-                    else:
-                        log(f"  [{i}/{len(bulunan_ilanlar)}] İlan {ino} çekilemedi.", "WARN")
+                        hasar_durum = "Hatasız/Orijinal" if veri["tamami_orijinal"] else f"{veri['boyali_parca_sayisi']} Boya / {veri['degisen_parca_sayisi']} Değişen"
+                        log(f"  [{i}/{len(bulunanlar)}] {veri['marka']} {veri['model']} ({veri['yil']}) | {veri['fiyat_tl']:,} TL | {veri['km']:,} KM | {hasar_durum} | {veri['il']}/{veri['ilce']}", "SUCCESS")
                 except Exception as exc:
-                    log(f"İş parçacığı hatası ({ino}): {exc}", "ERROR")
+                    log(f"İş parçacığı hatası ({aid}): {exc}", "ERROR")
 
-        t_bitis = time.time()
-        log(f"Tüm detaylar tamamlandı! Toplam {toplam_basarili} ilan eksiksiz kaydedildi ({t_bitis - t_baslangic:.1f} sn).", "SUCCESS")
-        return toplam_basarili
-
-    def eksikleri_tamamla(self):
-        """Veritabanında kayıtlı olup detayları henüz çekilmemiş ilanları tespit eder ve tamamlar."""
-        conn = sqlite3.connect(self.db_path)
-        conn.row_factory = sqlite3.Row
-        c = conn.cursor()
-        c.execute("SELECT ilan_no, ilan_url FROM arabam_ilanlari WHERE aciklama IS NULL OR aciklama = ''")
-        eksikler = [(r["ilan_no"], r["ilan_url"]) for r in c.fetchall() if r["ilan_url"]]
-        conn.close()
-
-        if not eksikler:
-            log("Tamamlanacak eksik detaylı ilan yok.", "INFO")
-            return 0
-
-        log(f"Veritabanında {len(eksikler)} adet eksik detaylı ilan bulundu, tamamlanıyor...", "INFO")
-        toplam_basarili = 0
-        t_baslangic = time.time()
-        with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_threads) as executor:
-            future_to_ilan = {
-                executor.submit(self.ilan_detayini_eksiksiz_cek, ino, u): (ino, u)
-                for ino, u in eksikler
-            }
-            for i, future in enumerate(concurrent.futures.as_completed(future_to_ilan), 1):
-                ino, u = future_to_ilan[future]
-                try:
-                    veri = future.result()
-                    if veri:
-                        self.ilani_veritabanina_kaydet(veri)
-                        toplam_basarili += 1
-                        log(f"  [{i}/{len(eksikler)}] İlan {ino} detaylandırıldı: {veri['marka']} {veri['model']} | {veri['fiyat_tl']:,} TL", "SUCCESS")
-                except Exception as exc:
-                    log(f"İş parçacığı hatası ({ino}): {exc}", "ERROR")
-
-        t_bitis = time.time()
-        log(f"Eksik tamamlama bitti: {toplam_basarili} ilan zenginleştirildi ({t_bitis - t_baslangic:.1f} sn).", "SUCCESS")
+        t_bitir = time.time()
+        log(f"Tarama tamamlandı! {toplam_basarili} araç standart formatta kaydedildi ({t_bitir - t_basla:.1f} sn).", "SUCCESS")
         return toplam_basarili
 
     def hesapla_arac_refah_endeksi(self):
-        """Toplanan zengin ilan verilerinden İlçe bazlı Araç Refah Endeksi hesaplar."""
-        log("İlçe Bazlı Araç Refah ve Alım Gücü Endeksi hesaplanıyor...", "INFO")
+        """Toplanan araç verilerinden İlçe bazlı Refah ve Alım Gücü Endeksi hesaplar."""
+        log("İlçe Bazlı Araç Refah Endeksi hesaplanıyor...", "INFO")
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
@@ -722,12 +668,10 @@ class EksiksizArabaToplayici:
             luks_oran = round((g["luks_adet"] / adet) * 100, 1)
             eko_oran = round((g["eko_adet"] / adet) * 100, 1)
 
-            # En popüler marka
             c.execute("SELECT marka, COUNT(*) as m_adet FROM arabam_ilanlari WHERE il=? AND ilce=? GROUP BY marka ORDER BY m_adet DESC LIMIT 1", (il, ilce))
             pop = c.fetchone()
             pop_marka = pop["marka"] if pop else "Volkswagen"
 
-            # 2026 Alım Gücü & Refah Skoru Formülü
             base_skor = 50.0 + ((ort_fiyat - 850000) / 45000) + (luks_oran * 0.8) - (eko_oran * 0.4) - (ort_yas * 1.5)
             refah_skoru = max(25.0, min(99.5, round(base_skor, 1)))
 
@@ -754,10 +698,12 @@ class EksiksizArabaToplayici:
         conn.close()
         log("  ✓ İlçe Araç Refah Endeksi güncellendi.", "SUCCESS")
 
-    def export_csv(self):
-        """Toplanan tüm verileri eksiksiz CSV ve JSON dosyalarına aktarır."""
+    def export_csv(self, target_dir=None):
+        """Toplanan ayrıştırılmış araç verilerini CSV formatına aktarır."""
         import csv
-        log("Eksiksiz araç verileri CSV formatına aktarılıyor...", "INFO")
+        out_dir = Path(target_dir) if target_dir else CSV_DIR
+        out_dir.mkdir(parents=True, exist_ok=True)
+        log("Araç verileri CSV formatına aktarılıyor...", "INFO")
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
         c = conn.cursor()
@@ -771,7 +717,7 @@ class EksiksizArabaToplayici:
             c.execute(f"SELECT * FROM {tbl}")
             rows = c.fetchall()
             if rows:
-                p = CSV_DIR / fname
+                p = out_dir / fname
                 keys = rows[0].keys()
                 with open(p, "w", encoding="utf-8-sig", newline="") as f:
                     writer = csv.DictWriter(f, fieldnames=keys, delimiter=";")
@@ -782,55 +728,68 @@ class EksiksizArabaToplayici:
 
         conn.close()
 
+def parse_sehirler(sehir_args):
+    """Hem virgüllü '1,2,3' hem de boşluklu 1 2 3 plaka girdilerini ayrıştırır."""
+    if not sehir_args:
+        return []
+    plakalar = []
+    for arg in sehir_args:
+        for part in str(arg).split(","):
+            part = part.strip()
+            if part.isdigit():
+                plakalar.append(int(part))
+    return sorted(list(set(plakalar)))
+
 def main():
-    parser = argparse.ArgumentParser(description="GEOPROP AI - Arabam.com Eksiksiz Araç Verisi Toplayıcısı")
+    parser = argparse.ArgumentParser(description="GEOPROP AI - Standartlaştırılmış Araç Verisi Toplayıcısı")
     parser.add_argument("--hepsi", action="store_true", help="Türkiye genelindeki 81 ilin tamamını tara")
-    parser.add_argument("--sehirler", nargs="+", type=int, default=None, help="Taranacak il plaka kodları (Örn: --sehirler 34 6 35 77)")
+    parser.add_argument("--sehirler", "--iller", nargs="+", default=None, help="Taranacak il plaka kodları (Örn: --sehirler 34 6 veya '34,6')")
     parser.add_argument("--genel", action="store_true", help="İl filtresi olmadan son yüklenen ilanları tara")
     parser.add_argument("--kategoriler", nargs="+", default=["otomobil"], help="Kategoriler: otomobil arazi-suv-pickup minivan-van-panelvan")
-    parser.add_argument("--sayfa", type=int, default=2, help="Her il veya kategori için taranacak sayfa adedi")
-    parser.add_argument("--threads", type=int, default=6, help="Paralel çalışan iş parçacığı (worker thread) sayısı")
-    parser.add_argument("--eksikleri-tamamla", action="store_true", help="Veritabanında kayıtlı olup detayları boş olan ilanları tamamla")
+    parser.add_argument("--sayfa", type=int, default=3, help="Her il veya kategori için taranacak sayfa adedi")
+    parser.add_argument("--threads", type=int, default=6, help="Paralel çalışan iş parçacığı sayısı")
+    parser.add_argument("--db", type=str, default=None, help="Özel SQLite veritabanı yolu")
+    parser.add_argument("--csv-dir", type=str, default=None, help="Özel CSV çıkış dizini")
     parser.add_argument("--export-only", action="store_true", help="Yalnızca mevcut veritabanını CSV'ye aktar")
     args = parser.parse_args()
 
-    toplayici = EksiksizArabaToplayici(max_threads=args.threads)
+    db_path = Path(args.db) if args.db else DB_PATH
+    toplayici = AnonimArabaToplayici(db_path=db_path, max_threads=args.threads)
 
     if args.export_only:
-        toplayici.export_csv()
+        toplayici.export_csv(target_dir=args.csv_dir)
         return
 
-    if args.eksikleri_tamamla:
-        toplayici.eksikleri_tamamla()
-        toplayici.hesapla_arac_refah_endeksi()
-        toplayici.export_csv()
-        return
-
-    plakalar = list(range(1, 82)) if args.hepsi else args.sehirler
+    plakalar = list(range(1, 82)) if args.hepsi else parse_sehirler(args.sehirler)
     if not plakalar and not args.genel:
-        # Varsayılan metropol ve pilot iller
         plakalar = [34, 6, 35, 77, 16, 7]
 
+    kategoriler = []
+    for k in args.kategoriler:
+        for sub_k in str(k).split(","):
+            sub_k = sub_k.strip()
+            if sub_k:
+                kategoriler.append(sub_k)
+
     log("=" * 70, "INFO")
-    log("GEOPROP AI - ARABAM.COM EKSIKSIZ ARAÇ VERİ TOPLAYICI BAŞLATILDI", "INFO")
+    log("GEOPROP AI - STANDARTLAŞTIRILMIŞ ARAÇ VERİ TOPLAYICI (ANALİTİK PARSE)", "INFO")
     log(f"Hedef İller: {'81 İl Tümü' if args.hepsi else ('Genel Akış' if args.genel else plakalar)}", "INFO")
-    log(f"Kategoriler: {args.kategoriler} | Sayfa Sayısı: {args.sayfa} | Worker Threads: {args.threads}", "INFO")
+    log(f"Kategoriler: {kategoriler} | Sayfa Sayısı: {args.sayfa} | Worker Threads: {args.threads}", "INFO")
     log("=" * 70, "INFO")
 
     toplayici.calistir_toplu_tarama(
         plakalar=plakalar,
-        kategoriler=args.kategoriler,
+        kategoriler=kategoriler,
         sayfa_sayisi=args.sayfa,
         genel=args.genel
     )
 
     toplayici.hesapla_arac_refah_endeksi()
-    toplayici.export_csv()
+    toplayici.export_csv(target_dir=args.csv_dir)
 
     log("=" * 70, "SUCCESS")
-    log("TÜM ARAÇ VERİLERİ EKSİKSİZ ÇEKİLDİ VE KAYDEDİLDİ!", "SUCCESS")
-    log(f"Veritabanı: {DB_PATH}", "INFO")
-    log(f"CSV Çıktısı: {CSV_DIR / '23_arabam_arac_ilanlari.csv'}", "INFO")
+    log("ARAÇ VERİLERİ BAŞARIYLA AYRIŞTIRILDI VE DIŞA AKTARILDI!", "SUCCESS")
+    log(f"Veritabanı: {db_path}", "INFO")
     log("=" * 70, "SUCCESS")
 
 if __name__ == "__main__":

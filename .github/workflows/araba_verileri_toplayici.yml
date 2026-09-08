@@ -1,0 +1,214 @@
+name: Turkiye 81 İl Araç Verileri Toplayıcı (40 Worker Matrix)
+
+on:
+  workflow_dispatch:
+    inputs:
+      kategoriler:
+        description: 'Çekilecek Taşıt Kategorileri (otomobil, arazi-suv-pickup veya virgülle çoklu)'
+        required: true
+        default: 'otomobil'
+        type: string
+      sayfa_sayisi:
+        description: 'İl Başına Sayfa Derinliği (Her sayfa 20 ilan)'
+        required: false
+        default: '10'
+        type: string
+      threads:
+        description: 'Her Sanal Makinede Paralel Worker Thread Sayısı'
+        required: false
+        default: '6'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  tara_matrix:
+    name: "Grup ${{ matrix.grup }} (İller: ${{ matrix.iller }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 40
+      matrix:
+        include:
+          - { grup: 1, iller: "1,2" }         # Adana, Adıyaman
+          - { grup: 2, iller: "3,4" }         # Afyonkarahisar, Ağrı
+          - { grup: 3, iller: "5,6" }         # Amasya, Ankara
+          - { grup: 4, iller: "7,8" }         # Antalya, Artvin
+          - { grup: 5, iller: "9,10" }        # Aydın, Balıkesir
+          - { grup: 6, iller: "11,12" }       # Bilecik, Bingöl
+          - { grup: 7, iller: "13,14" }       # Bitlis, Bolu
+          - { grup: 8, iller: "15,16" }       # Burdur, Bursa
+          - { grup: 9, iller: "17,18" }       # Çanakkale, Çankırı
+          - { grup: 10, iller: "19,20" }      # Çorum, Denizli
+          - { grup: 11, iller: "21,22" }      # Diyarbakır, Edirne
+          - { grup: 12, iller: "23,24" }      # Elazığ, Erzincan
+          - { grup: 13, iller: "25,26" }      # Erzurum, Eskişehir
+          - { grup: 14, iller: "27,28" }      # Gaziantep, Giresun
+          - { grup: 15, iller: "29,30" }      # Gümüşhane, Hakkari
+          - { grup: 16, iller: "31,32" }      # Hatay, Isparta
+          - { grup: 17, iller: "33" }         # Mersin
+          - { grup: 18, iller: "34" }         # İstanbul
+          - { grup: 19, iller: "35" }         # İzmir
+          - { grup: 20, iller: "36,37" }      # Kars, Kastamonu
+          - { grup: 21, iller: "38,39" }      # Kayseri, Kırklareli
+          - { grup: 22, iller: "40,41" }      # Kırşehir, Kocaeli
+          - { grup: 23, iller: "42,43" }      # Konya, Kütahya
+          - { grup: 24, iller: "44,45" }      # Malatya, Manisa
+          - { grup: 25, iller: "46,47" }      # Kahramanmaraş, Mardin
+          - { grup: 26, iller: "48,49" }      # Muğla, Muş
+          - { grup: 27, iller: "50,51" }      # Nevşehir, Niğde
+          - { grup: 28, iller: "52,53" }      # Ordu, Rize
+          - { grup: 29, iller: "54,55" }      # Sakarya, Samsun
+          - { grup: 30, iller: "56,57" }      # Siirt, Sinop
+          - { grup: 31, iller: "58,59" }      # Sivas, Tekirdağ
+          - { grup: 32, iller: "60,61" }      # Tokat, Trabzon
+          - { grup: 33, iller: "62,63" }      # Tunceli, Şanlıurfa
+          - { grup: 34, iller: "64,65" }      # Uşak, Van
+          - { grup: 35, iller: "66,67" }      # Yozgat, Zonguldak
+          - { grup: 36, iller: "68,69" }      # Aksaray, Bayburt
+          - { grup: 37, iller: "70,71" }      # Karaman, Kırıkkale
+          - { grup: 38, iller: "72,73,74" }   # Batman, Şırnak, Bartın
+          - { grup: 39, iller: "75,76,77" }   # Ardahan, Iğdır, Yalova
+          - { grup: 40, iller: "78,79,80,81" } # Karabük, Kilis, Osmaniye, Düzce
+
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          pip install curl_cffi beautifulsoup4
+
+      - name: "Grup ${{ matrix.grup }} Araç Verilerini Topla"
+        run: |
+          mkdir -p cikti_grup_${{ matrix.grup }}
+          python araba_veri_toplayici.py \
+            --sehirler "${{ matrix.iller }}" \
+            --sayfa "${{ github.event.inputs.sayfa_sayisi || '10' }}" \
+            --kategoriler "${{ github.event.inputs.kategoriler || 'otomobil' }}" \
+            --threads "${{ github.event.inputs.threads || '6' }}" \
+            --db "araba_grup_${{ matrix.grup }}.db" \
+            --csv-dir "cikti_grup_${{ matrix.grup }}"
+
+      - name: "Sonuçları Paketle"
+        run: |
+          tar -czf grup_${{ matrix.grup }}_araba_verileri.tar.gz araba_grup_${{ matrix.grup }}.db cikti_grup_${{ matrix.grup }}
+
+      - name: "Artifaktı Yükle"
+        uses: actions/upload-artifact@v4
+        with:
+          name: araba-grup-${{ matrix.grup }}
+          path: grup_${{ matrix.grup }}_araba_verileri.tar.gz
+          retention-days: 7
+
+  birlestir:
+    name: "81 İlin Tüm Araç Verilerini Birleştir ve Yayınla"
+    needs: tara_matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          pip install curl_cffi beautifulsoup4
+
+      - name: "Tüm 40 Grup Artifaktını İndir"
+        uses: actions/download-artifact@v4
+        with:
+          path: tum_gruplar
+
+      - name: "Tüm Veritabanlarını Birleştir ve CSV Oluştur"
+        run: |
+          python - << 'EOF'
+          import os, glob, tarfile, sqlite3, csv
+          from pathlib import Path
+
+          print("Tüm 40 grup artifaktı açılıyor...")
+          tar_files = glob.glob("tum_gruplar/**/*.tar.gz", recursive=True)
+          print(f"Toplam bulunan grup paketi: {len(tar_files)}")
+
+          os.makedirs("temp_ext", exist_ok=True)
+          for tf in tar_files:
+              try:
+                  with tarfile.open(tf, "r:gz") as t:
+                      t.extractall("temp_ext")
+              except Exception as e:
+                  print("Tar açma hatası:", tf, e)
+
+          os.makedirs("collector/data/csv_ciktilari", exist_ok=True)
+          ana_db = "collector/data/arabam_vasita_piyasasi.sqlite"
+          
+          # Ana DB'yi başlat
+          from araba_veri_toplayici import init_db, AnonimArabaToplayici
+          init_db(ana_db)
+
+          conn = sqlite3.connect(ana_db)
+          cur = conn.cursor()
+
+          db_files = glob.glob("temp_ext/**/*.db", recursive=True)
+          print(f"Birleştirilecek SQLite dosyası sayısı: {len(db_files)}")
+
+          toplam_kayit = 0
+          for db_file in db_files:
+              try:
+                  c2 = sqlite3.connect(db_file)
+                  c2.row_factory = sqlite3.Row
+                  cur2 = c2.cursor()
+                  cur2.execute("SELECT * FROM arabam_ilanlari")
+                  rows = cur2.fetchall()
+                  if rows:
+                      cols = [k for k in rows[0].keys() if k != "id"]
+                      col_str = ", ".join(cols)
+                      placeholders = ", ".join(["?"] * len(cols))
+                      sql = f"INSERT OR REPLACE INTO arabam_ilanlari ({col_str}) VALUES ({placeholders})"
+                      
+                      val_list = [[r[k] for k in cols] for r in rows]
+                      cur.executemany(sql, val_list)
+                      toplam_kayit += len(rows)
+                  c2.close()
+              except Exception as e:
+                  print(f"DB birleştirme hatası ({db_file}):", e)
+
+          conn.commit()
+          print(f"Ana veritabanına aktarılan toplam araç sayısı: {toplam_kayit:,}")
+          conn.close()
+
+          # Refah Endeksi ve CSV Çıktılarını Yeniden Hesapla
+          toplayici = AnonimArabaToplayici(db_path=Path(ana_db))
+          toplayici.hesapla_arac_refah_endeksi()
+          toplayici.export_csv()
+          EOF
+
+      - name: "Zip Veri Paketi Oluştur"
+        run: |
+          zip -r turkiye_81_il_arac_verileri_2026.zip \
+            collector/data/arabam_vasita_piyasasi.sqlite \
+            collector/data/csv_ciktilari/23_arabam_arac_ilanlari.csv \
+            collector/data/csv_ciktilari/24_ilce_ve_mahalle_arac_refah_endeksi.csv
+
+      - name: "Tüm Türkiye Araç Paketini Artifakt Olarak Yayınla"
+        uses: actions/upload-artifact@v4
+        with:
+          name: TURKIYE-81-IL-ARAC-VERILERI-2026
+          path: turkiye_81_il_arac_verileri_2026.zip
+          retention-days: 14
+
+      - name: "Depoya Kaydet ve Commit/Push Yap"
+        run: |
+          git config --global user.name "GitHub Actions Runner"
+          git config --global user.email "actions@github.com"
+          git add collector/data/csv_ciktilari/23_arabam_arac_ilanlari.csv collector/data/csv_ciktilari/24_ilce_ve_mahalle_arac_refah_endeksi.csv collector/data/arabam_vasita_piyasasi.sqlite || true
+          git commit -m "chore(data): Türkiye geneli 81 il araç verileri ve ilçe refah endeksi güncellendi [skip ci]" || echo "Değişiklik yok"
+          git push origin main || echo "Push atlandı"
