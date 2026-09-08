@@ -1,0 +1,78 @@
+name: "Turkiye Ada-Parsel İmar, Plan Künyesi ve Askı Değişiklikleri Toplayıcı"
+
+on:
+  workflow_dispatch:
+    inputs:
+      mod:
+        description: 'Çalışma Modu'
+        required: true
+        default: 'csv_ilanlar'
+        type: choice
+        options:
+          - 'csv_ilanlar'
+          - 'varsayilan_test'
+      limit:
+        description: 'İşlenecek Maksimum Parsel Sayısı'
+        required: false
+        default: '100'
+        type: string
+  schedule:
+    # Her gece saat 03:30'da otomatik çalışarak yeni parsel ve askıdaki imar değişikliklerini tarar
+    - cron: '30 3 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  imar_toplayici:
+    name: "İmar, Plan Künyesi ve Parsel Toplayıcı"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Kodu Checkout Et
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Python 3.12 Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Parsel, İmar ve Plan Künyesi Toplama İşlemini Başlat
+        run: |
+          echo "========================================================"
+          echo "GEOPROP AI - İMAR VE PARSEL VERİ TOPLAMA MOTORU"
+          echo "Tarih: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "Mod: ${{ github.event.inputs.mod || 'csv_ilanlar' }}"
+          echo "========================================================"
+          
+          if [ "${{ github.event.inputs.mod }}" = "varsayilan_test" ]; then
+            python collector/parsel_imar_ve_degisiklik_toplayici.py
+          else
+            python collector/parsel_imar_ve_degisiklik_toplayici.py --zenginlestir-csv --limit ${{ github.event.inputs.limit || '100' }}
+          fi
+
+      - name: Çıktıları Kontrol Et
+        run: |
+          ls -lh collector/data/imar_ve_parseller/ || true
+
+      - name: Değişiklikleri Git ile Kaydet ve Push Et
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add collector/data/imar_ve_parseller/
+          
+          if git diff --staged --quiet; then
+            echo "Yeni parsel veya imar verisi değişikliği yok, push atlanıyor."
+          else
+            git commit -m "feat(imar): Ada-parsel imar, plan künyesi ve bağımsız bölüm verileri güncellendi [skip ci]"
+            git pull --rebase origin main || true
+            git push origin main
+          fi
