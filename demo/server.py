@@ -98,7 +98,123 @@ class GeopropApiHandler(http.server.SimpleHTTPRequestHandler):
             self.wfile.write(json.dumps(response_data, ensure_ascii=False).encode("utf-8"))
             return
 
-        # 2. HIZLI TEST ÖRNEKLERİ LİSTESİ API'Sİ
+        # 2. 2026 VE SONRASI TİCARİ İSTİHBARAT & E-TİCARET KARNESİ API'Sİ
+        elif path == "/api/bolge-istihbarat":
+            il = str(query.get("il", [""])[0]).strip()
+            ilce = str(query.get("ilce", [""])[0]).strip()
+            mahalle = str(query.get("mahalle", [""])[0]).strip()
+            lat = float(query["lat"][0]) if "lat" in query and query["lat"][0] else None
+            lon = float(query["lon"][0]) if "lon" in query and query["lon"][0] else None
+
+            istihbarat_db = os.path.join(COLLECTOR_DIR, "data", "turkiye_makro_ve_mikro_istihbarat.sqlite")
+            lojistik_db = os.path.join(COLLECTOR_DIR, "data", "eticaret_ve_lojistik.sqlite")
+
+            res = {
+                "status": "success",
+                "yil": 2026,
+                "donem": "2026-Q3 ve Sonrası (2026-2027 Projeksiyonu)",
+                "il": il,
+                "ilce": ilce,
+                "mahalle": mahalle,
+                "etbis": None,
+                "sege": None,
+                "ciro_potansiyeli": None,
+                "lojistik": {"toplam_kargomat": 0, "toplam_sube": 0, "en_yakin_kargomat": None, "en_yakin_sube": None},
+                "tutun_saglik": None,
+                "mahalle_harcama": None
+            }
+
+            import math
+            def haversine_m(lat1, lon1, lat2, lon2):
+                if not (lat1 and lon1 and lat2 and lon2): return None
+                R = 6371000
+                phi1, phi2 = math.radians(lat1), math.radians(lat2)
+                dphi = math.radians(lat2 - lat1)
+                dlam = math.radians(lon2 - lon1)
+                a = math.sin(dphi/2)**2 + math.cos(phi1)*math.cos(phi2)*math.sin(dlam/2)**2
+                return round(2 * R * math.atan2(math.sqrt(a), math.sqrt(1 - a)))
+
+            # A) Makro ve Mikro İstihbarat DB
+            if os.path.exists(istihbarat_db):
+                import sqlite3
+                conn_m = sqlite3.connect(istihbarat_db)
+                conn_m.row_factory = sqlite3.Row
+                cm = conn_m.cursor()
+
+                # 1. ETBİS 2026 E-Ticaret
+                if il:
+                    cm.execute("SELECT * FROM etbis_81_il_e_ticaret WHERE il_adi LIKE ? LIMIT 1", (f"%{il}%",))
+                    row_et = cm.fetchone()
+                    if row_et: res["etbis"] = dict(row_et)
+
+                # 2. SEGE 2026 İlçe
+                if il and ilce:
+                    cm.execute("SELECT * FROM sege_973_ilce_gelismislik WHERE il_adi LIKE ? AND ilce_adi LIKE ? LIMIT 1", (f"%{il}%", f"%{ilce}%"))
+                    row_sege = cm.fetchone()
+                    if row_sege: res["sege"] = dict(row_sege)
+
+                # 3. Ciro & Lokasyon Potansiyeli Skoru (2026-2027)
+                if il and ilce:
+                    cm.execute("SELECT * FROM ciro_ve_ticari_potansiyel_endeksi WHERE il LIKE ? AND ilce LIKE ? LIMIT 1", (f"%{il}%", f"%{ilce}%"))
+                    row_ciro = cm.fetchone()
+                    if row_ciro: res["ciro_potansiyeli"] = dict(row_ciro)
+
+                # 4. TÜİK Tütün & Sigara 2026
+                cm.execute("SELECT * FROM tuik_tutun_ve_sigara_istatistikleri WHERE bolge_adi LIKE ? OR bolge_adi LIKE ? LIMIT 1", (f"%{il}%", "%Türkiye Geneli%"))
+                row_tutun = cm.fetchone()
+                if row_tutun: res["tutun_saglik"] = dict(row_tutun)
+
+                conn_m.close()
+
+            # B) E-Ticaret ve Lojistik DB
+            if os.path.exists(lojistik_db):
+                import sqlite3
+                conn_l = sqlite3.connect(lojistik_db)
+                conn_l.row_factory = sqlite3.Row
+                cl = conn_l.cursor()
+
+                # Lojistik & Kargomatlar
+                if il:
+                    cl.execute("SELECT * FROM kargo_ve_teslimat_noktalari WHERE il_ad LIKE ?", (f"%{il}%",))
+                    pts = cl.fetchall()
+                    kargomatlar = [dict(p) for p in pts if p["tip"] == "PTT_KARGOMAT"]
+                    subeler = [dict(p) for p in pts if p["tip"] == "PTT_SUBE"]
+                    res["lojistik"]["toplam_kargomat"] = len(kargomatlar)
+                    res["lojistik"]["toplam_sube"] = len(subeler)
+
+                    if lat and lon:
+                        for k in kargomatlar:
+                            if k.get("lat") and k.get("lon"):
+                                k["mesafe_metre"] = haversine_m(lat, lon, k["lat"], k["lon"])
+                        kargomatlar_dist = [k for k in kargomatlar if k.get("mesafe_metre") is not None]
+                        if kargomatlar_dist:
+                            kargomatlar_dist.sort(key=lambda x: x["mesafe_metre"])
+                            res["lojistik"]["en_yakin_kargomat"] = kargomatlar_dist[0]
+
+                        for s in subeler:
+                            if s.get("lat") and s.get("lon"):
+                                s["mesafe_metre"] = haversine_m(lat, lon, s["lat"], s["lon"])
+                        subeler_dist = [s for s in subeler if s.get("mesafe_metre") is not None]
+                        if subeler_dist:
+                            subeler_dist.sort(key=lambda x: x["mesafe_metre"])
+                            res["lojistik"]["en_yakin_sube"] = subeler_dist[0]
+
+                # Mahalle Harcama Kalemleri
+                if mahalle:
+                    cl.execute("SELECT * FROM eticaret_ve_harcama_kalemleri WHERE seviye='mahalle' AND mahalle LIKE ? LIMIT 1", (f"%{mahalle}%",))
+                    row_m = cl.fetchone()
+                    if row_m: res["mahalle_harcama"] = dict(row_m)
+
+                conn_l.close()
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps(res, ensure_ascii=False).encode("utf-8"))
+            return
+
+        # 3. HIZLI TEST ÖRNEKLERİ LİSTESİ API'Sİ
         elif path == "/api/hizli-ornekler":
             ornekler = [
                 {

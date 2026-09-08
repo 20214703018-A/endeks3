@@ -14,10 +14,11 @@ def merge_csv_directories(input_dirs, output_dir):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Birleştirilecek CSV dosya adları
+    # Birleştirilecek CSV dosya adları (2026 ve Sonrası Güncel)
     target_files = [
         "01_demografi_ve_nufus.csv",
         "02_yillik_satislar_2010_2024.csv",
+        "02_yillik_satislar_2010_2026.csv",
         "03_fiyat_ozet_konut_arsa.csv",
         "04_aylik_fiyat_trendi_2021_2026.csv",
         "05_oda_yas_kat_isitma_kirilimlari.csv",
@@ -32,7 +33,12 @@ def merge_csv_directories(input_dirs, output_dir):
         "14_mahalleler_listesi.csv",
         "15_e_ticaret_ve_harcama_kalemleri.csv",
         "16_medeni_durum_ve_gayrimenkul_stoku.csv",
-        "17_detayli_yas_piramidi_47_grup.csv"
+        "17_detayli_yas_piramidi_47_grup.csv",
+        "18_kargo_ve_teslimat_noktalari.csv",
+        "19_etbis_il_bazli_e_ticaret_hacimleri.csv",
+        "20_sege_973_ilce_sosyo_ekonomik_kademe.csv",
+        "21_ciro_potansiyeli_ve_ticari_cekicilik.csv",
+        "22_tuik_sigara_ve_tutun_tuketim_endeksi.csv"
     ]
 
     for fname in target_files:

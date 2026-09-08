@@ -759,6 +759,63 @@
           </div>
         </div>
 
+        <!-- 2026-2027 Ticari İstihbarat & E-Ticaret Karnesi -->
+        <div class="section-card" id="cardTicariIstihbarat" style="border-color: rgba(245, 158, 11, 0.35); background: linear-gradient(145deg, rgba(245, 158, 11, 0.04), rgba(20, 24, 38, 0.95));">
+          <div class="section-title" style="color: #fbbf24;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>2026-2027 Ticari İstihbarat & E-Ticaret Karnesi</span>
+            <span style="font-size:0.68rem; padding:2px 6px; border-radius:4px; background:rgba(245, 158, 11, 0.2); color:#fbbf24; margin-left:auto;">2026 Güncel</span>
+          </div>
+
+          <!-- Ciro ve Çekim Skoru -->
+          <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:rgba(245,158,11,0.08); border-radius:6px; margin-bottom:10px;">
+            <div>
+              <span style="font-size:0.72rem; color:var(--text-muted); display:block;">Maptriks / Huff Çekim Modeli Ciro Skoru:</span>
+              <b id="valCiroSkor" style="font-size:1.15rem; color:#fbbf24;">-- / 100</b>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:0.72rem; color:var(--text-muted); display:block;">Sosyo-Ekonomik Derece</span>
+              <span id="valCiroSinif" class="highlight-badge" style="background:rgba(245,158,11,0.25); color:#fde68a; font-weight:700;">--</span>
+            </div>
+          </div>
+
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">2026 SEGE Kademesi</span>
+              <span class="meta-val" id="valSegeKademe" style="color:#60a5fa;">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">2026 İl E-Ticaret Hacmi</span>
+              <span class="meta-val" id="valEtbisHacim">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">2026 Kişi Başı E-Ticaret</span>
+              <span class="meta-val" id="valEtbisKisiBasi">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">TÜİK Sigara/Tütün Oranı</span>
+              <span class="meta-val" id="valTutunOrani">--</span>
+            </div>
+          </div>
+
+          <!-- Lojistik ve Teslimat -->
+          <div style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(245, 158, 11, 0.15);">
+            <div style="font-size:0.75rem; color:#fde68a; font-weight:600; margin-bottom:4px;">📦 Lojistik & Hızlı Teslimat Ağı (PTT CBS)</div>
+            <div class="calc-row">
+              <span style="font-size:0.72rem; color:var(--text-muted);">En Yakın 7/24 Kargomat Dolabı:</span>
+              <b style="font-size:0.75rem; color:var(--accent-cyan);" id="valYakinKargomat">--</b>
+            </div>
+            <div class="calc-row">
+              <span style="font-size:0.72rem; color:var(--text-muted);">En Yakın PTT Kargo Şubesi:</span>
+              <b style="font-size:0.75rem; color:var(--text-primary);" id="valYakinSube">--</b>
+            </div>
+            <div class="calc-row" id="rowMahalleEcom" style="display:none;">
+              <span style="font-size:0.72rem; color:var(--text-muted);">Mahalle 2026 Online Pazaryeri:</span>
+              <b style="font-size:0.75rem; color:var(--accent-emerald);" id="valMahalleOnline">--</b>
+            </div>
+          </div>
+        </div>
+
         <!-- Resmi TKGM Doğrulama Köprüsü -->
         <div style="margin-top: 14px; padding-bottom: 24px;">
           <a id="btnTkgmResmi" href="https://parselsorgu.tkgm.gov.tr/" target="_blank" class="btn" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; text-decoration:none; padding:11px 14px; border-radius:8px; font-size:0.82rem; font-weight:700; background:linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.3)); border:1px solid rgba(239, 68, 68, 0.5); color:#fca5a5; transition:all 0.2s; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);">
@@ -989,6 +1046,59 @@
           btnTkgm.href = 'https://parselsorgu.tkgm.gov.tr/';
         }
       }
+
+      // 2026 ve Sonrası Ticari İstihbarat & E-Ticaret Verilerini Çek
+      const qIl = p.il || '';
+      const qIlce = p.ilce || '';
+      const qMahalle = p.mahalle || '';
+      const qLat = p.enlem || '';
+      const qLon = p.boylam || '';
+
+      fetch(`/api/bolge-istihbarat?il=${encodeURIComponent(qIl)}&ilce=${encodeURIComponent(qIlce)}&mahalle=${encodeURIComponent(qMahalle)}&lat=${qLat}&lon=${qLon}`)
+        .then(r => r.json())
+        .then(ist => {
+          if (ist && ist.status === 'success') {
+            const ciro = ist.ciro_potansiyeli;
+            if (ciro) {
+              document.getElementById('valCiroSkor').textContent = `%${ciro.ciro_potansiyeli_skoru} / 100`;
+              document.getElementById('valCiroSinif').textContent = `${ciro.sosyo_ekonomik_derece} Grubu`;
+            }
+            const sege = ist.sege;
+            if (sege) {
+              document.getElementById('valSegeKademe').textContent = `${sege.gelismislik_kademesi}. Kademe (${sege.sosyo_ekonomik_sinif})`;
+            }
+            const et = ist.etbis;
+            if (et) {
+              document.getElementById('valEtbisHacim').textContent = `${et.yillik_e_ticaret_hacmi_milyar_tl} Milyar TL`;
+              document.getElementById('valEtbisKisiBasi').textContent = `${parseFloat(et.kisi_basi_e_ticaret_harcamasi_tl).toLocaleString('tr-TR')} TL`;
+            }
+            const tutun = ist.tutun_saglik;
+            if (tutun) {
+              document.getElementById('valTutunOrani').textContent = `%${tutun.toplam_sigara_orani} (${tutun.tuketim_seviyesi})`;
+            }
+            const loj = ist.lojistik;
+            if (loj) {
+              if (loj.en_yakin_kargomat) {
+                document.getElementById('valYakinKargomat').textContent = `${loj.en_yakin_kargomat.ad} (~${loj.en_yakin_kargomat.mesafe_metre}m)`;
+              } else {
+                document.getElementById('valYakinKargomat').textContent = `${loj.toplam_kargomat} Dolap (İl Geneli)`;
+              }
+              if (loj.en_yakin_sube) {
+                document.getElementById('valYakinSube').textContent = `${loj.en_yakin_sube.ad} (~${loj.en_yakin_sube.mesafe_metre}m)`;
+              } else {
+                document.getElementById('valYakinSube').textContent = `${loj.toplam_sube} Şube`;
+              }
+            }
+            const mah = ist.mahalle_harcama;
+            if (mah && mah.guncel_2026_online_pazaryeri_tl) {
+              document.getElementById('rowMahalleEcom').style.display = 'flex';
+              document.getElementById('valMahalleOnline').textContent = `${Math.round(mah.guncel_2026_online_pazaryeri_tl).toLocaleString('tr-TR')} TL`;
+            } else {
+              document.getElementById('rowMahalleEcom').style.display = 'none';
+            }
+          }
+        })
+        .catch(e => console.warn('İstihbarat API Hatası:', e));
 
       // Paneli aç
       document.getElementById('detailPanel').style.display = 'flex';

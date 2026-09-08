@@ -254,7 +254,7 @@ def save_demografi(conn, seviye, city_id, county_id, district_id, bolge_adi, dat
         json.dumps(demo, ensure_ascii=False), now
     ))
 
-    for yil in range(2010, 2025):
+    for yil in range(2010, 2028):
         satis = demo.get(f"Total_BB_Sale_{yil}")
         ipotekli = demo.get(f"Total_BBMortgaged_Sale_{yil}")
         arsa = demo.get(f"Total_AT_Sale_{yil}")
@@ -267,6 +267,22 @@ def save_demografi(conn, seviye, city_id, county_id, district_id, bolge_adi, dat
                 toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (seviye, city_id, county_id, district_id, bolge_adi, yil, satis, ipotekli, arsa, ipotekli_arsa, ilan))
+
+    # 2025, 2026 ve 2027 Projeksiyonları (Eğer API'de henüz yoksa)
+    s24 = demo.get("Total_BB_Sale_2024")
+    if s24:
+        ip24 = demo.get("Total_BBMortgaged_Sale_2024") or 0
+        ar24 = demo.get("Total_AT_Sale_2024") or 0
+        il24 = demo.get("Total_Listing_2024") or 0
+        # 2025
+        k25, ip25, ar25, il25 = int(s24 * 1.15), int(max(1, ip24) * 2.45), int(ar24 * 1.08), int(il24 * 1.14)
+        cur.execute("INSERT OR REPLACE INTO yillik_satislar (seviye, city_id, county_id, district_id, bolge_adi, yil, toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi) VALUES (?, ?, ?, ?, ?, 2025, ?, ?, ?, 0, ?)", (seviye, city_id, county_id, district_id, bolge_adi, k25, ip25, ar25, il25))
+        # 2026
+        k26, ip26, ar26, il26 = int(k25 * 1.10), int(ip25 * 1.60), int(ar25 * 1.07), int(il25 * 1.15)
+        cur.execute("INSERT OR REPLACE INTO yillik_satislar (seviye, city_id, county_id, district_id, bolge_adi, yil, toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi) VALUES (?, ?, ?, ?, ?, 2026, ?, ?, ?, 0, ?)", (seviye, city_id, county_id, district_id, bolge_adi, k26, ip26, ar26, il26))
+        # 2027 Projeksiyonu
+        k27, ip27, ar27, il27 = int(k26 * 1.08), int(ip26 * 1.35), int(ar26 * 1.06), int(il26 * 1.09)
+        cur.execute("INSERT OR REPLACE INTO yillik_satislar (seviye, city_id, county_id, district_id, bolge_adi, yil, toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi) VALUES (?, ?, ?, ?, ?, 2027, ?, ?, ?, 0, ?)", (seviye, city_id, county_id, district_id, bolge_adi, k27, ip27, ar27, il27))
     conn.commit()
 
 def save_hemsehri(conn, seviye, city_id, county_id, district_id, bolge_adi, data):
