@@ -1,0 +1,73 @@
+name: "Turkiye E-Ticaret, Kargo ve Hızlı Teslimat Toplayıcı"
+
+on:
+  workflow_dispatch:
+    inputs:
+      iller:
+        description: "Taranacak İller (Boş bırakılırsa tüm Türkiye taranır)"
+        required: false
+        default: ""
+  schedule:
+    # Her Pazartesi sabah 03:00'da haftalık e-ticaret ve kargo dağıtım verilerini günceller
+    - cron: '0 3 * * 1'
+
+permissions:
+  contents: write
+
+jobs:
+  eticaret_ve_kargo_toplayici:
+    name: "E-Ticaret Hacimleri & Kargo Ağı Toplayıcı"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Kodu Checkout Et
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Python 3.12 Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: E-Ticaret ve Kargo Lojistik Verilerini Topla
+        run: |
+          echo "========================================================"
+          echo "GEOPROP AI - TÜRKİYE E-TİCARET & KARGO TOPLAYICI"
+          echo "Tarih: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "========================================================"
+          
+          CMD="python collector/eticaret_kargo_ve_hizli_teslimat_toplayici.py"
+          if [ -n "${{ github.event.inputs.iller }}" ]; then
+            CMD="$CMD --iller ${{ github.event.inputs.iller }}"
+          fi
+          
+          eval $CMD
+
+      - name: Çıktıları Kontrol Et
+        run: |
+          ls -lh collector/data/csv_ciktilari/ || true
+          ls -lh collector/data/*.geojson || true
+
+      - name: Değişiklikleri Git ile Kaydet ve Push Et
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f collector/data/csv_ciktilari/15_e_ticaret_ve_harcama_kalemleri.csv \
+                 collector/data/csv_ciktilari/18_kargo_ve_teslimat_noktalari.csv \
+                 collector/data/turkiye_kargo_ve_kargomatlar.geojson \
+                 collector/data/eticaret_ve_lojistik.sqlite || true
+          
+          if git diff --staged --quiet; then
+            echo "Yeni e-ticaret/kargo veri değişikliği yok, push atlanıyor."
+          else
+            git commit -m "feat(eticaret): Türkiye e-ticaret harcamaları ve kargo/kargomat lojistik ağı güncellendi [skip ci]"
+            git pull --rebase origin main || true
+            git push origin main
+          fi
