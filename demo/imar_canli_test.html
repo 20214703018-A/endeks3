@@ -759,6 +759,14 @@
           </div>
         </div>
 
+        <!-- Resmi TKGM Doğrulama Köprüsü -->
+        <div style="margin-top: 14px; padding-bottom: 24px;">
+          <a id="btnTkgmResmi" href="https://parselsorgu.tkgm.gov.tr/" target="_blank" class="btn" style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; text-decoration:none; padding:11px 14px; border-radius:8px; font-size:0.82rem; font-weight:700; background:linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.3)); border:1px solid rgba(239, 68, 68, 0.5); color:#fca5a5; transition:all 0.2s; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            <span>🏛️ Resmi TKGM Parsel Sorgu'da Aç</span>
+          </a>
+        </div>
+
       </div>
     </div>
 
@@ -952,6 +960,16 @@
         });
       } else {
         unitContainer.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:8px;">Bu parselde kat mülkiyeti kurulmamıştır (Ham arsa).</div>';
+      }
+
+      // TKGM Resmi Bağlantısını Güncelle
+      const btnTkgm = document.getElementById('btnTkgmResmi');
+      if (btnTkgm) {
+        if (p.enlem && p.boylam) {
+          btnTkgm.href = `https://parselsorgu.tkgm.gov.tr/#ara/cografi/${p.enlem}/${p.boylam}`;
+        } else {
+          btnTkgm.href = 'https://parselsorgu.tkgm.gov.tr/';
+        }
       }
 
       // Paneli aç
