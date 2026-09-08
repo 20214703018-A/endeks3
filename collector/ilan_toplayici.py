@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GEOPROP AI - Yüksek Hızlı & Hayalet Modlu İlan Toplayıcı (Stealth Scraper)
--------------------------------------------------------------------------
-Satılık Konut, Satılık Arsa ve Satılık İşyeri (Dükkan) kategorilerindeki
-tüm ilanları; İl, İlçe ve MAHALLE düzeyinde, 51.171 mahalle poligonuyla
-eşleştirilmiş TAM GPS KOORDİNATLARI (Enlem/Boylam), fiyat, m², birim fiyat,
-oda sayısı ve kat bilgileriyle toplar.
+GEOPROP AI - Hibrit Gayrimenkul & Detaylı Arsa İstihbarat Toplayıcısı
+---------------------------------------------------------------------
+1. Konut & İşyeri (Dükkan): Arama sayfalarından yüksek hızda (fiyat, m², kat, oda, mahalle ve GPS).
+2. Arsa & Tarla: Arama listesi + Eşzamanlı Detay Sayfası Madenciliği ile:
+   - Ada No & Parsel No
+   - İmar Durumu (Konut, Ticari, Tarla vb.)
+   - Tapu Durumu (Müstakil, Hisseli vb.)
+   - Kat Karşılığı Verilme Durumu
+   - KAKS / Emsal Oranı
+   - İlan Sahibinin Haritada İşaretlediği Tam Pin Koordinatı (Lat/Lon)
+   - 51.171 Mahalle/Köy Veritabanı ile Mahalle ID Eşleşmesi
 """
 
 import os
@@ -21,6 +26,7 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
@@ -69,7 +75,7 @@ def load_centroids():
     return CENTROIDS_CACHE
 
 def find_mahalle_coords(city, county, mahalle):
-    """Mahalle adına göre 51.171 noktalı veri setinden tam GPS koordinatını bulur"""
+    """Mahalle adına göre 51.171 noktalı veri setinden merkez koordinatını bulur"""
     centroids = load_centroids()
     if not centroids or not mahalle:
         return None, None, None
@@ -128,34 +134,33 @@ class StealthSession:
             "Upgrade-Insecure-Requests": "1"
         }
 
-    def fetch_page(self, url, max_retries=4):
+    def fetch_page(self, url, max_retries=3, is_detail=False):
         self.request_count += 1
-        delay = self.base_delay + random.uniform(0.15, 0.45)
-        if self.request_count % 25 == 0:
+        delay = (self.base_delay * 0.5 if is_detail else self.base_delay) + random.uniform(0.1, 0.3)
+        if self.request_count % 35 == 0:
             delay += random.uniform(2.0, 3.5)
         time.sleep(delay)
 
         for attempt in range(1, max_retries + 1):
             req = urllib.request.Request(url, headers=self.get_headers(url))
             try:
-                with urllib.request.urlopen(req, timeout=20) as resp:
+                with urllib.request.urlopen(req, timeout=15) as resp:
                     final_url = resp.geturl()
                     html = resp.read().decode("utf-8", errors="replace")
                     return html, final_url
             except urllib.error.HTTPError as e:
                 if e.code in (429, 503):
-                    wait = (8 * attempt) + random.uniform(1.0, 3.0)
+                    wait = (6 * attempt) + random.uniform(1.0, 2.5)
                     ra = e.headers.get("Retry-After")
                     if ra and ra.isdigit():
                         wait = max(wait, int(ra) + 1)
-                    log(f"Hız limiti (HTTP {e.code}). {wait:.1f}sn dinleniliyor (Deneme {attempt}/{max_retries})...", "WARN")
                     time.sleep(wait)
                 elif e.code == 404:
                     return None, None
                 else:
-                    time.sleep(2 * attempt)
+                    time.sleep(1.5 * attempt)
             except Exception:
-                time.sleep(2 * attempt)
+                time.sleep(1.5 * attempt)
         return None, None
 
 def init_db(db_path):
@@ -176,9 +181,17 @@ def init_db(db_path):
         mahalle_id INTEGER,
         enlem REAL,
         boylam REAL,
+        ilan_pin_lat REAL,
+        ilan_pin_lon REAL,
         fiyat_tl INTEGER,
         m2 REAL,
         birim_m2_fiyat REAL,
+        ada_no TEXT,
+        parsel_no TEXT,
+        imar_durumu TEXT,
+        tapu_durumu TEXT,
+        kat_karsiligi TEXT,
+        kaks_emsal TEXT,
         oda_sayisi TEXT,
         bulundugu_kat TEXT,
         ilan_etiketi TEXT,
@@ -188,22 +201,118 @@ def init_db(db_path):
         county_id INTEGER,
         crawled_at TEXT
     )""")
+
     # Kolon göç kontrolü (migration)
     cur.execute("PRAGMA table_info(ilanlar);")
     cols = [r[1] for r in cur.fetchall()]
-    if "mahalle_id" not in cols:
-        cur.execute("ALTER TABLE ilanlar ADD COLUMN mahalle_id INTEGER;")
-    if "enlem" not in cols:
-        cur.execute("ALTER TABLE ilanlar ADD COLUMN enlem REAL;")
-    if "boylam" not in cols:
-        cur.execute("ALTER TABLE ilanlar ADD COLUMN boylam REAL;")
+    new_cols = {
+        "mahalle_id": "INTEGER",
+        "enlem": "REAL",
+        "boylam": "REAL",
+        "ilan_pin_lat": "REAL",
+        "ilan_pin_lon": "REAL",
+        "ada_no": "TEXT",
+        "parsel_no": "TEXT",
+        "imar_durumu": "TEXT",
+        "tapu_durumu": "TEXT",
+        "kat_karsiligi": "TEXT",
+        "kaks_emsal": "TEXT"
+    }
+    for col, ctype in new_cols.items():
+        if col not in cols:
+            cur.execute(f"ALTER TABLE ilanlar ADD COLUMN {col} {ctype};")
 
     cur.execute("CREATE INDEX IF NOT EXISTS idx_ilan_konum ON ilanlar(il, ilce, mahalle, kategori);")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_ilan_coords ON ilanlar(enlem, boylam);")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_ilan_ada_parsel ON ilanlar(ada_no, parsel_no);")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_ilan_fiyat ON ilanlar(fiyat_tl, m2);")
     conn.commit()
     return conn
 
+def extract_land_detail(html):
+    """Arsa detay sayfasından Ada, Parsel, İmar, Tapu, KAKS ve tam harita pinini çıkarır"""
+    if not html:
+        return {}
+
+    # 1. Tam Harita Pini (Enlem / Boylam)
+    pin_m = re.search(r'lat[^\d]+([0-9]{2}\.[0-9]+)[^\d]+lng[^\d]+([0-9]{2}\.[0-9]+)', html)
+    pin_lat = float(pin_m.group(1)) if pin_m else None
+    pin_lon = float(pin_m.group(2)) if pin_m else None
+
+    ada = None
+    parsel = None
+    imar = None
+    tapu = None
+    kat_karsiligi = None
+
+    # 2. Yapılandırılmış Özellik Tablosu
+    props = re.findall(r'\"name\":\s*\"([^\"]+)\",\s*\"value\":\s*\"([^\"]+)\"', html)
+    for n, v in props:
+        nl = n.lower()
+        if nl == 'ada':
+            ada = v.strip()
+        elif nl == 'parsel':
+            parsel = v.strip()
+        elif 'imar' in nl and not imar:
+            imar = v.strip()
+        elif 'tapu' in nl and not tapu:
+            tapu = v.strip()
+        elif 'kat karşılığı' in nl:
+            kat_karsiligi = v.strip()
+
+    # 3. İlan Açıklama Metni Analizi
+    desc_m = re.search(r'\"description\":\s*\"(.*?)\"', html)
+    desc = desc_m.group(1).encode().decode('unicode_escape', errors='ignore') if desc_m else ''
+
+    if not ada and desc:
+        m_ada = re.search(r'(?:ada|ada\s*no)[\s:]*([0-9]+)', desc, re.IGNORECASE)
+        if m_ada:
+            ada = m_ada.group(1)
+
+    if not parsel and desc:
+        m_parsel = re.search(r'(?:parsel|parsel\s*no)[\s:]*([0-9]+)', desc, re.IGNORECASE)
+        if m_parsel:
+            parsel = m_parsel.group(1)
+
+    # İmar durumu tahmini (metinden)
+    if not imar and desc:
+        d_low = desc.lower()
+        if 'konut imar' in d_low: imar = 'Konut İmarlı'
+        elif 'ticari imar' in d_low: imar = 'Ticari İmarlı'
+        elif 'tarla' in d_low: imar = 'Tarla'
+        elif 'zeytinlik' in d_low: imar = 'Zeytinlik'
+        elif 'sanayi' in d_low: imar = 'Sanayi İmarlı'
+        elif 'turizm' in d_low: imar = 'Turizm İmarlı'
+
+    # KAKS / Emsal oranı
+    kaks = None
+    if desc:
+        m_kaks = re.search(r'(?:kaks|emsal)[^\d:]*([0-9.,]+)', desc, re.IGNORECASE)
+        if m_kaks:
+            kaks = m_kaks.group(1)
+
+    return {
+        "ilan_pin_lat": pin_lat,
+        "ilan_pin_lon": pin_lon,
+        "ada_no": ada,
+        "parsel_no": parsel,
+        "imar_durumu": imar,
+        "tapu_durumu": tapu,
+        "kat_karsiligi": kat_karsiligi,
+        "kaks_emsal": kaks
+    }
+
+def enrich_land_listing(listing, session):
+    """Bir arsa ilanının detay sayfasına girerek ilave alanları ekler"""
+    url = listing.get("url")
+    if not url:
+        return listing
+
+    html, _ = session.fetch_page(url, is_detail=True)
+    if html:
+        detail_data = extract_land_detail(html)
+        listing.update(detail_data)
+    return listing
 
 def parse_listings_from_html(html, target_category, city_id, county_id, default_city="", default_county=""):
     if not html:
@@ -279,7 +388,7 @@ def parse_listings_from_html(html, target_category, city_id, county_id, default_
 
                 birim_m2 = round(fiyat_tl / m2_val, 1) if (fiyat_tl and m2_val and m2_val > 0) else None
 
-                # Mahalle GPS koordinatları ve Mahalle ID'sini 51.171 mahallelik veritabanından bağla
+                # Mahalle GPS koordinatları ve Mahalle ID'si
                 mahalle_id, lat, lon = find_mahalle_coords(il, ilce, mahalle)
 
                 listings.append({
@@ -294,9 +403,17 @@ def parse_listings_from_html(html, target_category, city_id, county_id, default_
                     "mahalle_id": mahalle_id,
                     "enlem": lat,
                     "boylam": lon,
+                    "ilan_pin_lat": None,
+                    "ilan_pin_lon": None,
                     "fiyat_tl": fiyat_tl,
                     "m2": m2_val,
                     "birim_m2_fiyat": birim_m2,
+                    "ada_no": None,
+                    "parsel_no": None,
+                    "imar_durumu": None,
+                    "tapu_durumu": None,
+                    "kat_karsiligi": None,
+                    "kaks_emsal": None,
                     "oda_sayisi": oda,
                     "bulundugu_kat": kat,
                     "ilan_etiketi": etiket,
@@ -318,12 +435,16 @@ def save_listings(conn, listings):
     cur.executemany("""
     INSERT OR REPLACE INTO ilanlar (
         ilan_id, kategori, tip, baslik, url, il, ilce, mahalle, mahalle_id,
-        enlem, boylam, fiyat_tl, m2, birim_m2_fiyat, oda_sayisi, bulundugu_kat,
-        ilan_etiketi, ilan_tarihi, gorsel_url, city_id, county_id, crawled_at
+        enlem, boylam, ilan_pin_lat, ilan_pin_lon, fiyat_tl, m2, birim_m2_fiyat,
+        ada_no, parsel_no, imar_durumu, tapu_durumu, kat_karsiligi, kaks_emsal,
+        oda_sayisi, bulundugu_kat, ilan_etiketi, ilan_tarihi, gorsel_url,
+        city_id, county_id, crawled_at
     ) VALUES (
         :ilan_id, :kategori, :tip, :baslik, :url, :il, :ilce, :mahalle, :mahalle_id,
-        :enlem, :boylam, :fiyat_tl, :m2, :birim_m2_fiyat, :oda_sayisi, :bulundugu_kat,
-        :ilan_etiketi, :ilan_tarihi, :gorsel_url, :city_id, :county_id, :crawled_at
+        :enlem, :boylam, :ilan_pin_lat, :ilan_pin_lon, :fiyat_tl, :m2, :birim_m2_fiyat,
+        :ada_no, :parsel_no, :imar_durumu, :tapu_durumu, :kat_karsiligi, :kaks_emsal,
+        :oda_sayisi, :bulundugu_kat, :ilan_etiketi, :ilan_tarihi, :gorsel_url,
+        :city_id, :county_id, :crawled_at
     )""", listings)
     conn.commit()
     return len(listings)
@@ -333,8 +454,32 @@ def export_to_csv(conn, target_dir):
     target_dir.mkdir(parents=True, exist_ok=True)
     cur = conn.cursor()
 
-    for kat in ("konut", "arsa", "isyeri"):
-        csv_file = target_dir / f"satilik_{kat}_ilanlari.csv"
+    # 1. ARSALAR (Detaylı Ada/Parsel/İmar Tablosu)
+    cur.execute("""
+        SELECT ilan_id, kategori, tip, il, ilce, mahalle, mahalle_id, ada_no, parsel_no,
+               imar_durumu, tapu_durumu, kaks_emsal, kat_karsiligi,
+               ilan_pin_lat, ilan_pin_lon, enlem, boylam,
+               fiyat_tl, m2, birim_m2_fiyat, ilan_etiketi, ilan_tarihi, url
+        FROM ilanlar WHERE kategori = 'arsa'
+        ORDER BY il, ilce, mahalle, fiyat_tl DESC
+    """)
+    arsa_rows = cur.fetchall()
+    if arsa_rows:
+        import csv
+        f_path = target_dir / "satilik_arsa_ilanlari.csv"
+        with open(f_path, "w", newline="", encoding="utf-8-sig") as f:
+            w = csv.writer(f)
+            w.writerow([
+                "İlan ID", "Kategori", "Tip", "İl", "İlçe", "Mahalle", "Mahalle ID", "Ada No", "Parsel No",
+                "İmar Durumu", "Tapu Durumu", "KAKS / Emsal", "Kat Karşılığı",
+                "İlan Pin Lat", "İlan Pin Lon", "Mahalle Merkez Lat", "Mahalle Merkez Lon",
+                "Fiyat (TL)", "m²", "₺/m² Birim Fiyat", "Etiket", "Tarih", "URL"
+            ])
+            w.writerows(arsa_rows)
+        log(f"Arsa ilanları CSV'ye aktarıldı: {f_path.name} ({len(arsa_rows)} satır - Ada/Parsel/İmar Detaylı)", "SUCCESS")
+
+    # 2. KONUT & İŞYERİ
+    for kat in ("konut", "isyeri"):
         cur.execute("""
             SELECT ilan_id, kategori, tip, il, ilce, mahalle, mahalle_id, enlem, boylam,
                    fiyat_tl, m2, birim_m2_fiyat, oda_sayisi, bulundugu_kat, ilan_etiketi, ilan_tarihi, url
@@ -346,22 +491,25 @@ def export_to_csv(conn, target_dir):
             continue
 
         import csv
-        with open(csv_file, "w", newline="", encoding="utf-8-sig") as f:
-            writer = csv.writer(f)
-            writer.writerow([
+        f_path = target_dir / f"satilik_{kat}_ilanlari.csv"
+        with open(f_path, "w", newline="", encoding="utf-8-sig") as f:
+            w = csv.writer(f)
+            w.writerow([
                 "İlan ID", "Kategori", "Tip", "İl", "İlçe", "Mahalle", "Mahalle ID",
                 "Enlem (Lat)", "Boylam (Lon)", "Fiyat (TL)", "m²", "₺/m² Birim Fiyat",
                 "Oda Sayısı", "Bulunduğu Kat", "Etiket", "Tarih", "URL"
             ])
-            writer.writerows(rows)
-        log(f"{kat.capitalize()} ilanları CSV'ye aktarıldı: {csv_file.name} ({len(rows)} satır - Koordinatlı)", "SUCCESS")
+            w.writerows(rows)
+        log(f"{kat.capitalize()} ilanları CSV'ye aktarıldı: {f_path.name} ({len(rows)} satır)", "SUCCESS")
 
 def main():
-    parser = argparse.ArgumentParser(description="GEOPROP AI - Yüksek Hızlı İlan Toplayıcı")
+    parser = argparse.ArgumentParser(description="GEOPROP AI - Hibrit İlan Toplayıcı")
     parser.add_argument("--iller", type=str, default="34", help="Hedef il plaka/ID (örn: 34,6,35 veya 'hepsi')")
     parser.add_argument("--kategori", type=str, default="hepsi", help="Kategori: konut, arsa, isyeri veya 'hepsi'")
     parser.add_argument("--max-sayfa", type=int, default=30, help="İlçe başına maksimum sayfa derinliği (varsayılan: 30)")
     parser.add_argument("--hiz", type=float, default=0.4, help="İstekler arası temel bekleme (saniye)")
+    parser.add_argument("--arsa-detay", dest="arsa_detay", action="store_true", default=True, help="Arsalarda detay sayfasına girerek Ada/Parsel/İmar topla (Varsayılan: Açık)")
+    parser.add_argument("--arsa-detaysiz", dest="arsa_detay", action="store_false", help="Arsalarda detay sayfasına girmeden hızlı liste modunda topla")
     parser.add_argument("--sadece-il", action="store_true", help="İlçe kırmadan doğrudan il geneli tara")
     args = parser.parse_args()
 
@@ -376,7 +524,6 @@ def main():
     with open(GUIDE_PATH, "r", encoding="utf-8") as f:
         guide = json.load(f)
 
-    # Koordinat veri tabanını yükle
     centroids = load_centroids()
     log(f"🗺️  Mahalle Koordinat Veritabanı Yüklendi: {len(centroids):,} Mahalle/Köy Aktif", "INFO")
 
@@ -391,8 +538,8 @@ def main():
         target_categories = [x.strip() for x in args.kategori.split(",") if x.strip() in CATEGORIES]
 
     log("=" * 65, "INFO")
-    log(f"🚀 İlan Toplayıcı Başlatıldı | İller: {len(target_cities)} | Kategoriler: {target_categories}", "INFO")
-    log(f"📍 Konum Hassasiyeti: İl + İlçe + Mahalle + Tam GPS Koordinatları (Lat/Lon)", "INFO")
+    log(f"🚀 Hibrit İlan Toplayıcı Başlatıldı | İller: {len(target_cities)} | Kategoriler: {target_categories}", "INFO")
+    log(f"📍 Konut & Dükkan: Liste Modu (Hızlı) | Arsa: {'DETAYLI (Ada, Parsel, İmar, Pin)' if args.arsa_detay else 'Liste Modu'}", "INFO")
     log(f"🛡️  Stealth Modu: Aktif (Rastgele Jitter, TLS Browser İmzası, 429 Koruması)", "INFO")
     log("=" * 65, "INFO")
 
@@ -438,6 +585,19 @@ def main():
                     for item in new_items:
                         seen_ids_in_county.add(item["ilan_id"])
 
+                    # ARSA DETAY ZENGİNLEŞTİRME (Ada, Parsel, İmar, Tapu, Pin)
+                    if kat == "arsa" and args.arsa_detay:
+                        enriched_items = []
+                        with ThreadPoolExecutor(max_workers=5) as executor:
+                            future_to_item = {executor.submit(enrich_land_listing, item, session): item for item in new_items}
+                            for future in as_completed(future_to_item):
+                                try:
+                                    enriched = future.result()
+                                    enriched_items.append(enriched)
+                                except Exception:
+                                    enriched_items.append(future_to_item[future])
+                        new_items = enriched_items
+
                     saved_count = save_listings(conn, new_items)
                     toplam_toplanan += saved_count
 
@@ -445,7 +605,8 @@ def main():
                         break
 
                 if seen_ids_in_county:
-                    log(f"  └─ {county_name} ({kat}): {len(seen_ids_in_county)} ilan toplandı (Koordinatlı)", "SUCCESS")
+                    detail_note = " + Ada/Parsel/Pin Detaylı" if (kat == "arsa" and args.arsa_detay) else ""
+                    log(f"  └─ {county_name} ({kat}): {len(seen_ids_in_county)} ilan toplandı{detail_note}", "SUCCESS")
 
     log("=" * 65, "INFO")
     log(f"🎉 Tarama Tamamlandı! Toplam Yeni İlan: {toplam_toplanan:,}", "SUCCESS")
