@@ -224,7 +224,8 @@ class ParselImarToplayici:
                 "mevkii": props.get("mevkii", ""),
                 "enlem": lat_c,
                 "boylam": lon_c,
-                "geometry": geom
+                "geometry": geom,
+                "poligon_geojson": json.dumps(geom) if geom else ""
             }
         return None
 

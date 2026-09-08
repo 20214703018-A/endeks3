@@ -361,12 +361,15 @@ function initMap() {
     zoomControl: true
   });
 
-  // Modern sleek dark tiles
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    subdomains: 'abcd',
+  // Modern sleek dark tiles (No API key required, Esri Dark Gray)
+  const esriDarkBase = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
     maxZoom: 19
-  }).addTo(AppState.map);
+  });
+  const esriDarkLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19
+  });
+  L.layerGroup([esriDarkBase, esriDarkLabels]).addTo(AppState.map);
 
   AppState.currentLayerGroup = L.featureGroup().addTo(AppState.map);
 }
