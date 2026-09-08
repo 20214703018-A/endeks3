@@ -542,7 +542,7 @@
     <div id="map"></div>
 
     <!-- Map Hint -->
-    <div class="map-hint">
+    <div class="map-hint" id="mapZoomHint">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
       <span>Harita üzerinde <b>herhangi bir parsele tıklayın</b>, canlı imar ve kadastro verisi anında gelsin!</span>
     </div>
@@ -846,6 +846,24 @@
       const lon = e.latlng.lng;
       canliSorguYap({ lat: lat, lon: lon });
     });
+
+    // Zoom Seviyesi ve TKGM Katman Bilgilendirmesi
+    function updateZoomHint() {
+      const z = map.getZoom();
+      const hint = document.getElementById('mapZoomHint');
+      if (!hint) return;
+      if (z < 14) {
+        hint.innerHTML = `<span style="font-size:1rem;">🔍</span> <span>Resmi TKGM parsel sınırları için <b>biraz daha yakınlaşın</b> (Zoom: ${z}/14) · Veya soldaki örneklere tıklayın</span>`;
+        hint.style.borderColor = 'rgba(251, 191, 36, 0.4)';
+        hint.style.background = 'rgba(11, 15, 23, 0.9)';
+      } else {
+        hint.innerHTML = `<span style="font-size:1rem;">🟢</span> <span><b>TKGM Canlı Kadastro Sınırları Aktif</b> (Zoom: ${z}) · Herhangi bir parsele tıklayıp imar durumunu sorgulayın</span>`;
+        hint.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+        hint.style.background = 'rgba(6, 78, 59, 0.4)';
+      }
+    }
+    map.on('zoomend', updateZoomHint);
+    updateZoomHint();
 
     function switchTab(tabName) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));

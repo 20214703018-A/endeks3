@@ -369,7 +369,52 @@ function initMap() {
   const esriDarkLabels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 19
   });
-  L.layerGroup([esriDarkBase, esriDarkLabels]).addTo(AppState.map);
+  const darkLayer = L.layerGroup([esriDarkBase, esriDarkLabels]).addTo(AppState.map);
+
+  const googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    attribution: '© Google Maps — Hibrit Uydu & Sokaklar'
+  });
+
+  const osmStandard = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap Katkıda Bulunanlar'
+  });
+
+  // CANLI TKGM PARSEL WMS / TILE KATMANI (EPSG:3857 BBOX)
+  const TkgmParcelLayer = L.TileLayer.extend({
+    getTileUrl: function(coords) {
+      const nwPoint = coords.scaleBy(new L.Point(256, 256));
+      const sePoint = nwPoint.add(new L.Point(256, 256));
+      const nw = this._map.unproject(nwPoint, coords.z);
+      const se = this._map.unproject(sePoint, coords.z);
+      const p1 = L.CRS.EPSG3857.project(nw);
+      const p2 = L.CRS.EPSG3857.project(se);
+      const minX = Math.min(p1.x, p2.x).toFixed(2);
+      const minY = Math.min(p1.y, p2.y).toFixed(2);
+      const maxX = Math.max(p1.x, p2.x).toFixed(2);
+      const maxY = Math.max(p1.y, p2.y).toFixed(2);
+      const bbox = `${minX},${minY},${maxX},${maxY}`;
+      return `https://www.kolayimar.com/api/geo-proxy/map?slug=parsel&layers=TKGM:parseller&bbox=${bbox}&width=256&height=256&format=image/png&crs=EPSG:3857`;
+    }
+  });
+
+  const tkgmParcelWms = new TkgmParcelLayer('', {
+    maxZoom: 21,
+    minZoom: 14,
+    opacity: 0.9,
+    zIndex: 500,
+    attribution: '© TKGM MEGSİS'
+  }).addTo(AppState.map);
+
+  // Katman Kontrolü
+  L.control.layers({
+    "🌑 Karanlık CBS (Esri Dark)": darkLayer,
+    "🛰️ Canlı Hibrit Uydu (Google)": googleHybrid,
+    "🗺️ Açık Sokak Haritası (OSM)": osmStandard
+  }, {
+    "📐 Canlı TKGM Parsel Sınırları": tkgmParcelWms
+  }, { position: 'topright' }).addTo(AppState.map);
 
   AppState.currentLayerGroup = L.featureGroup().addTo(AppState.map);
 }
