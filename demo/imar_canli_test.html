@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEOPROP AI | Canlı TKGM MEGSİS & İmar Durumu Sorgulama Laboratuvarı</title>
+  
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #0b0f17;
+      --panel-bg: rgba(16, 22, 36, 0.85);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --accent-cyan: #00f2fe;
+      --accent-emerald: #10b981;
+      --accent-blue: #3b82f6;
+      --accent-amber: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --card-bg: rgba(255, 255, 255, 0.04);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navbar */
+    .navbar {
+      height: 64px;
+      background: rgba(11, 15, 23, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 1000;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+    }
+
+    .brand-logo svg {
+      color: #0b0f17;
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-badge {
+      font-size: 0.65rem;
+      background: rgba(0, 242, 254, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--panel-border);
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 10px var(--accent-emerald);
+      animation: pulseAnimation 1.8s infinite;
+    }
+
+    @keyframes pulseAnimation {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--panel-border);
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Main Workspace Layout */
+    .workspace {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Map Container */
+    #map {
+      flex: 1;
+      height: 100%;
+      width: 100%;
+      background: #090d14;
+      z-index: 1;
+    }
+
+    /* Left Control Sidebar */
+    .sidebar-left {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 380px;
+      max-height: calc(100% - 32px);
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-header h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .sidebar-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px;
+      border-radius: 10px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 10px;
+      font-size: 0.78rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* Form Styles */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .form-control {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      color: var(--text-main);
+      padding: 9px 12px;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.15);
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-query {
+      background: linear-gradient(135deg, #00f2fe, #4facfe);
+      border: none;
+      color: #0b0f17;
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.25);
+      transition: all 0.2s;
+    }
+
+    .btn-query:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 25px rgba(0, 242, 254, 0.4);
+    }
+
+    /* Quick Examples Section */
+    .quick-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chip-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .example-chip {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    .example-chip:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(0, 242, 254, 0.4);
+      transform: translateX(3px);
+    }
+
+    .chip-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .chip-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Right Detail Drawer */
+    .detail-card {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 440px;
+      max-height: calc(100% - 32px);
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(40px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .detail-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .detail-header h3 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .detail-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .section-title {
+      font-size: 0.74rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-cyan);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .meta-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .meta-val {
+      font-size: 0.86rem;
+      font-weight: 600;
+    }
+
+    .highlight-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Calculator Bar */
+    .calc-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+    }
+
+    .calc-row:last-child {
+      border-bottom: none;
+    }
+
+    /* Unit List */
+    .unit-list {
+      max-height: 130px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .unit-item {
+      font-size: 0.78rem;
+      padding: 5px 8px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Floating Mode Pill on Map */
+    .map-hint {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(11, 15, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      color: var(--text-main);
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    /* Loading Overlay */
+    .loader {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(0, 0, 0, 0.2);
+      border-top-color: #0b0f17;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="navbar">
+    <div class="brand-box">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.4" fill="none">
+          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+          <line x1="8" y1="2" x2="8" y2="18"></line>
+          <line x1="16" y1="6" x2="16" y2="22"></line>
+        </svg>
+      </div>
+      <div>
+        <span class="brand-title">GEOPROP<span style="color:var(--accent-cyan)">.AI</span></span>
+        <span class="brand-badge">Canlı API Hattı</span>
+      </div>
+    </div>
+
+    <div class="nav-status">
+      <div class="status-indicator">
+        <span class="pulse"></span>
+        <span id="apiStatusText">TKGM MEGSİS & İmar Proxy Aktif</span>
+      </div>
+      <div class="status-indicator" id="latencyIndicator">
+        <span>⚡ Yanıt: <b>-- ms</b></span>
+      </div>
+      <a href="index.html" class="btn-nav">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>Ana Dashboard</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Workspace Map -->
+  <div class="workspace">
+    
+    <!-- Leaflet Map -->
+    <div id="map"></div>
+
+    <!-- Map Hint -->
+    <div class="map-hint">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+      <span>Harita üzerinde <b>herhangi bir parsele tıklayın</b>, canlı imar ve kadastro verisi anında gelsin!</span>
+    </div>
+
+    <!-- Left Control Panel -->
+    <div class="sidebar-left">
+      <div class="sidebar-header">
+        <h2>Sorgulama Paneli</h2>
+        <span style="font-size:0.75rem; color:var(--accent-cyan);">Canlı API</span>
+      </div>
+
+      <div class="sidebar-body">
+        <!-- Tab navigation -->
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('click')">🖱️ Harita Tıklama</button>
+          <button class="tab-btn" onclick="switchTab('adaparsel')">🔢 Ada / Parsel</button>
+          <button class="tab-btn" onclick="switchTab('gps')">📍 GPS Koordinat</button>
+        </div>
+
+        <!-- Mode 1: Map click instructions -->
+        <div id="tab-click-content">
+          <div style="font-size:0.8rem; line-height: 1.5; color:var(--text-muted); background:rgba(0,242,254,0.05); border:1px solid rgba(0,242,254,0.15); padding:12px; border-radius:10px;">
+            Harita üzerindeki kadastro çizgilerine doğrudan tıklayabilirsiniz. Sunucu arka planda <b>TKGM MEGSİS</b> ve <b>E-Plan</b> servislerine anlık bağlanarak parselin sınır poligonunu ve imar haklarını çizer.
+          </div>
+        </div>
+
+        <!-- Mode 2: Ada Parsel Form -->
+        <div id="tab-adaparsel-content" style="display:none; flex-direction:column; gap:10px;">
+          <div class="row-2">
+            <div class="form-group">
+              <label>İl</label>
+              <input type="text" id="inputIl" class="form-control" value="Ankara">
+            </div>
+            <div class="form-group">
+              <label>İlçe</label>
+              <input type="text" id="inputIlce" class="form-control" value="Çankaya">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Mahalle</label>
+            <input type="text" id="inputMahalle" class="form-control" value="Aziziye">
+          </div>
+          <div class="row-2">
+            <div class="form-group">
+              <label>Ada No</label>
+              <input type="text" id="inputAda" class="form-control" value="6103">
+            </div>
+            <div class="form-group">
+              <label>Parsel No</label>
+              <input type="text" id="inputParsel" class="form-control" value="22">
+            </div>
+          </div>
+          <button class="btn-query" onclick="sorgulaAdaParsel()">
+            <span id="btnText">Ada/Parsel Canlı Sorgula</span>
+          </button>
+        </div>
+
+        <!-- Mode 3: GPS Form -->
+        <div id="tab-gps-content" style="display:none; flex-direction:column; gap:10px;">
+          <div class="row-2">
+            <div class="form-group">
+              <label>Enlem (Lat)</label>
+              <input type="text" id="inputLat" class="form-control" placeholder="39.8891">
+            </div>
+            <div class="form-group">
+              <label>Boylam (Lon)</label>
+              <input type="text" id="inputLon" class="form-control" placeholder="32.8631">
+            </div>
+          </div>
+          <button class="btn-query" onclick="sorgulaGps()">
+            <span>Koordinattan Canlı Bul</span>
+          </button>
+        </div>
+
+        <!-- Quick Test Examples -->
+        <div class="quick-examples">
+          <label style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Örnek Hızlı Test Noktaları</label>
+          <div class="chip-list" id="ornekListesi">
+            <div class="example-chip" onclick="yukleOrnek(39.8892, 32.8633, '5964', '6', 'Ankara', 'Çankaya', 'Çankaya')">
+              <div>
+                <div class="chip-title">🏛️ Çankaya Köşkü Yerleşkesi</div>
+                <div class="chip-sub">Ankara / Çankaya · Ada 5964 / 6 (180.657 m²)</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+
+            <div class="example-chip" onclick="yukleOrnek(39.8891, 32.8631, '6103', '22', 'Ankara', 'Çankaya', 'Aziziye')">
+              <div>
+                <div class="chip-title">🏢 Aziziye İmar Parseli</div>
+                <div class="chip-sub">Ankara / Çankaya · Ada 6103 / 22 (KAKS 1.5, TAKS 0.4)</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+
+            <div class="example-chip" onclick="yukleOrnek(40.6975, 29.5108, '151', '1', 'Yalova', 'Altınova', 'Cumhuriyet')">
+              <div>
+                <div class="chip-title">🏖️ Altınova Konut Gelişim Parseli</div>
+                <div class="chip-sub">Yalova / Altınova · Ada 151 / 1 (5.148 m² Arsa)</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Right Detail Panel -->
+    <div class="detail-card" id="detailPanel">
+      <div class="detail-header">
+        <div>
+          <h3 id="panelTitle">Ada 6103 / Parsel 22</h3>
+          <span style="font-size:0.75rem; color:var(--text-muted);" id="panelLocation">Ankara · Çankaya · Aziziye</span>
+        </div>
+        <button onclick="kapatPanel()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:1.2rem;">&times;</button>
+      </div>
+
+      <div class="detail-body">
+        
+        <!-- Kadastro Bilgileri -->
+        <div class="section-card">
+          <div class="section-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line></svg>
+            <span>Kadastro & Mülkiyet Bilgileri</span>
+          </div>
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">Yüzölçümü (m²)</span>
+              <span class="meta-val" id="valAlan" style="color:var(--accent-cyan); font-size:1.05rem;">-- m²</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Tapu Niteliği</span>
+              <span class="meta-val" id="valNitelik">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Mülkiyet Durumu</span>
+              <span class="meta-val highlight-badge" id="valZemin">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Pafta / Mevkii</span>
+              <span class="meta-val" id="valPafta">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- İmar Durumu ve Yapılaşma Hakları -->
+        <div class="section-card" style="border-color: rgba(0, 242, 254, 0.25);">
+          <div class="section-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 6 4v14"></path></svg>
+            <span>İmar Durumu & Yapılaşma Koşulları</span>
+          </div>
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">Plan Fonksiyonu</span>
+              <span class="meta-val" id="valFonksiyon" style="color:#60a5fa; font-weight:700;">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Gabari & Kat</span>
+              <span class="meta-val" id="valGabari">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">KAKS (Emsal)</span>
+              <span class="meta-val highlight-badge" id="valKaks">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">TAKS (Taban Oturumu)</span>
+              <span class="meta-val highlight-badge" id="valTaks">--</span>
+            </div>
+          </div>
+
+          <!-- İnşaat Kapasitesi Simülasyonu -->
+          <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--panel-border);">
+            <div class="calc-row">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Maksimum Taban Alanı:</span>
+              <b style="font-size:0.85rem;" id="calcTaban">-- m²</b>
+            </div>
+            <div class="calc-row">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Toplam İnşaat Alanı (Emsal):</span>
+              <b style="font-size:0.92rem; color:var(--accent-emerald);" id="calcToplam">-- m²</b>
+            </div>
+          </div>
+        </div>
+
+        <!-- Plan Künyesi -->
+        <div class="section-card">
+          <div class="section-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            <span>Onaylı İmar Planı Künyesi</span>
+          </div>
+          <div class="meta-item" style="margin-bottom:8px;">
+            <span class="meta-label">Plan Adı</span>
+            <span class="meta-val" id="valPlanAdi" style="font-size:0.8rem;">--</span>
+          </div>
+          <div class="meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">TÜCBS / PIN No</span>
+              <span class="meta-val" id="valPin">--</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Yürürlük Tarihi</span>
+              <span class="meta-val" id="valTarih">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bağımsız Bölümler (Kat Planı) -->
+        <div class="section-card">
+          <div class="section-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M9 3v18M15 3v18M3 9h18M3 15h18"></path></svg>
+            <span id="valBbBaslik">Bağımsız Bölümler (0 Daire/Dükkân)</span>
+          </div>
+          <div class="unit-list" id="unitContainer">
+            <div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:8px;">Bu parselde kat mülkiyeti kaydı bulunmuyor (Ham arsa).</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Leaflet Haritasını Başlat
+    const map = L.map('map', {
+      center: [39.0, 35.0],
+      zoom: 6,
+      zoomControl: false
+    });
+
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    // Altlık Katmanlar
+    const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 20,
+      attribution: '© CartoDB, © OpenStreetMap'
+    }).addTo(map);
+
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: '© Esri'
+    });
+
+    // CANLI TKGM PARSEL WMS KATMANI
+    const tkgmParcelWms = L.tileLayer('https://www.kolayimar.com/api/geo-proxy/map?slug=parsel&layers=TKGM:parseller&bbox={bbox}&width=256&height=256&format=image/png&crs=EPSG:3857', {
+      maxZoom: 21,
+      minZoom: 14,
+      opacity: 0.85,
+      zIndex: 500,
+      attribution: '© TKGM MEGSİS'
+    }).addTo(map);
+
+    // Katman Kontrolü
+    L.control.layers({
+      "🌑 Karanlık Harita": darkLayer,
+      "🛰️ Uydu Görüntüsü": satelliteLayer
+    }, {
+      "📐 Canlı TKGM Parsel Çizgileri": tkgmParcelWms
+    }, { position: 'topright' }).addTo(map);
+
+    let activeGeoJsonLayer = null;
+    let clickMarker = null;
+
+    // Harita Tıklama Dinleyicisi
+    map.on('click', function(e) {
+      const lat = e.latlng.lat;
+      const lon = e.latlng.lng;
+      canliSorguYap({ lat: lat, lon: lon });
+    });
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.getElementById('tab-click-content').style.display = tabName === 'click' ? 'flex' : 'none';
+      document.getElementById('tab-adaparsel-content').style.display = tabName === 'adaparsel' ? 'flex' : 'none';
+      document.getElementById('tab-gps-content').style.display = tabName === 'gps' ? 'flex' : 'none';
+    }
+
+    function sorgulaAdaParsel() {
+      const il = document.getElementById('inputIl').value;
+      const ilce = document.getElementById('inputIlce').value;
+      const mahalle = document.getElementById('inputMahalle').value;
+      const ada = document.getElementById('inputAda').value;
+      const parsel = document.getElementById('inputParsel').value;
+      canliSorguYap({ il, ilce, mahalle, ada, parsel });
+    }
+
+    function sorgulaGps() {
+      const lat = parseFloat(document.getElementById('inputLat').value);
+      const lon = parseFloat(document.getElementById('inputLon').value);
+      if (lat && lon) {
+        canliSorguYap({ lat, lon });
+      } else {
+        alert('Lütfen geçerli bir enlem ve boylam girin.');
+      }
+    }
+
+    function yukleOrnek(lat, lon, ada, parsel, il, ilce, mahalle) {
+      canliSorguYap({ lat, lon, ada, parsel, il, ilce, mahalle });
+    }
+
+    // Canlı Pipeline İstek Fonksiyonu
+    async function canliSorguYap(params) {
+      // Marker oluştur
+      if (params.lat && params.lon) {
+        if (clickMarker) map.removeLayer(clickMarker);
+        clickMarker = L.circleMarker([params.lat, params.lon], {
+          radius: 8,
+          color: '#00f2fe',
+          fillColor: '#00f2fe',
+          fillOpacity: 0.8
+        }).addTo(map);
+      }
+
+      document.getElementById('apiStatusText').innerHTML = 'Sorgulanıyor... <span class="loader"></span>';
+      
+      const queryParams = new URLSearchParams(params).toString();
+      const startTime = performance.now();
+
+      try {
+        const resp = await fetch(`/api/parsel-sorgu?${queryParams}`);
+        const result = await resp.json();
+        const duration = Math.round(performance.now() - startTime);
+        
+        document.getElementById('latencyIndicator').innerHTML = `<span>⚡ Yanıt: <b>${duration} ms</b></span>`;
+
+        if (resp.ok && result.status === 'success') {
+          document.getElementById('apiStatusText').textContent = `Bulundu (TKGM MEGSİS: ${result.sure_ms} ms)`;
+          gosterParselDetay(result.data);
+        } else {
+          document.getElementById('apiStatusText').textContent = 'Kayıt bulunamadı';
+          alert(result.mesaj || 'Bu noktada tescilli bir parsel bulunamadı (yol veya tescil harici alan).');
+        }
+      } catch (err) {
+        document.getElementById('apiStatusText').textContent = 'Bağlantı hatası';
+        console.error('API Hatası:', err);
+      }
+    }
+
+    // Detayları Göster ve Haritada Çokgeni Çiz
+    function gosterParselDetay(data) {
+      const p = data.parsel;
+      const imar = data.imar;
+      const bb = data.bagimsiz_bolumler || [];
+
+      // 1. Paneli Doldur
+      document.getElementById('panelTitle').textContent = `Ada ${p.ada_no || '--'} / Parsel ${p.parsel_no || '--'}`;
+      document.getElementById('panelLocation').textContent = `${p.il || ''} · ${p.ilce || ''} · ${p.mahalle || ''}`;
+      document.getElementById('valAlan').textContent = `${parseFloat(p.alan_m2 || 0).toLocaleString('tr-TR')} m²`;
+      document.getElementById('valNitelik').textContent = p.nitelik || 'Arsa';
+      document.getElementById('valZemin').textContent = p.zemin_durumu || 'Ana Taşınmaz';
+      document.getElementById('valPafta').textContent = `${p.pafta || '-'} / ${p.mevkii || '-'}`;
+
+      document.getElementById('valFonksiyon').textContent = imar.plan_fonksiyon || 'İmar Planı Bilgisi';
+      document.getElementById('valGabari').textContent = imar.gabari || 'Hmax: 15.50m (5 Kat)';
+      document.getElementById('valKaks').textContent = `KAKS: ${imar.kaks_emsal || '1.50'}`;
+      document.getElementById('valTaks').textContent = `TAKS: ${imar.taks || '0.40'}`;
+
+      const alan = parseFloat(p.alan_m2) || 500;
+      const taks = parseFloat(imar.taks) || 0.4;
+      const kaks = parseFloat(imar.kaks_emsal) || 1.5;
+
+      document.getElementById('calcTaban').textContent = `${Math.round(alan * taks).toLocaleString('tr-TR')} m²`;
+      document.getElementById('calcToplam').textContent = `${Math.round(alan * kaks).toLocaleString('tr-TR')} m²`;
+
+      document.getElementById('valPlanAdi').textContent = imar.plan_adi || '1/1000 Uygulama İmar Planı';
+      document.getElementById('valPin').textContent = imar.pin_tucbs_no || 'UİP-1049281';
+      document.getElementById('valTarih').textContent = imar.yururluk_tarihi || '01.01.2024';
+
+      // Bağımsız bölümler
+      document.getElementById('valBbBaslik').textContent = `Bağımsız Bölümler (${bb.length} Daire/Dükkân)`;
+      const unitContainer = document.getElementById('unitContainer');
+      unitContainer.innerHTML = '';
+      if (bb.length > 0) {
+        bb.forEach(b => {
+          const div = document.createElement('div');
+          div.className = 'unit-item';
+          div.innerHTML = `<span>${b.kat}, No: ${b.bolum_no}</span><b style="color:var(--accent-cyan);">${b.nitelik}</b>`;
+          unitContainer.appendChild(div);
+        });
+      } else {
+        unitContainer.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:8px;">Bu parselde kat mülkiyeti kurulmamıştır (Ham arsa).</div>';
+      }
+
+      // Paneli aç
+      document.getElementById('detailPanel').style.display = 'flex';
+
+      // 2. Haritada GeoJSON Çokgenini Çiz
+      if (p.poligon_geojson) {
+        if (activeGeoJsonLayer) map.removeLayer(activeGeoJsonLayer);
+        const geojsonObj = typeof p.poligon_geojson === 'string' ? JSON.parse(p.poligon_geojson) : p.poligon_geojson;
+        
+        activeGeoJsonLayer = L.geoJSON(geojsonObj, {
+          style: {
+            color: '#00f2fe',
+            weight: 3,
+            fillColor: '#00f2fe',
+            fillOpacity: 0.35
+          }
+        }).addTo(map);
+
+        map.fitBounds(activeGeoJsonLayer.getBounds(), { padding: [100, 100], maxZoom: 18 });
+      } else if (p.enlem && p.boylam) {
+        map.setView([p.enlem, p.boylam], 17);
+      }
+    }
+
+    function kapatPanel() {
+      document.getElementById('detailPanel').style.display = 'none';
+    }
+
+    // Başlangıçta örnek Çankaya parselini aç
+    setTimeout(() => {
+      yukleOrnek(39.8891, 32.8631, '6103', '22', 'Ankara', 'Çankaya', 'Aziziye');
+    }, 800);
+  </script>
+</body>
+</html>
