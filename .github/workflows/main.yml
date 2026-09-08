@@ -72,7 +72,7 @@ jobs:
           COLLECTOR_DIR=$(dirname $(find . -name "collector.py" | head -n 1))
           cd "$COLLECTOR_DIR"
           if [ -d "data" ]; then
-            zip -r "paket_${{ matrix.id }}.zip" data/csv_ciktilari data/piyasa_verileri.db || true
+            zip -r "paket_${{ matrix.id }}.zip" data/csv_ciktilari data/poligonlar data/piyasa_verileri.db || true
           fi
 
       - name: Paketi Yükle
