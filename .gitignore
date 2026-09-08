@@ -1,6 +1,10 @@
 # Veri ve geçici dosyalar
 collector/data/
+!collector/turkiye_il_ilce_rehberi.json
+!collector/mahalle_koordinatlari.json
 data/
+
+
 *.db
 *.db-wal
 *.db-shm

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEOPROP AI | Türkiye Gayrimenkul, Demografi & Lokasyon İstihbarat Platformu</title>
+  
+  <!-- Google Fonts: Inter & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS for Interactive Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Pre-compiled Istanbul Data (Works offline & local file://) -->
+  <script src="data/istanbul_data.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+            <line x1="8" y1="2" x2="8" y2="18"></line>
+            <line x1="16" y1="6" x2="16" y2="22"></line>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="brand-name">GEOPROP<span class="accent-dot">.AI</span></span>
+          <span class="brand-sub">LOKASYON İSTİHBARAT & EMLAK ANALİTİĞİ</span>
+        </div>
+      </div>
+      <div class="status-badge">
+        <span class="pulse-dot"></span>
+        <span>İstanbul: 39 İlçe · 966 Mahalle · Eksiksiz CBS</span>
+      </div>
+    </div>
+
+    <div class="nav-controls">
+      <!-- Search Input -->
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="searchInput" placeholder="İlçe veya mahalle ara (Örn: Kadıköy, Bebek, Sahil)...">
+      </div>
+
+      <!-- District Selector -->
+      <div class="select-group">
+        <label for="districtSelect">İlçe:</label>
+        <select id="districtSelect">
+          <option value="all">Tüm İstanbul (39 İlçe)</option>
+        </select>
+      </div>
+
+      <!-- Neighborhood Selector -->
+      <div class="select-group">
+        <label for="neighborhoodSelect">Mahalle:</label>
+        <select id="neighborhoodSelect" disabled>
+          <option value="all">Tüm Mahalleler</option>
+        </select>
+      </div>
+
+      <button id="resetViewBtn" class="btn btn-secondary" title="Harita ve Filtreleri Sıfırla">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+        Sıfırla
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Container -->
+  <main class="dashboard-grid">
+    <!-- Top KPI Metrics Banner -->
+    <section class="kpi-banner">
+      <div class="kpi-card" id="kpiPriceCard">
+        <div class="kpi-header">
+          <span class="kpi-title">ORTALAMA SATILIK m²</span>
+          <span class="kpi-badge positive" id="kpiChange">+0.0%</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiPrice">---</span>
+          <span class="kpi-unit">₺/m²</span>
+        </div>
+        <div class="kpi-subtext" id="kpiAvgHomePrice">Ortalama Konut: --- ₺</div>
+      </div>
+
+      <div class="kpi-card" id="kpiRentCard">
+        <div class="kpi-header">
+          <span class="kpi-title">ORTALAMA KİRALIK m²</span>
+          <span class="kpi-badge info" id="kpiAmortization">-- Yıl Geri Dönüş</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiRent">---</span>
+          <span class="kpi-unit">₺/m²</span>
+        </div>
+        <div class="kpi-subtext" id="kpiYield">Brüt Kira Getirisi: %---</div>
+      </div>
+
+      <div class="kpi-card" id="kpiSesCard">
+        <div class="kpi-header">
+          <span class="kpi-title">SOSYO-EKONOMİK REFAH (SES)</span>
+          <span class="kpi-badge tier" id="kpiSesTier">A+ / A</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiIncome">---</span>
+          <span class="kpi-unit">₺ / hane geliri</span>
+        </div>
+        <div class="kpi-subtext" id="kpiHomeOwnership">Ev Sahibi: %--- · Kiracı: %---</div>
+      </div>
+
+      <div class="kpi-card" id="kpiPopCard">
+        <div class="kpi-header">
+          <span class="kpi-title">NÜFUS & HANE SAYISI</span>
+          <span class="kpi-badge warning" id="kpiAgeYoung">Genç: %---</span>
+        </div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiPopulation">---</span>
+          <span class="kpi-unit">kişi</span>
+        </div>
+        <div class="kpi-subtext" id="kpiHouseholds">Toplam Hane: --- hane</div>
+      </div>
+    </section>
+
+    <!-- Content Workspace: Left Map & Charts, Right Deep Analytics -->
+    <div class="workspace-layout">
+      <!-- Left Column: Interactive Map & Price History -->
+      <div class="workspace-left">
+        <!-- Interactive Map Card -->
+        <div class="card map-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h2 class="card-title" id="mapTitle">İnteraktif CBS Haritası & Sınır Poligonları</h2>
+              <span class="card-subtitle" id="mapSubtitle">İlçeye veya mahalleye tıklayarak yakınlaşın ve analiz edin</span>
+            </div>
+            <div class="map-legend">
+              <span class="legend-item"><span class="legend-color poly-ilce"></span> İlçe Sınırı</span>
+              <span class="legend-item"><span class="legend-color poly-mahalle"></span> Mahalle Sınırı</span>
+            </div>
+          </div>
+          <div class="map-wrapper">
+            <div id="map"></div>
+            <div class="map-floating-info" id="mapHoverInfo">
+              <div class="hover-title">Harita üzerinde bir bölgeye gelin</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5-Year Price Trend Chart -->
+        <div class="card chart-card">
+          <div class="card-header">
+            <div class="card-title-group">
+              <h2 class="card-title">5 Yıllık Fiyat Değişimi & Gelecek Projeksiyonu (2021 – 2026)</h2>
+              <span class="card-subtitle">Aylık satılık ve kiralık m² fiyatları serisi</span>
+            </div>
+            <div class="chart-toggles">
+              <button class="toggle-btn active" data-type="both">Satılık & Kiralık</button>
+              <button class="toggle-btn" data-type="sale">Sadece Satılık</button>
+              <button class="toggle-btn" data-type="rent">Sadece Kiralık</button>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="priceTrendChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Deep Multidimensional Analytics -->
+      <div class="workspace-right">
+        <!-- Tab Navigation -->
+        <div class="analytics-tabs">
+          <button class="tab-btn active" data-tab="tab-ecom">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            E-Ticaret & Harcamalar
+          </button>
+          <button class="tab-btn" data-tab="tab-demo">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            Demografi & Refah
+          </button>
+          <button class="tab-btn" data-tab="tab-building">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+            Yapı & Konut Stoğu
+          </button>
+          <button class="tab-btn" data-tab="tab-poi">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+            Perakende & POI
+          </button>
+          <button class="tab-btn" data-tab="tab-election">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            Seçim & Siyaset
+          </button>
+          <button class="tab-btn" data-tab="tab-hometown">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Memleket Kütüğü
+          </button>
+        </div>
+
+        <!-- TAB 1: E-TİCARET & HANE HARCAMALARI -->
+        <div class="tab-content active" id="tab-ecom">
+          <div class="card inner-card">
+            <h3 class="inner-title">Aylık E-Ticaret ve Harcama Alışkanlıkları (TL)</h3>
+            <p class="inner-desc">TÜİK ve banka kartı harcama modellemesi ile mahallenin satın alma gücü</p>
+            <div class="spending-grid">
+              <div class="spend-card">
+                <span class="spend-label">Online Pazaryeri (Trendyol vb.)</span>
+                <span class="spend-val" id="spendMarketplace">--- ₺</span>
+              </div>
+              <div class="spend-card">
+                <span class="spend-label">Online Giyim & Ayakkabı</span>
+                <span class="spend-val" id="spendClothing">--- ₺</span>
+              </div>
+              <div class="spend-card">
+                <span class="spend-label">Online Elektronik</span>
+                <span class="spend-val" id="spendElectronics">--- ₺</span>
+              </div>
+              <div class="spend-card">
+                <span class="spend-label">Tatil & Seyahat Harcaması</span>
+                <span class="spend-val" id="spendTravel">--- ₺</span>
+              </div>
+              <div class="spend-card">
+                <span class="spend-label">Online Şans Oyunları / Bahis</span>
+                <span class="spend-val" id="spendBetting">--- ₺</span>
+              </div>
+              <div class="spend-card">
+                <span class="spend-label">Ev Dekorasyon</span>
+                <span class="spend-val" id="spendDecoration">--- ₺</span>
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+            <h4 class="inner-subtitle">Aylık Hanehalkı Bütçe Dağılımı</h4>
+            <div class="chart-wrapper small-chart">
+              <canvas id="expenseChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: DEMOGRAFİ & REFAH -->
+        <div class="tab-content" id="tab-demo">
+          <div class="card inner-card">
+            <h3 class="inner-title">Sosyo-Ekonomik Statü (SES) ve Eğitim Seviyesi</h3>
+            <div class="chart-split">
+              <div class="chart-box">
+                <h4 class="inner-subtitle">SES Refah Grupları</h4>
+                <div class="chart-wrapper small-chart">
+                  <canvas id="sesDoughnutChart"></canvas>
+                </div>
+              </div>
+              <div class="chart-box">
+                <h4 class="inner-subtitle">Eğitim Düzeyi</h4>
+                <div class="chart-wrapper small-chart">
+                  <canvas id="educationChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-divider"></div>
+            <h4 class="inner-subtitle">Medeni Durum & Aile Profili</h4>
+            <div class="marital-grid" id="maritalGrid">
+              <div class="marital-item"><span>Evli:</span> <strong id="mMarried">---</strong></div>
+              <div class="marital-item"><span>Bekar:</span> <strong id="mSingle">---</strong></div>
+              <div class="marital-item"><span>Boşanmış:</span> <strong id="mDivorced">---</strong></div>
+              <div class="marital-item"><span>Dul:</span> <strong id="mWidow">---</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: YAPI & KONUT STOĞU -->
+        <div class="tab-content" id="tab-building">
+          <div class="card inner-card">
+            <h3 class="inner-title">Deprem & Bina Yaşı Dağılımı (Yapı Stoğu Analizi)</h3>
+            <p class="inner-desc">Bölgedeki binaların yaş gruplarına göre stok oranları ve metrekare fiyatları</p>
+            <div class="chart-wrapper small-chart">
+              <canvas id="buildingAgeChart"></canvas>
+            </div>
+
+            <div class="section-divider"></div>
+            <h4 class="inner-subtitle">Oda Tipi Dağılımı (1+1, 2+1, 3+1, 4+1)</h4>
+            <div class="chart-wrapper small-chart">
+              <canvas id="roomDistributionChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: PERAKENDE & POI -->
+        <div class="tab-content" id="tab-poi">
+          <div class="card inner-card">
+            <h3 class="inner-title">Perakende Ayak İzi & Önemli Donatı Noktaları (POI)</h3>
+            <p class="inner-desc">Zincir marketler, kahveciler, eczaneler ve ulaşım ağları</p>
+            <div class="poi-grid" id="poiList">
+              <!-- Dynamically Populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 5: SEÇİM & SİYASET -->
+        <div class="tab-content" id="tab-election">
+          <div class="card inner-card">
+            <h3 class="inner-title" id="electionTitle">Mahalle / İlçe Seçim Sonuçları</h3>
+            <div class="election-summary" id="electionSummary">
+              <!-- Dynamically Populated -->
+            </div>
+            <div class="chart-wrapper small-chart">
+              <canvas id="electionChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 6: MEMLEKET KÜTÜĞÜ -->
+        <div class="tab-content" id="tab-hometown">
+          <div class="card inner-card">
+            <h3 class="inner-title">Memleket Kütüğü & Hemşehri Dağılımı</h3>
+            <p class="inner-desc">Bu bölgede yaşayanların nüfusa kayıtlı olduğu en kalabalık 8 il</p>
+            <div class="hometown-list" id="hometownList">
+              <!-- Dynamically Populated -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <span>GEOPROP AI · 2026 Türkiye Gayrimenkul ve Sosyo-Demografik Açık Veri Platformu</span>
+      <span>Tüm veriler TÜİK, Emlakjet, Endeksa ve TKGM CBS uç noktalarından derlenmiştir.</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

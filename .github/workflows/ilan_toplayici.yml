@@ -1,0 +1,208 @@
+name: Turkiye Tum İlanlar Toplayici (Konut, Arsa, İsyeri)
+
+on:
+  workflow_dispatch:
+    inputs:
+      kategori:
+        description: 'Çekilecek Kategoriler (arsa, konut, isyeri veya hepsi)'
+        required: true
+        default: 'arsa,konut,isyeri'
+        type: choice
+        options:
+          - 'arsa,konut,isyeri'
+          - 'arsa'
+          - 'konut'
+          - 'isyeri'
+          - 'arsa,konut'
+      max_sayfa:
+        description: 'İlçe Başına Maksimum Sayfa Derinliği'
+        required: false
+        default: '30'
+        type: string
+      hiz:
+        description: 'İstekler Arası Temel Bekleme (saniye)'
+        required: false
+        default: '0.4'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  tara_matrix:
+    name: "Grup ${{ matrix.grup }} (İller: ${{ matrix.iller }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 40
+      matrix:
+        include:
+          - { grup: 1, iller: "1,2" }      # Adana, Adıyaman
+          - { grup: 2, iller: "3,4" }      # Afyonkarahisar, Ağrı
+          - { grup: 3, iller: "5,6" }      # Amasya, Ankara
+          - { grup: 4, iller: "7,8" }      # Antalya, Artvin
+          - { grup: 5, iller: "9,10" }     # Aydın, Balıkesir
+          - { grup: 6, iller: "11,12" }    # Bilecik, Bingöl
+          - { grup: 7, iller: "13,14" }    # Bitlis, Bolu
+          - { grup: 8, iller: "15,16" }    # Burdur, Bursa
+          - { grup: 9, iller: "17,18" }    # Çanakkale, Çankırı
+          - { grup: 10, iller: "19,20" }   # Çorum, Denizli
+          - { grup: 11, iller: "21,22" }   # Diyarbakır, Edirne
+          - { grup: 12, iller: "23,24" }   # Elazığ, Erzincan
+          - { grup: 13, iller: "25,26" }   # Erzurum, Eskişehir
+          - { grup: 14, iller: "27,28" }   # Gaziantep, Giresun
+          - { grup: 15, iller: "29,30" }   # Gümüşhane, Hakkari
+          - { grup: 16, iller: "31,32" }   # Hatay, Isparta
+          - { grup: 17, iller: "33" }      # Mersin
+          - { grup: 18, iller: "34" }      # İstanbul
+          - { grup: 19, iller: "35" }      # İzmir
+          - { grup: 20, iller: "36,37" }   # Kars, Kastamonu
+          - { grup: 21, iller: "38,39" }   # Kayseri, Kırklareli
+          - { grup: 22, iller: "40,41" }   # Kırşehir, Kocaeli
+          - { grup: 23, iller: "42,43" }   # Konya, Kütahya
+          - { grup: 24, iller: "44,45" }   # Malatya, Manisa
+          - { grup: 25, iller: "46,47" }   # Kahramanmaraş, Mardin
+          - { grup: 26, iller: "48,49" }   # Muğla, Muş
+          - { grup: 27, iller: "50,51" }   # Nevşehir, Niğde
+          - { grup: 28, iller: "52,53" }   # Ordu, Rize
+          - { grup: 29, iller: "54,55" }   # Sakarya, Samsun
+          - { grup: 30, iller: "56,57" }   # Siirt, Sinop
+          - { grup: 31, iller: "58,59" }   # Sivas, Tekirdağ
+          - { grup: 32, iller: "60,61" }   # Tokat, Trabzon
+          - { grup: 33, iller: "62,63" }   # Tunceli, Şanlıurfa
+          - { grup: 34, iller: "64,65" }   # Uşak, Van
+          - { grup: 35, iller: "66,67" }   # Yozgat, Zonguldak
+          - { grup: 36, iller: "68,69" }   # Aksaray, Bayburt
+          - { grup: 37, iller: "70,71" }   # Karaman, Kırıkkale
+          - { grup: 38, iller: "72,73,74" } # Batman, Şırnak, Bartın
+          - { grup: 39, iller: "75,76,77" } # Ardahan, Iğdır, Yalova
+          - { grup: 40, iller: "78,79,80,81" } # Karabük, Kilis, Osmaniye, Düzce
+
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Gerekli Paketleri Yükle
+        run: |
+          pip install --upgrade pip
+
+      - name: "İlanları Topla (İller: ${{ matrix.iller }})"
+        run: |
+          python collector/ilan_toplayici.py \
+            --iller "${{ matrix.iller }}" \
+            --kategori "${{ github.event.inputs.kategori || 'arsa,konut,isyeri' }}" \
+            --max-sayfa "${{ github.event.inputs.max_sayfa || '30' }}" \
+            --hiz "${{ github.event.inputs.hiz || '0.4' }}"
+
+      - name: "Sonuçları Paketle"
+        run: |
+          mkdir -p cikti_grup_${{ matrix.grup }}
+          [ -f collector/data/ilanlar.db ] && cp collector/data/ilanlar.db cikti_grup_${{ matrix.grup }}/ilanlar_${{ matrix.grup }}.db || true
+          [ -d collector/data/csv_ciktilari ] && cp -r collector/data/csv_ciktilari cikti_grup_${{ matrix.grup }}/ || true
+          tar -czf grup_${{ matrix.grup }}_verileri.tar.gz cikti_grup_${{ matrix.grup }}
+
+      - name: "Artifaktı Yükle"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ilanlar-grup-${{ matrix.grup }}
+          path: grup_${{ matrix.grup }}_verileri.tar.gz
+          retention-days: 7
+
+  birlestir:
+    name: "Tüm Türkiye İlan Verilerini Birleştir"
+    needs: tara_matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: "Tüm Grup Artifaktlarını İndir"
+        uses: actions/download-artifact@v4
+        with:
+          path: tum_gruplar
+
+      - name: "Tek Veritabanı ve CSV Haline Getir"
+        run: |
+          python - << 'EOF'
+          import os, glob, tarfile, sqlite3, csv
+
+          os.makedirs("birlestirilmis_ciktilar/csv", exist_ok=True)
+          main_db = "birlestirilmis_ciktilar/turkiye_tum_ilanlar.db"
+          conn = sqlite3.connect(main_db)
+          cur = conn.cursor()
+          cur.execute("""
+          CREATE TABLE IF NOT EXISTS ilanlar (
+              ilan_id INTEGER PRIMARY KEY,
+              kategori TEXT, tip TEXT, baslik TEXT, url TEXT,
+              il TEXT, ilce TEXT, mahalle TEXT, fiyat_tl INTEGER,
+              m2 REAL, birim_m2_fiyat REAL, oda_sayisi TEXT,
+              bulundugu_kat TEXT, ilan_etiketi TEXT, ilan_tarihi TEXT,
+              gorsel_url TEXT, city_id INTEGER, county_id INTEGER, crawled_at TEXT
+          )""")
+
+          # Tar dosyalarını aç ve sqlite'a aktar
+          tar_files = glob.glob("tum_gruplar/**/*.tar.gz", recursive=True)
+          print(f"Bulunan grup paketi: {len(tar_files)}")
+          
+          toplam = 0
+          for tf in tar_files:
+              try:
+                  with tarfile.open(tf, "r:gz") as t:
+                      t.extractall("temp_ext")
+              except Exception as e:
+                  print("Açma hatası:", e)
+
+          for db_file in glob.glob("temp_ext/**/*.db", recursive=True):
+              try:
+                  c2 = sqlite3.connect(db_file)
+                  cur2 = c2.cursor()
+                  cur2.execute("SELECT * FROM ilanlar")
+                  rows = cur2.fetchall()
+                  cur.executemany("""
+                  INSERT OR REPLACE INTO ilanlar VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                  """, rows)
+                  toplam += len(rows)
+                  c2.close()
+              except Exception as e:
+                  print("DB birleştirme hatası:", e)
+
+          conn.commit()
+          print(f"Toplam birleştirilen ilan sayısı: {toplam:,}")
+
+          # Kategori CSV'leri oluştur
+          for kat in ("arsa", "konut", "isyeri"):
+              cur.execute("SELECT ilan_id, kategori, tip, il, ilce, mahalle, fiyat_tl, m2, birim_m2_fiyat, oda_sayisi, bulundugu_kat, ilan_etiketi, ilan_tarihi, url FROM ilanlar WHERE kategori = ? ORDER BY il, ilce, fiyat_tl DESC", (kat,))
+              rows = cur.fetchall()
+              csv_out = f"birlestirilmis_ciktilar/csv/turkiye_satilik_{kat}_ilanlari.csv"
+              with open(csv_out, "w", newline="", encoding="utf-8-sig") as f:
+                  w = csv.writer(f)
+                  w.writerow(["İlan ID", "Kategori", "Tip", "İl", "İlçe", "Mahalle", "Fiyat (TL)", "m²", "₺/m² Birim Fiyat", "Oda Sayısı", "Bulunduğu Kat", "Etiket", "Tarih", "URL"])
+                  w.writerows(rows)
+              print(f"CSV oluşturuldu: {csv_out} ({len(rows):,} satır)")
+
+          conn.close()
+          EOF
+
+      - name: "Zip Paketi Hazırla"
+        run: |
+          cd birlestirilmis_ciktilar
+          zip -r ../turkiye_tum_ilanlar_veriseti.zip turkiye_tum_ilanlar.db csv/
+          cd ..
+
+      - name: "Tüm Türkiye İlan Paketini Artifakt Olarak Yükle"
+        uses: actions/upload-artifact@v4
+        with:
+          name: TURKIYE-TUM-ILANLAR-VERI-PAKETI
+          path: turkiye_tum_ilanlar_veriseti.zip
+          retention-days: 14
