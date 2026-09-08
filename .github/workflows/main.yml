@@ -1,0 +1,240 @@
+name: Tüm Türkiye Hızlı Veri Toplayıcı (15 Sanal Makine Paralel)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mod:
+        description: 'Çalışma Modu'
+        required: true
+        default: 'tum_turkiye_paralel_15_makine'
+        type: choice
+        options:
+          - 'tum_turkiye_paralel_15_makine'
+          - 'ozel_il_secimi'
+      ozel_iller:
+        description: 'Sadece "ozel_il_secimi" modunda geçerlidir (Örn: 34 veya 34,6,35)'
+        required: false
+        default: '34'
+        type: string
+      hiz:
+        description: 'İstekler arası güvenli bekleme (saniye)'
+        required: true
+        default: '1.0'
+        type: string
+      mahalle:
+        description: 'Mahalle detaylarına (Level=3) inilsin mi?'
+        required: false
+        default: true
+        type: boolean
+      sadece_il:
+        description: 'Sadece İl Düzeyi (İlçe ve mahallelere inmeden hızlı genel özet)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  # =========================================================================
+  # MOD 1: 15 PARALEL SANAL MAKİNE İLE TÜM TÜRKİYE (~2.5 - 3 SAAT)
+  # =========================================================================
+  paralel_toplayici:
+    if: ${{ github.event.inputs.mod == 'tum_turkiye_paralel_15_makine' }}
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: "01_istanbul"
+            name: "01 - İstanbul"
+            iller: "34"
+          - id: "02_ankara"
+            name: "02 - Ankara"
+            iller: "6"
+          - id: "03_izmir"
+            name: "03 - İzmir"
+            iller: "35"
+          - id: "04_bursa_yalova"
+            name: "04 - Bursa, Yalova, Bilecik"
+            iller: "16,77,11"
+          - id: "05_kocaeli_sakarya"
+            name: "05 - Kocaeli, Sakarya, Bolu, Düzce"
+            iller: "41,54,14,81"
+          - id: "06_trakya_guney_marmara"
+            name: "06 - Trakya & Güney Marmara (Balıkesir, Çanakkale, Edirne, Kırklareli, Tekirdağ)"
+            iller: "10,17,22,39,59"
+          - id: "07_antalya_goller"
+            name: "07 - Antalya & Göller Yöresi (Antalya, Burdur, Isparta)"
+            iller: "7,15,32"
+          - id: "08_guney_ege"
+            name: "08 - Güney Ege (Aydın, Denizli, Muğla, Uşak)"
+            iller: "9,20,48,64"
+          - id: "09_kuzey_ege"
+            name: "09 - Kuzey Ege & İç Batı (Afyon, Kütahya, Manisa)"
+            iller: "3,43,45"
+          - id: "10_cukurova"
+            name: "10 - Çukurova & Doğu Akdeniz (Adana, Hatay, Mersin, Osmaniye)"
+            iller: "1,31,33,80"
+          - id: "11_konya_karaman"
+            name: "11 - Konya, Karaman, Aksaray"
+            iller: "42,68,70"
+          - id: "12_orta_anadolu"
+            name: "12 - Orta Anadolu (Eskişehir, Kayseri, Kırşehir, Nevşehir, Niğde, Yozgat, Kırıkkale)"
+            iller: "26,38,40,50,51,66,71"
+          - id: "13_orta_karadeniz"
+            name: "13 - Orta Karadeniz & İç Kuzey (Samsun, Ordu, Sivas, Tokat, Çorum, Amasya, Giresun, Kastamonu, Sinop, Çankırı)"
+            iller: "5,18,19,28,37,52,55,57,58,60"
+          - id: "14_dogu_bati_karadeniz"
+            name: "14 - Doğu & Batı Karadeniz (Trabzon, Rize, Artvin, Zonguldak, Karabük, Bartın, Gümüşhane, Bayburt)"
+            iller: "8,29,53,61,67,69,74,78"
+          - id: "15_dogu_guneydogu"
+            name: "15 - Doğu & Güneydoğu Anadolu (Gaziantep, Ş.Urfa, Diyarbakır, K.Maraş ve 20 il)"
+            iller: "2,4,12,13,21,23,24,25,27,30,36,44,46,47,49,56,62,63,65,72,73,75,76,79"
+
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Gerekli Paketler
+        run: sudo apt-get update && sudo apt-get install -y zip sqlite3
+
+      - name: Veri Toplayıcıyı Çalıştır
+        run: |
+          COLLECTOR_DIR=$(dirname $(find . -name "collector.py" | head -n 1))
+          cd "$COLLECTOR_DIR"
+          
+          EXTRA_FLAGS=""
+          if [ "${{ inputs.sadece_il }}" = "true" ]; then
+            EXTRA_FLAGS="--sadece-il"
+          fi
+          if [ "${{ inputs.mahalle }}" = "false" ]; then
+            EXTRA_FLAGS="$EXTRA_FLAGS --mahallesiz"
+          fi
+          
+          echo "Tarama başlıyor: Bölge=${{ matrix.name }}, İller=${{ matrix.iller }}"
+          python3 collector.py --iller "${{ matrix.iller }}" --hiz ${{ inputs.hiz }} $EXTRA_FLAGS
+
+      - name: CSV Dosyalarını Üret
+        run: |
+          COLLECTOR_DIR=$(dirname $(find . -name "export_csv.py" | head -n 1))
+          cd "$COLLECTOR_DIR"
+          python3 export_csv.py
+
+      - name: Bölge Verilerini Paketle
+        run: |
+          COLLECTOR_DIR=$(dirname $(find . -name "collector.py" | head -n 1))
+          cd "$COLLECTOR_DIR"
+          zip -r "paket_${{ matrix.id }}.zip" data/csv_ciktilari data/poligonlar data/piyasa_verileri.db
+
+      - name: Bölge Paketini Yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: bolge_${{ matrix.id }}
+          path: |
+            **/paket_${{ matrix.id }}.zip
+            **/data/csv_ciktilari/*.csv
+          retention-days: 14
+
+  # =========================================================================
+  # BİRLEŞTİRİCİ: 15 Makine Bittiğinde Tüm CSV'leri Tek Pakette Birleştirir
+  # =========================================================================
+  birlestirici:
+    needs: paralel_toplayici
+    if: ${{ github.event.inputs.mod == 'tum_turkiye_paralel_15_makine' && always() }}
+    name: 🏆 Tüm Türkiye Verilerini Tek Pakette Birleştir
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Gerekli Paketler
+        run: sudo apt-get update && sudo apt-get install -y zip
+
+      - name: Tüm Bölge Çıktılarını İndir
+        uses: actions/download-artifact@v4
+        with:
+          path: indirilen_bolgeler
+
+      - name: CSV Dosyalarını Tek Çatıda Birleştir
+        run: |
+          MERGE_SCRIPT=$(find . -name "merge_csv.py" | head -n 1)
+          mkdir -p tum_turkiye_csv_ciktilari
+          python3 "$MERGE_SCRIPT" tum_turkiye_csv_ciktilari indirilen_bolgeler
+          cd tum_turkiye_csv_ciktilari
+          zip -r ../TUM_TURKIYE_TEK_PAKET_CSV.zip *.csv
+          cd ..
+          ls -lh TUM_TURKIYE_TEK_PAKET_CSV.zip
+
+      - name: Birleştirilmiş Tek Paketi Artifact Olarak Sun
+        uses: actions/upload-artifact@v4
+        with:
+          name: TUM_TURKIYE_TAMAMI_TEK_PAKET
+          path: TUM_TURKIYE_TEK_PAKET_CSV.zip
+          retention-days: 30
+
+  # =========================================================================
+  # MOD 2: ÖZEL İL SEÇİMİ (Tek Sanal Makine)
+  # =========================================================================
+  ozel_toplayici:
+    if: ${{ github.event.inputs.mod == 'ozel_il_secimi' }}
+    name: Özel İl Tarama (${{ github.event.inputs.ozel_iller }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Gerekli Paketler
+        run: sudo apt-get update && sudo apt-get install -y zip sqlite3
+
+      - name: Veri Toplayıcıyı Çalıştır
+        run: |
+          COLLECTOR_DIR=$(dirname $(find . -name "collector.py" | head -n 1))
+          cd "$COLLECTOR_DIR"
+          
+          EXTRA_FLAGS=""
+          if [ "${{ inputs.sadece_il }}" = "true" ]; then
+            EXTRA_FLAGS="--sadece-il"
+          fi
+          if [ "${{ inputs.mahalle }}" = "false" ]; then
+            EXTRA_FLAGS="$EXTRA_FLAGS --mahallesiz"
+          fi
+          
+          echo "Özel tarama başlıyor: İller=${{ inputs.ozel_iller }}"
+          python3 collector.py --iller "${{ inputs.ozel_iller }}" --hiz ${{ inputs.hiz }} $EXTRA_FLAGS
+
+      - name: CSV Dosyalarını Üret
+        run: |
+          COLLECTOR_DIR=$(dirname $(find . -name "export_csv.py" | head -n 1))
+          cd "$COLLECTOR_DIR"
+          python3 export_csv.py
+
+      - name: Verileri Paketle
+        run: |
+          COLLECTOR_DIR=$(dirname $(find . -name "collector.py" | head -n 1))
+          cd "$COLLECTOR_DIR"
+          zip -r ozel_tarama_verileri.zip data/csv_ciktilari data/poligonlar data/piyasa_verileri.db
+
+      - name: ZIP Paketini Yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ozel_tarama_verileri
+          path: |
+            **/ozel_tarama_verileri.zip
+            **/data/csv_ciktilari/*.csv
+          retention-days: 30
