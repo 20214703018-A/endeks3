@@ -120,18 +120,23 @@ jobs:
           python3 collector.py --iller "${{ matrix.iller }}" --hiz ${{ inputs.hiz }} $EXTRA_FLAGS
 
       - name: CSV Dosyalarını Üret
+        if: always()
         run: |
           COLLECTOR_DIR=$(dirname $(find . -name "export_csv.py" | head -n 1))
           cd "$COLLECTOR_DIR"
-          python3 export_csv.py
+          python3 export_csv.py || true
 
       - name: Bölge Verilerini Paketle
+        if: always()
         run: |
           COLLECTOR_DIR=$(dirname $(find . -name "collector.py" | head -n 1))
           cd "$COLLECTOR_DIR"
-          zip -r "paket_${{ matrix.id }}.zip" data/csv_ciktilari data/poligonlar data/piyasa_verileri.db
+          if [ -d "data" ]; then
+            zip -r "paket_${{ matrix.id }}.zip" data/csv_ciktilari data/poligonlar data/piyasa_verileri.db || true
+          fi
 
       - name: Bölge Paketini Yükle
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: bolge_${{ matrix.id }}
@@ -219,18 +224,23 @@ jobs:
           python3 collector.py --iller "${{ inputs.ozel_iller }}" --hiz ${{ inputs.hiz }} $EXTRA_FLAGS
 
       - name: CSV Dosyalarını Üret
+        if: always()
         run: |
           COLLECTOR_DIR=$(dirname $(find . -name "export_csv.py" | head -n 1))
           cd "$COLLECTOR_DIR"
-          python3 export_csv.py
+          python3 export_csv.py || true
 
       - name: Verileri Paketle
+        if: always()
         run: |
           COLLECTOR_DIR=$(dirname $(find . -name "collector.py" | head -n 1))
           cd "$COLLECTOR_DIR"
-          zip -r ozel_tarama_verileri.zip data/csv_ciktilari data/poligonlar data/piyasa_verileri.db
+          if [ -d "data" ]; then
+            zip -r ozel_tarama_verileri.zip data/csv_ciktilari data/poligonlar data/piyasa_verileri.db || true
+          fi
 
       - name: ZIP Paketini Yükle
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ozel_tarama_verileri
