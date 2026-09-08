@@ -1,33 +1,43 @@
-name: "Turkiye Ada-Parsel İmar, Plan Künyesi ve Askı Değişiklikleri Toplayıcı"
+name: "Turkiye Ada-Parsel İmar, Plan Künyesi ve Geo Harita Toplayıcı (10 Paralel Makine)"
 
 on:
   workflow_dispatch:
     inputs:
-      mod:
-        description: 'Çalışma Modu'
-        required: true
-        default: 'otomatik_kesif'
-        type: choice
-        options:
-          - 'otomatik_kesif'
-          - 'csv_ilanlar'
-      limit:
-        description: 'İşlenecek Maksimum Parsel Sayısı'
+      limit_per_group:
+        description: 'Makinelerin Grup Başına Çekeceği Parsel Limiti'
         required: false
-        default: '250'
+        default: '200'
         type: string
   schedule:
-    # Her gece saat 03:30'da otomatik çalışarak yeni ada ve parselleri tarar
+    # Her gece saat 03:30'da otomatik çalışarak tüm Türkiye ada ve parsellerini tarar
     - cron: '30 3 * * *'
 
 permissions:
   contents: write
 
 jobs:
-  imar_toplayici:
-    name: "İmar, Plan Künyesi ve Parsel Toplayıcı"
+  # =========================================================================
+  # 1. FAZ: 10 EŞZAMANLI PARALEL MAKİNE İLE TÜRKİYE GENELİ TARAMA
+  # =========================================================================
+  parsel_matrix:
+    name: "Grup ${{ matrix.grup }} - ${{ matrix.bolge }}"
     runs-on: ubuntu-latest
-    
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        include:
+          - { grup: 1, bolge: "Marmara Batı & Trakya", iller: "istanbul,edirne,kirklareli,tekirdag,canakkale" }
+          - { grup: 2, bolge: "Marmara Doğu & Güney", iller: "bursa,kocaeli,sakarya,yalova,balikesir,bilecik" }
+          - { grup: 3, bolge: "Ege", iller: "izmir,manisa,aydin,mugla,denizli,usak,kutahya,afyonkarahisar" }
+          - { grup: 4, bolge: "İç Anadolu Batı", iller: "ankara,eskisehir,konya,karaman,aksaray,cankiri" }
+          - { grup: 5, bolge: "İç Anadolu Doğu", iller: "kayseri,sivas,yozgat,kirsehir,nevsehir,nigde,kirikkale" }
+          - { grup: 6, bolge: "Akdeniz", iller: "antalya,burdur,isparta,mersin,adana,hatay,osmaniye,kahramanmaras" }
+          - { grup: 7, bolge: "Batı Karadeniz", iller: "bolu,duzce,zonguldak,bartin,karabuk,kastamonu,sinop" }
+          - { grup: 8, bolge: "Doğu Karadeniz", iller: "samsun,ordu,giresun,trabzon,rize,artvin,gumushane,bayburt,amasya,tokat,corum" }
+          - { grup: 9, bolge: "Doğu Anadolu", iller: "erzurum,erzincan,kars,agri,igdir,ardahan,van,mus,bitlis,hakkari,malatya,elazig,bingol,tunceli" }
+          - { grup: 10, bolge: "Güneydoğu Anadolu", iller: "gaziantep,sanliurfa,diyarbakir,mardin,batman,siirt,sirnak,adiyaman,kilis" }
+
     steps:
       - name: Kodu Checkout Et
         uses: actions/checkout@v4
@@ -45,26 +55,68 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Parsel, İmar ve Plan Künyesi Toplama İşlemini Başlat
+      - name: "Bölgesel Ada & Parsel Taraması (Grup ${{ matrix.grup }})"
         run: |
           echo "========================================================"
-          echo "GEOPROP AI - İMAR VE PARSEL VERİ TOPLAMA MOTORU"
-          echo "Tarih: $(date '+%Y-%m-%d %H:%M:%S')"
-          echo "Mod: ${{ github.event.inputs.mod || 'otomatik_kesif' }}"
-          echo "Limit: ${{ github.event.inputs.limit || '250' }}"
+          echo "MAKİNE NO: ${{ matrix.grup }}"
+          echo "BÖLGE: ${{ matrix.bolge }}"
+          echo "İLLER: ${{ matrix.iller }}"
+          echo "LİMİT: ${{ github.event.inputs.limit_per_group || '200' }}"
           echo "========================================================"
-          
-          if [ "${{ github.event.inputs.mod }}" = "csv_ilanlar" ]; then
-            python collector/parsel_imar_ve_degisiklik_toplayici.py --zenginlestir-csv --limit ${{ github.event.inputs.limit || '250' }}
-          else
-            python collector/parsel_imar_ve_degisiklik_toplayici.py --otomatik-kesif --limit ${{ github.event.inputs.limit || '250' }}
-          fi
+          python collector/parsel_imar_ve_degisiklik_toplayici.py \
+            --cikis-ek "grup_${{ matrix.grup }}" \
+            --iller "${{ matrix.iller }}" \
+            --limit "${{ github.event.inputs.limit_per_group || '200' }}"
 
-      - name: Çıktıları Kontrol Et
+      - name: "Grup Çıktılarını Artifakt Olarak Kaydet"
+        uses: actions/upload-artifact@v4
+        with:
+          name: parsel-grup-${{ matrix.grup }}
+          path: |
+            collector/data/imar_ve_parseller/*grup_${{ matrix.grup }}*
+          retention-days: 1
+
+  # =========================================================================
+  # 2. FAZ: TÜM BÖLGELERİ BİRLEŞTİRME VE ATOMİK GİT COMMIT & PUSH
+  # =========================================================================
+  birlestir_ve_yayinla:
+    name: "10 Bölge Sonuçlarını Birleştir ve Yayınla"
+    needs: [parsel_matrix]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Kodu Checkout Et
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Python 3.12 Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: "Tüm Grup Artifaktlarını İndir"
+        uses: actions/download-artifact@v4
+        with:
+          path: indirilmis_artifaktlar/
+
+      - name: "Artifaktları Veri Dizinine Taşı"
         run: |
-          ls -lh collector/data/imar_ve_parseller/ || true
+          mkdir -p collector/data/imar_ve_parseller/
+          find indirilmis_artifaktlar/ -type f -exec mv -f {} collector/data/imar_ve_parseller/ \;
+          ls -la collector/data/imar_ve_parseller/
 
-      - name: Değişiklikleri Git ile Kaydet ve Push Et
+      - name: "Bütün Bölgesel Sonuçları Tek Bir Veritabanı ve GeoJSON'da Birleştir"
+        run: |
+          python collector/parsel_imar_ve_degisiklik_toplayici.py --birlestir
+          # Geçici grup dosyalarını temizle, sadece ana nihai dosyalar kalsın
+          rm -f collector/data/imar_ve_parseller/*_grup_* || true
+
+      - name: "Nihai Çıktıları Kontrol Et"
+        run: |
+          ls -lh collector/data/imar_ve_parseller/
+
+      - name: "Nihai Verileri Git Depoya Atomik Kaydet ve Push Et"
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -73,7 +125,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "Yeni parsel veya imar verisi değişikliği yok, push atlanıyor."
           else
-            git commit -m "feat(imar): Ada-parsel imar, plan künyesi ve bağımsız bölüm verileri güncellendi [skip ci]"
+            git commit -m "feat(parsel): 10 bölgeden toplanan ada/parsel, imar ve GeoJSON harita katmanı birleştirildi [skip ci]"
             git pull --rebase origin main || true
             git push origin main
           fi
