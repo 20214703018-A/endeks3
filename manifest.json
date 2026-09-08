@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Piyasa Toplayıcı (yerel demo)",
+  "version": "0.3.0",
+  "description": "Emlakjet bölge fiyat endeksini (il → ilçe → mahalle, konut/arsa ayrı) ve emlak ilanlarını kaynak/dönem bilgisiyle yerel akademik veri dosyalarına kaydeder; tarama kesilirse kaldığı yerden devam eder.",
+  "permissions": ["storage", "unlimitedStorage", "alarms", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://*.endeksa.com/*",
+    "https://*.emlakjet.com/*",
+    "https://*.sahibinden.com/*",
+    "https://*.hepsiemlak.com/*",
+    "https://*.zingat.com/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Piyasa kaydet"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.endeksa.com/*",
+        "https://*.emlakjet.com/*",
+        "https://*.sahibinden.com/*",
+        "https://*.hepsiemlak.com/*",
+        "https://*.zingat.com/*"
+      ],
+      "js": ["parsers.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

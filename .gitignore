@@ -1,0 +1,13 @@
+# Veri ve geçici dosyalar
+collector/data/
+data/
+*.db
+*.db-wal
+*.db-shm
+*.zip
+
+# İşletim sistemi ve geçici dosyalar
+.DS_Store
+Thumbs.db
+__pycache__/
+*.py[cod]

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<style>
+  body { width: 340px; font: 13px system-ui; padding: 10px; color: #222; }
+  h3 { margin: 0 0 8px; font-size: 14px; }
+  input { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+  button { width: 100%; padding: 8px; margin-top: 8px; border: 0; border-radius: 8px; background: #0b3d2e; color: #fff; cursor: pointer; }
+  button:disabled { opacity: .6; }
+  button.secondary { background:#345b4f; }
+  button.danger { background:#8b2b2b; }
+  .row { display:flex; gap:6px; }
+  .row > label { flex:1; }
+  #durum { margin-top: 8px; font-size: 12px; color: #555; white-space: pre-wrap; }
+  small { color: #777; }
+</style>
+</head>
+<body>
+  <h3>📊 Piyasa Toplayıcı</h3>
+  <div id="panel" style="background:#eef6f1;border-radius:8px;padding:8px;margin-bottom:8px">
+    <div style="font-size:12px">Backend: <b id="bDurum">…</b></div>
+    <div style="font-size:22px;font-weight:700" id="bBugun">0</div>
+    <div style="font-size:12px" id="bAlt">bugün kaydedilen satır</div>
+    <div style="font-size:12px" id="bHavuz">havuz: …</div>
+    <div style="font-size:11px;color:#666" id="bSon"></div>
+  </div>
+  <label>Backend<br /><input id="backend" value="http://localhost:3001" /></label>
+  <label style="display:block;margin-top:8px;padding:7px;background:#fff6db;border:1px solid #e2c66d;border-radius:7px"><input id="izinOnayi" type="checkbox" style="width:auto" /> İlgili siteden <b>yazılı otomatik veri toplama iznim var</b></label>
+  <label style="display:block;margin-top:8px"><input id="otomatik" type="checkbox" style="width:auto" /> <b>Otomatik pilot:</b> açtığım her sonuç sayfasını kendiliğinden kaydet (filtre değiştirince de)</label>
+  <div style="display:flex;gap:6px;margin-top:8px">
+    <label style="flex:1">İl<br /><input id="fIl" placeholder="otomatik" /></label>
+    <label style="flex:1">İlçe<br /><input id="fIlce" placeholder="otomatik" /></label>
+  </div>
+  <button id="tara">Sayfayı tara (önizleme)</button>
+  <button id="kaydet">Kaydet → backend</button>
+  <hr style="border:0;border-top:1px solid #ddd;margin:12px 0 8px" />
+  <b>🗺️ Emlakjet bölge endeksi</b>
+  <div style="font-size:11px;color:#666;margin:2px 0 6px">
+    Türkiye → il → ilçe → mahalle. Her bölge için m² fiyat, ortalama fiyat,
+    yıllık değişim, amortisman, aylık seri ve yaş/oda/kat/ısıtma dağılımı.
+    Kayıtlar eklentinin kendi yerel veritabanına yazılır (konut/arsa ayrı). Sekme kapansa da sürer.
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;font-size:12px">
+    <label style="flex:0 0 auto"><input id="ejKonut" type="checkbox" checked style="width:auto" /> Konut</label>
+    <label style="flex:0 0 auto"><input id="ejArsa" type="checkbox" checked style="width:auto" /> Arsa</label>
+  </div>
+  <div class="row" style="margin-top:6px">
+    <label style="flex:1.4">Derinlik<br />
+      <select id="ejDerinlik" style="width:100%;padding:6px;border:1px solid #ccc;border-radius:6px">
+        <option value="il">İl (81 il + ilçe özetleri)</option>
+        <option value="ilce" selected>İlçe (+ tüm mahalle özetleri)</option>
+        <option value="mahalle">Mahalle (her mahalleye gir: aylık seri + dağılımlar)</option>
+      </select>
+    </label>
+    <label style="flex:1">Bekleme (sn)<br /><input id="ejBekleme" type="number" min="0.8" max="20" step="0.1" value="1.5" /></label>
+  </div>
+  <label style="display:block;margin-top:6px;font-size:12px"><input id="ejTrend" type="checkbox" checked style="width:auto" /> Aylık trend serisini de kaydet</label>
+  <div style="display:flex;gap:6px;margin-top:8px">
+    <button id="ejBaslat" style="flex:1">▶ Başlat</button>
+    <button id="ejDevam" class="secondary" style="flex:1">⏵ Devam</button>
+    <button id="ejDuraklat" class="secondary" style="flex:1">⏸ Duraklat</button>
+  </div>
+  <div style="display:flex;gap:6px;margin-top:6px">
+    <button id="ejDurdur" class="danger" style="flex:1">⏹ Durdur</button>
+    <button id="ejSifirla" class="danger" style="flex:1;background:#5a3a3a">🗑 Kuyruğu sıfırla</button>
+  </div>
+  <div id="ejDurum" style="margin-top:7px;font-size:12px;background:#eef6f1;padding:7px;border-radius:7px;white-space:pre-wrap">Tarama başlatılmadı.</div>
+  <div id="ejHavuz" style="margin-top:5px;font-size:11px;color:#555;white-space:pre-wrap"></div>
+  <button id="ejVeri">📂 Kayıtları aç · ara · CSV indir</button>
+
+  <hr style="border:0;border-top:1px solid #ddd;margin:12px 0 8px" />
+  <b>Akademik tarama (sayfa gezerek)</b>
+  <div class="row" style="margin-top:6px">
+    <label>Azami sayfa<br /><input id="maxSayfa" type="number" min="1" max="2000" value="1200" /></label>
+    <label>Bekleme (sn)<br /><input id="bekleme" type="number" min="4" max="60" value="8" /></label>
+  </div>
+  <button id="ilanTarama" class="secondary">İlanlarda sonraki sayfalara geç</button>
+  <button id="piyasaTarama" class="secondary">Emlakjet il → ilçe → mahalle tara</button>
+  <button id="taramaDurdur" class="danger">Taramayı durdur</button>
+  <div id="taramaDurum" style="margin-top:7px;font-size:12px;background:#f4f4f4;padding:7px;border-radius:7px;white-space:pre-wrap">Etkin tarama yok.</div>
+  <button id="teshis" style="background:#5a4300">🔍 Teşhis (neden çözülmediğini göster)</button>
+  <div id="durum">Endeksa analiz veya Emlakjet piyasa sayfasında açın.</div>
+  <pre id="teshisCikti" style="display:none;max-height:220px;overflow:auto;font-size:11px;background:#f4f4f4;padding:8px;border-radius:8px;white-space:pre-wrap"></pre>
+  <small>Veriler backend tarafından otomatik olarak JSON ve CSV dosyalarına yazılır. Sayfalı tarama yalnızca siz başlatınca çalışır; en az 4 sn bekler, CAPTCHA veya erişim engeli aşmaz. Kullanım koşulları ve araştırma izniniz kapsamında kullanın.</small>
+  <script src="popup.js"></script>
+</body>
+</html>

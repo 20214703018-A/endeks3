@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<title>Piyasa Toplayıcı — yerel veri</title>
+<style>
+  :root {
+    --kagit: #f7f8f7; --kart: #fff; --cizgi: #dfe4e1; --metin: #1b2420;
+    --soluk: #667; --vurgu: #0b3d2e; --konut: #0b3d2e; --arsa: #7a4b12;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--kagit); color: var(--metin);
+    font: 14px/1.45 system-ui, -apple-system, Segoe UI, sans-serif; }
+  header { background: var(--vurgu); color: #fff; padding: 14px 20px; }
+  header h1 { margin: 0; font-size: 17px; }
+  header p { margin: 4px 0 0; font-size: 12px; opacity: .8; }
+  main { padding: 16px 20px 40px; max-width: 1400px; }
+  .kartlar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .kart { background: var(--kart); border: 1px solid var(--cizgi); border-radius: 10px;
+    padding: 10px 14px; min-width: 150px; }
+  .kart b { display: block; font-size: 21px; }
+  .kart span { font-size: 11px; color: var(--soluk); }
+  .arac { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end;
+    background: var(--kart); border: 1px solid var(--cizgi); border-radius: 10px;
+    padding: 10px; margin-bottom: 12px; }
+  label { font-size: 11px; color: var(--soluk); display: block; }
+  input, select { padding: 7px 8px; border: 1px solid var(--cizgi); border-radius: 7px;
+    font: inherit; background: #fff; }
+  input[type=search] { min-width: 260px; }
+  button { padding: 8px 12px; border: 0; border-radius: 7px; background: var(--vurgu);
+    color: #fff; cursor: pointer; font: inherit; }
+  button.ikincil { background: #4a635a; }
+  button.tehlike { background: #8b2b2b; }
+  button:disabled { opacity: .55; cursor: default; }
+  .tablo-sar { background: var(--kart); border: 1px solid var(--cizgi); border-radius: 10px;
+    overflow: auto; max-height: 62vh; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td { padding: 6px 9px; border-bottom: 1px solid var(--cizgi); text-align: right;
+    white-space: nowrap; }
+  th { position: sticky; top: 0; background: #eef2f0; text-align: right; font-size: 11px;
+    text-transform: uppercase; letter-spacing: .03em; color: #4a5a52; }
+  th:first-child, td:first-child, th.sol, td.sol { text-align: left; }
+  tbody tr:hover { background: #f2f7f4; }
+  .rozet { display: inline-block; padding: 1px 7px; border-radius: 20px; font-size: 11px;
+    color: #fff; background: var(--konut); }
+  .rozet.arsa { background: var(--arsa); }
+  #bilgi { font-size: 12px; color: var(--soluk); margin: 8px 2px; }
+  .bos { padding: 30px; text-align: center; color: var(--soluk); }
+</style>
+</head>
+<body>
+<header>
+  <h1>📊 Piyasa Toplayıcı — yerel veri havuzu</h1>
+  <p>Kayıtlar bu bilgisayarda, eklentinin kendi veritabanında tutulur. Konut ve arsa ayrı süzülür ve ayrı dışa aktarılır.</p>
+</header>
+<main>
+  <div class="kartlar" id="kartlar"></div>
+
+  <div class="arac">
+    <div>
+      <label for="q">Ara (il / ilçe / mahalle)</label>
+      <input id="q" type="search" placeholder="örn. kadıköy, çankaya, akat" />
+    </div>
+    <div>
+      <label for="depo">Veri kümesi</label>
+      <select id="depo">
+        <option value="bolge">Bölge özeti (m² fiyat, ort. fiyat)</option>
+        <option value="trend">Aylık trend serisi</option>
+        <option value="dagilim">Yaş / oda / kat / ısıtma dağılımı</option>
+      </select>
+    </div>
+    <div>
+      <label for="tip">Tip</label>
+      <select id="tip">
+        <option value="">Konut + Arsa</option>
+        <option value="konut">Konut</option>
+        <option value="arsa">Arsa</option>
+      </select>
+    </div>
+    <div>
+      <label for="seviye">Seviye</label>
+      <select id="seviye">
+        <option value="">Tümü</option>
+        <option value="ulke">Türkiye</option>
+        <option value="il">İl</option>
+        <option value="ilce">İlçe</option>
+        <option value="mahalle">Mahalle</option>
+      </select>
+    </div>
+    <div>
+      <label for="limit">Satır</label>
+      <select id="limit">
+        <option>100</option><option selected>300</option><option>1000</option>
+      </select>
+    </div>
+    <button id="araBtn">Ara</button>
+    <button id="disaAktar" class="ikincil">⬇ Görünen kümeyi CSV indir</button>
+    <button id="hepsiniAktar" class="ikincil">⬇ Tümünü CSV indir (konut + arsa ayrı)</button>
+    <button id="sil" class="tehlike">🗑 Yerel veriyi sil</button>
+  </div>
+
+  <div id="bilgi">Aramak için bir şeyler yazın ya da boş bırakıp <b>Ara</b> deyin.</div>
+  <div class="tablo-sar"><table id="tablo"><thead></thead><tbody></tbody></table></div>
+</main>
+<script src="db.js"></script>
+<script src="veri.js"></script>
+</body>
+</html>
