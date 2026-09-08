@@ -38,7 +38,9 @@ def merge_csv_directories(input_dirs, output_dir):
         "19_etbis_il_bazli_e_ticaret_hacimleri.csv",
         "20_sege_973_ilce_sosyo_ekonomik_kademe.csv",
         "21_ciro_potansiyeli_ve_ticari_cekicilik.csv",
-        "22_tuik_sigara_ve_tutun_tuketim_endeksi.csv"
+        "22_tuik_sigara_ve_tutun_tuketim_endeksi.csv",
+        "23_arabam_arac_ilanlari.csv",
+        "24_ilce_ve_mahalle_arac_refah_endeksi.csv"
     ]
 
     for fname in target_files:

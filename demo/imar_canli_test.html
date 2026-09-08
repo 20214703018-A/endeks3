@@ -814,6 +814,23 @@
               <b style="font-size:0.75rem; color:var(--accent-emerald);" id="valMahalleOnline">--</b>
             </div>
           </div>
+
+          <!-- Arabam.com Araç Refah Endeksi -->
+          <div id="rowAracRefah" style="margin-top:10px; padding-top:8px; border-top:1px solid rgba(245, 158, 11, 0.15); display:none;">
+            <div style="font-size:0.75rem; color:#fde68a; font-weight:600; margin-bottom:4px;">🚗 Bölgesel Araç Refah Endeksi (Arabam.com)</div>
+            <div class="calc-row">
+              <span style="font-size:0.72rem; color:var(--text-muted);">Ortalama Araç Değeri:</span>
+              <b style="font-size:0.75rem; color:#fbbf24;" id="valAracOrtFiyat">--</b>
+            </div>
+            <div class="calc-row">
+              <span style="font-size:0.72rem; color:var(--text-muted);">Lüks Araç Penetrasyonu:</span>
+              <b style="font-size:0.75rem; color:var(--accent-cyan);" id="valAracLuksOran">--</b>
+            </div>
+            <div class="calc-row">
+              <span style="font-size:0.72rem; color:var(--text-muted);">Bölgenin En Popüler Markası:</span>
+              <b style="font-size:0.75rem; color:var(--text-primary);" id="valAracPopMarka">--</b>
+            </div>
+          </div>
         </div>
 
         <!-- Resmi TKGM Doğrulama Köprüsü -->
@@ -1095,6 +1112,16 @@
               document.getElementById('valMahalleOnline').textContent = `${Math.round(mah.guncel_2026_online_pazaryeri_tl).toLocaleString('tr-TR')} TL`;
             } else {
               document.getElementById('rowMahalleEcom').style.display = 'none';
+            }
+
+            const arac = ist.arac_refah;
+            if (arac && arac.ortalama_fiyat_tl) {
+              document.getElementById('rowAracRefah').style.display = 'block';
+              document.getElementById('valAracOrtFiyat').textContent = `${Math.round(arac.ortalama_fiyat_tl).toLocaleString('tr-TR')} TL`;
+              document.getElementById('valAracLuksOran').textContent = `%${arac.luks_arac_orani_yuzde} (${arac.sosyo_ekonomik_kategori})`;
+              document.getElementById('valAracPopMarka').textContent = arac.en_populer_marka;
+            } else {
+              document.getElementById('rowAracRefah').style.display = 'none';
             }
           }
         })

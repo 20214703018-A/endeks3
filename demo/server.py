@@ -207,6 +207,23 @@ class GeopropApiHandler(http.server.SimpleHTTPRequestHandler):
 
                 conn_l.close()
 
+            # C) Arabam.com Vasıta ve Refah Endeksi DB
+            vasita_db = os.path.join(COLLECTOR_DIR, "data", "arabam_vasita_piyasasi.sqlite")
+            if os.path.exists(vasita_db):
+                import sqlite3
+                conn_v = sqlite3.connect(vasita_db)
+                conn_v.row_factory = sqlite3.Row
+                cv = conn_v.cursor()
+                if il and ilce:
+                    cv.execute("SELECT * FROM ilce_arac_refah_endeksi WHERE il LIKE ? AND ilce LIKE ? LIMIT 1", (f"%{il}%", f"%{ilce}%"))
+                    row_v = cv.fetchone()
+                    if row_v: res["arac_refah"] = dict(row_v)
+                if not res.get("arac_refah") and il:
+                    cv.execute("SELECT * FROM ilce_arac_refah_endeksi WHERE il LIKE ? LIMIT 1", (f"%{il}%",))
+                    row_v = cv.fetchone()
+                    if row_v: res["arac_refah"] = dict(row_v)
+                conn_v.close()
+
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Access-Control-Allow-Origin", "*")
