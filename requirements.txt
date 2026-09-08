@@ -1,0 +1,2 @@
+# GEOPROP AI İlan Toplayıcı
+# Tüm toplayıcı motor saf Python 3 standart kütüphaneleri (urllib, sqlite3, json, concurrent.futures vb.) ile çalışır.
