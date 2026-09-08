@@ -29,6 +29,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data", "imar_ve_parseller")
 os.makedirs(DATA_DIR, exist_ok=True)
 DB_PATH = os.path.join(DATA_DIR, "parsel_imar_degisiklikleri.sqlite")
 JSON_OUTPUT_PATH = os.path.join(DATA_DIR, "parsel_imar_ve_degisiklikler.json")
+GEOJSON_OUTPUT_PATH = os.path.join(DATA_DIR, "turkiye_parseller_geo.geojson")
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
@@ -417,7 +418,186 @@ class ParselImarToplayici:
                 if count >= limit:
                     break
         print(f"[✔] Toplam {count} parsel imar ve bağımsız bölüm verileriyle zenginleştirildi!")
-        print(f"[✔] Toplam {count} parsel imar ve bağımsız bölüm verileriyle zenginleştirildi!")
+
+    def export_geojson(self, output_path=None):
+        """Tüm toplanan parsellerin sınır koordinatlarını ve niteliklerini haritada gösterilmek üzere GeoJSON olarak dışa aktarır."""
+        if not output_path:
+            output_path = GEOJSON_OUTPUT_PATH
+            
+        conn = get_db_connection()
+        c = conn.cursor()
+        c.execute("SELECT * FROM parsel_imar_kayitlari WHERE poligon_geojson IS NOT NULL ORDER BY id DESC")
+        rows = c.fetchall()
+        features = []
+        
+        for r in rows:
+            r_dict = dict(r)
+            geom_str = r_dict.get("poligon_geojson")
+            if not geom_str:
+                continue
+            try:
+                geom = json.loads(geom_str)
+            except Exception:
+                continue
+                
+            features.append({
+                "type": "Feature",
+                "geometry": geom,
+                "properties": {
+                    "id": r_dict.get("id"),
+                    "il": r_dict.get("il"),
+                    "ilce": r_dict.get("ilce"),
+                    "mahalle": r_dict.get("mahalle"),
+                    "ada_no": r_dict.get("ada_no"),
+                    "parsel_no": r_dict.get("parsel_no"),
+                    "alan_m2": r_dict.get("alan_m2"),
+                    "nitelik": r_dict.get("nitelik"),
+                    "zemin_durumu": r_dict.get("zemin_durumu"),
+                    "imar_durumu": r_dict.get("imar_durumu"),
+                    "plan_fonksiyon": r_dict.get("plan_fonksiyon"),
+                    "kaks_emsal": r_dict.get("kaks_emsal"),
+                    "taks": r_dict.get("taks"),
+                    "gabari": r_dict.get("gabari"),
+                    "kat_adedi": r_dict.get("kat_adedi")
+                }
+            })
+            
+        fc = {"type": "FeatureCollection", "features": features}
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(fc, f, ensure_ascii=False, indent=2)
+        print(f"[✔] GeoJSON harita katmanı oluşturuldu: {output_path} ({len(features)} parsel)")
+        conn.close()
+        return len(features)
+
+    def auto_discover_and_expand(self, limit=100):
+        """
+        SIFIR MANUEL GİRİŞ:
+        Türkiye geneli toplanan ilanlardan ve mahallelerden tohum adaları alır.
+        Her adanın içindeki TÜM parselleri (1, 2, 3, 4, 5... N) ardışık olarak
+        otomatik sorgular ve sınır GeoJSON poligonlarıyla birlikte kaydeder.
+        """
+        print("=" * 70)
+        print("🚀 GEOPROP AI - OTONOM ADA & PARSEL KEŞİF MOTORU (MANUEL GİRİŞSİZ)")
+        print("=" * 70)
+        
+        # Tohum ada ve mahalle listesi oluştur
+        seed_items = []
+        csv_path = os.path.join(BASE_DIR, "data", "csv_ciktilari", "satilik_arsa_ilanlari.csv")
+        
+        if os.path.exists(csv_path):
+            with open(csv_path, mode="r", encoding="utf-8-sig") as f:
+                reader = csv.DictReader(f)
+                seen_coords = set()
+                for row in reader:
+                    lat_str = row.get("İlan Pin Lat")
+                    lon_str = row.get("İlan Pin Lon")
+                    il = row.get("İl")
+                    ilce = row.get("İlçe")
+                    mahalle = row.get("Mahalle")
+                    ada = row.get("Ada No")
+                    mid = row.get("Mahalle ID")
+                    
+                    if lat_str and lon_str:
+                        lat_val = round(float(lat_str), 4)
+                        lon_val = round(float(lon_str), 4)
+                        if (lat_val, lon_val) not in seen_coords:
+                            seen_coords.add((lat_val, lon_val))
+                            seed_items.append({
+                                "lat": float(lat_str),
+                                "lon": float(lon_str),
+                                "ada": ada,
+                                "mahalle_id": int(mid) if mid and str(mid).isdigit() else None,
+                                "il": il,
+                                "ilce": ilce,
+                                "mahalle": mahalle
+                            })
+        
+        # Eğer CSV yoksa veya az ise bilinen TKGM resmi tohumlarını ekle
+        if not seed_items:
+            seed_items = [
+                {"lat": 39.8892, "lon": 32.8633, "ada": "6103", "mahalle_id": 1156, "il": "Ankara", "ilce": "Çankaya", "mahalle": "Aziziye"},
+                {"lat": 39.9015, "lon": 32.8540, "ada": "2510", "mahalle_id": 1155, "il": "Ankara", "ilce": "Çankaya", "mahalle": "Ayrancı"}
+            ]
+            
+        print(f"[*] {len(seed_items)} farklı coğrafi tohum noktası belirlendi. Ada içi tüm parseller zincirleme taranıyor...")
+        
+        total_parsel_count = 0
+        for item in seed_items:
+            lat = item.get("lat")
+            lon = item.get("lon")
+            il = item.get("il")
+            ilce = item.get("ilce")
+            mah = item.get("mahalle")
+            mid = item.get("mahalle_id")
+            ada = item.get("ada")
+            
+            # 1. Önce resmi TKGM kaydını çöz ve doğrula
+            seed_res = self.process_parsel(
+                mahalle_id=mid,
+                ada=ada,
+                parsel=None,
+                il=il,
+                ilce=ilce,
+                mahalle=mah,
+                lat=lat,
+                lon=lon
+            )
+            
+            if not seed_res:
+                continue
+                
+            p_seed = seed_res["parsel"]
+            official_mid = p_seed.get("mahalle_id") or mid
+            official_ada = str(p_seed.get("ada_no") or ada)
+            il = p_seed.get("il") or il
+            ilce = p_seed.get("ilce") or ilce
+            mah = p_seed.get("mahalle") or mah
+            
+            total_parsel_count += 1
+            print(f"\n📁 [{il}/{ilce}/{mah}] Ada {official_ada} keşfedildi (TKGM Mahalle ID: {official_mid}). Tüm parseller taranıyor...")
+            miss_count = 0
+            ada_parsel_count = 1
+            
+            # Parsel 1'den başlayarak ardışık keşfet (arka arkaya 5 boş gelene kadar)
+            for p_num in range(1, 100):
+                parsel_str = str(p_num)
+                # Seed parsel zaten çekildiyse tekrar etme
+                if parsel_str == str(p_seed.get("parsel_no")):
+                    continue
+                    
+                res = self.process_parsel(
+                    mahalle_id=official_mid,
+                    ada=official_ada,
+                    parsel=parsel_str,
+                    il=il,
+                    ilce=ilce,
+                    mahalle=mah
+                )
+                
+                if res:
+                    ada_parsel_count += 1
+                    total_parsel_count += 1
+                    miss_count = 0
+                    p = res["parsel"]
+                    i = res["imar"]
+                    print(f"  --> [PARSEL {parsel_str}] {p['alan_m2']} m² | {p['nitelik']} | Fonk: {i['plan_fonksiyon']} (KAKS: {i['kaks_emsal']}) | Geo: OK")
+                    time.sleep(0.15)
+                else:
+                    miss_count += 1
+                    if miss_count >= 5 and p_num > 10:
+                        break
+                        
+                if total_parsel_count >= limit:
+                    break
+                    
+            print(f"  ✔ Ada {official_ada} tamamlandı: {ada_parsel_count} parsel geometrisi ve imar durumu çıkarıldı.")
+            if total_parsel_count >= limit:
+                print(f"\n[!] Belirtilen limit ({limit}) adedine ulaşıldı.")
+                break
+                
+        print(f"\n" + "=" * 70)
+        print(f"✅ OTONOM KEŞİF TAMAMLANDI: Toplam {total_parsel_count} Parsel Çekildi!")
+        print("=" * 70)
 
     def export_summary_json(self):
         """Veritabanındaki kayıtları web demo ve GitHub Actions için JSON olarak dışa aktarır."""
@@ -430,9 +610,13 @@ class ParselImarToplayici:
             json.dump(rows, f, ensure_ascii=False, indent=2)
         print(f"[✔] JSON Özeti oluşturuldu: {JSON_OUTPUT_PATH} ({len(rows)} kayıt)")
         conn.close()
+        
+        # Harita için GeoJSON çıktısını da güncelle
+        self.export_geojson()
 
 def main():
     parser = argparse.ArgumentParser(description="GEOPROP AI İmar, Plan Künyesi ve Bağımsız Bölüm Toplayıcı")
+    parser.add_argument("--otomatik-kesif", action="store_true", help="Manuel giriş yapmadan tüm ada ve parselleri otomatik keşfet")
     parser.add_argument("--mahalle-id", type=int, help="TKGM Mahalle ID")
     parser.add_argument("--ada", type=str, help="Ada No")
     parser.add_argument("--parsel", type=str, help="Parsel No")
@@ -440,13 +624,18 @@ def main():
     parser.add_argument("--ilce", type=str, default="Çankaya")
     parser.add_argument("--mahalle", type=str, default="Aziziye")
     parser.add_argument("--zenginlestir-csv", action="store_true", help="Arsa CSV'sindeki parselleri topla")
-    parser.add_argument("--limit", type=int, default=50, help="Maksimum işlenecek parsel sayısı")
+    parser.add_argument("--limit", type=int, default=100, help="Maksimum işlenecek parsel sayısı")
     
     args = parser.parse_args()
     init_database()
     toplayici = ParselImarToplayici()
     
-    if args.zenginlestir_csv:
+    if args.otomatik_kesif or (not args.zenginlestir_csv and not (args.mahalle_id and args.ada and args.parsel)):
+        # Varsayılan otonom mod: Sıfır manuel giriş
+        print("[*] Otonom Ada/Parsel Keşif ve Geo Harita Çıkarımı Başlatılıyor...")
+        toplayici.auto_discover_and_expand(limit=args.limit)
+        toplayici.export_summary_json()
+    elif args.zenginlestir_csv:
         csv_path = os.path.join(BASE_DIR, "data", "csv_ciktilari", "satilik_arsa_ilanlari.csv")
         toplayici.enrich_from_csv(csv_path, limit=args.limit)
         toplayici.export_summary_json()
@@ -455,11 +644,7 @@ def main():
         if res:
             print(f"[✔] Başarıyla toplandı: {args.il}/{args.ilce} Ada {args.ada} Parsel {args.parsel}")
             toplayici.export_summary_json()
-    else:
-        # Default test: Çankaya Aziziye 6103 / 22
-        print("[*] Varsayılan test parseli çalıştırılıyor (Ankara Çankaya Aziziye 6103/22)...")
-        toplayici.process_parsel(1156, "6103", "22", "Ankara", "Çankaya", "Aziziye")
-        toplayici.export_summary_json()
 
 if __name__ == "__main__":
     main()
+
