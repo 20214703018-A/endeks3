@@ -1,0 +1,58 @@
+name: "Turkiye Dağlar, Ormanlar ve Coğrafi Varlıklar Toplayıcı"
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Haftalık olarak pazar gecesi saat 02:00'da çalışır
+    - cron: '0 2 * * 0'
+
+permissions:
+  contents: write
+
+jobs:
+  cografya_toplayici:
+    name: "Dağlar, Ormanlar ve Tabiat Varlıkları Toplayıcı"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Kodu Checkout Et
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Python 3.12 Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Dağlar, Ormanlar ve Coğrafi Varlıkları Topla
+        run: |
+          echo "========================================================"
+          echo "GEOPROP AI - TÜRKİYE DAĞLAR VE ORMANLAR TOPLAYICI"
+          echo "Tarih: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "========================================================"
+          python collector/cografi_ve_orman_toplayici.py
+
+      - name: Çıktıları Kontrol Et
+        run: |
+          ls -lh collector/data/cografya/ || true
+
+      - name: Değişiklikleri Git ile Kaydet ve Push Et
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f collector/data/cografya/
+          
+          if git diff --staged --quiet; then
+            echo "Yeni coğrafi veri değişikliği yok, push atlanıyor."
+          else
+            git commit -m "feat(cografya): Türkiye dağlar, zirveler ve orman verileri güncellendi [skip ci]"
+            git pull --rebase origin main || true
+            git push origin main
+          fi

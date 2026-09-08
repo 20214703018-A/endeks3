@@ -67,7 +67,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add collector/data/imar_ve_parseller/
+          git add -f collector/data/imar_ve_parseller/
           
           if git diff --staged --quiet; then
             echo "Yeni parsel veya imar verisi değişikliği yok, push atlanıyor."
