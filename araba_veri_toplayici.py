@@ -20,6 +20,7 @@ import os
 import sys
 import re
 import json
+import html
 import time
 import sqlite3
 import argparse
@@ -53,6 +54,31 @@ ECONOMY_BRANDS = {
     "fiat", "renault", "dacia", "hyundai", "tata", "lada", "tofaş", 
     "chery", "geely", "mg", "citroen", "peugeot"
 }
+
+# Desteklenen Tüm Kategoriler ve URL Eşleşmeleri
+CATEGORY_MAP = {
+    "otomobil": "otomobil",
+    "oto": "otomobil",
+    "arazi": "arazi-suv-pick-up",
+    "suv": "arazi-suv-pick-up",
+    "pickup": "arazi-suv-pick-up",
+    "pick-up": "arazi-suv-pick-up",
+    "arazi-suv-pickup": "arazi-suv-pick-up",
+    "arazi-suv-pick-up": "arazi-suv-pick-up",
+    "minivan": "minivan-panelvan",
+    "panelvan": "minivan-panelvan",
+    "van": "minivan-panelvan",
+    "minivan-panelvan": "minivan-panelvan",
+    "minivan-van-panelvan": "minivan-panelvan",
+    "minivan-van_panelvan": "minivan-panelvan",
+    "ticari": "ticari-arac",
+    "ticari-arac": "ticari-arac",
+    "ticari-araclar": "ticari-arac",
+    "hepsi": ["otomobil", "arazi-suv-pick-up", "minivan-panelvan"]
+}
+
+# Varsayılan olarak tüm binek, SUV ve hafif ticari kategorileri
+DEFAULT_CATEGORIES = ["otomobil", "arazi-suv-pick-up", "minivan-panelvan"]
 
 PART_ID_MAP = {
     "B01001": "hasar_kaput",
@@ -364,12 +390,12 @@ class AnonimArabaToplayici:
                             ilce = m_ilce.group(1).strip()
 
             # 2. Araç Kimlik ve Segment
-            kategori = dl_data.get("CD_kategori", "Otomobil").strip()
-            marka = (dl_data.get("CD_marka") or dl_data.get("CD_Marka", "")).strip()
-            seri = dl_data.get("CD_seri", "").strip()
-            model = dl_data.get("CD_model", "").strip()
-            breadcrumb = dl_data.get("CD_Detail_Breadcrumb", "").strip()
-            segment = dl_data.get("CD_Detail_CarSegment", "").strip()
+            kategori = html.unescape(dl_data.get("CD_kategori", "Otomobil")).strip()
+            marka = html.unescape(dl_data.get("CD_marka") or dl_data.get("CD_Marka", "")).strip()
+            seri = html.unescape(dl_data.get("CD_seri", "")).strip()
+            model = html.unescape(dl_data.get("CD_model", "")).strip()
+            breadcrumb = html.unescape(dl_data.get("CD_Detail_Breadcrumb", "")).strip()
+            segment = html.unescape(dl_data.get("CD_Detail_CarSegment", "")).strip()
 
             marka_lower = marka.lower()
             if any(b in marka_lower for b in LUXURY_BRANDS):
@@ -740,12 +766,27 @@ def parse_sehirler(sehir_args):
                 plakalar.append(int(part))
     return sorted(list(set(plakalar)))
 
+def resolve_categories(kat_inputs):
+    """Kategori girdilerini (otomobil, arazi, suv, minivan, panelvan, hepsi) standart URL sluglarına dönüştürür."""
+    cats = []
+    for k in (kat_inputs or DEFAULT_CATEGORIES):
+        for sub_k in str(k).split(","):
+            sub_k = sub_k.strip().lower()
+            if not sub_k:
+                continue
+            resolved = CATEGORY_MAP.get(sub_k, sub_k)
+            if isinstance(resolved, list):
+                cats.extend(resolved)
+            else:
+                cats.append(resolved)
+    return list(dict.fromkeys(cats))
+
 def main():
     parser = argparse.ArgumentParser(description="GEOPROP AI - Standartlaştırılmış Araç Verisi Toplayıcısı")
     parser.add_argument("--hepsi", action="store_true", help="Türkiye genelindeki 81 ilin tamamını tara")
     parser.add_argument("--sehirler", "--iller", nargs="+", default=None, help="Taranacak il plaka kodları (Örn: --sehirler 34 6 veya '34,6')")
     parser.add_argument("--genel", action="store_true", help="İl filtresi olmadan son yüklenen ilanları tara")
-    parser.add_argument("--kategoriler", nargs="+", default=["otomobil"], help="Kategoriler: otomobil arazi-suv-pickup minivan-van-panelvan")
+    parser.add_argument("--kategoriler", nargs="+", default=DEFAULT_CATEGORIES, help="Kategoriler: otomobil arazi-suv-pick-up minivan-panelvan (Varsayılan: Tümü)")
     parser.add_argument("--sayfa", type=int, default=3, help="Her il veya kategori için taranacak sayfa adedi")
     parser.add_argument("--threads", type=int, default=6, help="Paralel çalışan iş parçacığı sayısı")
     parser.add_argument("--db", type=str, default=None, help="Özel SQLite veritabanı yolu")
@@ -764,12 +805,7 @@ def main():
     if not plakalar and not args.genel:
         plakalar = [34, 6, 35, 77, 16, 7]
 
-    kategoriler = []
-    for k in args.kategoriler:
-        for sub_k in str(k).split(","):
-            sub_k = sub_k.strip()
-            if sub_k:
-                kategoriler.append(sub_k)
+    kategoriler = resolve_categories(args.kategoriler)
 
     log("=" * 70, "INFO")
     log("GEOPROP AI - STANDARTLAŞTIRILMIŞ ARAÇ VERİ TOPLAYICI (ANALİTİK PARSE)", "INFO")

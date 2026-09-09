@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       kategoriler:
-        description: 'Çekilecek Taşıt Kategorileri (otomobil, arazi-suv-pickup veya virgülle çoklu)'
+        description: 'Çekilecek Taşıt Kategorileri (otomobil, arazi-suv-pick-up, minivan-panelvan veya hepsi)'
         required: true
-        default: 'otomobil'
+        default: 'otomobil,arazi-suv-pick-up,minivan-panelvan'
         type: string
       sayfa_sayisi:
         description: 'İl Başına Sayfa Derinliği (Her sayfa 20 ilan)'
@@ -91,7 +91,7 @@ jobs:
           python araba_veri_toplayici.py \
             --sehirler "${{ matrix.iller }}" \
             --sayfa "${{ github.event.inputs.sayfa_sayisi || '10' }}" \
-            --kategoriler "${{ github.event.inputs.kategoriler || 'otomobil' }}" \
+            --kategoriler "${{ github.event.inputs.kategoriler || 'otomobil,arazi-suv-pick-up,minivan-panelvan' }}" \
             --threads "${{ github.event.inputs.threads || '6' }}" \
             --db "araba_grup_${{ matrix.grup }}.db" \
             --csv-dir "cikti_grup_${{ matrix.grup }}"
