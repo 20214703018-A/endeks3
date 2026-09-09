@@ -601,35 +601,41 @@ class AnonimArabaToplayici:
         kategoriler = kategoriler or ["otomobil"]
         toplam_basarili = 0
 
-        hedef_listeler = []
+        hedef_kombinasyonlar = []
         if genel:
             for kat in kategoriler:
-                for s in range(1, sayfa_sayisi + 1):
-                    hedef_listeler.append((kat, None, s))
+                hedef_kombinasyonlar.append((kat, None))
         else:
             plakalar = plakalar or [34, 6, 35, 77, 16, 7]
             for plaka in plakalar:
                 for kat in kategoriler:
-                    for s in range(1, sayfa_sayisi + 1):
-                        hedef_listeler.append((kat, plaka, s))
+                    hedef_kombinasyonlar.append((kat, plaka))
 
-        log(f"Toplam {len(hedef_listeler)} arama sayfası taranacak...", "INFO")
+        log(f"Toplam {len(hedef_kombinasyonlar)} il/kategori hedefi taranacak (Max sayfa: {sayfa_sayisi})...", "INFO")
 
-        # 1. Aşama: Link Keşfi
+        # 1. Aşama: Link Keşfi (İlan bittiğinde erken sonlanmalı)
         bulunanlar = []
         gorulenler = set(self.mevcut_araclar)
 
-        for kat, plaka, sayfa in hedef_listeler:
+        for kat, plaka in hedef_kombinasyonlar:
             etiket = f"Plaka {plaka}" if plaka else "Genel"
-            links = self.arama_sayfasindan_ilan_linkleri_al(kategori=kat, plaka=plaka, sayfa=sayfa)
-            yeni_adet = 0
-            for aid, u in links:
-                if aid not in gorulenler:
-                    gorulenler.add(aid)
-                    bulunanlar.append((aid, u))
-                    yeni_adet += 1
-            log(f"  {etiket} [{kat}] Sayfa {sayfa}: {len(links)} araç bulundu ({yeni_adet} yeni).", "INFO")
-            time.sleep(0.3)
+            bos_sayfa_sayisi = 0
+            for sayfa in range(1, sayfa_sayisi + 1):
+                links = self.arama_sayfasindan_ilan_linkleri_al(kategori=kat, plaka=plaka, sayfa=sayfa)
+                if not links:
+                    bos_sayfa_sayisi += 1
+                    if bos_sayfa_sayisi >= 1: # İlanlar tükendi, sonraki il/kategoriye geç
+                        break
+                    continue
+                bos_sayfa_sayisi = 0
+                yeni_adet = 0
+                for aid, u in links:
+                    if aid not in gorulenler:
+                        gorulenler.add(aid)
+                        bulunanlar.append((aid, u))
+                        yeni_adet += 1
+                log(f"  {etiket} [{kat}] Sayfa {sayfa}: {len(links)} araç bulundu ({yeni_adet} yeni).", "INFO")
+                time.sleep(0.2)
 
         if not bulunanlar:
             log("Taranacak yeni araç bulunamadı (Tümü veritabanında mevcut).", "INFO")
