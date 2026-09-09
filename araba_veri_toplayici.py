@@ -20,7 +20,7 @@ import os
 import sys
 import re
 import json
-import html
+import html as html_lib
 import time
 import sqlite3
 import argparse
@@ -280,12 +280,28 @@ class AnonimArabaToplayici:
         self.max_threads = max_threads
         self.session = requests.Session(impersonate="chrome120")
         self.headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
             "Referer": "https://www.arabam.com/",
             "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7"
         }
+        self._warmup_session()
         self.mevcut_araclar = self._mevcut_arac_idleri_yukle()
+
+    def _warmup_session(self):
+        """Oturumu ana sayfaya bağlanarak başlatır ve Cloudflare / WAF çerezlerini alır."""
+        for deneme in range(3):
+            try:
+                r = self.session.get("https://www.arabam.com/", headers=self.headers, timeout=15)
+                if r.status_code == 200:
+                    log(f"Oturum ve WAF çerezleri başarıyla yüklendi ({len(self.session.cookies)} adet).", "SUCCESS")
+                    return True
+                else:
+                    log(f"İlk oturum bağlantısı HTTP {r.status_code} (Deneme {deneme+1}/3)", "WARN")
+                    time.sleep(1.5 * (deneme + 1))
+            except Exception as e:
+                log(f"İlk oturum çerez yükleme uyarısı (Deneme {deneme+1}/3): {e}", "WARN")
+                time.sleep(1.0)
+        return False
 
     def _mevcut_arac_idleri_yukle(self):
         """Daha önce kaydedilmiş anonim araç ID'lerini küme olarak yükler."""
@@ -297,40 +313,46 @@ class AnonimArabaToplayici:
         return rows
 
     def arama_sayfasindan_ilan_linkleri_al(self, kategori="otomobil", plaka=None, sayfa=1):
-        """Arama sayfasındaki araç linklerini ve anonim ID'lerini tespit eder."""
+        """Arama sayfasındaki araç linklerini ve anonim ID'lerini tespit eder (yeniden deneme korumalı)."""
         if plaka:
             url = f"https://www.arabam.com/ikinci-el/{kategori}?city={plaka}&page={sayfa}"
         else:
             url = f"https://www.arabam.com/ikinci-el/{kategori}?page={sayfa}"
 
-        try:
-            r = self.session.get(url, headers=self.headers, timeout=15)
-            if r.status_code != 200:
-                log(f"Arama sayfası HTTP {r.status_code}: {url}", "WARN")
-                return []
+        for deneme in range(3):
+            try:
+                r = self.session.get(url, headers=self.headers, timeout=15)
+                if r.status_code == 200:
+                    soup = BeautifulSoup(r.text, "html.parser")
+                    rows = soup.select("tr.listing-list-item")
+                    ilan_linkleri = []
 
-            soup = BeautifulSoup(r.text, "html.parser")
-            rows = soup.select("tr.listing-list-item")
-            ilan_linkleri = []
+                    for row in rows:
+                        link_el = row.find("a", href=True)
+                        if not link_el:
+                            continue
+                        href = link_el["href"]
+                        m = re.search(r"/(\d+)(?:\?|$)", href)
+                        ilan_no = m.group(1) if m else ""
+                        if not ilan_no:
+                            continue
 
-            for row in rows:
-                link_el = row.find("a", href=True)
-                if not link_el:
-                    continue
-                href = link_el["href"]
-                m = re.search(r"/(\d+)(?:\?|$)", href)
-                ilan_no = m.group(1) if m else ""
-                if not ilan_no:
-                    continue
+                        arac_id = hashlib.sha256(ilan_no.encode()).hexdigest()[:16]
+                        tam_url = f"https://www.arabam.com{href}" if href.startswith("/") else href
+                        ilan_linkleri.append((arac_id, tam_url))
 
-                arac_id = hashlib.sha256(ilan_no.encode()).hexdigest()[:16]
-                tam_url = f"https://www.arabam.com{href}" if href.startswith("/") else href
-                ilan_linkleri.append((arac_id, tam_url))
-
-            return ilan_linkleri
-        except Exception as e:
-            log(f"Arama sayfası çekilemedi ({url}): {e}", "ERROR")
-            return []
+                    return ilan_linkleri
+                elif r.status_code in (403, 429):
+                    log(f"Arama sayfası HTTP {r.status_code} (Deneme {deneme+1}/3): {url}", "WARN")
+                    time.sleep(2.0 * (deneme + 1))
+                    self._warmup_session()
+                else:
+                    log(f"Arama sayfası HTTP {r.status_code}: {url}", "WARN")
+                    break
+            except Exception as e:
+                log(f"Arama sayfası çekilemedi ({url}): {e}", "ERROR")
+                time.sleep(1.0)
+        return []
 
     def arac_verilerini_cek_ve_parse_et(self, arac_id, ilan_url):
         """
@@ -338,12 +360,27 @@ class AnonimArabaToplayici:
         """
         thread_session = requests.Session(impersonate="chrome120")
         try:
-            r = thread_session.get(ilan_url, headers=self.headers, timeout=20)
-            if r.status_code != 200:
-                return None
+            thread_session.cookies.update(self.session.cookies)
+        except Exception:
+            pass
 
-            html = r.text
-            soup = BeautifulSoup(html, "html.parser")
+        html_content = None
+        for deneme in range(3):
+            try:
+                r = thread_session.get(ilan_url, headers=self.headers, timeout=20)
+                if r.status_code == 200:
+                    html_content = r.text
+                    break
+                elif r.status_code in (403, 429):
+                    time.sleep(1.5 * (deneme + 1))
+            except Exception:
+                time.sleep(1.0)
+
+        if not html_content:
+            return None
+
+        try:
+            soup = BeautifulSoup(html_content, "html.parser")
 
             dl_data = {}
             damage_list = []
@@ -390,12 +427,12 @@ class AnonimArabaToplayici:
                             ilce = m_ilce.group(1).strip()
 
             # 2. Araç Kimlik ve Segment
-            kategori = html.unescape(dl_data.get("CD_kategori", "Otomobil")).strip()
-            marka = html.unescape(dl_data.get("CD_marka") or dl_data.get("CD_Marka", "")).strip()
-            seri = html.unescape(dl_data.get("CD_seri", "")).strip()
-            model = html.unescape(dl_data.get("CD_model", "")).strip()
-            breadcrumb = html.unescape(dl_data.get("CD_Detail_Breadcrumb", "")).strip()
-            segment = html.unescape(dl_data.get("CD_Detail_CarSegment", "")).strip()
+            kategori = html_lib.unescape(dl_data.get("CD_kategori", "Otomobil")).strip()
+            marka = html_lib.unescape(dl_data.get("CD_marka") or dl_data.get("CD_Marka", "")).strip()
+            seri = html_lib.unescape(dl_data.get("CD_seri", "")).strip()
+            model = html_lib.unescape(dl_data.get("CD_model", "")).strip()
+            breadcrumb = html_lib.unescape(dl_data.get("CD_Detail_Breadcrumb", "")).strip()
+            segment = html_lib.unescape(dl_data.get("CD_Detail_CarSegment", "")).strip()
 
             marka_lower = marka.lower()
             if any(b in marka_lower for b in LUXURY_BRANDS):

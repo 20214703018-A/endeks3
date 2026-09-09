@@ -9,14 +9,14 @@ on:
         default: 'otomobil,arazi-suv-pick-up,minivan-panelvan'
         type: string
       sayfa_sayisi:
-        description: 'İl Başına Sayfa Derinliği (Her sayfa 20 ilan)'
+        description: 'İl Başına Sayfa Derinliği (Her sayfa 20 ilan - Örn: 50 veya 150)'
         required: false
-        default: '10'
+        default: '50'
         type: string
       threads:
-        description: 'Her Sanal Makinede Paralel Worker Thread Sayısı'
+        description: 'Her Sanal Makinede Paralel Worker Thread Sayısı (Örn: 8)'
         required: false
-        default: '6'
+        default: '8'
         type: string
 
 permissions:
@@ -84,6 +84,17 @@ jobs:
       - name: Bağımlılıkları Yükle
         run: |
           pip install curl_cffi beautifulsoup4
+
+      - name: Cloudflare WARP Kur (403 WAF Aşımı)
+        uses: fscarmen/warp-on-actions@v1.4
+        with:
+          stack: dual
+          mode: wireguard
+
+      - name: WARP ve Çıkış IP Teşhisi
+        run: |
+          echo "=== Cloudflare Çıkış IP ve Ağ Durumu ==="
+          curl -s https://cloudflare.com/cdn-cgi/trace || true
 
       - name: "Grup ${{ matrix.grup }} Araç Verilerini Topla"
         run: |
