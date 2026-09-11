@@ -1,0 +1,146 @@
+name: "Turkiye Arsa ve Tarla Fiyat Endeksi (40 Makine Paralel)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      asama:
+        description: 'Çalıştırma Aşaması (hepsi = Hem Mahalle Özeti/Segmentler Hem 80 Aylık Trend)'
+        required: true
+        default: 'hepsi'
+        type: choice
+        options:
+          - 'hepsi'
+          - '1'
+          - '2'
+      workers:
+        description: 'Her Makinede Paralel Thread Sayısı'
+        required: false
+        default: '4'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  tara_matrix:
+    name: "Grup ${{ matrix.grup }} (İller: ${{ matrix.iller }})"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 40
+      matrix:
+        include:
+          - { grup: 1, iller: "1,2" }      # Adana, Adıyaman
+          - { grup: 2, iller: "3,4" }      # Afyonkarahisar, Ağrı
+          - { grup: 3, iller: "5,6" }      # Amasya, Ankara
+          - { grup: 4, iller: "7,8" }      # Antalya, Artvin
+          - { grup: 5, iller: "9,10" }     # Aydın, Balıkesir
+          - { grup: 6, iller: "11,12" }    # Bilecik, Bingöl
+          - { grup: 7, iller: "13,14" }    # Bitlis, Bolu
+          - { grup: 8, iller: "15,16" }    # Burdur, Bursa
+          - { grup: 9, iller: "17,18" }    # Çanakkale, Çankırı
+          - { grup: 10, iller: "19,20" }   # Çorum, Denizli
+          - { grup: 11, iller: "21,22" }   # Diyarbakır, Edirne
+          - { grup: 12, iller: "23,24" }   # Elazığ, Erzincan
+          - { grup: 13, iller: "25,26" }   # Erzurum, Eskişehir
+          - { grup: 14, iller: "27,28" }   # Gaziantep, Giresun
+          - { grup: 15, iller: "29,30" }   # Gümüşhane, Hakkari
+          - { grup: 16, iller: "31,32" }   # Hatay, Isparta
+          - { grup: 17, iller: "33" }      # Mersin
+          - { grup: 18, iller: "34" }      # İstanbul
+          - { grup: 19, iller: "35" }      # İzmir
+          - { grup: 20, iller: "36,37" }   # Kars, Kastamonu
+          - { grup: 21, iller: "38,39" }   # Kayseri, Kırklareli
+          - { grup: 22, iller: "40,41" }   # Kırşehir, Kocaeli
+          - { grup: 23, iller: "42,43" }   # Konya, Kütahya
+          - { grup: 24, iller: "44,45" }   # Malatya, Manisa
+          - { grup: 25, iller: "46,47" }   # Kahramanmaraş, Mardin
+          - { grup: 26, iller: "48,49" }   # Muğla, Muş
+          - { grup: 27, iller: "50,51" }   # Nevşehir, Niğde
+          - { grup: 28, iller: "52,53" }   # Ordu, Rize
+          - { grup: 29, iller: "54,55" }   # Sakarya, Samsun
+          - { grup: 30, iller: "56,57" }   # Siirt, Sinop
+          - { grup: 31, iller: "58,59" }   # Sivas, Tekirdağ
+          - { grup: 32, iller: "60,61" }   # Tokat, Trabzon
+          - { grup: 33, iller: "62,63" }   # Tunceli, Şanlıurfa
+          - { grup: 34, iller: "64,65" }   # Uşak, Van
+          - { grup: 35, iller: "66,67" }   # Yozgat, Zonguldak
+          - { grup: 36, iller: "68,69" }   # Aksaray, Bayburt
+          - { grup: 37, iller: "70,71" }   # Karaman, Kırıkkale
+          - { grup: 38, iller: "72,73,74" } # Batman, Şırnak, Bartın
+          - { grup: 39, iller: "75,76,77" } # Ardahan, Iğdır, Yalova
+          - { grup: 40, iller: "78,79,80,81" } # Karabük, Kilis, Osmaniye, Düzce
+
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bağımlılıkları Kur
+        run: |
+          pip install requests pandas
+
+      - name: "Arsa & Tarla Verilerini Topla (İller: ${{ matrix.iller }})"
+        run: |
+          python collector/arsa_tam_kapsamli_toplayici.py \
+            --iller "${{ matrix.iller }}" \
+            --asama "${{ github.event.inputs.asama || 'hepsi' }}" \
+            --workers "${{ github.event.inputs.workers || '4' }}"
+
+      - name: "Sonuçları Paketle"
+        run: |
+          mkdir -p cikti_grup_${{ matrix.grup }}
+          [ -f collector/data/arsa_piyasa_istihbarati.db ] && cp collector/data/arsa_piyasa_istihbarati.db cikti_grup_${{ matrix.grup }}/arsa_${{ matrix.grup }}.sqlite || true
+          [ -d collector/data/csv_ciktilari ] && cp -r collector/data/csv_ciktilari cikti_grup_${{ matrix.grup }}/ || true
+          tar -czf grup_${{ matrix.grup }}_arsa.tar.gz cikti_grup_${{ matrix.grup }}
+
+      - name: "Artifaktı Yükle"
+        uses: actions/upload-artifact@v4
+        with:
+          name: arsa-grup-${{ matrix.grup }}
+          path: grup_${{ matrix.grup }}_arsa.tar.gz
+          retention-days: 7
+
+  birlestir:
+    name: "Tüm Türkiye Arsa & Tarla Verilerini Birleştir"
+    needs: tara_matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bağımlılıkları Kur
+        run: |
+          pip install requests pandas
+
+      - name: "Tüm Grup Artifaktlarını İndir"
+        uses: actions/download-artifact@v4
+        with:
+          path: tum_gruplar
+
+      - name: "Veritabanlarını ve CSV'leri Birleştir"
+        run: |
+          python collector/arsa_tam_kapsamli_toplayici.py --birlestir-dizin tum_gruplar
+
+      - name: "Master Zip Paketi Hazırla"
+        run: |
+          mkdir -p tum_turkiye_arsa_nihai_paket
+          [ -f collector/data/arsa_piyasa_istihbarati.db ] && cp collector/data/arsa_piyasa_istihbarati.db tum_turkiye_arsa_nihai_paket/ || true
+          [ -d collector/data/csv_ciktilari ] && cp -r collector/data/csv_ciktilari tum_turkiye_arsa_nihai_paket/ || true
+          zip -r turkiye_arsa_tarla_tam_veriseti.zip tum_turkiye_arsa_nihai_paket/
+
+      - name: "Nihai Paketi Artifakt Olarak Yükle"
+        uses: actions/upload-artifact@v4
+        with:
+          name: TURKIYE-ARSA-TARLA-ENDEKS-40-MAKINE-PAKETI
+          path: turkiye_arsa_tarla_tam_veriseti.zip
+          retention-days: 14

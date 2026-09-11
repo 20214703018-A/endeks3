@@ -18,3 +18,5 @@ reports/veri-katalogu-tam.csv
 Thumbs.db
 __pycache__/
 *.py[cod]
+collector/state_*.json
+
