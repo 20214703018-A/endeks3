@@ -105,11 +105,18 @@ class HamCografiVeri:
     en_yakin_gol_baraj_adi: Optional[str]
     en_yakin_gol_baraj_mesafe_m: Optional[float]
     
-    # 4. Fay Hattı & Sismik Mesafe
+    # 4. Fay Hattı & Sismik Mesafe (Makro ve Detaylı 895 Segment)
     diri_fay_adi: str
     diri_fay_sistemi: str
     diri_fay_tipi: str
     diri_fay_mesafesi_km: float
+    detayli_fay_id: str
+    detayli_fay_sistemi: str
+    detayli_fay_tipi: str
+    detayli_fay_kayma_hizi_mm_yil: str
+    detayli_fay_segment_uzunlugu_km: float
+    detayli_fay_mesafesi_m: float
+    detayli_fay_mesafesi_km: float
 
 
 @dataclass
@@ -135,6 +142,13 @@ class DepremVeFaySonucu:
     fay_mesafesi_km: float
     sismik_risk_derecesi: str     # 1. Derece Yüksek, 2. Derece Orta vb.
     sismik_guvenlik_puani: int    # 0 - 100 puan
+    detayli_fay_id: Optional[str] = None
+    detayli_fay_sistemi: Optional[str] = None
+    detayli_fay_tipi: Optional[str] = None
+    detayli_fay_kayma_hizi_mm_yil: Optional[str] = None
+    detayli_fay_segment_uzunlugu_km: Optional[float] = None
+    detayli_fay_mesafesi_m: Optional[float] = None
+    detayli_fay_mesafesi_km: Optional[float] = None
 
 
 @dataclass
@@ -181,6 +195,11 @@ class CografiVeAltyapiMotoru:
     def __init__(self, db_path: Optional[Path] = None):
         self.db_path = db_path or DB_PATH
         self.su_toplayici = ArsaSuAltyapiToplayici(self.db_path)
+        try:
+            from turkiye_detayli_fay_veritabani_olusturucu import DetayliFaySorgulayici
+            self.detayli_fay_sorgulayici = DetayliFaySorgulayici()
+        except Exception:
+            self.detayli_fay_sorgulayici = None
 
     def _get_connection(self) -> sqlite3.Connection:
         conn = sqlite3.connect(str(self.db_path), timeout=30.0)
@@ -361,6 +380,22 @@ class CografiVeAltyapiMotoru:
 
         fay_km = round(min_mesafe_m / 1000.0, 1)
 
+        # Detaylı Diri Fay Sorgusu (895 Segment)
+        detayli_res = None
+        if self.detayli_fay_sorgulayici:
+            try:
+                detayli_res = self.detayli_fay_sorgulayici.en_yakin_fay_sorgula(lat, lon)
+            except Exception:
+                pass
+
+        detayli_id = detayli_res.get("catalog_id") if detayli_res else None
+        detayli_sis = detayli_res.get("fay_sistemi") if detayli_res else None
+        detayli_tip = detayli_res.get("slip_type") if detayli_res else None
+        detayli_hiz = detayli_res.get("net_slip_rate_mm_yil") if detayli_res else None
+        detayli_uzun = detayli_res.get("fay_uzunluk_km") if detayli_res else None
+        detayli_m = detayli_res.get("mesafe_m") if detayli_res else None
+        detayli_km = detayli_res.get("mesafe_km") if detayli_res else None
+
         if not secilen_fay or fay_km > 150.0:
             return DepremVeFaySonucu(
                 en_yakin_fay_adi="Ana Diri Fay Hattından Uzak",
@@ -368,7 +403,14 @@ class CografiVeAltyapiMotoru:
                 fay_tipi="Masif / Kararlı Zemin",
                 fay_mesafesi_km=fay_km,
                 sismik_risk_derecesi="4. Derece Düşük Sismik Risk",
-                sismik_guvenlik_puani=95
+                sismik_guvenlik_puani=95,
+                detayli_fay_id=detayli_id,
+                detayli_fay_sistemi=detayli_sis,
+                detayli_fay_tipi=detayli_tip,
+                detayli_fay_kayma_hizi_mm_yil=detayli_hiz,
+                detayli_fay_segment_uzunlugu_km=detayli_uzun,
+                detayli_fay_mesafesi_m=detayli_m,
+                detayli_fay_mesafesi_km=detayli_km
             )
 
         if fay_km <= 5.0:
@@ -393,7 +435,14 @@ class CografiVeAltyapiMotoru:
             fay_tipi=secilen_fay["tip"] or "Doğrultu Atımlı",
             fay_mesafesi_km=fay_km,
             sismik_risk_derecesi=risk_derece,
-            sismik_guvenlik_puani=guvenlik_puani
+            sismik_guvenlik_puani=guvenlik_puani,
+            detayli_fay_id=detayli_id,
+            detayli_fay_sistemi=detayli_sis,
+            detayli_fay_tipi=detayli_tip,
+            detayli_fay_kayma_hizi_mm_yil=detayli_hiz,
+            detayli_fay_segment_uzunlugu_km=detayli_uzun,
+            detayli_fay_mesafesi_m=detayli_m,
+            detayli_fay_mesafesi_km=detayli_km
         )
 
     def hesapla_taskin_riski(self, lat: float, lon: float) -> TaskinRiskiSonucu:
@@ -530,7 +579,14 @@ class CografiVeAltyapiMotoru:
             diri_fay_adi=fay.en_yakin_fay_adi,
             diri_fay_sistemi=fay.fay_sistemi,
             diri_fay_tipi=fay.fay_tipi,
-            diri_fay_mesafesi_km=fay.fay_mesafesi_km
+            diri_fay_mesafesi_km=fay.fay_mesafesi_km,
+            detayli_fay_id=fay.detayli_fay_id or "",
+            detayli_fay_sistemi=fay.detayli_fay_sistemi or "",
+            detayli_fay_tipi=fay.detayli_fay_tipi or "",
+            detayli_fay_kayma_hizi_mm_yil=fay.detayli_fay_kayma_hizi_mm_yil or "",
+            detayli_fay_segment_uzunlugu_km=fay.detayli_fay_segment_uzunlugu_km or 0.0,
+            detayli_fay_mesafesi_m=fay.detayli_fay_mesafesi_m or 0.0,
+            detayli_fay_mesafesi_km=fay.detayli_fay_mesafesi_km or 0.0
         )
 
     def analiz_et(self, lat: float, lon: float, canli_osm_tara: bool = False) -> ArsaTamCografiRapor:
@@ -599,13 +655,13 @@ class CografiVeAltyapiMotoru:
         return ArsaTamCografiRapor(
             enlem=lat,
             boylam=lon,
-            analiz_zamani=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            analiz_zamani=datetime.now().strftime("%d.%m.%Y %H:%M:%S"),
             topografya=topo,
             su_altyapisi=su,
             taskin_riski=taskin,
             deprem_ve_fay=fay,
             en_yakin_yerlesim_adi=yerlesim_adi,
-            yerlesim_mesafe_m=yerlesim_mesafe,
+            yerlesim_mesafe_m=round(yerlesim_mesafe, 1),
             arazi_fiziksel_kalite_puani=toplam_puan,
             arazi_kalite_sinifi=sinif,
             ozet_degerlendirme=ozet
@@ -614,6 +670,7 @@ class CografiVeAltyapiMotoru:
 
 def format_tam_cografi_rapor(r: ArsaTamCografiRapor) -> str:
     """Tam 1. Grup analiz raporunu görsel ve zenginleştirilmiş formatta terminale basar."""
+    fay = r.deprem_ve_fay
     lines = [
         "╔═══════════════════════════════════════════════════════════════════════════════════════╗",
         "║              GEOPROP AI - 1. GRUP ARAZİ VE FİZİKSEL ALTYAPI ANALİZİ                   ║",
@@ -644,8 +701,13 @@ def format_tam_cografi_rapor(r: ArsaTamCografiRapor) -> str:
         f"║   • Taşkın & Sel Güvenliği: {r.taskin_riski.taskin_riski_derecesi}",
         f"║   • En Yakın Akarsu / Dere : {r.taskin_riski.en_yakin_akarsu_adi or 'Uzak'} ({f'{r.taskin_riski.akarsu_mesafe_m:.0f} m' if r.taskin_riski.akarsu_mesafe_m else 'Kayıt Yok'})",
         f"║   • En Yakın Kuru Dere     : {r.taskin_riski.en_yakin_kuru_dere_adi or 'Uzak'} ({f'{r.taskin_riski.kuru_dere_mesafe_m:.0f} m' if r.taskin_riski.kuru_dere_mesafe_m else 'Kayıt Yok'})",
-        f"║   • Diri Fay Segmenti      : {r.deprem_ve_fay.en_yakin_fay_adi} ({r.deprem_ve_fay.fay_mesafesi_km} km)",
-        f"║   • Sismik Kuşak & Sistem  : {r.deprem_ve_fay.fay_sistemi} - {r.deprem_ve_fay.sismik_risk_derecesi}",
+        f"║   • Diri Fay Segmenti      : {fay.en_yakin_fay_adi} ({fay.fay_mesafesi_km} km)",
+        f"║   • Sismik Kuşak & Sistem  : {fay.fay_sistemi} - {fay.sismik_risk_derecesi}",
+        f"║   • DETAYLI DİRİ FAY       : {fay.detayli_fay_id or 'Kayıt Yok'} ({fay.detayli_fay_sistemi or ''})",
+        f"║     - Mekanizma / Tip      : {fay.detayli_fay_tipi or 'Bilinmiyor'}",
+        f"║     - Yıllık Kayma Hızı    : {fay.detayli_fay_kayma_hizi_mm_yil or '-'} mm/yıl",
+        f"║     - Segment Uzunluğu     : {fay.detayli_fay_segment_uzunlugu_km or '-'} km",
+        f"║     - Parsel Fay Mesafesi  : {fay.detayli_fay_mesafesi_km or '-'} km ({fay.detayli_fay_mesafesi_m or '-'} m)",
         "║                                                                                       ║",
         "║ 4. ULAŞIM VE ÇEVRESEL YERLEŞİM:                                                       ║",
         f"║   • En Yakın Meskûn Mahal  : {r.en_yakin_yerlesim_adi} ({r.yerlesim_mesafe_m:.0f} metre)",

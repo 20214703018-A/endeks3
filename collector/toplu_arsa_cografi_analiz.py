@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from cografi_ve_altyapi_motoru import CografiVeAltyapiMotoru
+from tam_fiziksel_altyapi_sorgulayici import TamFizikselAltyapiSorgulayici
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data" / "cografya"
@@ -43,7 +44,7 @@ def log(msg: str, level: str = "INFO") -> None:
     print(f"[{now_str}] {prefix} {msg}", flush=True)
 
 
-def islem_yap_tekil(row: Dict[str, Any], motor: CografiVeAltyapiMotoru) -> Dict[str, Any]:
+def islem_yap_tekil(row: Dict[str, Any], motor: CografiVeAltyapiMotoru, fiz_sorgulayici: Optional[TamFizikselAltyapiSorgulayici] = None) -> Dict[str, Any]:
     """Tek bir satır için 1. Grup coğrafi ve su analizini yapar ve satırı zenginleştirir."""
     # Enlem ve boylam sütunlarını bul
     lat_keys = ["lat", "enlem", "latitude", "Lat", "Enlem"]
@@ -108,11 +109,47 @@ def islem_yap_tekil(row: Dict[str, Any], motor: CografiVeAltyapiMotoru) -> Dict[
         row["en_yakin_gol_baraj_adi"] = ham.en_yakin_gol_baraj_adi or ""
         row["en_yakin_gol_baraj_mesafe_m"] = ham.en_yakin_gol_baraj_mesafe_m if ham.en_yakin_gol_baraj_mesafe_m is not None else ""
         
-        # 4. Fay Ham Verileri (Mesafe, Ad ve Tür)
-        row["diri_fay_adi"] = ham.diri_fay_adi
-        row["diri_fay_sistemi"] = ham.diri_fay_sistemi
-        row["diri_fay_tipi"] = ham.diri_fay_tipi
-        row["diri_fay_mesafesi_km"] = ham.diri_fay_mesafesi_km
+        # 4. Detaylı Diri Fay Ham Verileri (GEM / MTA 895 Segment)
+        row["detayli_fay_id"] = ham.detayli_fay_id
+        row["detayli_fay_sistemi"] = ham.detayli_fay_sistemi
+        row["detayli_fay_tipi"] = ham.detayli_fay_tipi
+        row["detayli_fay_kayma_hizi_mm_yil"] = ham.detayli_fay_kayma_hizi_mm_yil
+        row["detayli_fay_segment_uzunlugu_km"] = ham.detayli_fay_segment_uzunlugu_km
+        row["detayli_fay_mesafesi_m"] = ham.detayli_fay_mesafesi_m
+        row["detayli_fay_mesafesi_km"] = ham.detayli_fay_mesafesi_km
+        row["makro_fay_adi"] = ham.diri_fay_adi
+        row["makro_fay_mesafesi_km"] = ham.diri_fay_mesafesi_km
+
+        # 5. Elektrik, Yol, Ray, Sit, Sahil, Orman, Yangın Ham Verileri
+        if fiz_sorgulayici:
+            try:
+                il_val = row.get("il") or row.get("Il") or ""
+                fiz = fiz_sorgulayici.analiz_et(lat, lon, il_adi=il_val)
+                row["elektrik_hatti_adi"] = fiz.en_yakin_elektrik_hatti_adi or ""
+                row["elektrik_hatti_voltaj"] = fiz.elektrik_hatti_voltaj or ""
+                row["elektrik_hatti_mesafe_m"] = fiz.elektrik_hatti_mesafe_m if fiz.elektrik_hatti_mesafe_m is not None else ""
+                row["mevcut_yol_adi"] = fiz.en_yakin_yol_adi or ""
+                row["mevcut_yol_sinifi"] = fiz.en_yakin_yol_sinifi or ""
+                row["mevcut_yol_mesafe_m"] = fiz.yol_mesafe_m if fiz.yol_mesafe_m is not None else ""
+                row["planlanan_yol_adi"] = fiz.en_yakin_planlanan_yol_adi or ""
+                row["planlanan_yol_mesafe_m"] = fiz.planlanan_yol_mesafe_m if fiz.planlanan_yol_mesafe_m is not None else ""
+                row["tren_hatti_adi"] = fiz.en_yakin_tren_hatti_adi or ""
+                row["tren_hatti_tipi"] = fiz.tren_hatti_tipi or ""
+                row["tren_hatti_mesafe_m"] = fiz.tren_hatti_mesafe_m if fiz.tren_hatti_mesafe_m is not None else ""
+                row["sit_alani_adi"] = fiz.en_yakin_sit_alani_adi or ""
+                row["sit_koruma_kategorisi"] = fiz.sit_koruma_kategorisi or ""
+                row["sit_alani_mesafe_m"] = fiz.sit_alani_mesafe_m if fiz.sit_alani_mesafe_m is not None else ""
+                row["parsel_sit_icerisinde_mi"] = fiz.parsel_sit_icerisinde_mi
+                row["sahil_seridi_mesafe_m"] = fiz.sahil_seridi_mesafe_m if fiz.sahil_seridi_mesafe_m is not None else ""
+                row["kiyi_kanunu_50m_yasak_bandinda_mi"] = fiz.kiyi_kanunu_50m_yasak_bandinda_mi
+                row["kiyi_kanunu_100m_sahil_seridinde_mi"] = fiz.kiyi_kanunu_100m_sahil_seridinde_mi
+                row["orman_adi"] = fiz.en_yakin_orman_adi or ""
+                row["orman_mesafe_m"] = fiz.orman_mesafe_m if fiz.orman_mesafe_m is not None else ""
+                row["dere_yatagi_adi"] = fiz.en_yakin_dere_yatagi_adi or ""
+                row["dere_yatagi_mesafe_m"] = fiz.dere_yatagi_mesafe_m if fiz.dere_yatagi_mesafe_m is not None else ""
+                row["yangin_risk_kategorisi"] = fiz.yangin_risk_kategorisi or ""
+            except Exception:
+                pass
     except Exception as e:
         row["hata"] = str(e)
 
@@ -138,12 +175,18 @@ def zenginlestir_csv(girdi_csv: Path, cikti_csv: Path, max_workers: int = 8, lim
     log(f"Toplam {total:,} arsa kaydı analiz edilecek (İş Parçacığı Sayısı: {max_workers})...", "INFO")
 
     motor = CografiVeAltyapiMotoru()
+    fiz_sorgulayici = None
+    try:
+        fiz_sorgulayici = TamFizikselAltyapiSorgulayici()
+    except Exception:
+        pass
+
     zenginlestirilmis: List[Dict[str, Any]] = []
     tamamlanan = 0
     t0 = time.time()
 
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        future_map = {pool.submit(islem_yap_tekil, r, motor): r for r in rows}
+        future_map = {pool.submit(islem_yap_tekil, r, motor, fiz_sorgulayici): r for r in rows}
         for future in as_completed(future_map):
             res = future.result()
             zenginlestirilmis.append(res)
@@ -207,12 +250,17 @@ def ornek_ilce_analizi(il_adi: str, ilce_adi: str, limit: int = 15) -> None:
 
     log(f"{il_adi.title()} - {ilce_adi.title()} için {len(secilenler)} mahalle/arsa noktası analiz ediliyor...", "STEP")
     motor = CografiVeAltyapiMotoru()
+    fiz_sorgulayici = None
+    try:
+        fiz_sorgulayici = TamFizikselAltyapiSorgulayici()
+    except Exception:
+        pass
     sonuclar = []
 
     for item in secilenler:
-        res = islem_yap_tekil(item, motor)
+        res = islem_yap_tekil(item, motor, fiz_sorgulayici)
         sonuclar.append(res)
-        print(f"  • {item['mahalle']:<20} | Eğim: %{item.get('egim_yuzde')} (Bakı: {item.get('baki_kardinal')} {item.get('baki_derece')}°) | Şebeke: {item.get('sebeke_mesafe_m')}m | Akarsu: {item.get('en_yakin_akarsu_mesafe_m')}m (Kot farkı: {item.get('akarsu_kot_farki_m')}m) | Fay: {item.get('diri_fay_mesafesi_km')}km")
+        print(f"  • {item['mahalle']:<20} | Eğim: %{item.get('egim_yuzde')} | Yol: {item.get('mevcut_yol_mesafe_m')}m | Sahil: {item.get('sahil_seridi_mesafe_m')}m | Dere: {item.get('dere_yatagi_mesafe_m')}m | Detaylı Fay: {item.get('detayli_fay_id')} ({item.get('detayli_fay_mesafesi_km')} km)")
 
     cikti_dosya = OUTPUT_CSV_DIR / f"{il_adi.lower()}_{ilce_adi.lower()}_1_grup_cografi_ve_su_analizi.csv"
     if sonuclar:
