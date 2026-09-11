@@ -369,7 +369,10 @@ async function getBrowser() {
   if (isAvailable) {
     log(`🔗 Chrome CDP Oturumu Aktif (Port: 9222)`, 'SUCCESS');
     isCdpConnected = true;
-    return await puppeteer.connect({ browserURL: 'http://localhost:9222' });
+    return await puppeteer.connect({
+      browserURL: 'http://localhost:9222',
+      protocolTimeout: 240000
+    });
   }
 
   log(`🚀 Chrome Başlatılıyor (CI / Headless Mod)...`, 'INFO');
@@ -388,22 +391,48 @@ async function getBrowser() {
   }
 
   isCdpConnected = false;
-  const browser = await puppeteer.launch({
+  const launchOptions = {
     headless: 'new',
     executablePath: bin,
+    protocolTimeout: 240000,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-gpu',
+      '--no-zygote',
+      '--single-process',
       '--no-first-run',
       '--no-default-browser-check',
+      '--disable-blink-features=AutomationControlled',
+      '--disable-background-networking',
+      '--disable-background-timer-throttling',
+      '--disable-client-side-phishing-detection',
+      '--disable-default-apps',
+      '--disable-extensions',
+      '--disable-hang-monitor',
+      '--disable-popup-blocking',
+      '--disable-prompt-on-repost',
+      '--disable-sync',
+      '--disable-translate',
+      '--metrics-recording-only',
+      '--safebrowsing-disable-auto-update',
       '--window-size=1920,1080',
       '--lang=tr-TR,tr'
     ]
-  });
-  log(`✅ Chrome başarıyla başlatıldı ve bağlandı!`, 'SUCCESS');
-  return browser;
+  };
+
+  try {
+    const browser = await puppeteer.launch(launchOptions);
+    log(`✅ Chrome başarıyla başlatıldı ve bağlandı!`, 'SUCCESS');
+    return browser;
+  } catch (err) {
+    log(`İlk başlatma uyarısı (${err.message}). 2 sn sonra tekrar deneniyor...`, 'WARN');
+    await new Promise(r => setTimeout(r, 2000));
+    const browser = await puppeteer.launch(launchOptions);
+    log(`✅ Chrome başarıyla başlatıldı (2. deneme)!`, 'SUCCESS');
+    return browser;
+  }
 }
 
 // Hepsiemlak Sayfasını Çekme ve Ayrıştırma (Nuxt.js Madencisi)
@@ -567,27 +596,59 @@ async function fetchEmlakjetArsaDetail(url) {
   }
 }
 
-// Emlakjet Sayfasını Çekme ve Ayrıştırma (JSON-LD Madencisi)
+// Emlakjet Sayfasını Çekme ve Ayrıştırma (JSON-LD Madencisi - Hızlı Native Fetch & Fallback)
 async function scrapeEmlakjetPage(page, url, targetCategory, defaultCity = '', defaultCounty = '') {
   try {
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 35000 });
+    let rawList = [];
 
-    const rawList = await page.evaluate(() => {
-      const scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
-      const found = [];
-      for (const s of scripts) {
-        try {
-          const j = JSON.parse(s.innerText);
-          const graph = j['@graph'] || [j];
-          for (const item of graph) {
-            if (item['@type'] === 'RealEstateListing') {
-              found.push(item);
+    // 1. Hızlı Native HTTP Fetch ile dene (Chrome gerektirmez, 200ms)
+    try {
+      const res = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7'
+        },
+        signal: AbortSignal.timeout(15000)
+      });
+      if (res.ok) {
+        const html = await res.text();
+        const regex = /<script[^>]*type=[\"']application\/ld\+json[\"'][^>]*>(.*?)<\/script>/gis;
+        let m;
+        while ((m = regex.exec(html)) !== null) {
+          try {
+            const j = JSON.parse(m[1]);
+            const graph = j['@graph'] || [j];
+            for (const item of graph) {
+              if (item['@type'] === 'RealEstateListing') {
+                rawList.push(item);
+              }
             }
-          }
-        } catch(e) {}
+          } catch (e) {}
+        }
       }
-      return found;
-    });
+    } catch (fetchErr) {}
+
+    // 2. Eğer fetch ile bulunamadıysa ve browser page mevcutsa fallback olarak page ile dene
+    if (rawList.length === 0 && page) {
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 35000 }).catch(() => {});
+      rawList = await page.evaluate(() => {
+        const scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+        const found = [];
+        for (const s of scripts) {
+          try {
+            const j = JSON.parse(s.innerText);
+            const graph = j['@graph'] || [j];
+            for (const item of graph) {
+              if (item['@type'] === 'RealEstateListing') {
+                found.push(item);
+              }
+            }
+          } catch(e) {}
+        }
+        return found;
+      }).catch(() => []);
+    }
 
     const items = [];
     for (const raw of rawList) {
@@ -850,10 +911,27 @@ async function main() {
   const prevCount = countStmt.get().cnt;
   log(`📊 Veritabanındaki Önceden Kayıtlı İlan Sayısı: ${prevCount.toLocaleString('tr-TR')}`, 'INFO');
 
-  // Chrome'a Bağlan veya Başlat (CDP / Headless)
-  const browser = await getBrowser();
-  const page = await browser.newPage();
-  await page.setViewport({ width: 1366, height: 768 });
+  // Chrome'a Bağlan veya Başlat (Sadece Hepsiemlak gerekliyse)
+  let browser = null;
+  let page = null;
+  if (targetKaynak === 'hepsiemlak' || targetKaynak === 'hepsi') {
+    try {
+      browser = await getBrowser();
+      if (browser) {
+        page = await browser.newPage();
+        await page.setViewport({ width: 1366, height: 768 });
+        page.setDefaultTimeout(60000);
+        page.setDefaultNavigationTimeout(60000);
+        await page.evaluateOnNewDocument(() => {
+          Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+        }).catch(() => {});
+      }
+    } catch (browserErr) {
+      log(`[UYARI] Chrome başlatılamadı (${browserErr.message}). Hepsiemlak bu makinede atlanacak, Emlakjet kesintisiz devam edecek.`, 'WARN');
+      browser = null;
+      page = null;
+    }
+  }
 
   let totalNew = 0;
   const startTime = Date.now();
@@ -868,7 +946,7 @@ async function main() {
       let pageNum = 1;
 
       // 1. HEPSİEMLAK TARAMASI
-      if (targetKaynak === 'hepsiemlak' || targetKaynak === 'hepsi') {
+      if ((targetKaynak === 'hepsiemlak' || targetKaynak === 'hepsi') && page) {
         while (true) {
           if (maxSayfa && pageNum > maxSayfa) break;
 
@@ -884,8 +962,15 @@ async function main() {
           const delay = hizBase * 1000 + Math.random() * 800;
           await new Promise(r => setTimeout(r, delay));
 
-          const { totalAds, totalPages, items } = await scrapeHepsiemlakPage(page, url, task.category, task.cityName, task.countyName);
+          let heResult = { totalAds: 0, totalPages: 0, items: [] };
+          try {
+            heResult = await scrapeHepsiemlakPage(page, url, task.category, task.cityName, task.countyName);
+          } catch (heErr) {
+            log(`[Hepsiemlak] Sayfa ${pageNum} hatası: ${heErr.message}`, 'WARN');
+            break;
+          }
 
+          const { totalAds, totalPages, items } = heResult;
           if (!items || items.length === 0) break;
 
           const saved = saveListingsToDb(db, items, centroids);
