@@ -356,8 +356,9 @@ function saveListingsToDb(db, items, centroids) {
   return savedCount;
 }
 
-// Chrome Port 9222 Kontrolü ve Başlatma
-async function ensureChromeRunning() {
+// Chrome Bağlantısı / Otomatik Başlatma (CDP & Headless CI Desteği)
+let isCdpConnected = false;
+async function getBrowser() {
   const checkUrl = 'http://localhost:9222/json/version';
   const isAvailable = await new Promise((resolve) => {
     http.get(checkUrl, (res) => {
@@ -366,46 +367,43 @@ async function ensureChromeRunning() {
   });
 
   if (isAvailable) {
-    log(`Chrome CDP Oturumu Aktif (Port: 9222)`, 'SUCCESS');
-    return;
+    log(`🔗 Chrome CDP Oturumu Aktif (Port: 9222)`, 'SUCCESS');
+    isCdpConnected = true;
+    return await puppeteer.connect({ browserURL: 'http://localhost:9222' });
   }
 
-  log(`Port 9222'de Chrome bulunamadı. Otomatik başlatılıyor...`, 'WARN');
-  const profileDir = path.join(process.env.HOME || '/Users/acar', '.gemini/chrome_cdp_profile');
-  fs.mkdirSync(profileDir, { recursive: true });
-
+  log(`🚀 Chrome Başlatılıyor (CI / Headless Mod)...`, 'INFO');
   const chromePaths = [
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    process.env.CHROME_BIN,
     '/usr/bin/google-chrome',
-    '/usr/bin/chromium-browser'
-  ];
+    '/usr/bin/google-chrome-stable',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium',
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  ].filter(Boolean);
+
   const bin = chromePaths.find(p => fs.existsSync(p));
   if (!bin) {
     throw new Error('Google Chrome binary bulunamadı!');
   }
 
-  const cp = spawn(bin, [
-    '--remote-debugging-port=9222',
-    `--user-data-dir=${profileDir}`,
-    '--no-first-run',
-    '--no-default-browser-check',
-    '--window-size=1366,768',
-    'about:blank'
-  ], { detached: true, stdio: 'ignore' });
-  cp.unref();
-
-  // Açılmasını bekle
-  for (let i = 0; i < 15; i++) {
-    await new Promise(r => setTimeout(r, 1000));
-    const ok = await new Promise((resolve) => {
-      http.get(checkUrl, (res) => resolve(res.statusCode === 200)).on('error', () => resolve(false));
-    });
-    if (ok) {
-      log(`Chrome CDP başarıyla başlatıldı ve bağlandı!`, 'SUCCESS');
-      return;
-    }
-  }
-  throw new Error('Chrome başlatılamadı veya 9222 portuna yanıt vermedi.');
+  isCdpConnected = false;
+  const browser = await puppeteer.launch({
+    headless: 'new',
+    executablePath: bin,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--window-size=1920,1080',
+      '--lang=tr-TR,tr'
+    ]
+  });
+  log(`✅ Chrome başarıyla başlatıldı ve bağlandı!`, 'SUCCESS');
+  return browser;
 }
 
 // Hepsiemlak Sayfasını Çekme ve Ayrıştırma (Nuxt.js Madencisi)
@@ -852,9 +850,8 @@ async function main() {
   const prevCount = countStmt.get().cnt;
   log(`📊 Veritabanındaki Önceden Kayıtlı İlan Sayısı: ${prevCount.toLocaleString('tr-TR')}`, 'INFO');
 
-  // Chrome'a Bağlan
-  await ensureChromeRunning();
-  const browser = await puppeteer.connect({ browserURL: 'http://localhost:9222' });
+  // Chrome'a Bağlan veya Başlat (CDP / Headless)
+  const browser = await getBrowser();
   const page = await browser.newPage();
   await page.setViewport({ width: 1366, height: 768 });
 
@@ -977,8 +974,14 @@ async function main() {
   } catch (err) {
     log(`Kritik tarama hatası: ${err.message}`, 'ERROR');
   } finally {
-    await page.close().catch(() => {});
-    await browser.disconnect().catch(() => {});
+    if (page) await page.close().catch(() => {});
+    if (browser) {
+      if (isCdpConnected) {
+        await browser.disconnect().catch(() => {});
+      } else {
+        await browser.close().catch(() => {});
+      }
+    }
 
     const elapsed = Math.round((Date.now() - startTime) / 1000 / 60 * 10) / 10;
     const finalCount = countStmt.get().cnt;
