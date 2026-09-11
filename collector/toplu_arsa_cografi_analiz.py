@@ -72,35 +72,49 @@ def islem_yap_tekil(row: Dict[str, Any], motor: CografiVeAltyapiMotoru) -> Dict[
         return row
 
     try:
-        rapor = motor.analiz_et(lat, lon, canli_osm_tara=False)
-        row["rakim_m"] = rapor.topografya.rakim_m
-        row["egim_yuzde"] = rapor.topografya.egim_yuzde
-        row["egim_derece"] = rapor.topografya.egim_derece
-        row["egim_sinifi"] = rapor.topografya.egim_sinifi
-        row["hafriyat_etkisi"] = rapor.topografya.insaat_hafriyat_etkisi
-        row["baki_yonu"] = rapor.topografya.baki_yonu
-        row["baki_derece"] = rapor.topografya.baki_derece
-        row["guneslenme_skoru"] = rapor.topografya.guneslenme_skoru
+        ham = motor.ham_analiz_et(lat, lon)
         
-        row["arsada_su_var_mi"] = rapor.su_altyapisi.arsa_su_durumu
-        row["su_guvenlik_skoru"] = rapor.su_altyapisi.su_guvenlik_skoru
-        row["sebeke_durumu"] = rapor.su_altyapisi.sebeke_durumu
-        row["sebeke_mesafe_m"] = round(rapor.su_altyapisi.en_yakin_sebeke_mesafe_m, 0)
-        row["yeralti_suyu_potansiyeli"] = rapor.su_altyapisi.yeralti_suyu_potansiyeli
-        row["sondaj_derinligi_m"] = rapor.su_altyapisi.tahmini_sondaj_derinligi_m
-        row["tarimsal_sulama_imkani"] = rapor.su_altyapisi.tarimsal_sulama_imkani
-        row["su_temin_onerisi"] = rapor.su_altyapisi.su_temin_onerisi
+        # 1. Topoğrafya Ham Verileri (Ölçüm & Açı)
+        row["rakim_m"] = ham.rakim_m
+        row["egim_yuzde"] = ham.egim_yuzde
+        row["egim_derece"] = ham.egim_derece
+        row["baki_derece"] = ham.baki_derece
+        row["baki_kardinal"] = ham.baki_kardinal
+        row["delta_z_3x3_m"] = ham.delta_z_3x3_m
         
-        row["taskin_riski"] = rapor.taskin_riski.taskin_riski_derecesi
-        row["en_yakin_akarsu_m"] = round(rapor.taskin_riski.akarsu_mesafe_m, 0) if rapor.taskin_riski.akarsu_mesafe_m else ""
-        row["diri_fay_adi"] = rapor.deprem_ve_fay.en_yakin_fay_adi
-        row["fay_mesafesi_km"] = rapor.deprem_ve_fay.fay_mesafesi_km
-        row["sismik_risk"] = rapor.deprem_ve_fay.sismik_risk_derecesi
+        # 2. Su Altyapısı Ham Verileri (Mesafe, Ad ve Kot)
+        row["sebeke_yerlesim_adi"] = ham.sebeke_yerlesim_adi
+        row["sebeke_mesafe_m"] = ham.sebeke_mesafe_m
+        row["en_yakin_kuyu_adi"] = ham.en_yakin_kuyu_adi or ""
+        row["en_yakin_kuyu_mesafe_m"] = ham.en_yakin_kuyu_mesafe_m if ham.en_yakin_kuyu_mesafe_m is not None else ""
+        row["en_yakin_kuyu_rakim_m"] = ham.en_yakin_kuyu_rakim_m if ham.en_yakin_kuyu_rakim_m is not None else ""
+        row["yari_cap_3km_kuyu_sayisi"] = ham.yari_cap_3km_kuyu_sayisi
+        row["en_yakin_pinar_adi"] = ham.en_yakin_pinar_adi or ""
+        row["en_yakin_pinar_mesafe_m"] = ham.en_yakin_pinar_mesafe_m if ham.en_yakin_pinar_mesafe_m is not None else ""
+        row["en_yakin_pinar_rakim_m"] = ham.en_yakin_pinar_rakim_m if ham.en_yakin_pinar_rakim_m is not None else ""
+        row["yari_cap_3km_pinar_sayisi"] = ham.yari_cap_3km_pinar_sayisi
+        row["en_yakin_kanal_adi"] = ham.en_yakin_kanal_adi or ""
+        row["en_yakin_kanal_mesafe_m"] = ham.en_yakin_kanal_mesafe_m if ham.en_yakin_kanal_mesafe_m is not None else ""
+        row["en_yakin_su_deposu_adi"] = ham.en_yakin_su_deposu_adi or ""
+        row["en_yakin_su_deposu_mesafe_m"] = ham.en_yakin_su_deposu_mesafe_m if ham.en_yakin_su_deposu_mesafe_m is not None else ""
         
-        row["arazi_fiziksel_puani"] = rapor.arazi_fiziksel_kalite_puani
-        row["arazi_kalite_sinifi"] = rapor.arazi_kalite_sinifi
+        # 3. Hidroloji Ham Verileri (Mesafe ve Kot Farkı)
+        row["en_yakin_akarsu_adi"] = ham.en_yakin_akarsu_adi or ""
+        row["en_yakin_akarsu_mesafe_m"] = ham.en_yakin_akarsu_mesafe_m if ham.en_yakin_akarsu_mesafe_m is not None else ""
+        row["en_yakin_akarsu_rakim_m"] = ham.en_yakin_akarsu_rakim_m if ham.en_yakin_akarsu_rakim_m is not None else ""
+        row["akarsu_kot_farki_m"] = ham.akarsu_kot_farki_m if ham.akarsu_kot_farki_m is not None else ""
+        row["en_yakin_kuru_dere_adi"] = ham.en_yakin_kuru_dere_adi or ""
+        row["en_yakin_kuru_dere_mesafe_m"] = ham.en_yakin_kuru_dere_mesafe_m if ham.en_yakin_kuru_dere_mesafe_m is not None else ""
+        row["en_yakin_gol_baraj_adi"] = ham.en_yakin_gol_baraj_adi or ""
+        row["en_yakin_gol_baraj_mesafe_m"] = ham.en_yakin_gol_baraj_mesafe_m if ham.en_yakin_gol_baraj_mesafe_m is not None else ""
+        
+        # 4. Fay Ham Verileri (Mesafe, Ad ve Tür)
+        row["diri_fay_adi"] = ham.diri_fay_adi
+        row["diri_fay_sistemi"] = ham.diri_fay_sistemi
+        row["diri_fay_tipi"] = ham.diri_fay_tipi
+        row["diri_fay_mesafesi_km"] = ham.diri_fay_mesafesi_km
     except Exception as e:
-        row["cografi_hata"] = str(e)
+        row["hata"] = str(e)
 
     return row
 
@@ -198,7 +212,7 @@ def ornek_ilce_analizi(il_adi: str, ilce_adi: str, limit: int = 15) -> None:
     for item in secilenler:
         res = islem_yap_tekil(item, motor)
         sonuclar.append(res)
-        print(f"  • {item['mahalle']:<20} | Su: {item.get('arsada_su_var_mi', '')[:35]} | Eğim: %{item.get('egim_yuzde', '')} ({item.get('baki_yonu', '')}) | Puan: {item.get('arazi_fiziksel_puani')}/100")
+        print(f"  • {item['mahalle']:<20} | Eğim: %{item.get('egim_yuzde')} (Bakı: {item.get('baki_kardinal')} {item.get('baki_derece')}°) | Şebeke: {item.get('sebeke_mesafe_m')}m | Akarsu: {item.get('en_yakin_akarsu_mesafe_m')}m (Kot farkı: {item.get('akarsu_kot_farki_m')}m) | Fay: {item.get('diri_fay_mesafesi_km')}km")
 
     cikti_dosya = OUTPUT_CSV_DIR / f"{il_adi.lower()}_{ilce_adi.lower()}_1_grup_cografi_ve_su_analizi.csv"
     if sonuclar:

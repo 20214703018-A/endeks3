@@ -56,40 +56,68 @@ def get_bounding_box(lat: float, lon: float, radius_m: float) -> Tuple[float, fl
 
 
 @dataclass
+class HamSuVerisi:
+    enlem: float
+    boylam: float
+    
+    # 1. Şebeke Altyapısı (Meskûn Mahal Merkez Hattı)
+    sebeke_yerlesim_adi: str
+    sebeke_mesafe_m: float
+    
+    # 2. Yeraltı Suyu & Kuyu Envanteri
+    en_yakin_kuyu_adi: Optional[str]
+    en_yakin_kuyu_mesafe_m: Optional[float]
+    en_yakin_kuyu_rakim_m: Optional[int]
+    yari_cap_3km_kuyu_sayisi: int
+    
+    # 3. Doğal Pınar & Kaynak
+    en_yakin_pinar_adi: Optional[str]
+    en_yakin_pinar_mesafe_m: Optional[float]
+    en_yakin_pinar_rakim_m: Optional[int]
+    yari_cap_3km_pinar_sayisi: int
+    
+    # 4. Sulama Altyapısı (Kanal, Depo)
+    en_yakin_kanal_adi: Optional[str]
+    en_yakin_kanal_mesafe_m: Optional[float]
+    en_yakin_su_deposu_adi: Optional[str]
+    en_yakin_su_deposu_mesafe_m: Optional[float]
+    
+    # 5. Hidroloji & Su Yolları
+    en_yakin_akarsu_adi: Optional[str]
+    en_yakin_akarsu_mesafe_m: Optional[float]
+    en_yakin_akarsu_rakim_m: Optional[int]
+    akarsu_kot_farki_m: Optional[float]
+    en_yakin_kuru_dere_adi: Optional[str]
+    en_yakin_kuru_dere_mesafe_m: Optional[float]
+    en_yakin_kuru_dere_rakim_m: Optional[int]
+    kuru_dere_kot_farki_m: Optional[float]
+    en_yakin_gol_baraj_adi: Optional[str]
+    en_yakin_gol_baraj_mesafe_m: Optional[float]
+
+
+@dataclass
 class SuVarligiSonucu:
     enlem: float
     boylam: float
-    arsa_su_durumu: str          # "KESİN MEVCUT (Şebeke)", "YÜKSEK (Kuyu & Şebeke Yakın)", "ŞARTLI (Sondaj Gerekli)", "KIRAÇ (Susuz Arazi)"
-    su_guvenlik_skoru: int       # 0 - 100 puan
-    
-    # 1. Şebeke Suyu
-    sebeke_durumu: str           # "Bitişik / Mevcut", "Yakın (Hat Çekilebilir)", "Orta Mesafe", "Yok / Çok Uzak"
+    arsa_su_durumu: str
+    su_guvenlik_skoru: int
+    sebeke_durumu: str
     en_yakin_sebeke_mesafe_m: float
     en_yakin_yerlesim_adi: str
     tahmini_sebeke_maliyeti_tl: str
-    
-    # 2. Yeraltı Suyu & Kuyu / Artezyen
-    yeralti_suyu_potansiyeli: str # "Çok Yüksek (Sığ Akifer 20-40m)", "Orta (Derin Sondaj 50-100m)", "Düşük / Riskli"
+    yeralti_suyu_potansiyeli: str
     en_yakin_kuyu_mesafe_m: Optional[float]
     en_yakin_kuyu_adi: Optional[str]
     tahmini_sondaj_derinligi_m: str
     dsi_ruhsat_durumu: str
-    
-    # 3. Sulama & Açık Su
-    tarimsal_sulama_imkani: str   # "Mevcut (Kanal Yanında)", "Yakın Çevrede", "Yok / Kuru Tarım"
+    tarimsal_sulama_imkani: str
     en_yakin_kanal_mesafe_m: Optional[float]
     en_yakin_kanal_adi: Optional[str]
-    
-    # 4. Doğal Pınar & Kaynak
     dogal_pinar_var_mi: bool
     en_yakin_pinar_mesafe_m: Optional[float]
     en_yakin_pinar_adi: Optional[str]
-    
-    # 5. Hidroloji & Dere Tabanı
     en_yakin_akarsu_mesafe_m: Optional[float]
     en_yakin_akarsu_adi: Optional[str]
-    
-    # 6. Eylem & Yatırım Tavsiyesi
     su_temin_onerisi: str
     tahmini_toplam_su_butcesi_tl: str
 
@@ -307,6 +335,88 @@ out body;
             pass
 
         return eklenenler
+
+    def ham_su_verisi(self, lat: float, lon: float, arsa_rakim: Optional[float] = None) -> HamSuVerisi:
+        """Herhangi bir yorum veya puan içermeyen, tamamen ham ölçüm ve mesafe verilerini döndürür."""
+        yerlesim_adi, sebeke_mesafe = self.sorgula_en_yakin_meskun_mahal(lat, lon)
+        kaynaklar = self.sorgula_su_kaynaklari(lat, lon, arama_yaricapi_m=10000.0)
+        su_yollari = self.sorgula_su_yollari(lat, lon, arama_yaricapi_m=10000.0)
+
+        en_yakin_kuyu = kaynaklar.get("en_yakin_kuyu")
+        en_yakin_pinar = kaynaklar.get("en_yakin_pinar")
+        en_yakin_kanal = kaynaklar.get("en_yakin_kanal")
+        en_yakin_depo = kaynaklar.get("en_yakin_depo")
+
+        en_yakin_akarsu = su_yollari.get("en_yakin_akarsu")
+        en_yakin_kuru_dere = su_yollari.get("en_yakin_kuru_dere")
+
+        kuyu_3km = sum(1 for k in kaynaklar.get("kuyular", []) if k["mesafe_m"] <= 3000.0)
+        pinar_3km = sum(1 for p in kaynaklar.get("pinarlar", []) if p["mesafe_m"] <= 3000.0)
+
+        akarsu_kot_farki = None
+        if arsa_rakim is not None and en_yakin_akarsu and en_yakin_akarsu.get("rakim_m") is not None:
+            akarsu_kot_farki = round(arsa_rakim - en_yakin_akarsu["rakim_m"], 1)
+
+        kuru_dere_kot_farki = None
+        if arsa_rakim is not None and en_yakin_kuru_dere and en_yakin_kuru_dere.get("rakim_m") is not None:
+            kuru_dere_kot_farki = round(arsa_rakim - en_yakin_kuru_dere["rakim_m"], 1)
+
+        en_yakin_gol = None
+        gol_mesafe = None
+        gol_ad = None
+        try:
+            conn = self.get_connection()
+            cur = conn.cursor()
+            min_x, max_x, min_y, max_y = get_bounding_box(lat, lon, 15000.0)
+            cur.execute("""
+            SELECT s.ad, s.enlem, s.boylam
+            FROM rtree_su_yollari r
+            JOIN su_yollari_ve_dereler s ON r.id = s.id
+            WHERE r.minX >= ? AND r.maxX <= ? AND r.minY >= ? AND r.maxY <= ?
+              AND s.kategori IN ('SU_YOLU_GOL', 'SU_ALTYAPISI_DEPO')
+            """, (min_x, max_x, min_y, max_y))
+            gol_rows = cur.fetchall()
+            conn.close()
+
+            if gol_rows:
+                min_g_dist = float("inf")
+                for gr in gol_rows:
+                    d = haversine_distance(lat, lon, gr["enlem"], gr["boylam"])
+                    if d < min_g_dist:
+                        min_g_dist = d
+                        gol_ad = gr["ad"]
+                gol_mesafe = round(min_g_dist, 1)
+        except Exception:
+            pass
+
+        return HamSuVerisi(
+            enlem=lat,
+            boylam=lon,
+            sebeke_yerlesim_adi=yerlesim_adi or "Tespit Edilemedi",
+            sebeke_mesafe_m=round(sebeke_mesafe, 1),
+            en_yakin_kuyu_adi=en_yakin_kuyu["ad"] if en_yakin_kuyu else None,
+            en_yakin_kuyu_mesafe_m=en_yakin_kuyu["mesafe_m"] if en_yakin_kuyu else None,
+            en_yakin_kuyu_rakim_m=en_yakin_kuyu["rakim_m"] if en_yakin_kuyu else None,
+            yari_cap_3km_kuyu_sayisi=kuyu_3km,
+            en_yakin_pinar_adi=en_yakin_pinar["ad"] if en_yakin_pinar else None,
+            en_yakin_pinar_mesafe_m=en_yakin_pinar["mesafe_m"] if en_yakin_pinar else None,
+            en_yakin_pinar_rakim_m=en_yakin_pinar["rakim_m"] if en_yakin_pinar else None,
+            yari_cap_3km_pinar_sayisi=pinar_3km,
+            en_yakin_kanal_adi=en_yakin_kanal["ad"] if en_yakin_kanal else None,
+            en_yakin_kanal_mesafe_m=en_yakin_kanal["mesafe_m"] if en_yakin_kanal else None,
+            en_yakin_su_deposu_adi=en_yakin_depo["ad"] if en_yakin_depo else None,
+            en_yakin_su_deposu_mesafe_m=en_yakin_depo["mesafe_m"] if en_yakin_depo else None,
+            en_yakin_akarsu_adi=en_yakin_akarsu["ad"] if en_yakin_akarsu else None,
+            en_yakin_akarsu_mesafe_m=en_yakin_akarsu["mesafe_m"] if en_yakin_akarsu else None,
+            en_yakin_akarsu_rakim_m=en_yakin_akarsu["rakim_m"] if en_yakin_akarsu else None,
+            akarsu_kot_farki_m=akarsu_kot_farki,
+            en_yakin_kuru_dere_adi=en_yakin_kuru_dere["ad"] if en_yakin_kuru_dere else None,
+            en_yakin_kuru_dere_mesafe_m=en_yakin_kuru_dere["mesafe_m"] if en_yakin_kuru_dere else None,
+            en_yakin_kuru_dere_rakim_m=en_yakin_kuru_dere["rakim_m"] if en_yakin_kuru_dere else None,
+            kuru_dere_kot_farki_m=kuru_dere_kot_farki,
+            en_yakin_gol_baraj_adi=gol_ad,
+            en_yakin_gol_baraj_mesafe_m=gol_mesafe
+        )
 
     def analiz_et(self, lat: float, lon: float, canli_osm_tara: bool = True) -> SuVarligiSonucu:
         """Arsanın su varlığı ve altyapı durumunu hesaplar."""

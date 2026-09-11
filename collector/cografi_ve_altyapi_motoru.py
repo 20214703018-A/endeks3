@@ -65,6 +65,54 @@ def point_to_line_segment_distance(lat: float, lon: float, lat1: float, lon1: fl
 
 
 @dataclass
+class HamCografiVeri:
+    enlem: float
+    boylam: float
+    
+    # 1. Topoğrafya (DEM 30m)
+    rakim_m: float
+    egim_yuzde: float
+    egim_derece: float
+    baki_derece: float
+    baki_kardinal: str
+    grid_3x3_rakimlar: List[float]
+    delta_z_3x3_m: float
+    
+    # 2. Su Altyapısı & Su Varlığı (Mesafe ve Varlıklar)
+    sebeke_yerlesim_adi: str
+    sebeke_mesafe_m: float
+    en_yakin_kuyu_adi: Optional[str]
+    en_yakin_kuyu_mesafe_m: Optional[float]
+    en_yakin_kuyu_rakim_m: Optional[int]
+    yari_cap_3km_kuyu_sayisi: int
+    en_yakin_pinar_adi: Optional[str]
+    en_yakin_pinar_mesafe_m: Optional[float]
+    en_yakin_pinar_rakim_m: Optional[int]
+    yari_cap_3km_pinar_sayisi: int
+    en_yakin_kanal_adi: Optional[str]
+    en_yakin_kanal_mesafe_m: Optional[float]
+    en_yakin_su_deposu_adi: Optional[str]
+    en_yakin_su_deposu_mesafe_m: Optional[float]
+    
+    # 3. Hidroloji & Su Yolları
+    en_yakin_akarsu_adi: Optional[str]
+    en_yakin_akarsu_mesafe_m: Optional[float]
+    en_yakin_akarsu_rakim_m: Optional[int]
+    akarsu_kot_farki_m: Optional[float]
+    en_yakin_kuru_dere_adi: Optional[str]
+    en_yakin_kuru_dere_mesafe_m: Optional[float]
+    kuru_dere_kot_farki_m: Optional[float]
+    en_yakin_gol_baraj_adi: Optional[str]
+    en_yakin_gol_baraj_mesafe_m: Optional[float]
+    
+    # 4. Fay Hattı & Sismik Mesafe
+    diri_fay_adi: str
+    diri_fay_sistemi: str
+    diri_fay_tipi: str
+    diri_fay_mesafesi_km: float
+
+
+@dataclass
 class TopografyaSonucu:
     rakim_m: float
     egim_yuzde: float
@@ -380,6 +428,109 @@ class CografiVeAltyapiMotoru:
             kuru_dere_mesafe_m=kuru_dere_m if en_yakin_kuru_dere else None,
             taskin_riski_derecesi=risk,
             taskin_guvenlik_puani=puan
+        )
+
+    def ham_analiz_et(self, lat: float, lon: float) -> HamCografiVeri:
+        """Sadece ve sadece ham coğrafi, topoğrafik, hidrolojik ve fay mesafe verilerini çeker."""
+        step = 0.0003
+        lats = [
+            lat + step, lat + step, lat + step,
+            lat, lat, lat,
+            lat - step, lat - step, lat - step
+        ]
+        lons = [
+            lon - step, lon, lon + step,
+            lon - step, lon, lon + step,
+            lon - step, lon, lon + step
+        ]
+        lat_str = ",".join(f"{x:.6f}" for x in lats)
+        lon_str = ",".join(f"{x:.6f}" for x in lons)
+        url = f"https://api.open-meteo.com/v1/elevation?latitude={lat_str}&longitude={lon_str}"
+
+        elevations = None
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (GEOPROP Topography Engine)"})
+            with urllib.request.urlopen(req, timeout=5) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                elevations = data.get("elevation")
+        except Exception:
+            pass
+
+        if not elevations or len(elevations) != 9:
+            elevations = [100.0] * 9
+
+        z00, z01, z02 = elevations[0], elevations[1], elevations[2]
+        z10, z11, z12 = elevations[3], elevations[4], elevations[5]
+        z20, z21, z22 = elevations[6], elevations[7], elevations[8]
+        merkez_rakim = z11
+
+        cos_lat = math.cos(math.radians(lat))
+        dx = 111320.0 * cos_lat * step
+        dy = 111320.0 * step
+
+        dz_dx = ((z02 + 2.0 * z12 + z22) - (z00 + 2.0 * z10 + z20)) / (8.0 * dx)
+        dz_dy = ((z20 + 2.0 * z21 + z22) - (z00 + 2.0 * z01 + z02)) / (8.0 * dy)
+
+        slope_rad = math.atan(math.sqrt(dz_dx * dz_dx + dz_dy * dz_dy))
+        slope_deg = math.degrees(slope_rad)
+        slope_pct = math.tan(slope_rad) * 100.0
+
+        if dz_dx == 0.0 and dz_dy == 0.0:
+            aspect_deg = 180.0
+        else:
+            aspect_deg = 180.0 + math.degrees(math.atan2(dz_dy, -dz_dx))
+            if aspect_deg >= 360.0:
+                aspect_deg -= 360.0
+            elif aspect_deg < 0.0:
+                aspect_deg += 360.0
+
+        kardinal_yonler = ["K", "KD", "D", "GD", "G", "GB", "B", "KB"]
+        idx = int((aspect_deg + 22.5) // 45) % 8
+        baki_kardinal = kardinal_yonler[idx]
+
+        # Ham Su Verileri
+        su = self.su_toplayici.ham_su_verisi(lat, lon, arsa_rakim=merkez_rakim)
+
+        # Ham Fay Verileri
+        fay = self.hesapla_fay_ve_sismik_risk(lat, lon)
+
+        return HamCografiVeri(
+            enlem=lat,
+            boylam=lon,
+            rakim_m=round(merkez_rakim, 1),
+            egim_yuzde=round(slope_pct, 2),
+            egim_derece=round(slope_deg, 2),
+            baki_derece=round(aspect_deg, 1),
+            baki_kardinal=baki_kardinal,
+            grid_3x3_rakimlar=elevations,
+            delta_z_3x3_m=round(max(elevations) - min(elevations), 1),
+            sebeke_yerlesim_adi=su.sebeke_yerlesim_adi,
+            sebeke_mesafe_m=su.sebeke_mesafe_m,
+            en_yakin_kuyu_adi=su.en_yakin_kuyu_adi,
+            en_yakin_kuyu_mesafe_m=su.en_yakin_kuyu_mesafe_m,
+            en_yakin_kuyu_rakim_m=su.en_yakin_kuyu_rakim_m,
+            yari_cap_3km_kuyu_sayisi=su.yari_cap_3km_kuyu_sayisi,
+            en_yakin_pinar_adi=su.en_yakin_pinar_adi,
+            en_yakin_pinar_mesafe_m=su.en_yakin_pinar_mesafe_m,
+            en_yakin_pinar_rakim_m=su.en_yakin_pinar_rakim_m,
+            yari_cap_3km_pinar_sayisi=su.yari_cap_3km_pinar_sayisi,
+            en_yakin_kanal_adi=su.en_yakin_kanal_adi,
+            en_yakin_kanal_mesafe_m=su.en_yakin_kanal_mesafe_m,
+            en_yakin_su_deposu_adi=su.en_yakin_su_deposu_adi,
+            en_yakin_su_deposu_mesafe_m=su.en_yakin_su_deposu_mesafe_m,
+            en_yakin_akarsu_adi=su.en_yakin_akarsu_adi,
+            en_yakin_akarsu_mesafe_m=su.en_yakin_akarsu_mesafe_m,
+            en_yakin_akarsu_rakim_m=su.en_yakin_akarsu_rakim_m,
+            akarsu_kot_farki_m=su.akarsu_kot_farki_m,
+            en_yakin_kuru_dere_adi=su.en_yakin_kuru_dere_adi,
+            en_yakin_kuru_dere_mesafe_m=su.en_yakin_kuru_dere_mesafe_m,
+            kuru_dere_kot_farki_m=su.kuru_dere_kot_farki_m,
+            en_yakin_gol_baraj_adi=su.en_yakin_gol_baraj_adi,
+            en_yakin_gol_baraj_mesafe_m=su.en_yakin_gol_baraj_mesafe_m,
+            diri_fay_adi=fay.en_yakin_fay_adi,
+            diri_fay_sistemi=fay.fay_sistemi,
+            diri_fay_tipi=fay.fay_tipi,
+            diri_fay_mesafesi_km=fay.fay_mesafesi_km
         )
 
     def analiz_et(self, lat: float, lon: float, canli_osm_tara: bool = False) -> ArsaTamCografiRapor:
