@@ -8,23 +8,16 @@ SQLite veritabanından ve poligon klasöründen İstanbul (34) il geneli,
 dosyasına (demo/data/istanbul.json) derler.
 """
 
-import os
 import json
 import sqlite3
+import argparse
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEMO_DIR = BASE_DIR / "demo"
 DATA_DIR = DEMO_DIR / "data"
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-
-DB_PATH = Path("/Users/acar/Downloads/bolge_01_istanbul/data 2/piyasa_verileri.db")
-POLY_DIR = Path("/Users/acar/Downloads/bolge_01_istanbul/data 2/poligonlar")
-
-if not DB_PATH.exists():
-    DB_PATH = BASE_DIR / "collector/data/piyasa_verileri.db"
-if not POLY_DIR.exists():
-    POLY_DIR = BASE_DIR / "collector/data/poligonlar"
+DEFAULT_DB_PATH = BASE_DIR / "collector/data/piyasa_verileri.db"
+DEFAULT_POLY_DIR = BASE_DIR / "collector/data/poligonlar"
 
 def parse_ham_json(ham):
     if not ham: return {}
@@ -63,14 +56,23 @@ def parse_ham_json(ham):
         }
     }
 
-def compile_data():
-    print(f"[*] Veritabanı okunuyor: {DB_PATH}")
-    conn = sqlite3.connect(DB_PATH)
+def compile_data(db_path=DEFAULT_DB_PATH, poly_dir=DEFAULT_POLY_DIR, output_dir=DATA_DIR):
+    db_path = Path(db_path)
+    poly_dir = Path(poly_dir)
+    output_dir = Path(output_dir)
+    if not db_path.is_file():
+        raise FileNotFoundError(f"Veritabanı bulunamadı: {db_path}")
+    if not poly_dir.is_dir():
+        raise FileNotFoundError(f"Poligon klasörü bulunamadı: {poly_dir}")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"[*] Veritabanı okunuyor: {db_path}")
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     cur = conn.cursor()
 
     # 1. İlçe Poligon Haritası
     ilce_poligonlari = {}
-    city_poly_file = POLY_DIR / "city_34.json"
+    city_poly_file = poly_dir / "city_34.json"
     if city_poly_file.exists():
         with open(city_poly_file) as f:
             cp = json.load(f)
@@ -81,7 +83,7 @@ def compile_data():
 
     # 2. Mahalle Poligon Haritası
     mahalle_poligonlari = {}
-    for county_file in POLY_DIR.glob("county_34_*.json"):
+    for county_file in poly_dir.glob("county_34_*.json"):
         try:
             with open(county_file) as f:
                 d = json.load(f)
@@ -329,8 +331,8 @@ def compile_data():
 
     conn.close()
 
-    out_json = DATA_DIR / "istanbul.json"
-    out_js = DATA_DIR / "istanbul_data.js"
+    out_json = output_dir / "istanbul.json"
+    out_js = output_dir / "istanbul_data.js"
 
     print(f"[*] JSON dosyası kaydediliyor: {out_json}")
     with open(out_json, "w", encoding="utf-8") as f:
@@ -344,5 +346,20 @@ def compile_data():
     print(f"[✓] Derleme tamamlandı! Boyut: {size_mb:.2f} MB")
     print(f"    39 İlçe ve {sum(len(v) for v in out['mahalleler'].values())} Mahalle eksiksiz aktarıldı.")
 
+def main():
+    parser = argparse.ArgumentParser(
+        description="İstanbul demo paketini seçilen SQLite ve poligon kaynağından üretir."
+    )
+    parser.add_argument("--calistir", action="store_true", help="Çıktı üretimini açıkça başlat")
+    parser.add_argument("--db", type=Path, default=DEFAULT_DB_PATH, help="Kaynak piyasa_verileri.db")
+    parser.add_argument("--poligon", type=Path, default=DEFAULT_POLY_DIR, help="Kaynak poligon klasörü")
+    parser.add_argument("--cikti", type=Path, default=DATA_DIR, help="Çıktı klasörü")
+    args = parser.parse_args()
+    if not args.calistir:
+        parser.print_help()
+        return
+    compile_data(args.db, args.poligon, args.cikti)
+
+
 if __name__ == "__main__":
-    compile_data()
+    main()

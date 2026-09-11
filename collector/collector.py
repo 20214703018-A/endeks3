@@ -43,6 +43,31 @@ API_EJ_COMPANIES = "https://api.emlakjet.com/e6t/v1/project/companies"
 API_END_FELLOW = "https://api-valuation.endeksa.com/fellowcountryman"
 API_END_ELECTION = "https://api-valuation.endeksa.com/election"
 
+PROJECTION_LABELS = {"projection", "forecast", "projeksiyon", "tahmin"}
+PROJECTION_FORMULA_VERSION = "collector_fixed_growth_v1"
+
+
+def is_future_period(year, month=None, reference=None):
+    """Kaynak döneminin toplama anından ileride olup olmadığını belirler."""
+    try:
+        period = (int(year), int(month or 0))
+    except (TypeError, ValueError):
+        return False
+    reference = reference or datetime.now()
+    if period[1] == 0:
+        return period[0] > reference.year
+    return period > (reference.year, reference.month)
+
+
+def projection_metadata(record, reference=None):
+    """API etiketi eksik olsa bile gelecekteki trendi projeksiyon yapar."""
+    analysis_type = str(record.get("AnalysisType") or "").strip().lower()
+    if analysis_type in PROJECTION_LABELS:
+        return 1, "provider_declared"
+    if is_future_period(record.get("PropertyYear"), record.get("PropertyMonth"), reference):
+        return 1, "provider_future_inferred"
+    return 0, "provider_observed"
+
 def log(msg, level="INFO"):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     colors = {
@@ -134,6 +159,8 @@ def init_db(db_path):
         seviye TEXT, city_id INTEGER, county_id INTEGER, district_id INTEGER DEFAULT 0, bolge_adi TEXT, yil INTEGER,
         toplam_konut_satisi INTEGER, ipotekli_konut_satisi INTEGER,
         arsa_arazi_satisi INTEGER, ipotekli_arsa_satisi INTEGER, toplam_ilan_sayisi INTEGER,
+        projeksiyon INTEGER DEFAULT 0, projeksiyon_kaynagi TEXT,
+        hesaplama_surumu TEXT, guncellenme_tarihi TEXT,
         UNIQUE(seviye, city_id, county_id, district_id, yil)
     )""")
 
@@ -162,6 +189,7 @@ def init_db(db_path):
         amortisman_yil REAL, brut_kira_getirisi REAL, ortalama_bina_yasi REAL,
         satilik_kalma_suresi_gun REAL, kiralik_kalma_suresi_gun REAL,
         ilan_sayisi INTEGER, yillik_fiyat_degisim REAL, guncellenme_tarihi TEXT,
+        projeksiyon INTEGER DEFAULT 0, projeksiyon_kaynagi TEXT,
         UNIQUE(kategori, seviye, city_id, county_id, district_id, donem)
     )""")
 
@@ -171,6 +199,7 @@ def init_db(db_path):
         kategori TEXT, seviye TEXT, city_id INTEGER, county_id INTEGER, district_id INTEGER DEFAULT 0, bolge_adi TEXT, ay TEXT,
         satilik_m2_fiyat REAL, kiralik_m2_fiyat REAL, ortalama_fiyat REAL,
         ilan_sayisi INTEGER, amortisman_yil REAL, brut_kira_getirisi REAL, projeksiyon INTEGER,
+        projeksiyon_kaynagi TEXT, guncellenme_tarihi TEXT,
         UNIQUE(kategori, seviye, city_id, county_id, district_id, ay)
     )""")
 
@@ -195,6 +224,29 @@ def init_db(db_path):
     cur.execute("""CREATE TABLE IF NOT EXISTS emlak_ofisleri (id INTEGER PRIMARY KEY AUTOINCREMENT, city_id INTEGER, il_adi TEXT, ofis_id INTEGER, ofis_adi TEXT, slug TEXT, adres TEXT, telefon TEXT, danisman_sayisi INTEGER, ilan_sayisi INTEGER, UNIQUE(city_id, ofis_id))""")
     cur.execute("""CREATE TABLE IF NOT EXISTS danismanlar (id INTEGER PRIMARY KEY AUTOINCREMENT, city_id INTEGER, il_adi TEXT, danisman_id TEXT, danisman_adi TEXT, unvan TEXT, ofis_adi TEXT, telefon TEXT, aktif_ilan_sayisi INTEGER, UNIQUE(city_id, danisman_id))""")
     cur.execute("""CREATE TABLE IF NOT EXISTS sirketler (id INTEGER PRIMARY KEY AUTOINCREMENT, sirket_id INTEGER UNIQUE, sirket_adi TEXT, slug TEXT)""")
+
+    # Var olan veritabanlarını veri silmeden yeni projeksiyon izleme alanlarına taşır.
+    migrations = {
+        "yillik_satislar": {
+            "projeksiyon": "INTEGER DEFAULT 0",
+            "projeksiyon_kaynagi": "TEXT",
+            "hesaplama_surumu": "TEXT",
+            "guncellenme_tarihi": "TEXT",
+        },
+        "fiyat_ozet": {
+            "projeksiyon": "INTEGER DEFAULT 0",
+            "projeksiyon_kaynagi": "TEXT",
+        },
+        "fiyat_trend": {
+            "projeksiyon_kaynagi": "TEXT",
+            "guncellenme_tarihi": "TEXT",
+        },
+    }
+    for table, definitions in migrations.items():
+        existing = {row[1] for row in cur.execute(f"PRAGMA table_info({table})")}
+        for column, definition in definitions.items():
+            if column not in existing:
+                cur.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
 
     conn.commit()
     conn.close()
@@ -261,12 +313,20 @@ def save_demografi(conn, seviye, city_id, county_id, district_id, bolge_adi, dat
         ipotekli_arsa = demo.get(f"Total_ATMorgaged_Sale_{yil}")
         ilan = demo.get(f"Total_Listing_{yil}")
         if any(v is not None for v in (satis, ipotekli, arsa, ipotekli_arsa, ilan)):
+            projeksiyon = int(is_future_period(yil, reference=datetime.fromisoformat(now)))
+            projeksiyon_kaynagi = "provider_future_inferred" if projeksiyon else "provider_observed"
             cur.execute("""
             INSERT OR REPLACE INTO yillik_satislar (
                 seviye, city_id, county_id, district_id, bolge_adi, yil,
-                toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (seviye, city_id, county_id, district_id, bolge_adi, yil, satis, ipotekli, arsa, ipotekli_arsa, ilan))
+                toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi,
+                ipotekli_arsa_satisi, toplam_ilan_sayisi, projeksiyon,
+                projeksiyon_kaynagi, hesaplama_surumu, guncellenme_tarihi
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                seviye, city_id, county_id, district_id, bolge_adi, yil,
+                satis, ipotekli, arsa, ipotekli_arsa, ilan, projeksiyon,
+                projeksiyon_kaynagi, None, now,
+            ))
 
     # 2025, 2026 ve 2027 Projeksiyonları (Eğer API'de henüz yoksa)
     s24 = demo.get("Total_BB_Sale_2024")
@@ -276,13 +336,13 @@ def save_demografi(conn, seviye, city_id, county_id, district_id, bolge_adi, dat
         il24 = demo.get("Total_Listing_2024") or 0
         # 2025
         k25, ip25, ar25, il25 = int(s24 * 1.15), int(max(1, ip24) * 2.45), int(ar24 * 1.08), int(il24 * 1.14)
-        cur.execute("INSERT OR REPLACE INTO yillik_satislar (seviye, city_id, county_id, district_id, bolge_adi, yil, toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi) VALUES (?, ?, ?, ?, ?, 2025, ?, ?, ?, 0, ?)", (seviye, city_id, county_id, district_id, bolge_adi, k25, ip25, ar25, il25))
+        cur.execute("INSERT OR REPLACE INTO yillik_satislar (seviye, city_id, county_id, district_id, bolge_adi, yil, toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi, projeksiyon, projeksiyon_kaynagi, hesaplama_surumu, guncellenme_tarihi) VALUES (?, ?, ?, ?, ?, 2025, ?, ?, ?, 0, ?, 1, 'collector_fixed_growth', ?, ?)", (seviye, city_id, county_id, district_id, bolge_adi, k25, ip25, ar25, il25, PROJECTION_FORMULA_VERSION, now))
         # 2026
         k26, ip26, ar26, il26 = int(k25 * 1.10), int(ip25 * 1.60), int(ar25 * 1.07), int(il25 * 1.15)
-        cur.execute("INSERT OR REPLACE INTO yillik_satislar (seviye, city_id, county_id, district_id, bolge_adi, yil, toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi) VALUES (?, ?, ?, ?, ?, 2026, ?, ?, ?, 0, ?)", (seviye, city_id, county_id, district_id, bolge_adi, k26, ip26, ar26, il26))
+        cur.execute("INSERT OR REPLACE INTO yillik_satislar (seviye, city_id, county_id, district_id, bolge_adi, yil, toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi, projeksiyon, projeksiyon_kaynagi, hesaplama_surumu, guncellenme_tarihi) VALUES (?, ?, ?, ?, ?, 2026, ?, ?, ?, 0, ?, 1, 'collector_fixed_growth', ?, ?)", (seviye, city_id, county_id, district_id, bolge_adi, k26, ip26, ar26, il26, PROJECTION_FORMULA_VERSION, now))
         # 2027 Projeksiyonu
         k27, ip27, ar27, il27 = int(k26 * 1.08), int(ip26 * 1.35), int(ar26 * 1.06), int(il26 * 1.09)
-        cur.execute("INSERT OR REPLACE INTO yillik_satislar (seviye, city_id, county_id, district_id, bolge_adi, yil, toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi) VALUES (?, ?, ?, ?, ?, 2027, ?, ?, ?, 0, ?)", (seviye, city_id, county_id, district_id, bolge_adi, k27, ip27, ar27, il27))
+        cur.execute("INSERT OR REPLACE INTO yillik_satislar (seviye, city_id, county_id, district_id, bolge_adi, yil, toplam_konut_satisi, ipotekli_konut_satisi, arsa_arazi_satisi, ipotekli_arsa_satisi, toplam_ilan_sayisi, projeksiyon, projeksiyon_kaynagi, hesaplama_surumu, guncellenme_tarihi) VALUES (?, ?, ?, ?, ?, 2027, ?, ?, ?, 0, ?, 1, 'collector_fixed_growth', ?, ?)", (seviye, city_id, county_id, district_id, bolge_adi, k27, ip27, ar27, il27, PROJECTION_FORMULA_VERSION, now))
     conn.commit()
 
 def save_hemsehri(conn, seviye, city_id, county_id, district_id, bolge_adi, data):
@@ -340,37 +400,46 @@ def save_fiyat_ve_kirilimlar(conn, kategori, seviye, city_id, county_id, distric
 
     if genel:
         donem = f"{genel.get('PropertyYear')}-{str(genel.get('PropertyMonth', '')).zfill(2)}"
+        genel_projeksiyon, genel_projeksiyon_kaynagi = projection_metadata(
+            genel, datetime.fromisoformat(now)
+        )
         cur.execute("""
         INSERT OR REPLACE INTO fiyat_ozet (
             kategori, seviye, city_id, county_id, district_id, bolge_adi, donem,
             satilik_m2_fiyat, kiralik_m2_fiyat, ortalama_fiyat,
             amortisman_yil, brut_kira_getirisi, ortalama_bina_yasi,
             satilik_kalma_suresi_gun, kiralik_kalma_suresi_gun,
-            ilan_sayisi, yillik_fiyat_degisim, guncellenme_tarihi
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ilan_sayisi, yillik_fiyat_degisim, guncellenme_tarihi,
+            projeksiyon, projeksiyon_kaynagi
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             kategori, seviye, city_id, county_id, district_id, bolge_adi, donem,
             genel.get("UnitPriceForSale"), genel.get("UnitPriceForRent"), genel.get("PriceForSale"),
             genel.get("Amortization"), genel.get("Yield"), genel.get("AverageAgeForSale"),
             genel.get("ListingPeriodForSale"), genel.get("ListingPeriodForRent"),
-            genel.get("CountForSale"), genel.get("UnitPriceSaleAnnualChange"), now
+            genel.get("CountForSale"), genel.get("UnitPriceSaleAnnualChange"), now,
+            genel_projeksiyon, genel_projeksiyon_kaynagi,
         ))
 
     for r in data.get("Trend") or []:
         y, m = r.get("PropertyYear"), r.get("PropertyMonth")
         if not y or not m: continue
         ay = f"{y}-{str(m).zfill(2)}"
+        projeksiyon, projeksiyon_kaynagi = projection_metadata(
+            r, datetime.fromisoformat(now)
+        )
         cur.execute("""
         INSERT OR REPLACE INTO fiyat_trend (
             kategori, seviye, city_id, county_id, district_id, bolge_adi, ay,
             satilik_m2_fiyat, kiralik_m2_fiyat, ortalama_fiyat,
-            ilan_sayisi, amortisman_yil, brut_kira_getirisi, projeksiyon
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ilan_sayisi, amortisman_yil, brut_kira_getirisi, projeksiyon,
+            projeksiyon_kaynagi, guncellenme_tarihi
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             kategori, seviye, city_id, county_id, district_id, bolge_adi, ay,
             r.get("UnitPriceForSale"), r.get("UnitPriceForRent"), r.get("PriceForSale"),
             r.get("CountForSale"), r.get("Amortization"), r.get("Yield"),
-            1 if r.get("AnalysisType") == "Projection" else 0
+            projeksiyon, projeksiyon_kaynagi, now,
         ))
 
     kirilim_haritasi = {"oda": data.get("HouseType"), "yas": data.get("Age"), "kat": data.get("FloorSergment"), "isitma": data.get("Heating")}
@@ -587,20 +656,25 @@ def main():
                 # Anlık mahalle fiyatını Static satırından da hemen fiyat_ozet'e kaydedelim (ekstra istek gerekmeden)
                 now_t = datetime.now().isoformat()
                 donem_t = f"{m.get('PropertyYear')}-{str(m.get('PropertyMonth', '')).zfill(2)}" if m.get('PropertyYear') else "guncel"
+                ozet_projeksiyon, ozet_projeksiyon_kaynagi = projection_metadata(
+                    m, datetime.fromisoformat(now_t)
+                )
                 cur.execute("""
                 INSERT OR REPLACE INTO fiyat_ozet (
                     kategori, seviye, city_id, county_id, district_id, bolge_adi, donem,
                     satilik_m2_fiyat, kiralik_m2_fiyat, ortalama_fiyat,
                     amortisman_yil, brut_kira_getirisi, ortalama_bina_yasi,
                     satilik_kalma_suresi_gun, kiralik_kalma_suresi_gun,
-                    ilan_sayisi, yillik_fiyat_degisim, guncellenme_tarihi
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ilan_sayisi, yillik_fiyat_degisim, guncellenme_tarihi,
+                    projeksiyon, projeksiyon_kaynagi
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     "konut", "mahalle", city_id, county_id, dist_id, f"{bolge_tam} - {dist_name}", donem_t,
                     m.get("UnitPriceForSale"), m.get("UnitPriceForRent"), m.get("PriceForSale"),
                     m.get("Amortization"), m.get("Yield"), m.get("AverageAgeForSale"),
                     m.get("ListingPeriodForSale"), m.get("ListingPeriodForRent"),
-                    m.get("CountForSale"), m.get("UnitPriceSaleAnnualChange"), now_t
+                    m.get("CountForSale"), m.get("UnitPriceSaleAnnualChange"), now_t,
+                    ozet_projeksiyon, ozet_projeksiyon_kaynagi,
                 ))
                 conn.commit()
 

@@ -13,6 +13,7 @@ import time
 import random
 import urllib.request
 import urllib.error
+import argparse
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -69,6 +70,19 @@ def fetch_county_polygons(job):
     return city_id, county_id, county_name, 0, False
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Mevcut ilçe rehberinden mahalle poligonlarını ağ üzerinden toplar"
+    )
+    parser.add_argument(
+        "--calistir",
+        action="store_true",
+        help="Ağ taramasını açıkça başlat",
+    )
+    args = parser.parse_args()
+    if not args.calistir:
+        parser.print_help()
+        return
+
     POLYGONS_DIR.mkdir(parents=True, exist_ok=True)
     jobs = []
     for city_file in sorted(POLYGONS_DIR.glob("city_*.json")):

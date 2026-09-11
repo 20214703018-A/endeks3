@@ -1,15 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GEOPROP AI - Türkiye Makro & Mikro Ticari Lokasyon İstihbarat Toplayıcısı
+GEOPROP AI - Türkiye Makro & Mikro Ticari Lokasyon MODELİ
 ========================================================================
-2026 ve Sonrası (2026-2027 Projeksiyonları) Güncel Veri Motoru:
-1. T.C. Ticaret Bakanlığı ETBİS: 81 İl 2026 E-Ticaret Hacimleri, Uyum Endeksleri ve Kişi Başı Harcama (5.45 Trilyon TL Ulusal Hacim)
-2. Sanayi ve Teknoloji Bakanlığı SEGE-2026: 973 İlçe Sosyo-Ekonomik Gelişmişlik Kademesi (1-6) ve 2026 Skorları
-3. PTT A.Ş. Canlı CBS Servisleri: 81 İldeki PTT Kargo Şubeleri ve 7/24 Kargomat Akıllı Dolapları (Birebir GPS)
-4. TÜİK & BKM & Endeksa: İl, İlçe ve Mahalle E-Ticaret (Pazaryeri, Giyim, Elektronik) ve Harcama Kalemleri (2026 Enflasyon Endeksli)
-5. TÜİK Türkiye Sağlık Araştırması: 2026 İl ve Bölge Bazlı Tütün & Sigara Tüketim Oranları
-6. Maptriks / Huff Gravity Tarzı "2026-2027 Ciro & Lokasyon Potansiyeli Puanı" Hesaplama Motoru (0-100)
+Bu betik sabit örnekler ve deterministik katsayılarla demo/model veri üretir.
+Üretilen değerler ETBİS, SEGE, TÜİK veya başka bir kurumun doğrulanmış güncel
+verisi değildir ve karar verisi olarak kullanılmamalıdır.
 """
 
 import os
@@ -47,7 +43,7 @@ def init_master_db(db_path=None):
     conn = sqlite3.connect(target_db)
     c = conn.cursor()
 
-    # 1. ETBİS 81 İl E-Ticaret Hacimleri ve Uyum Endeksi (2026 ve Sonrası)
+    # 1. ETBİS benzeri il e-ticaret model tablosu
     c.execute("""
     CREATE TABLE IF NOT EXISTS etbis_81_il_e_ticaret (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,20 +57,20 @@ def init_master_db(db_path=None):
         tescilli_e_ticaret_isletme_sayisi INTEGER,
         genel_ticaret_icindeki_pay_yuzde REAL,
         alis_satis_karsilama_orani REAL,
-        veri_donemi TEXT DEFAULT '2026-Q3 (Güncel)',
+        veri_donemi TEXT DEFAULT 'MODEL-2026-Q3',
         guncellenme_yili INTEGER DEFAULT 2026,
-        tahmin_ufku TEXT DEFAULT '2026-2027 Projeksiyonu'
+        tahmin_ufku TEXT DEFAULT 'MODEL-2026-2027'
     )
     """)
     # Kolon göçü (Migration)
     c.execute("PRAGMA table_info(etbis_81_il_e_ticaret)")
     existing_cols = [r[1] for r in c.fetchall()]
     if "veri_donemi" not in existing_cols:
-        c.execute("ALTER TABLE etbis_81_il_e_ticaret ADD COLUMN veri_donemi TEXT DEFAULT '2026-Q3 (Güncel)'")
+        c.execute("ALTER TABLE etbis_81_il_e_ticaret ADD COLUMN veri_donemi TEXT DEFAULT 'MODEL-2026-Q3'")
     if "tahmin_ufku" not in existing_cols:
-        c.execute("ALTER TABLE etbis_81_il_e_ticaret ADD COLUMN tahmin_ufku TEXT DEFAULT '2026-2027 Projeksiyonu'")
+        c.execute("ALTER TABLE etbis_81_il_e_ticaret ADD COLUMN tahmin_ufku TEXT DEFAULT 'MODEL-2026-2027'")
 
-    # 2. Sanayi Bakanlığı SEGE 973 İlçe Sosyo-Ekonomik Gelişmişlik (2026 Revize)
+    # 2. SEGE benzeri ilçe sosyo-ekonomik model tablosu
     c.execute("""
     CREATE TABLE IF NOT EXISTS sege_973_ilce_gelismislik (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,7 +82,7 @@ def init_master_db(db_path=None):
         gelismislik_kademesi INTEGER, -- 1 (En Zengin/Gelişmiş) - 6 (En Düşük)
         kademe_tanimi TEXT,
         sosyo_ekonomik_sinif TEXT, -- 'A+', 'A', 'B+', 'B', 'C', 'D'
-        veri_donemi TEXT DEFAULT '2026 Revize (Güncel)',
+        veri_donemi TEXT DEFAULT 'MODEL-2026',
         guncellenme_yili INTEGER DEFAULT 2026,
         tahmin_ufku TEXT DEFAULT '2026-2027',
         UNIQUE(il_adi, ilce_adi)
@@ -95,7 +91,7 @@ def init_master_db(db_path=None):
     c.execute("PRAGMA table_info(sege_973_ilce_gelismislik)")
     existing_sege = [r[1] for r in c.fetchall()]
     if "veri_donemi" not in existing_sege:
-        c.execute("ALTER TABLE sege_973_ilce_gelismislik ADD COLUMN veri_donemi TEXT DEFAULT '2026 Revize (Güncel)'")
+        c.execute("ALTER TABLE sege_973_ilce_gelismislik ADD COLUMN veri_donemi TEXT DEFAULT 'MODEL-2026'")
     if "guncellenme_yili" not in existing_sege:
         c.execute("ALTER TABLE sege_973_ilce_gelismislik ADD COLUMN guncellenme_yili INTEGER DEFAULT 2026")
     if "tahmin_ufku" not in existing_sege:
@@ -112,7 +108,7 @@ def init_master_db(db_path=None):
         tuketim_seviyesi TEXT,
         aciklama TEXT,
         veri_yili INTEGER DEFAULT 2026,
-        veri_donemi TEXT DEFAULT '2026 Güncel'
+        veri_donemi TEXT DEFAULT 'MODEL-2026'
     )
     """)
     c.execute("PRAGMA table_info(tuik_tutun_ve_sigara_istatistikleri)")
@@ -120,7 +116,7 @@ def init_master_db(db_path=None):
     if "veri_yili" not in existing_tutun:
         c.execute("ALTER TABLE tuik_tutun_ve_sigara_istatistikleri ADD COLUMN veri_yili INTEGER DEFAULT 2026")
     if "veri_donemi" not in existing_tutun:
-        c.execute("ALTER TABLE tuik_tutun_ve_sigara_istatistikleri ADD COLUMN veri_donemi TEXT DEFAULT '2026 Güncel'")
+        c.execute("ALTER TABLE tuik_tutun_ve_sigara_istatistikleri ADD COLUMN veri_donemi TEXT DEFAULT 'MODEL-2026'")
 
     # 6. Maptriks / 2026-2027 Ciro Potansiyeli ve Lokasyon Çekicilik Skoru
     c.execute("""
@@ -136,7 +132,7 @@ def init_master_db(db_path=None):
         e_ticaret_teslimat_skoru REAL, -- 0 - 100
         sosyo_ekonomik_derece TEXT, -- 'A+', 'A', 'B+', 'B', 'C', 'D'
         degerlendirme_ozeti TEXT,
-        projeksiyon_donemi TEXT DEFAULT '2026 ve Sonrası (2026-2027)',
+        projeksiyon_donemi TEXT DEFAULT 'MODEL-2026-2027',
         hesaplanma_yili INTEGER DEFAULT 2026,
         UNIQUE(seviye, il, ilce, mahalle)
     )
@@ -144,7 +140,7 @@ def init_master_db(db_path=None):
     c.execute("PRAGMA table_info(ciro_ve_ticari_potansiyel_endeksi)")
     existing_ciro = [r[1] for r in c.fetchall()]
     if "projeksiyon_donemi" not in existing_ciro:
-        c.execute("ALTER TABLE ciro_ve_ticari_potansiyel_endeksi ADD COLUMN projeksiyon_donemi TEXT DEFAULT '2026 ve Sonrası (2026-2027)'")
+        c.execute("ALTER TABLE ciro_ve_ticari_potansiyel_endeksi ADD COLUMN projeksiyon_donemi TEXT DEFAULT 'MODEL-2026-2027'")
     if "hesaplanma_yili" not in existing_ciro:
         c.execute("ALTER TABLE ciro_ve_ticari_potansiyel_endeksi ADD COLUMN hesaplanma_yili INTEGER DEFAULT 2026")
 
@@ -209,9 +205,9 @@ def init_master_db(db_path=None):
         guncel_2026_toplam_harcama_tl REAL,
         guncel_2026_online_pazaryeri_tl REAL,
         guncel_2026_hanehalki_geliri_tl REAL,
-        veri_donemi TEXT DEFAULT '2026-Q3 (Güncel)',
+        veri_donemi TEXT DEFAULT 'MODEL-2026-Q3',
         guncellenme_yili INTEGER DEFAULT 2026,
-        tahmin_ufku TEXT DEFAULT '2026-2027 Projeksiyonu',
+        tahmin_ufku TEXT DEFAULT 'MODEL-2026-2027',
         UNIQUE(seviye, city_id, county_id, district_id)
     )
     """)
@@ -226,15 +222,15 @@ class TurkiyeLokasyonIstihbaratMaster:
         self.session = requests.Session()
 
     # =========================================================================
-    # 1. ETBİS: T.C. TİCARET BAKANLIĞI RESMİ E-TİCARET VERİLERİ (2026 VE SONRASI)
+    # 1. ETBİS BENZERİ DEMO/MODEL VERİSİ
     # =========================================================================
     def yukle_etbis_resmi_verileri(self):
-        """T.C. Ticaret Bakanlığı ETBİS 2026 ve Sonrası (5.45 Trilyon TL) veritabanını yükler."""
-        log("T.C. Ticaret Bakanlığı ETBİS 81 İl 2026 ve Sonrası E-Ticaret Veritabanı işleniyor...", "INFO")
+        """Sabit örnek ve katsayılarla ETBİS benzeri demo tablosu üretir."""
+        log("81 il için ETBİS benzeri MODEL/DEMO tablosu işleniyor...", "WARN")
         conn = sqlite3.connect(self.db_path)
         c = conn.cursor()
 
-        # Resmi ETBİS 2026 Göstergeleri (5.45 Trilyon TL Ulusal Hacim, 2026 Kişi Başı Harcama, Uyum Endeksi)
+        # Doğrulanmamış sabit örnekler; resmî veri değildir.
         etbis_veri_tablosu = [
             (34, "İstanbul", "Marmara", 2180.0, 148500, 99.1, 1, 215000, 26.5, 1.48),
             (6, "Ankara", "İç Anadolu", 620.0, 126800, 93.4, 5, 68000, 23.4, 1.19),
@@ -267,7 +263,7 @@ class TurkiyeLokasyonIstihbaratMaster:
             (67, "Zonguldak", "Karadeniz", 52.0, 94500, 81.3, 23, 7200, 19.1, 0.99)
         ]
 
-        # 81 İl Veri Enjeksiyonu (2026 ve Sonrası)
+        # 81 il için demo/model veri üretimi
         for p in range(1, 82):
             mevcut = next((item for item in etbis_veri_tablosu if item[0] == p), None)
             if not mevcut:
@@ -280,29 +276,29 @@ class TurkiyeLokasyonIstihbaratMaster:
                 c.execute("""
                 INSERT OR REPLACE INTO etbis_81_il_e_ticaret
                 (plaka, il_adi, bolge, yillik_e_ticaret_hacmi_milyar_tl, kisi_basi_e_ticaret_harcamasi_tl, e_ticaret_uyum_endeksi_skoru, uyum_siralamasi, tescilli_e_ticaret_isletme_sayisi, genel_ticaret_icindeki_pay_yuzde, alis_satis_karsilama_orani, veri_donemi, guncellenme_yili, tahmin_ufku)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '2026-Q3 (Güncel)', 2026, '2026-2027 Projeksiyonu')
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'MODEL-2026-Q3', 2026, 'MODEL-2026-2027')
                 """, (p, f"İl {p}", "Anadolu", hacim, kisi_basi, uyum, sira, isletme, 17.5, 0.91))
             else:
                 c.execute("""
                 INSERT OR REPLACE INTO etbis_81_il_e_ticaret
                 (plaka, il_adi, bolge, yillik_e_ticaret_hacmi_milyar_tl, kisi_basi_e_ticaret_harcamasi_tl, e_ticaret_uyum_endeksi_skoru, uyum_siralamasi, tescilli_e_ticaret_isletme_sayisi, genel_ticaret_icindeki_pay_yuzde, alis_satis_karsilama_orani, veri_donemi, guncellenme_yili, tahmin_ufku)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '2026-Q3 (Güncel)', 2026, '2026-2027 Projeksiyonu')
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'MODEL-2026-Q3', 2026, 'MODEL-2026-2027')
                 """, mevcut)
 
         conn.commit()
         conn.close()
-        log("  ✓ 81 İl ETBİS 2026 E-Ticaret Hacimleri ve Uyum Endeksi yüklendi.", "SUCCESS")
+        log("  ✓ 81 il için model/demo e-ticaret değerleri yüklendi.", "SUCCESS")
 
     # =========================================================================
-    # 2. SANAYİ VE TEKNOLOJİ BAKANLIĞI SEGE: 973 İLÇE GELİŞMİŞLİK ENDEKSİ (2026 REVİZE)
+    # 2. SEGE BENZERİ DEMO/MODEL VERİSİ
     # =========================================================================
     def yukle_sege_973_ilce(self):
-        """Sanayi ve Teknoloji Bakanlığı SEGE 2026 Revize İlçe Sosyo-Ekonomik Skorlarını yükler."""
-        log("Sanayi ve Teknoloji Bakanlığı 973 İlçe SEGE 2026 Endeksi işleniyor...", "INFO")
+        """Sabit örnek ve katsayılarla SEGE benzeri demo skorları üretir."""
+        log("İlçeler için SEGE benzeri MODEL/DEMO endeksi işleniyor...", "WARN")
         conn = sqlite3.connect(self.db_path)
         c = conn.cursor()
 
-        # Örnek kritik ilçeler ve 2026 güncel SEGE kademeleri
+        # Doğrulanmamış sabit örnek ilçeler ve model kademeleri
         sege_verileri = [
             (34, "İstanbul", "Şişli", 1, 4.285, 1, "1. Kademe (En Gelişmiş)", "A+"),
             (6, "Ankara", "Çankaya", 2, 4.150, 1, "1. Kademe (En Gelişmiş)", "A+"),
@@ -332,7 +328,7 @@ class TurkiyeLokasyonIstihbaratMaster:
             c.execute("""
             INSERT OR REPLACE INTO sege_973_ilce_gelismislik
             (il_plaka, il_adi, ilce_adi, sege_siralamasi, sege_skoru, gelismislik_kademesi, kademe_tanimi, sosyo_ekonomik_sinif, veri_donemi, guncellenme_yili, tahmin_ufku)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, '2026 Revize (Güncel)', 2026, '2026-2027')
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'MODEL-2026', 2026, 'MODEL-2026-2027')
             """, s)
 
         # Rehber dosyasındaki tüm ilçeleri SEGE 2026 algoritmasıyla genişlet
@@ -354,30 +350,30 @@ class TurkiyeLokasyonIstihbaratMaster:
                         c.execute("""
                         INSERT OR REPLACE INTO sege_973_ilce_gelismislik
                         (il_plaka, il_adi, ilce_adi, sege_siralamasi, sege_skoru, gelismislik_kademesi, kademe_tanimi, sosyo_ekonomik_sinif, veri_donemi, guncellenme_yili, tahmin_ufku)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, '2026 Revize (Güncel)', 2026, '2026-2027')
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'MODEL-2026', 2026, 'MODEL-2026-2027')
                         """, (cid, cname, iname, rank, skor, kademe, f"{kademe}. Kademe", sinif))
 
         conn.commit()
         conn.close()
-        log("  ✓ Sanayi Bakanlığı 973 İlçe SEGE 2026 Endeksleri kaydedildi.", "SUCCESS")
+        log("  ✓ İlçeler için model/demo gelişmişlik skorları kaydedildi.", "SUCCESS")
 
     # =========================================================================
     # 3. TÜİK SAĞLIK ARAŞTIRMASI: TÜTÜN VE SİGARA TÜKETİM ENDEKSİ (2026)
     # =========================================================================
     def yukle_tuik_tutun_verileri(self):
-        """TÜİK 2026 Türkiye Sağlık Araştırması tütün ve sigara tüketim istatistiklerini yükler."""
-        log("TÜİK Türkiye Sağlık Araştırması 2026 Tütün & Sigara Tüketim Endeksi işleniyor...", "INFO")
+        """Doğrulanmamış sabit tütün oranlarını demo amacıyla yükler."""
+        log("Tütün tüketimi MODEL/DEMO tablosu işleniyor...", "WARN")
         conn = sqlite3.connect(self.db_path)
         c = conn.cursor()
 
         tutun_tablosu = [
-            ("Türkiye Geneli (15+ Yaş)", 43.2, 18.1, 33.8, "Ulusal Ortalama (2026)", "2026 projeksiyonunda her 100 kişiden ~34'ü her gün tütün mamulü tüketiyor.", 2026, "2026 Güncel"),
-            ("Karadeniz Bölgesi (Trabzon, Rize, Artvin)", 49.1, 19.8, 39.0, "Çok Yüksek (2026)", "Çay kültürü ve kırsal tüketim alışkanlıklarıyla TR'nin en yüksek tüketim bölgesi.", 2026, "2026 Güncel"),
-            ("Doğu Anadolu Bölgesi (Erzurum, Malatya)", 46.8, 15.2, 36.2, "Yüksek (2026)", "Kış aylarında kapalı mekan ve sosyalleşme kaynaklı yüksek tütün oranı.", 2026, "2026 Güncel"),
-            ("Güneydoğu Anadolu (Gaziantep, Diyarbakır)", 48.0, 12.8, 35.4, "Yüksek (2026)", "Genç erkek nüfusta nargile ve tütün tüketimi yüksek seviyede.", 2026, "2026 Güncel"),
-            ("Marmara Bölgesi (İstanbul, Tekirdağ, Kocaeli)", 44.5, 23.1, 34.8, "Yüksek (2026)", "Metropol yoğunluğu ve kadınlarda Türkiye ortalamasının üzerindeki tüketim oranı.", 2026, "2026 Güncel"),
-            ("Ege Bölgesi (İzmir, Muğla, Aydın)", 40.8, 19.5, 31.0, "Orta (2026)", "Ege sahillerinde dengeli sosyo-kültürel tüketim dağılımı.", 2026, "2026 Güncel"),
-            ("İç Anadolu Bölgesi (Ankara, Konya)", 42.2, 17.0, 31.6, "Orta (2026)", "Türkiye ortalamasına yakın dengeli tüketim profili.", 2026, "2026 Güncel")
+            ("Türkiye Geneli (15+ Yaş)", 43.2, 18.1, 33.8, "Model örneği", "Doğrulanmamış demo/model oranıdır.", 2026, "MODEL-2026"),
+            ("Karadeniz Bölgesi (Trabzon, Rize, Artvin)", 49.1, 19.8, 39.0, "Model örneği", "Doğrulanmamış demo/model oranıdır.", 2026, "MODEL-2026"),
+            ("Doğu Anadolu Bölgesi (Erzurum, Malatya)", 46.8, 15.2, 36.2, "Model örneği", "Doğrulanmamış demo/model oranıdır.", 2026, "MODEL-2026"),
+            ("Güneydoğu Anadolu (Gaziantep, Diyarbakır)", 48.0, 12.8, 35.4, "Model örneği", "Doğrulanmamış demo/model oranıdır.", 2026, "MODEL-2026"),
+            ("Marmara Bölgesi (İstanbul, Tekirdağ, Kocaeli)", 44.5, 23.1, 34.8, "Model örneği", "Doğrulanmamış demo/model oranıdır.", 2026, "MODEL-2026"),
+            ("Ege Bölgesi (İzmir, Muğla, Aydın)", 40.8, 19.5, 31.0, "Model örneği", "Doğrulanmamış demo/model oranıdır.", 2026, "MODEL-2026"),
+            ("İç Anadolu Bölgesi (Ankara, Konya)", 42.2, 17.0, 31.6, "Model örneği", "Doğrulanmamış demo/model oranıdır.", 2026, "MODEL-2026")
         ]
 
         for t in tutun_tablosu:
@@ -389,7 +385,7 @@ class TurkiyeLokasyonIstihbaratMaster:
 
         conn.commit()
         conn.close()
-        log("  ✓ TÜİK 2026 Sağlık Araştırması Sigara & Tütün Verileri yüklendi.", "SUCCESS")
+        log("  ✓ Model/demo tütün oranları yüklendi.", "SUCCESS")
 
     # =========================================================================
     # 4. MAPTRIKS & HUFF GRAVITY MODELİ: 2026-2027 CİRO VE LOKASYON POTANSİYELİ
@@ -432,12 +428,12 @@ class TurkiyeLokasyonIstihbaratMaster:
             ecom_skor = max(22.0, min(99.2, round((uyum_skoru * 0.62) + (ciro_skor * 0.38), 1)))
 
             sinif = row["sosyo_ekonomik_sinif"] or "B"
-            ozet = f"2026 SEGE Kademe {kademe} ({sinif}). 2026-2027 Ciro potansiyeli %{ciro_skor}, e-ticaret teslimat yoğunluğu %{ecom_skor} seviyesinde."
+            ozet = f"Model kademe {kademe} ({sinif}). Model ciro skoru %{ciro_skor}, model e-ticaret teslimat skoru %{ecom_skor}."
 
             c.execute("""
             INSERT OR REPLACE INTO ciro_ve_ticari_potansiyel_endeksi
             (seviye, il, ilce, mahalle, ciro_potansiyeli_skoru, yeme_icme_kafe_skoru, market_perakende_skoru, e_ticaret_teslimat_skoru, sosyo_ekonomik_derece, degerlendirme_ozeti, projeksiyon_donemi, hesaplanma_yili)
-            VALUES ('ilce', ?, ?, '', ?, ?, ?, ?, ?, ?, '2026 ve Sonrası (2026-2027)', 2026)
+            VALUES ('ilce', ?, ?, '', ?, ?, ?, ?, ?, ?, 'MODEL-2026-2027', 2026)
             """, (il, ilce, ciro_skor, kafe_skor, market_skor, ecom_skor, sinif, ozet))
 
         conn.commit()
@@ -478,16 +474,20 @@ class TurkiyeLokasyonIstihbaratMaster:
         conn.close()
 
 def main():
-    parser = argparse.ArgumentParser(description="Türkiye Makro & Mikro Ticari İstihbarat Toplayıcısı (2026 ve Sonrası)")
-    parser.add_argument("--hepsi", action="store_true", default=True, help="Tüm kaynakları (ETBİS, SEGE, PTT, TÜİK, Maptriks Modeli) sırayla çalıştırır")
+    parser = argparse.ArgumentParser(description="Doğrulanmamış ticari istihbarat demo/model verisi üretir")
+    parser.add_argument("--model-demo", action="store_true", help="Demo/model veri üretimini açıkça başlat")
     args = parser.parse_args()
+
+    if not args.model_demo:
+        parser.print_help()
+        return
 
     master = TurkiyeLokasyonIstihbaratMaster()
 
-    # 1. ETBİS 81 İl E-Ticaret (2026)
+    # 1. ETBİS benzeri model/demo tablosu
     master.yukle_etbis_resmi_verileri()
 
-    # 2. Sanayi Bakanlığı 973 İlçe SEGE Endeksi (2026)
+    # 2. SEGE benzeri model/demo tablosu
     master.yukle_sege_973_ilce()
 
     # 3. TÜİK Sağlık & Sigara Araştırması (2026)
@@ -500,7 +500,7 @@ def main():
     master.export_all_datasets()
 
     log("================================================================", "SUCCESS")
-    log("TÜM TÜRKİYE 2026 VE SONRASI TİCARİ İSTİHBARAT VERİTABANI HAZIR!", "SUCCESS")
+    log("TÜRKİYE TİCARİ İSTİHBARAT MODEL/DEMO VERİTABANI HAZIR!", "SUCCESS")
     log(f"Veritabanı: {DB_PATH}", "INFO")
     log("================================================================", "SUCCESS")
 

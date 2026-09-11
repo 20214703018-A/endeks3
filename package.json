@@ -1,0 +1,12 @@
+{
+  "name": "geoprop-ilan-toplayici",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "40 Makine Paralel Emlakjet ve Hepsiemlak İlan Toplayıcı",
+  "scripts": {
+    "start": "node gayrimenkul_toplayici.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.0.0"
+  }
+}

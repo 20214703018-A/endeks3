@@ -523,7 +523,7 @@
     <div class="nav-status">
       <div class="status-indicator">
         <span class="pulse"></span>
-        <span id="apiStatusText">TKGM MEGSİS & İmar Proxy Aktif</span>
+        <span id="apiStatusText">TKGM sorgusu hazır · imar ayrıca doğrulanır</span>
       </div>
       <div class="status-indicator" id="latencyIndicator">
         <span>⚡ Yanıt: <b>-- ms</b></span>
@@ -565,7 +565,7 @@
         <!-- Mode 1: Map click instructions -->
         <div id="tab-click-content">
           <div style="font-size:0.8rem; line-height: 1.5; color:var(--text-muted); background:rgba(0,242,254,0.05); border:1px solid rgba(0,242,254,0.15); padding:12px; border-radius:10px;">
-            Harita üzerindeki kadastro çizgilerine doğrudan tıklayabilirsiniz. Sunucu arka planda <b>TKGM MEGSİS</b> ve <b>E-Plan</b> servislerine anlık bağlanarak parselin sınır poligonunu ve imar haklarını çizer.
+            Haritadan veya formdan açıkça sorgu başlattığınızda sunucu <b>TKGM MEGSİS</b> kadastro kaydını getirir. İmar alanları yalnız E-Plan proxy yanıtında gerçekten varsa gösterilir; yoksa “doğrulanamadı” olarak kalır.
           </div>
         </div>
 
@@ -632,7 +632,7 @@
             <div class="example-chip" onclick="yukleOrnek(39.8891, 32.8631, '6103', '22', 'Ankara', 'Çankaya', 'Aziziye')">
               <div>
                 <div class="chip-title">🏢 Aziziye İmar Parseli</div>
-                <div class="chip-sub">Ankara / Çankaya · Ada 6103 / 22 (KAKS 1.5, TAKS 0.4)</div>
+                <div class="chip-sub">Ankara / Çankaya · Ada 6103 / 22</div>
               </div>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </div>
@@ -763,8 +763,8 @@
         <div class="section-card" id="cardTicariIstihbarat" style="border-color: rgba(245, 158, 11, 0.35); background: linear-gradient(145deg, rgba(245, 158, 11, 0.04), rgba(20, 24, 38, 0.95));">
           <div class="section-title" style="color: #fbbf24;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-            <span>2026-2027 Ticari İstihbarat & E-Ticaret Karnesi</span>
-            <span style="font-size:0.68rem; padding:2px 6px; border-radius:4px; background:rgba(245, 158, 11, 0.2); color:#fbbf24; margin-left:auto;">2026 Güncel</span>
+            <span>Ticari Gösterge Modelleri & E-Ticaret Karnesi</span>
+            <span style="font-size:0.68rem; padding:2px 6px; border-radius:4px; background:rgba(245, 158, 11, 0.2); color:#fbbf24; margin-left:auto;">TÜRETİLMİŞ / DOĞRULAMA GEREKİR</span>
           </div>
 
           <!-- Ciro ve Çekim Skoru -->
@@ -781,19 +781,19 @@
 
           <div class="meta-grid">
             <div class="meta-item">
-              <span class="meta-label">2026 SEGE Kademesi</span>
+              <span class="meta-label">SEGE Türetilmiş Kademe</span>
               <span class="meta-val" id="valSegeKademe" style="color:#60a5fa;">--</span>
             </div>
             <div class="meta-item">
-              <span class="meta-label">2026 İl E-Ticaret Hacmi</span>
+              <span class="meta-label">İl E-Ticaret Model Değeri</span>
               <span class="meta-val" id="valEtbisHacim">--</span>
             </div>
             <div class="meta-item">
-              <span class="meta-label">2026 Kişi Başı E-Ticaret</span>
+              <span class="meta-label">Kişi Başı E-Ticaret Modeli</span>
               <span class="meta-val" id="valEtbisKisiBasi">--</span>
             </div>
             <div class="meta-item">
-              <span class="meta-label">TÜİK Sigara/Tütün Oranı</span>
+              <span class="meta-label">Tütün Model Göstergesi</span>
               <span class="meta-val" id="valTutunOrani">--</span>
             </div>
           </div>
@@ -1012,7 +1012,7 @@
     // Detayları Göster ve Haritada Çokgeni Çiz
     function gosterParselDetay(data) {
       const p = data.parsel;
-      const imar = data.imar;
+      const imar = data.imar || {};
       const bb = data.bagimsiz_bolumler || [];
 
       // 1. Paneli Doldur
@@ -1023,21 +1023,23 @@
       document.getElementById('valZemin').textContent = p.zemin_durumu || 'Ana Taşınmaz';
       document.getElementById('valPafta').textContent = `${p.pafta || '-'} / ${p.mevkii || '-'}`;
 
-      document.getElementById('valFonksiyon').textContent = imar.plan_fonksiyon || 'İmar Planı Bilgisi';
-      document.getElementById('valGabari').textContent = imar.gabari || 'Hmax: 15.50m (5 Kat)';
-      document.getElementById('valKaks').textContent = `KAKS: ${imar.kaks_emsal || '1.50'}`;
-      document.getElementById('valTaks').textContent = `TAKS: ${imar.taks || '0.40'}`;
+      document.getElementById('valFonksiyon').textContent = imar.plan_fonksiyon || 'Doğrulanamadı';
+      document.getElementById('valGabari').textContent = imar.gabari || 'Doğrulanamadı';
+      document.getElementById('valKaks').textContent = imar.kaks_emsal != null ? `KAKS: ${imar.kaks_emsal}` : 'KAKS: —';
+      document.getElementById('valTaks').textContent = imar.taks != null ? `TAKS: ${imar.taks}` : 'TAKS: —';
 
-      const alan = parseFloat(p.alan_m2) || 500;
-      const taks = parseFloat(imar.taks) || 0.4;
-      const kaks = parseFloat(imar.kaks_emsal) || 1.5;
+      const alan = parseFloat(p.alan_m2);
+      const taks = parseFloat(imar.taks);
+      const kaks = parseFloat(imar.kaks_emsal);
 
-      document.getElementById('calcTaban').textContent = `${Math.round(alan * taks).toLocaleString('tr-TR')} m²`;
-      document.getElementById('calcToplam').textContent = `${Math.round(alan * kaks).toLocaleString('tr-TR')} m²`;
+      document.getElementById('calcTaban').textContent = Number.isFinite(alan) && Number.isFinite(taks)
+        ? `${Math.round(alan * taks).toLocaleString('tr-TR')} m²` : '—';
+      document.getElementById('calcToplam').textContent = Number.isFinite(alan) && Number.isFinite(kaks)
+        ? `${Math.round(alan * kaks).toLocaleString('tr-TR')} m²` : '—';
 
-      document.getElementById('valPlanAdi').textContent = imar.plan_adi || '1/1000 Uygulama İmar Planı';
-      document.getElementById('valPin').textContent = imar.pin_tucbs_no || 'UİP-1049281';
-      document.getElementById('valTarih').textContent = imar.yururluk_tarihi || '01.01.2024';
+      document.getElementById('valPlanAdi').textContent = imar.plan_adi || 'Doğrulanamadı';
+      document.getElementById('valPin').textContent = imar.pin_tucbs_no || '—';
+      document.getElementById('valTarih').textContent = imar.yururluk_tarihi || '—';
 
       // Bağımsız bölümler
       document.getElementById('valBbBaslik').textContent = `Bağımsız Bölümler (${bb.length} Daire/Dükkân)`;
@@ -1051,7 +1053,7 @@
           unitContainer.appendChild(div);
         });
       } else {
-        unitContainer.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:8px;">Bu parselde kat mülkiyeti kurulmamıştır (Ham arsa).</div>';
+        unitContainer.innerHTML = '<div style="font-size:0.75rem; color:var(--text-muted); text-align:center; padding:8px;">Bu sorguda doğrulanmış bağımsız bölüm kaynağı bağlı değil.</div>';
       }
 
       // TKGM Resmi Bağlantısını Güncelle
@@ -1155,10 +1157,8 @@
       document.getElementById('detailPanel').style.display = 'none';
     }
 
-    // Başlangıçta örnek Çankaya parselini aç
-    setTimeout(() => {
-      yukleOrnek(39.8891, 32.8631, '6103', '22', 'Ankara', 'Çankaya', 'Aziziye');
-    }, 800);
+    // Sayfa açılışında ağ isteği veya veritabanı yazımı yapılmaz. Sorgu ancak
+    // kullanıcı haritaya, örneğe ya da form düğmesine bastığında başlar.
   </script>
 </body>
 </html>

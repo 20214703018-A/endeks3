@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tek parsel için müşteri talebiyle 3D kadastro görseli hazırlama demosu.">
+  <title>GEOPROP AI | 3D Parsel Görsel Stüdyosu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.7.1/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="parsel_3d_demo.css">
+</head>
+<body>
+  <a class="skip-link" href="#studio">İçeriğe geç</a>
+
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="GEOPROP AI ana sayfa">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M5 8.5 12 5l8 3.5L27 5v18.5L20 27l-8-3.5L5 27V8.5Z"/><path d="M12 5v18.5M20 8.5V27"/></svg>
+      </span>
+      <span><strong>GEOPROP</strong><em>.AI</em><small>3D PARSEL STÜDYOSU</small></span>
+    </a>
+    <div class="topbar-meta">
+      <span class="mode-pill"><i></i> Tekil müşteri talebi</span>
+      <a href="imar_canli_test.html">Canlı imar ekranı</a>
+    </div>
+  </header>
+
+  <main id="studio" class="studio-shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <span class="eyebrow">MÜŞTERİYE ÖZEL SUNUM</span>
+        <h1 id="page-title">Bir parseli sorgula,<br><span>3D görsele dönüştür.</span></h1>
+        <p>TKGM parsel sınırını tek talepte getirir, etiketsiz uydu görüntüsü üzerinde dört farklı yönden sunar.</p>
+      </div>
+      <div class="intro-stat" aria-label="İş akışı özeti">
+        <span>01</span><p><strong>Parseli bul</strong>Konum veya mahalle kimliğiyle</p>
+        <span>02</span><p><strong>Kamerayı ayarla</strong>3D açı ve yönü seç</p>
+        <span>03</span><p><strong>Dört açıyı indir</strong>Kuzey, doğu, güney ve batı</p>
+      </div>
+    </section>
+
+    <section class="studio-grid">
+      <aside class="control-panel" aria-labelledby="query-title">
+        <div class="panel-heading">
+          <span class="step-number">01</span>
+          <div><h2 id="query-title">Parsel bilgileri</h2><p>Tek bir müşteri talebi için sorgu oluşturun.</p></div>
+        </div>
+
+        <form id="parcelForm">
+          <div class="field-grid two">
+            <label><span>İl</span><input id="province" name="il" value="Ankara" autocomplete="address-level1" required></label>
+            <label><span>İlçe</span><input id="district" name="ilce" value="Çankaya" autocomplete="address-level2" required></label>
+          </div>
+          <label><span>Mahalle / Köy</span><input id="neighborhood" name="mahalle" value="Çankaya" required></label>
+          <div class="field-grid two emphasis-fields">
+            <label><span>Ada no</span><input id="block" name="ada" value="5964" inputmode="numeric" required></label>
+            <label><span>Parsel no</span><input id="parcel" name="parsel" value="6" inputmode="numeric" required></label>
+          </div>
+
+          <details>
+            <summary>Konum ve TKGM seçenekleri</summary>
+            <div class="details-content">
+              <label><span>TKGM mahalle ID <small>(varsa)</small></span><input id="neighborhoodId" name="mahalleId" inputmode="numeric" placeholder="Örn. 1156"></label>
+              <div class="field-grid two">
+                <label><span>Enlem</span><input id="latitude" name="lat" value="39.8892" inputmode="decimal"></label>
+                <label><span>Boylam</span><input id="longitude" name="lon" value="32.8633" inputmode="decimal"></label>
+              </div>
+              <p>Mahalle ID bilinmiyorsa parsel yakınındaki koordinat tersine sorgu için kullanılır.</p>
+            </div>
+          </details>
+
+          <button class="primary-action" type="submit" id="queryButton">
+            <span class="button-icon" aria-hidden="true">⌖</span>
+            <span><strong>Parseli getir</strong><small>TKGM MEGSİS canlı sorgu</small></span>
+            <span class="button-arrow" aria-hidden="true">→</span>
+          </button>
+          <button class="text-action" type="button" id="sampleButton">Örnek tanıtım poligonunu yükle</button>
+        </form>
+
+        <div id="errorMessage" class="message error-message" role="alert" hidden></div>
+        <div id="statusMessage" class="message status-message" role="status" aria-live="polite">
+          <span class="status-dot"></span><span>Örnek parsel görsele hazır.</span>
+        </div>
+
+        <div class="data-card" id="parcelCard">
+          <div class="data-card-top"><span id="sourceBadge">TANITIM VERİSİ</span><span id="areaValue">180.657 m²</span></div>
+          <h3 id="parcelTitle">Ada 5964 · Parsel 6</h3>
+          <p id="locationValue">Ankara / Çankaya / Çankaya</p>
+          <dl>
+            <div><dt>Nitelik</dt><dd id="qualityValue">Arsa</dd></div>
+            <div><dt>Kaynak</dt><dd id="sourceValue">Demo poligonu</dd></div>
+          </dl>
+        </div>
+      </aside>
+
+      <section class="visual-panel" aria-labelledby="visual-title">
+        <div class="visual-toolbar">
+          <div><span class="step-number">02</span><div><h2 id="visual-title">3D uydu görünümü</h2><p id="visualSubtitle">Etiketsiz uydu katmanı · tanıtım modu</p></div></div>
+          <div class="camera-tools" aria-label="Kamera kontrolleri">
+            <button type="button" id="rotateLeft" title="Sola döndür" aria-label="Kamerayı sola döndür">↶</button>
+            <button type="button" id="resetCamera" title="Kamerayı parsele odakla" aria-label="Kamerayı parsele odakla">⌂</button>
+            <button type="button" id="rotateRight" title="Sağa döndür" aria-label="Kamerayı sağa döndür">↷</button>
+          </div>
+        </div>
+
+        <div class="map-frame">
+          <div id="map" aria-label="3D parsel haritası"></div>
+          <div class="map-shade" aria-hidden="true"></div>
+        </div>
+
+        <div class="export-bar">
+          <div class="export-copy"><span class="step-number">03</span><div><strong>Dört uydu açısını hazırla</strong><small>Görsellerde poligon ve zorunlu kaynak ibaresi dışında öğe bulunmaz.</small></div></div>
+          <div class="export-actions">
+            <button type="button" class="secondary-action" id="kmlButton">KML indir</button>
+            <button type="button" class="download-action" id="downloadButton">4 açıyı ZIP indir <span>↓</span></button>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <footer class="legal-note">
+      <strong>Bilgilendirme:</strong> Parsel geometrisi kaynak yanıtına göre gösterilir; resmî aplikasyon veya sınır tespiti yerine geçmez. Test demosu Esri uydu görüntüsü ve açık arazi verisi kullanır. Google fotogerçekçi 3D katmanı için ayrı Maps Platform yapılandırması gerekir; sağlayıcı atfı kaldırılamaz.
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="parsel_3d_demo.js"></script>
+</body>
+</html>

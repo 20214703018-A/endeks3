@@ -1,4 +1,4 @@
-name: Turkiye Tum İlanlar Toplayici (Konut, Arsa, İsyeri)
+name: "Turkiye Tum Gayrimenkul Ilanlari (40 Makine - Emlakjet & Hepsiemlak)"
 
 on:
   workflow_dispatch:
@@ -14,24 +14,24 @@ on:
           - 'konut'
           - 'isyeri'
           - 'arsa,konut'
-      arsa_detay:
-        description: 'Arsalarda detay sayfasına girerek Ada, Parsel ve İmar topla'
+      kaynak:
+        description: 'Veri Kaynağı (hepsi = Hem Hepsiemlak Hem Emlakjet)'
         required: true
-        default: 'true'
+        default: 'hepsi'
         type: choice
         options:
-          - 'true'
-          - 'false'
+          - 'hepsi'
+          - 'hepsiemlak'
+          - 'emlakjet'
       max_sayfa:
-
         description: 'İlçe Başına Maksimum Sayfa Derinliği'
         required: false
-        default: '30'
+        default: '50'
         type: string
       hiz:
-        description: 'İstekler Arası Temel Bekleme (saniye)'
+        description: 'İstekler Arası Bekleme (saniye)'
         required: false
-        default: '0.4'
+        default: '1.2'
         type: string
 
 permissions:
@@ -91,33 +91,55 @@ jobs:
       - name: Kodu Çek
         uses: actions/checkout@v4
 
+      - name: Node.js 22 Kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
       - name: Python Kur
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+      - name: Bağımlılıkları Kur
+        run: |
+          npm install puppeteer-core
+          pip install pandas
+
+      - name: Xvfb ve Chrome CDP Oturumu Başlat (Ubuntu)
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y xvfb
+          Xvfb :99 -screen 0 1920x1080x24 -ac &
+          export DISPLAY=:99
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+          google-chrome \
+            --remote-debugging-port=9222 \
+            --user-data-dir=/tmp/chrome_runner_profile \
+            --no-first-run \
+            --no-default-browser-check \
+            --no-sandbox \
+            --disable-dev-shm-usage \
+            --disable-gpu \
+            --window-size=1920,1080 \
+            about:blank &
+          sleep 4
+          curl -s http://localhost:9222/json/version || echo "Chrome CDP hazir"
 
       - name: "İlanları Topla (İller: ${{ matrix.iller }})"
         run: |
-          EXTRA_ARGS=""
-          if [ "${{ github.event.inputs.arsa_detay }}" = "false" ]; then
-            EXTRA_ARGS="--arsa-detaysiz"
-          else
-            EXTRA_ARGS="--arsa-detay"
-          fi
-
-          python collector/ilan_toplayici.py \
+          node gayrimenkul_toplayici.mjs \
             --iller "${{ matrix.iller }}" \
             --kategori "${{ github.event.inputs.kategori || 'arsa,konut,isyeri' }}" \
-            --max-sayfa "${{ github.event.inputs.max_sayfa || '30' }}" \
-            --hiz "${{ github.event.inputs.hiz || '0.4' }}" \
-            $EXTRA_ARGS
+            --kaynak "${{ github.event.inputs.kaynak || 'hepsi' }}" \
+            --max-sayfa "${{ github.event.inputs.max_sayfa || '50' }}" \
+            --hiz "${{ github.event.inputs.hiz || '1.2' }}" \
+            --export-csv
 
       - name: "Sonuçları Paketle"
         run: |
           mkdir -p cikti_grup_${{ matrix.grup }}
-          [ -f collector/data/ilanlar.db ] && cp collector/data/ilanlar.db cikti_grup_${{ matrix.grup }}/ilanlar_${{ matrix.grup }}.db || true
-          [ -d collector/data/csv_ciktilari ] && cp -r collector/data/csv_ciktilari cikti_grup_${{ matrix.grup }}/ || true
+          [ -f data/turkiye_tum_ilanlar.sqlite ] && cp data/turkiye_tum_ilanlar.sqlite cikti_grup_${{ matrix.grup }}/ilanlar_${{ matrix.grup }}.sqlite || true
+          [ -d data/csv_ciktilari ] && cp -r data/csv_ciktilari cikti_grup_${{ matrix.grup }}/ || true
           tar -czf grup_${{ matrix.grup }}_verileri.tar.gz cikti_grup_${{ matrix.grup }}
 
       - name: "Artifaktı Yükle"
@@ -140,120 +162,29 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Bağımlılıkları Kur
+        run: |
+          pip install pandas
+
       - name: "Tüm Grup Artifaktlarını İndir"
         uses: actions/download-artifact@v4
         with:
           path: tum_gruplar
 
-      - name: "Tek Veritabanı ve CSV Haline Getir"
+      - name: "Tek Veritabanı ve Ayrıntılı CSV'leri Birleştir"
         run: |
-          python - << 'EOF'
-          import os, glob, tarfile, sqlite3, csv
-
-          os.makedirs("birlestirilmis_ciktilar/csv", exist_ok=True)
-          main_db = "birlestirilmis_ciktilar/turkiye_tum_ilanlar.db"
-          conn = sqlite3.connect(main_db)
-          cur = conn.cursor()
-          cur.execute("""
-          CREATE TABLE IF NOT EXISTS ilanlar (
-              ilan_id INTEGER PRIMARY KEY,
-              kategori TEXT, tip TEXT, baslik TEXT, url TEXT,
-              il TEXT, ilce TEXT, mahalle TEXT, mahalle_id INTEGER,
-              enlem REAL, boylam REAL, ilan_pin_lat REAL, ilan_pin_lon REAL,
-              fiyat_tl INTEGER, m2 REAL, birim_m2_fiyat REAL,
-              ada_no TEXT, parsel_no TEXT, imar_durumu TEXT, tapu_durumu TEXT,
-              kat_karsiligi TEXT, kaks_emsal TEXT, oda_sayisi TEXT,
-              bulundugu_kat TEXT, ilan_etiketi TEXT, ilan_tarihi TEXT,
-              gorsel_url TEXT, city_id INTEGER, county_id INTEGER, crawled_at TEXT
-          )""")
-
-          tar_files = glob.glob("tum_gruplar/**/*.tar.gz", recursive=True)
-          print(f"Bulunan grup paketi: {len(tar_files)}")
-
-          toplam = 0
-          for tf in tar_files:
-              try:
-                  with tarfile.open(tf, "r:gz") as t:
-                      t.extractall("temp_ext")
-              except Exception as e:
-                  print("Açma hatası:", e)
-
-          for db_file in glob.glob("temp_ext/**/*.db", recursive=True):
-              try:
-                  c2 = sqlite3.connect(db_file)
-                  cur2 = c2.cursor()
-                  cur2.execute("SELECT * FROM ilanlar")
-                  rows = cur2.fetchall()
-                  cols_count = len(rows[0]) if rows else 0
-                  placeholders = ",".join(["?"] * cols_count)
-                  cur.executemany(f"INSERT OR REPLACE INTO ilanlar VALUES ({placeholders})", rows)
-                  toplam += len(rows)
-                  c2.close()
-              except Exception as e:
-                  print("DB birleştirme hatası:", e)
-
-          conn.commit()
-          print(f"Toplam birleştirilen ilan sayısı: {toplam:,}")
-
-          # 1. ARSALAR (Ada / Parsel / İmar Detaylı CSV)
-          cur.execute("""
-              SELECT ilan_id, kategori, tip, il, ilce, mahalle, mahalle_id, ada_no, parsel_no,
-                     imar_durumu, tapu_durumu, kaks_emsal, kat_karsiligi,
-                     ilan_pin_lat, ilan_pin_lon, enlem, boylam,
-                     fiyat_tl, m2, birim_m2_fiyat, ilan_etiketi, ilan_tarihi, url
-              FROM ilanlar WHERE kategori = 'arsa'
-              ORDER BY il, ilce, mahalle, fiyat_tl DESC
-          """)
-          arsa_rows = cur.fetchall()
-          if arsa_rows:
-              csv_out = "birlestirilmis_ciktilar/csv/turkiye_satilik_arsa_ilanlari.csv"
-              with open(csv_out, "w", newline="", encoding="utf-8-sig") as f:
-                  w = csv.writer(f)
-                  w.writerow([
-                      "İlan ID", "Kategori", "Tip", "İl", "İlçe", "Mahalle", "Mahalle ID", "Ada No", "Parsel No",
-                      "İmar Durumu", "Tapu Durumu", "KAKS / Emsal", "Kat Karşılığı",
-                      "İlan Pin Lat", "İlan Pin Lon", "Mahalle Merkez Lat", "Mahalle Merkez Lon",
-                      "Fiyat (TL)", "m²", "₺/m² Birim Fiyat", "Etiket", "Tarih", "URL"
-                  ])
-                  w.writerows(arsa_rows)
-              print(f"Arsa CSV oluşturuldu: {csv_out} ({len(arsa_rows):,} satır)")
-
-          # 2. KONUT & İŞYERİ
-          for kat in ("konut", "isyeri"):
-              cur.execute("""
-                  SELECT ilan_id, kategori, tip, il, ilce, mahalle, mahalle_id, enlem, boylam,
-                         fiyat_tl, m2, birim_m2_fiyat, oda_sayisi, bulundugu_kat, ilan_etiketi, ilan_tarihi, url
-                  FROM ilanlar WHERE kategori = ?
-                  ORDER BY il, ilce, mahalle, fiyat_tl DESC
-              """, (kat,))
-              rows = cur.fetchall()
-              if not rows:
-                  continue
-
-              csv_out = f"birlestirilmis_ciktilar/csv/turkiye_satilik_{kat}_ilanlari.csv"
-              with open(csv_out, "w", newline="", encoding="utf-8-sig") as f:
-                  w = csv.writer(f)
-                  w.writerow([
-                      "İlan ID", "Kategori", "Tip", "İl", "İlçe", "Mahalle", "Mahalle ID",
-                      "Enlem (Lat)", "Boylam (Lon)", "Fiyat (TL)", "m²", "₺/m² Birim Fiyat",
-                      "Oda Sayısı", "Bulunduğu Kat", "Etiket", "Tarih", "URL"
-                  ])
-                  w.writerows(rows)
-              print(f"{kat.capitalize()} CSV oluşturuldu: {csv_out} ({len(rows):,} satır)")
-
-          conn.close()
-          EOF
+          python export_ayrintili_csv.py --birlestir-dizin tum_gruplar
 
       - name: "Zip Paketi Hazırla"
         run: |
-          cd birlestirilmis_ciktilar
-          zip -r ../turkiye_tum_ilanlar_veriseti.zip turkiye_tum_ilanlar.db csv/
-          cd ..
-
+          mkdir -p tum_turkiye_nihai_paket
+          [ -f data/turkiye_tum_ilanlar.sqlite ] && cp data/turkiye_tum_ilanlar.sqlite tum_turkiye_nihai_paket/ || true
+          [ -d data/csv_ciktilari ] && cp -r data/csv_ciktilari tum_turkiye_nihai_paket/ || true
+          zip -r turkiye_tum_ilanlar_tam_veriseti.zip tum_turkiye_nihai_paket/
 
       - name: "Tüm Türkiye İlan Paketini Artifakt Olarak Yükle"
         uses: actions/upload-artifact@v4
         with:
-          name: TURKIYE-TUM-ILANLAR-VERI-PAKETI
-          path: turkiye_tum_ilanlar_veriseti.zip
+          name: TURKIYE-TUM-ILANLAR-40-MAKINE-PAKETI
+          path: turkiye_tum_ilanlar_tam_veriseti.zip
           retention-days: 14

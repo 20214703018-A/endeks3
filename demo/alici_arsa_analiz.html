@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Parsel, imar ve emsal verileriyle açıklanabilir arsa ön değerleme ekranı.">
+  <title>GEOPROP | Alıcı Arsa Analizi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="alici_arsa_analiz.css?v=1.0.2">
+</head>
+<body>
+  <a class="skip-link" href="#analysisForm">Analiz formuna geç</a>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="GEOPROP ana sayfa">
+      <span class="brand-mark" aria-hidden="true">G</span>
+      <span><strong>GEOPROP</strong><small>Gayrimenkul karar altyapısı</small></span>
+    </a>
+    <nav aria-label="Ürün alanları">
+      <a class="active" href="alici_arsa_analiz.html">Alıcı</a>
+      <span aria-disabled="true">Emlakçı <small>yakında</small></span>
+      <span aria-disabled="true">İşyeri <small>yakında</small></span>
+    </nav>
+    <div class="system-state"><i></i><span>4 veri modülü hazır</span></div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="eyebrow">ALICI KARAR MERKEZİ · ARSA</p>
+        <h1>Bir arsayı yalnızca fiyatıyla değil,<br><span>kanıtlarıyla değerlendirin.</span></h1>
+        <p class="hero-copy">Parsel sınırı, canlı imar durumu, benzer ilanlar ve arazi özellikleri tek açıklanabilir ön değerlemede birleşir.</p>
+      </div>
+      <div class="hero-proof" aria-label="Sistem kapsamı">
+        <div><strong>2.566.651</strong><span>çakışma grubu karara bağlı</span></div>
+        <div><strong>12</strong><span>en yakın emsale kadar</span></div>
+        <div><strong>0</strong><span>uydurulan imar alanı</span></div>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Arsa analiz çalışma alanı">
+      <aside class="query-panel">
+        <div class="panel-heading">
+          <span class="step">01</span>
+          <div><h2>Arsayı tanımlayın</h2><p>Koordinat veya ada/parsel ile başlayın.</p></div>
+        </div>
+
+        <form id="analysisForm">
+          <div class="mode-switch" role="group" aria-label="Sorgu yöntemi">
+            <button type="button" class="active" data-mode="parcel">Ada / parsel</button>
+            <button type="button" data-mode="coordinate">Koordinat</button>
+          </div>
+
+          <div class="field-grid">
+            <label>İl<input name="il" value="Yalova" autocomplete="address-level1" required></label>
+            <label>İlçe<input name="ilce" value="Çiftlikköy" autocomplete="address-level2"></label>
+          </div>
+          <label>Mahalle / köy<input name="mahalle" value="Sultaniye Mahallesi"></label>
+
+          <div class="field-grid parcel-fields">
+            <label>Ada<input name="ada" value="20" inputmode="numeric"></label>
+            <label>Parsel<input name="parsel" value="20" inputmode="numeric"></label>
+          </div>
+          <label class="parcel-fields optional-field">TKGM mahalle ID <small>varsa</small><input name="mahalleId" inputmode="numeric" placeholder="Örn. 139726"></label>
+
+          <div class="field-grid coordinate-fields">
+            <label>Enlem<input name="lat" value="40.643806" inputmode="decimal" required></label>
+            <label>Boylam<input name="lon" value="29.324681" inputmode="decimal" required></label>
+          </div>
+          <label>Arsa alanı (m²)<input name="alan_m2" value="284" inputmode="decimal" required></label>
+
+          <details>
+            <summary>Arazi özelliklerini ekleyin <span>değer ayarı</span></summary>
+            <div class="select-grid">
+              <label>Parsel şekli<select name="sekil"><option value="unknown">Bilinmiyor</option><option value="regular">Düzenli</option><option value="near_regular">Düzenliye yakın</option><option value="irregular">Düzensiz</option><option value="very_irregular">Çok düzensiz</option></select></label>
+              <label>Yol durumu<select name="yol"><option value="unknown">Bilinmiyor</option><option value="cadastral_frontage">Kadastral yola cephe</option><option value="road_access">Yol erişimi var</option><option value="limited">Sınırlı erişim</option><option value="none">Yol yok</option></select></label>
+              <label>Su durumu<select name="su"><option value="unknown">Bilinmiyor</option><option value="connected">Bağlantı var</option><option value="nearby">Yakında</option><option value="none">Doğrulanmadı</option></select></label>
+              <label>Zemin<select name="zemin"><option value="unknown">Bilinmiyor</option><option value="suitable">Uygun</option><option value="conditional">Koşullu</option><option value="risky">Riskli</option></select></label>
+              <label>Gelişme yönü<select name="gelisim"><option value="unknown">Bilinmiyor</option><option value="toward_growth">Gelişme yönünde</option><option value="neutral">Nötr</option><option value="outside_growth">Gelişme dışında</option></select></label>
+              <label>İmar sınıfı<select name="imar"><option value="unknown">Canlı veriden al</option><option value="zoned">İmarlı</option><option value="development">Gelişme alanı</option><option value="agricultural">Tarım</option><option value="protected">Koruma kısıtlı</option></select></label>
+            </div>
+          </details>
+
+          <label class="check-row"><input type="checkbox" name="canli_parsel_sorgula" checked><span><strong>TKGM ve imarı canlı sorgula</strong><small>Yanıt gelmezse girilen bilgilerle emsal analizi sürer.</small></span></label>
+          <button class="primary" id="submitButton" type="submit"><span>Arsayı analiz et</span><b aria-hidden="true">→</b></button>
+          <button class="secondary" id="sampleButton" type="button">Örnek verilerle hızlı göster</button>
+        </form>
+        <div id="formError" class="alert error" role="alert" hidden></div>
+      </aside>
+
+      <div class="map-panel">
+        <div id="map" aria-label="Parsel ve emsal haritası"></div>
+        <div class="map-toolbar">
+          <span id="mapStatus"><i></i> Arsa konumu hazır</span>
+          <button id="fitMap" type="button">Parsele odaklan</button>
+        </div>
+        <div class="map-legend"><span><i class="parcel-dot"></i> Seçilen parsel</span><span><i class="comp-dot"></i> Emsal ilan</span></div>
+      </div>
+    </section>
+
+    <section id="results" class="results" aria-live="polite">
+      <div class="results-heading">
+        <div><p class="eyebrow">AÇIKLANABİLİR SONUÇ</p><h2 id="resultTitle">Yalova / Çiftlikköy arsa analizi</h2></div>
+        <div id="analysisMeta" class="analysis-meta">Model hazırlanıyor</div>
+      </div>
+
+      <div id="loadingState" class="loading-state" hidden><span></span><div><strong>Veri katmanları birleştiriliyor</strong><small>Canlı parsel, imar ve emsal analizi</small></div></div>
+      <div id="resultAlert" class="alert" role="status">Örnek form hazır. Analizi başlatın.</div>
+
+      <div class="metric-grid">
+        <article class="metric feature"><span>Tahmini değer aralığı</span><strong id="priceRange">—</strong><small id="priceRangeNote">Emsal verisi bekleniyor</small></article>
+        <article class="metric"><span>Merkez tahmin</span><strong id="priceEstimate">—</strong><small id="unitEstimate">— / m²</small></article>
+        <article class="metric"><span>Güven puanı</span><strong id="confidence">—</strong><small id="confidenceLabel">Veri bekleniyor</small></article>
+        <article class="metric"><span>Seçilen emsal</span><strong id="comparableCount">—</strong><small id="comparableScope">—</small></article>
+      </div>
+
+      <div class="detail-grid">
+        <article class="detail-card zoning-card">
+          <div class="card-title"><div><span class="step">02</span><h3>Parsel ve imar kanıtı</h3></div><span id="zoningBadge" class="badge muted">Sorgulanmadı</span></div>
+          <dl class="data-list">
+            <div><dt>TKGM durumu</dt><dd id="cadastreStatus">—</dd></div>
+            <div><dt>Ada / parsel</dt><dd id="parcelIdentity">—</dd></div>
+            <div><dt>Parsel alanı</dt><dd id="parcelArea">—</dd></div>
+            <div><dt>Taşınmaz niteliği</dt><dd id="parcelQuality">—</dd></div>
+            <div><dt>Tapu / zemin statüsü</dt><dd id="groundTitleStatus">—</dd></div>
+            <div><dt>Plan fonksiyonu</dt><dd id="planFunction">—</dd></div>
+            <div><dt>KAKS / TAKS</dt><dd id="zoningRatios">—</dd></div>
+            <div><dt>Kat / yapı yüksekliği</dt><dd id="heightAndFloors">—</dd></div>
+            <div><dt>Ön / yan çekme</dt><dd id="setbacks">—</dd></div>
+            <div><dt>Plan türü / ölçek</dt><dd id="planTypeScale">—</dd></div>
+            <div><dt>PIN / plan durumu</dt><dd id="planPinStatus">—</dd></div>
+            <div><dt>Plan / kayıt tarihi</dt><dd id="planDate">—</dd></div>
+          </dl>
+          <div id="eplanPlans" class="eplan-plan-list" hidden></div>
+          <p id="zoningWarning" class="card-note">Canlı kaynak sonucu geldiğinde doldurulur.</p>
+        </article>
+
+        <article class="detail-card project-card">
+          <div class="card-title"><div><span class="step">03</span><h3>Örnek proje kapasitesi</h3></div><span class="badge">İmarla hesaplanır</span></div>
+          <div id="projectEmpty" class="empty-state"><strong>Doğrulanmış KAKS ve TAKS bekleniyor</strong><p>Eksik imar verisinden yapı kapasitesi üretilmez.</p></div>
+          <div id="projectValues" class="project-values" hidden>
+            <div><span>Toplam inşaat</span><strong id="grossConstruction">—</strong></div>
+            <div><span>Taban oturumu</span><strong id="footprint">—</strong></div>
+            <div><span>Açık alan</span><strong id="openArea">—</strong></div>
+            <div><span>Gösterge kat</span><strong id="floorCount">—</strong></div>
+          </div>
+          <p class="card-note">Ruhsat projesi değildir; plan notları, çekmeler ve kurum görüşleri ayrıca kontrol edilir.</p>
+        </article>
+      </div>
+
+      <article class="detail-card comparable-card">
+        <div class="card-title"><div><span class="step">04</span><h3>Seçilen emsaller</h3></div><span id="methodBadge" class="badge">Sağlam medyan</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Konum</th><th>Alan</th><th>Fiyat</th><th>m² fiyatı</th><th>Mesafe</th><th>Benzerlik</th></tr></thead>
+            <tbody id="comparableRows"><tr><td colspan="6" class="table-empty">Analiz sonrası emsaller burada gösterilir.</td></tr></tbody>
+          </table>
+        </div>
+        <p class="card-note">Kaynak sayfası bağlantıları gösterilmez. İç kaynak kimliği ve veri izi denetim için korunur.</p>
+      </article>
+
+      <div class="detail-grid lower-grid">
+        <article class="detail-card">
+          <div class="card-title"><div><span class="step">05</span><h3>Değer ayarları</h3></div><span id="factorTotal" class="badge">×1,000</span></div>
+          <div id="factorList" class="factor-list"></div>
+        </article>
+        <article class="detail-card evidence-card">
+          <div class="card-title"><div><span class="step">06</span><h3>Veri güvenliği</h3></div><span class="badge good">İzlenebilir</span></div>
+          <ul>
+            <li><i></i> Ham ve alternatif kayıtlar silinmedi.</li>
+            <li><i></i> Çakışma seçiminin gerekçesi kayıtlı.</li>
+            <li><i></i> Kaynak linkleri alıcı sonucunda gösterilmiyor.</li>
+            <li><i></i> Seçim/hemşehri gibi kısıtlı veriler fiyatlamada kullanılmıyor.</li>
+            <li><i></i> Erişilemeyen imar alanları boş bırakılıyor.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>GEOPROP · İstatistiksel ön değerlendirme</span><span>Kesin değer, ekspertiz veya resmî imar belgesi değildir.</span></footer>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="alici_arsa_analiz.js?v=1.0.2"></script>
+</body>
+</html>

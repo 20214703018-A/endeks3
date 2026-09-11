@@ -3,6 +3,9 @@ collector/data/
 !collector/turkiye_il_ilce_rehberi.json
 !collector/mahalle_koordinatlari.json
 data/
+warehouse/
+reports/veri-katalogu-tam.json
+reports/veri-katalogu-tam.csv
 
 
 *.db

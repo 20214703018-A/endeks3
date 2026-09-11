@@ -1,4 +1,50 @@
-# Açık API Veri Toplayıcı (Collector)
+# GEOPROP veri platformu ve alıcı arsa analizi
+
+Bu checkout artık dört birlikte çalışan çekirdek modül içerir:
+
+1. 9.140.813 Silver gözlemden kayıpsız veri soy ağacı ve 2.566.651 veri
+   çatışması için açıklanabilir Gold kararı,
+2. 16.027 benzersiz ve yayımlanabilir arsa ilanından linksiz emsal indeksi,
+3. istek anında salt-okunur TKGM kadastro ve kaynak bulunursa E-Plan/belediye
+   imar katmanı,
+4. alıcı için emsal, güven, fiyat aralığı, faktörler ve doğrulanmış KAKS/TAKS
+   varsa örnek proje kapasitesi gösteren arsa analiz ekranı.
+
+Yerel alıcı ekranını açmak için:
+
+```bash
+python3 demo/server.py
+```
+
+Ardından `http://localhost:8088/` adresine gidin. Ürün API'si
+`POST /api/v1/arsa/analiz`, canlı parsel API'si `GET /api/v1/parsel/canli`,
+durum API'si `GET /api/v1/veri-durumu` adresindedir. Kullanıcıya kaynak veya
+ilan bağlantısı verilmez; iç kaynak karması ve veri soy ağacı denetim için
+korunur.
+
+## Veri ürün indeksini yeniden üretme
+
+Bu komut yalnız açıkça `--calistir` verildiğinde çalışır ve Silver arsa
+bölümünden atomik bir SQLite ürün görünümü üretir:
+
+```bash
+python3 tools/arsa_emsal_indeksi.py --calistir \
+  --silver-root warehouse/silver \
+  --source-registry reports/kaynak-sicili.json \
+  --output-database warehouse/product/arsa_emsalleri.sqlite
+```
+
+Çıktı ilan URL'si içermez. Aynı ilan kimliğinin farklı gözlemleri kalite,
+güncellik ve sabit kaynak karmasıyla tekilleştirilir; geçmiş sürümler Silver'da
+silinmez.
+
+## Eski toplayıcı kapsamı
+
+> Bu klasör; Chrome eklentisi, Python toplayıcıları, demo arayüzleri ve çok
+> sayıda parçalı veri paketini birlikte içerir. Mevcut kapsam ve güvenilirlik
+> sınırları için [`docs/INCELEME_RAPORU.md`](docs/INCELEME_RAPORU.md), tam
+> makine-okunur dosya/ZIP dökümü için
+> [`reports/veri-envanteri.json`](reports/veri-envanteri.json) dosyasına bakın.
 
 Bu araç; Emlakjet ve Endeksa açık API uçlarından (**Demografi**, **Hemşehri/Kütük Dağılımı**, **Seçim Sonuçları**, **Coğrafi Poligonlar** ve **Fiyat Endeksi**) verileri hiyerarşik (Türkiye → İl → İlçe) olarak toplayıp yerel SQLite veritabanına (`data/piyasa_verileri.db`) ve Excel uyumlu CSV dosyalarına kaydeder.
 

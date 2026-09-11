@@ -23,6 +23,7 @@ import json
 import sqlite3
 import zipfile
 import urllib.request
+import argparse
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -243,5 +244,13 @@ def download_and_parse():
     print(f"📁 Dosyalar: {DATA_DIR}")
     print("=" * 70)
 
-if __name__ == "__main__":
+def main():
+    parser = argparse.ArgumentParser(
+        description="GeoNames Türkiye coğrafi varlıklarını indirip SQLite/CSV/GeoJSON üretir"
+    )
+    parser.parse_args()
     download_and_parse()
+
+
+if __name__ == "__main__":
+    main()

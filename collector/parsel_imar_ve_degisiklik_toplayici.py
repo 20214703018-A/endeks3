@@ -2,14 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 ===============================================================================
-GEOPROP AI - ADA / PARSEL İMAR, PLAN KÜNYESİ VE DEĞİŞİKLİK TOPLAYICI
+GEOPROP AI - ADA / PARSEL KADASTRO VE İMAR SORGULAMA ARACI
 ===============================================================================
-Toplanan Veriler (Kullanıcı Ekran Görüntüsü ile 1'e 1 Eşleşen):
-1. PARSEL KADASTRO: İl, İlçe, Mahalle, Ada, Parsel, m², Nitelik, Zemin Durumu, Mevkii, Pafta, Poligon
-2. İMAR DURUMU: Plan Fonksiyonu (Konut, TİCK vb.), KAKS/Emsal, TAKS, Gabari, Kat Adedi, Çekmeler
-3. PLAN KÜNYESİ: Plan Adı, Plan Türü, PIN / TÜCBS No, Onay Tarihi, Yürürlük Tarihi, Plan Süreci
-4. BAĞIMSIZ BÖLÜMLER: Kat Mülkiyeti / İrtifakı Daire & Dükkân listesi (Kat, No, Nitelik, Blok)
-5. İMAR DEĞİŞİKLİKLERİ & GELECEK PLANLAR: Askıdaki plan tadilatları, NİP/ÇDP revizyonları, Sit & Mania
+TKGM yanıtından gelen kadastro alanları kaynak gözlemidir. İmar/plan alanları
+yalnız yapılandırılmış E-Plan yanıtında gerçekten bulunduğunda doldurulur. Kaynak
+başarısızlığında varsayılan imar hakkı veya bağımsız bölüm üretilmez.
 ===============================================================================
 """
 
@@ -19,7 +16,6 @@ import json
 import time
 import sqlite3
 import argparse
-import random
 import csv
 from datetime import datetime
 from curl_cffi import requests
@@ -30,6 +26,28 @@ os.makedirs(DATA_DIR, exist_ok=True)
 DB_PATH = os.path.join(DATA_DIR, "parsel_imar_degisiklikleri.sqlite")
 JSON_OUTPUT_PATH = os.path.join(DATA_DIR, "parsel_imar_ve_degisiklikler.json")
 GEOJSON_OUTPUT_PATH = os.path.join(DATA_DIR, "turkiye_parseller_geo.geojson")
+
+EPLAN_BASE_URL = "https://eplan.csb.gov.tr"
+EPLAN_PLAN_OBJECT_ID = "1159bc1d-75cd-438d-958c-8716cc973f6c"
+EPLAN_GEOMETRY_FIELD = "3d758202-040e-481a-abd6-fb1c20312d63"
+EPLAN_PLAN_NAME_FIELD = "3f52b328-525b-49cb-a126-b0b2569a1553"
+EPLAN_PIN_FIELD = "319c08f6-0971-45c9-aef6-4ed53c108d45"
+EPLAN_ACTIVE_FIELD = "4e0d4291-130b-410a-8fee-f78309bac985"
+EPLAN_RECORD_DATE_FIELD = "24da024e-bcba-425e-991a-5480164990ba"
+EPLAN_PLAN_TYPE_FIELD = "5301b42b-4818-45a7-acd9-d25621db5197_3b452987-6f95-4b19-906e-7394e8f78723"
+EPLAN_SCALE_FIELD = "a895b410-68e4-4960-888b-c73321ac865f_2c9e87e1-d52c-4a71-acf7-b48e39f6044a"
+EPLAN_APPROVAL_STATUS_FIELD = "e5478ae0-d4f2-4555-ae12-401d68612cf0_fce47bc6-1bbe-45bb-b7c7-03ee71a2ffbb"
+
+EPLAN_RESULT_FIELDS = (
+    "recID",
+    EPLAN_PLAN_NAME_FIELD,
+    EPLAN_PIN_FIELD,
+    EPLAN_ACTIVE_FIELD,
+    EPLAN_RECORD_DATE_FIELD,
+    EPLAN_PLAN_TYPE_FIELD,
+    EPLAN_SCALE_FIELD,
+    EPLAN_APPROVAL_STATUS_FIELD,
+)
 
 def get_db_connection(db_path=None):
     target = db_path or DB_PATH
@@ -140,8 +158,34 @@ def normalize_tr(text):
     tr_map = str.maketrans("İIıŞşĞğÜüÖöÇç", "iiisssuuooocc")
     return text.strip().lower().translate(tr_map)
 
+
+def parse_localized_number(value):
+    """TKGM'nin TR/EN binlik ve ondalık ayraç varyantlarını güvenli ayrıştırır."""
+    if value in (None, ""):
+        return 0.0
+    if isinstance(value, (int, float)):
+        return float(value)
+    text = str(value).strip().replace(" ", "")
+    if "," in text and "." in text:
+        if text.rfind(".") > text.rfind(","):
+            text = text.replace(",", "")
+        else:
+            text = text.replace(".", "").replace(",", ".")
+    elif "," in text:
+        text = text.replace(",", ".")
+    try:
+        return float(text)
+    except ValueError:
+        return 0.0
+
+
+def positive_source_number(value):
+    """Kaynağın sıfır/boş sentinel değerini gerçek imar hakkı gibi sunmaz."""
+    parsed = parse_localized_number(value)
+    return parsed if parsed > 0 else None
+
 class ParselImarToplayici:
-    def __init__(self, cikis_ek=None):
+    def __init__(self, cikis_ek=None, init_storage=True):
         self.cikis_ek = cikis_ek
         if cikis_ek:
             self.db_path = os.path.join(DATA_DIR, f"parsel_imar_degisiklikleri_{cikis_ek}.sqlite")
@@ -152,13 +196,14 @@ class ParselImarToplayici:
             self.json_path = JSON_OUTPUT_PATH
             self.geojson_path = GEOJSON_OUTPUT_PATH
             
-        init_database(self.db_path)
+        if init_storage:
+            init_database(self.db_path)
         self.session = requests.Session()
-        self.headers_kolayimar = {
+        self.headers_eplan = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
             "Accept": "application/json, text/plain, */*",
-            "Referer": "https://www.kolayimar.com/imar-durumu-sorgula",
-            "Origin": "https://www.kolayimar.com",
+            "Referer": f"{EPLAN_BASE_URL}/e-plan/html/acikPlanlar.html",
+            "Origin": EPLAN_BASE_URL,
             "Content-Type": "application/json"
         }
         self.headers_tkgm = {
@@ -203,11 +248,8 @@ class ParselImarToplayici:
             lat_c = sum(c[1] for c in coords) / len(coords) if coords else lat
             lon_c = sum(c[0] for c in coords) / len(coords) if coords else lon
             
-            alan_str = props.get("alan", "0").replace(".", "").replace(",", ".")
-            try:
-                alan_m2 = float(alan_str)
-            except ValueError:
-                alan_m2 = 0.0
+            alan_raw = props.get("alan", "0")
+            alan_m2 = parse_localized_number(alan_raw)
                 
             return {
                 "success": True,
@@ -218,6 +260,7 @@ class ParselImarToplayici:
                 "ada_no": props.get("adaNo", str(ada) if ada else ""),
                 "parsel_no": props.get("parselNo", str(parsel) if parsel else ""),
                 "alan_m2": alan_m2,
+                "alan_raw": alan_raw,
                 "nitelik": props.get("nitelik", ""),
                 "zemin_durumu": props.get("zeminKmdurum", "Kat Mülkiyet"),
                 "pafta": props.get("pafta", ""),
@@ -229,95 +272,234 @@ class ParselImarToplayici:
             }
         return None
 
-    def fetch_eplan_and_zoning(self, il, ilce, mahalle, ada, parsel, mahalle_id=None):
-        """E-Plan ve imar durumu verilerini (KAKS, TAKS, Fonksiyon, Plan Künyesi, Askıdaki Planlar) çeker."""
-        url = "https://www.kolayimar.com/api/eplan"
-        payload = {"il": il, "ilce": ilce, "mahalle": mahalle, "ada": str(ada), "parsel": str(parsel)}
-        
-        try:
-            r = self.session.post(url, json=payload, headers=self.headers_kolayimar, impersonate="chrome124", timeout=12)
-            if r.status_code == 200:
-                res = r.json()
-                if res.get("success") and "data" in res:
-                    d = res["data"]
-                    imar = d.get("imarBilgileri", {})
-                    plan_meta = d.get("planMetadata", {})
-                    sit = d.get("dogalSit", {})
-                    mania = d.get("havaalaniUA", {})
-                    yatirim = d.get("yatirim", {})
-                    aski = d.get("aski", {})
-                    
-                    return {
-                        "success": True,
-                        "imar_durumu": imar.get("imarDurumu", "Uygulama İmar Planı Var"),
-                        "plan_fonksiyon": imar.get("kullanimAmaci", "Konut Alanı"),
-                        "kaks_emsal": imar.get("kaks") or imar.get("emsal") or 1.50,
-                        "taks": imar.get("taks") or 0.35,
-                        "gabari": imar.get("gabari") or imar.get("yapiYuksekligi") or "15.50m",
-                        "kat_adedi": imar.get("katAdedi") or "5 Kat",
-                        "yapi_nizami": imar.get("insaatNizami") or "Ayrık Nizam (A)",
-                        "on_bahce": imar.get("onBahce") or 5.0,
-                        "yan_bahce": imar.get("yanBahce") or 3.0,
-                        "plan_adi": imar.get("planAdi") or f"{ilce.upper()} İLÇESİ 3. ETAP UYGULAMA İMAR PLANI",
-                        "plan_turu": imar.get("planTipi") or "Uygulama İmar Planı",
-                        "pin_tucbs_no": plan_meta.get("pin") or imar.get("pin") or f"MERİ-{random.randint(1000000, 9999999)}",
-                        "onay_tarihi": imar.get("planTarihi", "12.01.2022"),
-                        "yururluk_tarihi": imar.get("yururlukTarihi", "12.01.2022"),
-                        "plan_sureci": "Yürürlükte",
-                        "dogal_sit": sit.get("status", "Yok"),
-                        "havaalani_mania": mania.get("status", "Yok"),
-                        "hazine_durumu": "Mevcut" if yatirim.get("hazineSatis", {}).get("status") == "var" else "Yok",
-                        "aski_degisiklikleri": aski.get("etkileyen", [])
-                    }
-        except Exception:
-            pass
-            
-        # Standart Bölge Plan Şablonu (E-Plan WFS Uyumlu)
+    @staticmethod
+    def _empty_zoning_result(status="kaynak_erisilemedi", error=None):
         return {
+            "success": False,
+            "veri_durumu": status,
+            "kaynak": "ÇŞİDB E-Plan" if status != "kaynak_erisilemedi" else None,
+            "hata": error,
+            "imar_durumu": None,
+            "plan_fonksiyon": None,
+            "kaks_emsal": None,
+            "taks": None,
+            "gabari": None,
+            "kat_adedi": None,
+            "yapi_nizami": None,
+            "on_bahce": None,
+            "yan_bahce": None,
+            "plan_adi": None,
+            "plan_turu": None,
+            "pin_tucbs_no": None,
+            "onay_tarihi": None,
+            "yururluk_tarihi": None,
+            "plan_sureci": None,
+            "dogal_sit": None,
+            "havaalani_mania": None,
+            "hazine_durumu": None,
+            "aski_degisiklikleri": [],
+            "planlar": [],
+            "fonksiyon_katmanlari": [],
+        }
+
+    def _ensure_eplan_guest_session(self):
+        """E-Plan'ın herkese açık sorgusu için anonim oturum çerezini alır."""
+        info = self.session.get(
+            f"{EPLAN_BASE_URL}/fSession/getSessionInfo",
+            headers=self.headers_eplan,
+            impersonate="chrome124",
+            timeout=10,
+        )
+        if info.status_code == 200:
+            return
+        login = self.session.get(
+            f"{EPLAN_BASE_URL}/fSession/loginAsGuest",
+            headers=self.headers_eplan,
+            impersonate="chrome124",
+            timeout=10,
+        )
+        if login.status_code != 200:
+            raise RuntimeError(f"E-Plan anonim oturum HTTP {login.status_code}")
+
+    def _query_eplan_plans(self, lat, lon, limit=10):
+        self._ensure_eplan_guest_session()
+        query = {
+            "columnFilters": [{
+                "name": EPLAN_GEOMETRY_FIELD,
+                "operator": "INTERSECTS",
+                "value": f"POINT({float(lon):.8f} {float(lat):.8f})",
+            }],
+            "resultColumns": [
+                {"fObjectPropertyRecID": field, "aggregateFunction": 0}
+                for field in EPLAN_RESULT_FIELDS
+            ],
+            "length": limit,
+        }
+        response = self.session.post(
+            f"{EPLAN_BASE_URL}/fObjectData/query?fObjectID={EPLAN_PLAN_OBJECT_ID}",
+            json=query,
+            headers=self.headers_eplan,
+            impersonate="chrome124",
+            timeout=15,
+        )
+        if response.status_code != 200:
+            raise RuntimeError(f"E-Plan plan sorgusu HTTP {response.status_code}")
+        rows = response.json()
+        if not isinstance(rows, list):
+            raise RuntimeError("E-Plan plan sorgusu beklenmeyen yanıt döndürdü")
+        plans = []
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            plans.append({
+                "record_id": row.get("recID"),
+                "plan_adi": row.get(EPLAN_PLAN_NAME_FIELD),
+                "pin_tucbs_no": row.get(EPLAN_PIN_FIELD),
+                "aktif": str(row.get(EPLAN_ACTIVE_FIELD) or "").lower() in {"1", "true"},
+                "kayit_tarihi": row.get(EPLAN_RECORD_DATE_FIELD),
+                "plan_turu": row.get(EPLAN_PLAN_TYPE_FIELD),
+                "olcek": row.get(EPLAN_SCALE_FIELD),
+                "onay_durumu": row.get(EPLAN_APPROVAL_STATUS_FIELD),
+            })
+        return plans
+
+    def _query_eplan_function(self, plan_id, lat, lon):
+        response = self.session.get(
+            f"{EPLAN_BASE_URL}/planGML/getPlanLayerData",
+            params={"planID": plan_id, "filterWkt": f"POINT ({float(lon):.8f} {float(lat):.8f})"},
+            headers=self.headers_eplan,
+            impersonate="chrome124",
+            timeout=15,
+        )
+        if response.status_code != 200:
+            return []
+        result = response.json()
+        return result if isinstance(result, list) else []
+
+    @staticmethod
+    def _extract_eplan_function(layers):
+        """PlanGML satırını alan adına göre okur; kod/sıfır sentinel değerlerini yaymaz."""
+        candidates = []
+        for layer in layers:
+            table_name = str(layer.get("tableName") or "")
+            if table_name.endswith("plan_siniri"):
+                continue
+            columns = layer.get("columns") or []
+            for row in layer.get("data") or []:
+                if not isinstance(row, list):
+                    continue
+                values = dict(zip(columns, row))
+                candidates.append((table_name, values))
+        if not candidates:
+            return {}, []
+
+        table_name, values = candidates[0]
+        purpose = values.get("Adı")
+        if not purpose:
+            purpose = next(
+                (value for key, value in values.items() if key.endswith(" Tipi") and value not in (None, "", "0", 0)),
+                None,
+            )
+        building_order = values.get("Yapı Düzeni")
+        if building_order in (None, "", "0", 0):
+            building_order = None
+        extracted = {
+            "imar_durumu": "PlanGML fonksiyon alanı",
+            "plan_fonksiyon": purpose,
+            "kaks_emsal": positive_source_number(values.get("Emsal Kaks")),
+            "taks": positive_source_number(values.get("TAKS")),
+            "gabari": positive_source_number(values.get("Yapı Yüksekliği")),
+            "kat_adedi": positive_source_number(values.get("Kat Adedi")),
+            "yapi_nizami": building_order,
+            "on_bahce": positive_source_number(values.get("Ön Bahçe Mesafesi")),
+            "yan_bahce": positive_source_number(values.get("Yan Bahçe Mesafesi")),
+        }
+        return extracted, [
+            {"katman": name, "alanlar": row_values}
+            for name, row_values in candidates
+        ]
+
+    def fetch_eplan_and_zoning(self, il, ilce, mahalle, ada, parsel, mahalle_id=None, lat=None, lon=None):
+        """Resmi E-Plan plan kapsamını ve varsa PlanGML yapılaşma alanlarını çeker.
+
+        E-Plan'da bulunmayan KAKS/TAKS tahmin edilmez. Plan kaydı ile parsel
+        yapılaşma koşulları ayrı güven durumları olarak döndürülür.
+        """
+        if lat in (None, "") or lon in (None, ""):
+            return self._empty_zoning_result("koordinat_eksik", "E-Plan sorgusu için koordinat gerekli")
+        try:
+            plans = self._query_eplan_plans(lat, lon)
+        except Exception as exc:
+            return self._empty_zoning_result(error=str(exc))
+        if not plans:
+            return self._empty_zoning_result("plan_bulunamadi")
+
+        def priority(plan):
+            try:
+                scale = int(float(plan.get("olcek") or 999999))
+            except (TypeError, ValueError):
+                scale = 999999
+            is_application = "uygulama" in normalize_tr(plan.get("plan_turu"))
+            return (not plan.get("aktif"), not is_application, scale, str(plan.get("kayit_tarihi") or ""))
+
+        active_plans = [plan for plan in plans if plan.get("aktif")] or plans
+        active_plans.sort(key=priority)
+        # Aynı noktayı kapsayan en yeni 1/1000 planı öne almak için eşit öncelikte
+        # kayıt tarihini tersten uygularız.
+        active_plans = sorted(
+            active_plans,
+            key=lambda plan: str(plan.get("kayit_tarihi") or ""),
+            reverse=True,
+        )
+        active_plans.sort(key=lambda plan: priority(plan)[:3])
+
+        chosen = active_plans[0]
+        function_fields = {}
+        function_layers = []
+        for plan in active_plans[:4]:
+            try:
+                layers = self._query_eplan_function(plan.get("record_id"), lat, lon)
+            except Exception:
+                continue
+            extracted, normalized_layers = self._extract_eplan_function(layers)
+            if normalized_layers:
+                chosen = plan
+                function_fields = extracted
+                function_layers = normalized_layers
+                break
+
+        has_parameters = any(function_fields.get(key) is not None for key in (
+            "plan_fonksiyon", "kaks_emsal", "taks", "gabari", "kat_adedi", "on_bahce", "yan_bahce"
+        ))
+        return {
+            **self._empty_zoning_result(),
+            **function_fields,
             "success": True,
-            "imar_durumu": "Uygulama İmar Planı Var",
-            "plan_fonksiyon": "Konut Alanı",
-            "kaks_emsal": 1.50,
-            "taks": 0.35,
-            "gabari": "15.50m",
-            "kat_adedi": "5 Kat",
-            "yapi_nizami": "Ayrık Nizam (A)",
-            "on_bahce": 5.0,
-            "yan_bahce": 3.0,
-            "plan_adi": f"{ilce.upper()} İLÇESİ 3. ETAP UYGULAMA İMAR PLANI",
-            "plan_turu": "Uygulama İmar Planı (1/1000)",
-            "pin_tucbs_no": f"MERİ-06120253",
-            "onay_tarihi": "12.01.2022",
-            "yururluk_tarihi": "12.01.2022",
-            "plan_sureci": "Yürürlükte",
-            "dogal_sit": "Yok",
-            "havaalani_mania": "Yok",
-            "hazine_durumu": "Yok",
-            "aski_degisiklikleri": []
+            "veri_durumu": "imar_alani_kismen_dogrulandi" if has_parameters else "plan_kapsami_dogrulandi",
+            "kaynak": "ÇŞİDB E-Plan",
+            "hata": None,
+            "plan_adi": chosen.get("plan_adi"),
+            "plan_turu": chosen.get("plan_turu"),
+            "pin_tucbs_no": chosen.get("pin_tucbs_no"),
+            "onay_tarihi": None,
+            "yururluk_tarihi": None,
+            "plan_sureci": chosen.get("onay_durumu"),
+            "plan_kayit_tarihi": chosen.get("kayit_tarihi"),
+            "plan_olcegi": chosen.get("olcek"),
+            "planlar": active_plans,
+            "fonksiyon_katmanlari": function_layers,
         }
 
     def fetch_bagimsiz_bolumler(self, mahalle_id, ada, parsel, zemin_durumu="Kat Mülkiyet", alan_m2=500.0):
-        """Kat Mülkiyetli taşınmazlar için bağımsız bölüm (daire/dükkân) sicilini modeller/çeker."""
-        bb_list = []
-        if "Mülkiyet" in zemin_durumu or "İrtifak" in zemin_durumu:
-            daire_sayisi = max(4, min(24, int(alan_m2 / 70)))
-            kat_isimleri = ["Zemin", "1", "2", "3", "4", "5"]
-            
-            for no in range(1, daire_sayisi + 1):
-                kat_idx = min(len(kat_isimleri) - 1, (no - 1) // 2)
-                kat_adi = kat_isimleri[kat_idx]
-                nitelik = "Dükkân" if kat_adi == "Zemin" and no == 1 else "Mesken"
-                bb_list.append({
-                    "bolum_no": str(no),
-                    "kat": kat_adi,
-                    "giris": "-",
-                    "nitelik": nitelik,
-                    "blok": "A Blok"
-                })
-        return bb_list
+        """Doğrulanmış bir bağımsız-bölüm kaynağı henüz bağlı değil.
+
+        Parsel alanından daire/dükkân adedi türetmek sicil verisi değildir; bu
+        nedenle güvenilir bir kaynak eklenene kadar boş liste döndürülür.
+        """
+        return []
 
     def save_to_db(self, p_data, i_data, bb_list):
-        conn = get_db_connection()
+        conn = get_db_connection(self.db_path)
         c = conn.cursor()
         
         # 1. Parsel & İmar
@@ -346,13 +528,13 @@ class ParselImarToplayici:
             p_data["ada_no"], p_data["parsel_no"], p_data["alan_m2"],
             p_data["nitelik"], p_data["zemin_durumu"], p_data["pafta"], p_data["mevkii"],
             p_data["enlem"], p_data["boylam"], json.dumps(p_data.get("geometry", {})),
-            i_data["imar_durumu"], i_data["plan_fonksiyon"], i_data.get("kaks_emsal"), i_data.get("taks"),
-            str(i_data.get("gabari", "")), str(i_data.get("kat_adedi", "")), i_data.get("yapi_nizami", ""),
+            i_data.get("imar_durumu"), i_data.get("plan_fonksiyon"), i_data.get("kaks_emsal"), i_data.get("taks"),
+            i_data.get("gabari"), i_data.get("kat_adedi"), i_data.get("yapi_nizami"),
             i_data.get("on_bahce"), i_data.get("yan_bahce"),
-            i_data["plan_adi"], i_data["plan_turu"], i_data["pin_tucbs_no"],
-            i_data["onay_tarihi"], i_data["yururluk_tarihi"], i_data["plan_sureci"],
-            i_data["dogal_sit"], i_data["havaalani_mania"], i_data["hazine_durumu"],
-            "TKGM MEGSİS + TÜCBS E-Plan"
+            i_data.get("plan_adi"), i_data.get("plan_turu"), i_data.get("pin_tucbs_no"),
+            i_data.get("onay_tarihi"), i_data.get("yururluk_tarihi"), i_data.get("plan_sureci"),
+            i_data.get("dogal_sit"), i_data.get("havaalani_mania"), i_data.get("hazine_durumu"),
+            "TKGM MEGSİS" + (" + ÇŞİDB E-Plan" if i_data.get("success") else "")
         ))
         
         # 2. Bağımsız Bölümler
@@ -382,7 +564,7 @@ class ParselImarToplayici:
         conn.commit()
         conn.close()
 
-    def process_parsel(self, mahalle_id=None, ada=None, parsel=None, il=None, ilce=None, mahalle=None, lat=None, lon=None):
+    def process_parsel(self, mahalle_id=None, ada=None, parsel=None, il=None, ilce=None, mahalle=None, lat=None, lon=None, persist=True):
         """Parseli sorgular, imar durumunu ve bağımsız bölümlerini kaydeder."""
         p_data = self.fetch_tkgm_megsis(mahalle_id=mahalle_id, ada=ada, parsel=parsel, lat=lat, lon=lon)
         if not p_data:
@@ -395,15 +577,28 @@ class ParselImarToplayici:
         parsel_no = p_data["parsel_no"] or parsel or "1"
         mah_id = p_data["mahalle_id"] or mahalle_id
         
-        i_data = self.fetch_eplan_and_zoning(il_ad, ilce_ad, mah_ad, ada_no, parsel_no, mah_id)
+        i_data = self.fetch_eplan_and_zoning(
+            il_ad, ilce_ad, mah_ad, ada_no, parsel_no, mah_id,
+            lat=p_data.get("enlem"), lon=p_data.get("boylam"),
+        )
         bb_list = self.fetch_bagimsiz_bolumler(
             mah_id, ada_no, parsel_no,
             p_data.get("zemin_durumu", ""),
             p_data.get("alan_m2", 500)
         )
         
-        self.save_to_db(p_data, i_data, bb_list)
-        return {"parsel": p_data, "imar": i_data, "bagimsiz_bolumler": bb_list}
+        if persist:
+            self.save_to_db(p_data, i_data, bb_list)
+        return {
+            "parsel": p_data,
+            "imar": i_data,
+            "bagimsiz_bolumler": bb_list,
+            "veri_guveni": {
+                "kadastro": "kaynakta_dogrulandi",
+                "imar": i_data.get("veri_durumu", "kaynak_erisilemedi"),
+                "bagimsiz_bolum": "kaynak_bagli_degil",
+            },
+        }
 
     def enrich_from_csv(self, csv_file_path, limit=50):
         """Mevcut toplanan arsa/konut CSV ilanlarından ada/parselleri otomatik çeker."""
@@ -636,7 +831,11 @@ class ParselImarToplayici:
                     miss_count = 0
                     p = res["parsel"]
                     i = res["imar"]
-                    print(f"  --> [PARSEL {parsel_str}] {p['alan_m2']} m² | {p['nitelik']} | Fonk: {i['plan_fonksiyon']} (KAKS: {i['kaks_emsal']}) | Geo: OK")
+                    imar_ozeti = (
+                        f"Fonk: {i.get('plan_fonksiyon')} (KAKS: {i.get('kaks_emsal')})"
+                        if i.get("success") else "İmar: doğrulanamadı"
+                    )
+                    print(f"  --> [PARSEL {parsel_str}] {p['alan_m2']} m² | {p['nitelik']} | {imar_ozeti} | Geo: OK")
                     time.sleep(0.12)
                 else:
                     miss_count += 1
@@ -773,7 +972,7 @@ def birlestir_tum_sonuclari(data_dir=DATA_DIR):
 
 def main():
     parser = argparse.ArgumentParser(description="GEOPROP AI İmar, Plan Künyesi ve Bağımsız Bölüm Toplayıcı")
-    parser.add_argument("--otomatik-kesif", action="store_true", help="Manuel giriş yapmadan tüm ada ve parselleri otomatik keşfet")
+    parser.add_argument("--otomatik-kesif", action="store_true", help="Tohum noktalar çevresinde sınırlı ada/parsel keşfi yap")
     parser.add_argument("--iller", type=str, help="Virgülle ayrılmış il listesi (örn: 'ankara,istanbul,izmir')")
     parser.add_argument("--cikis-ek", type=str, help="Çıktı dosyası grup eki (örn: 'grup_1')")
     parser.add_argument("--birlestir", action="store_true", help="Parçalı sonuçları birleştir")
@@ -787,6 +986,10 @@ def main():
     parser.add_argument("--limit", type=int, default=100, help="Maksimum işlenecek parsel sayısı")
     
     args = parser.parse_args()
+
+    if not (args.birlestir or args.otomatik_kesif or args.zenginlestir_csv or (args.mahalle_id and args.ada and args.parsel)):
+        parser.print_help()
+        return
     
     if args.birlestir:
         birlestir_tum_sonuclari()
@@ -794,9 +997,8 @@ def main():
 
     toplayici = ParselImarToplayici(cikis_ek=args.cikis_ek)
     
-    if args.otomatik_kesif or (not args.zenginlestir_csv and not (args.mahalle_id and args.ada and args.parsel)):
-        # Varsayılan otonom mod: Sıfır manuel giriş
-        print(f"[*] Otonom Ada/Parsel Keşif ve Geo Harita Çıkarımı Başlatılıyor (Ek: {args.cikis_ek or 'ana'})...")
+    if args.otomatik_kesif:
+        print(f"[*] Sınırlı Ada/Parsel Keşif ve Geo Harita Çıkarımı Başlatılıyor (Ek: {args.cikis_ek or 'ana'})...")
         toplayici.auto_discover_and_expand(limit=args.limit, iller=args.iller)
         toplayici.export_summary_json()
     elif args.zenginlestir_csv:
@@ -811,4 +1013,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

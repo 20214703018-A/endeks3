@@ -64,6 +64,7 @@ jobs:
           echo "LİMİT: ${{ github.event.inputs.limit_per_group || '200' }}"
           echo "========================================================"
           python collector/parsel_imar_ve_degisiklik_toplayici.py \
+            --otomatik-kesif \
             --cikis-ek "grup_${{ matrix.grup }}" \
             --iller "${{ matrix.iller }}" \
             --limit "${{ github.event.inputs.limit_per_group || '200' }}"

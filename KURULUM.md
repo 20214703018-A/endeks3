@@ -1,4 +1,29 @@
-# Piyasa Toplayıcı — kurulum (1 dk)
+# GEOPROP yerel alıcı arsa analizi
+
+Gerekli Python bağımlılıklarını kurduktan sonra proje kökünde:
+
+```bash
+python3 demo/server.py
+```
+
+Ana sayfa doğrudan alıcı arsa analizine açılır:
+`http://localhost:8088/`. Canlı parsel sorgusu koordinatla veya
+mahalle kimliği + ada + parsel ile yapılır. TKGM yanıtı bulunamazsa girilen
+bilgilerle istatistiksel analiz sürer; eksik imar alanları tahmin edilmez.
+
+Emsal ürün indeksi yoksa sunucu eski yerel ilan veritabanını kullanır. Güncel
+indeksi üretmek için README'deki `arsa_emsal_indeksi.py` komutunu çalıştırın.
+
+Arayüz açılmazsa önce `http://127.0.0.1:8088/api/v1/veri-durumu` adresini
+kontrol edin. Tarayıcının yarım açık bağlantısının sunucuyu bloke etmediğini
+doğrulayan regresyon testi:
+
+```bash
+PYTHONPATH=. python3 -m unittest discover -s tests \
+  -p 'test_demo_server_concurrency.py' -v
+```
+
+## Piyasa Toplayıcı Chrome eklentisi — kurulum (1 dk)
 
 Chrome / Edge / Brave'de:
 
@@ -7,8 +32,10 @@ Chrome / Edge / Brave'de:
 3. **Paketlenmemiş öğe yükle** → bu `extension/` klasörünü seç
 
 Emlakjet bölge endeksi için backend gerekmez; kayıtlar eklentinin kendi
-yerel veritabanına yazılır. (İlan toplama kısmı hâlâ `PORT=3001 npm start`
-ile çalışan backend'i kullanır.)
+yerel veritabanına yazılır. İlan toplama kısmının beklediği Node backend
+(`PORT=3001`) bu checkout'ta bulunmadığından o akış şu anda tek başına
+çalışmaz. Eksik sözleşme ve birleştirme planı `docs/INCELEME_RAPORU.md`
+içinde kayıtlıdır.
 
 ---
 
@@ -55,7 +82,9 @@ ayrı CSV indirme buradadır.
 
 ## 2) İlan toplama (Emlakjet / Sahibinden / Hepsiemlak / Zingat)
 
-Bu kısım backend'e yazar: `PORT=3001 npm start`.
+Bu kısım `localhost:3001` backend'ine yazar. Bu checkout'ta `package.json`
+ve `server.js` bulunmadığı için backend depoya alınana kadar ilan kaydı
+kullanılamaz; yalnız Emlakjet bölge endeksi yerel çalışır.
 
 Önizleme ve tek sayfa kaydı otomatik gezinmez. Otomatik kayıt/sayfalama
 varsayılan olarak kapalıdır; yalnızca ilgili siteden yazılı veri toplama

@@ -17,6 +17,7 @@ import json
 import csv
 import sqlite3
 import zipfile
+import argparse
 from pathlib import Path
 
 def extract_from_db(db_path, output_dir):
@@ -108,8 +109,24 @@ def extract_from_db(db_path, output_dir):
     print(f"  ✓ {db_path.name}: {len(rows)} satır başarıyla yeni tablolara dönüştürüldü.")
 
 def main():
-    downloads = Path.home() / "Downloads"
-    output_dir = Path.home() / "Desktop" / "GECMIS_VERIDEN_URETILEN_CSVLER"
+    parser = argparse.ArgumentParser(
+        description="Geçmiş piyasa SQLite/ZIP paketlerindeki ham JSON alanlarını CSV'ye dönüştürür"
+    )
+    parser.add_argument("--calistir", action="store_true", help="Dönüştürmeyi açıkça başlat")
+    parser.add_argument("--kaynak", type=Path, default=Path.home() / "Downloads", help="Taranacak kök klasör")
+    parser.add_argument(
+        "--cikti",
+        type=Path,
+        default=Path.home() / "Desktop" / "GECMIS_VERIDEN_URETILEN_CSVLER",
+        help="CSV çıktı klasörü",
+    )
+    args = parser.parse_args()
+    if not args.calistir:
+        parser.print_help()
+        return
+
+    downloads = args.kaynak
+    output_dir = args.cikti
 
     print("İndirilenler klasöründeki geçmiş veri paketleri aranıyor...")
     

@@ -1,0 +1,252 @@
+{
+  "registry_definition_version": "1.1.0",
+  "rights_declaration": {
+    "rights_holder": "KULLANICININ_YASAL_ADI_VEYA_SIRKET_UNVANI_GEREKLI",
+    "asserted_by_user": true,
+    "publication_rights_asserted_by_user": true,
+    "publication_rights_scope": "registrydeki_tum_veri_aileleri",
+    "publication_rights_asserted_at": "2026-09-10",
+    "public_source_links_enabled": false,
+    "internal_provenance_retained": true,
+    "dataset_license_id": "PROPRIETARY-DATA-1.0",
+    "ownership_scope": [
+      "kullanici_tarafindan_uretilen_istatistiksel_modeller",
+      "ozgun_model_ciktilari",
+      "veri_tabani_secilim_duzenleme_dogrulama_ve_sunum_yatirimi",
+      "kullaniciya_ait_sema_kod_dokumantasyon_ve_kalite_kurallari"
+    ],
+    "excluded_from_ownership_claim": [
+      "ucuncu_taraf_sitelerden_gelen_ham_icerik",
+      "ucuncu_taraf_telif_marka_kisisel_veri_ve_sozlesmesel_haklari",
+      "resmi_kurumlarin_kendi_kayitlari",
+      "acik_lisansli_kaynaklarin_kendi_lisans_yukumlulukleri"
+    ],
+    "effective_after_identity_confirmation": false,
+    "rights_holder_identity_status": "legal_name_pending",
+    "attestation_status": "active_user_attestation"
+  },
+  "default_policy": {
+    "registry_status": "owner_rights_declared",
+    "license_status": "user_publication_rights_declared",
+    "public_display_allowed": true,
+    "scoring_allowed": true,
+    "internal_quality_review_allowed": true,
+    "attribution_required": false,
+    "retention_policy": "owner_controlled_internal_provenance",
+    "freshness_sla_days": null,
+    "reviewed_at": "2026-09-10"
+  },
+  "sources": [
+    {
+      "source_id": "emlakjet_endeksa_market_collected",
+      "display_name": "Toplanmış bölgesel piyasa ve fiyat serileri",
+      "provider": "EmlakJet / Endeksa kaynaklı olduğu düşünülen paketler",
+      "source_mode": "user_collected_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "entities": ["price_summary", "price_trend", "price_distribution"]
+      },
+      "notes": "Hak sahibi yayın hakkını beyan etti; kaynak linki üründe gösterilmez, iç provenans korunur."
+    },
+    {
+      "source_id": "demography_and_annual_sales_collected",
+      "display_name": "Toplanmış demografi ve yıllık satış serileri",
+      "provider": "Endeksa demografi uçları kaynaklı olduğu düşünülen paketler",
+      "source_mode": "user_collected_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "entities": ["population_profile", "annual_sales"]
+      },
+      "notes": "2025-2027 sabit katsayılı yıllık satış kayıtları ayrıca projection olarak ayrılır."
+    },
+    {
+      "source_id": "multi_map_poi_collected",
+      "display_name": "Çoklu harita kaynağından toplanmış POI kayıtları",
+      "provider": "Birden fazla harita sağlayıcısı",
+      "source_mode": "user_collected_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "entities": ["poi"]
+      },
+      "notes": "Hak sahibi yayın hakkını beyan etti; sağlayıcı kimliği kalite ve denetim için iç sicilde korunur."
+    },
+    {
+      "source_id": "administrative_geography_collected",
+      "display_name": "İl, ilçe, mahalle ve poligon verileri",
+      "provider": "Kullanıcı tarafından toplanmış idari coğrafya kaynakları",
+      "source_mode": "user_collected_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "entities": ["province", "district", "neighbourhood", "administrative_guide", "administrative_boundary"]
+      },
+      "notes": "Resmi kimlik ve poligon kaynağı ayrı kanıtla bağlanmalıdır."
+    },
+    {
+      "source_id": "property_listings_collected",
+      "display_name": "Toplanmış gayrimenkul ilan gözlemleri",
+      "provider": "Birden fazla ilan kaynağı",
+      "source_mode": "user_collected_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "domains": ["listing_observation"]
+      },
+      "notes": "Yeniden gösterim ve saklama izni platform ve ilan bazında doğrulanmalıdır."
+    },
+    {
+      "source_id": "property_industry_directory_collected",
+      "display_name": "Emlak ofisi, danışman ve proje şirketi dizini",
+      "provider": "Toplanmış sektör dizini kaynakları",
+      "source_mode": "user_collected_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "domains": ["industry_directory"]
+      },
+      "policy": {
+        "registry_status": "privacy_and_license_review_required",
+        "public_display_allowed": false,
+        "scoring_allowed": false,
+        "attribution_required": false,
+        "retention_policy": "restricted_internal_privacy_review"
+      },
+      "notes": "Telefon, kişi adı ve adres alanları KVKK ve kaynak şartları incelemesi gerektirir."
+    },
+    {
+      "source_id": "restricted_context_collected",
+      "display_name": "Kısıtlı bağlam verileri",
+      "provider": "Toplanmış seçim, hemşehri ve davranış kaynakları",
+      "source_mode": "user_collected_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "domains": ["restricted_context"]
+      },
+      "policy": {
+        "registry_status": "restricted",
+        "license_status": "not_evaluated",
+        "public_display_allowed": false,
+        "scoring_allowed": false,
+        "attribution_required": true,
+        "retention_policy": "restricted_internal_only"
+      },
+      "notes": "Konut uygunluğu, fiyatlama, sıralama, hedefleme veya reklam kişiselleştirmesinde kullanılamaz."
+    },
+    {
+      "source_id": "local_commercial_models",
+      "display_name": "Yerel türetilmiş ticari ve lojistik göstergeler",
+      "provider": "Yerel model ve toplayıcı çıktıları",
+      "source_mode": "derived_local_model",
+      "acquisition_owner": "user",
+      "match": {
+        "domains": ["commercial_intelligence", "logistics", "auxiliary_non_property"]
+      },
+      "policy": {
+        "registry_status": "owner_rights_declared",
+        "license_status": "user_owned_verified",
+        "public_display_allowed": true,
+        "scoring_allowed": true,
+        "attribution_required": false
+      },
+      "notes": "Formül sürümü ve tüm girdi kaynakları doğrulanmadan resmi/güncel gösterge sayılmaz."
+    },
+    {
+      "source_id": "parcel_and_zoning_mixed",
+      "display_name": "Parsel, ilan ve imar karışık kayıtları",
+      "provider": "Kullanıcı girdisi ve toplanmış kaynaklar",
+      "source_mode": "mixed_offline_and_live",
+      "acquisition_owner": "user",
+      "match": {
+        "domains": ["cadastre_planning"]
+      },
+      "policy": {
+        "registry_status": "owner_rights_declared",
+        "license_status": "user_publication_rights_declared",
+        "public_display_allowed": true,
+        "scoring_allowed": true,
+        "attribution_required": false
+      },
+      "notes": "Sentetik kayıtlar karantinada kalır; TKGM ve plan kaynağı sorgu bazında bağlanmalıdır."
+    },
+    {
+      "source_id": "gazetteer_collected",
+      "display_name": "Toplanmış coğrafi yer adları",
+      "provider": "Kaynağı dosya bazında doğrulanacak gazetteer",
+      "source_mode": "user_collected_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "entities": ["gazetteer"]
+      }
+    },
+    {
+      "source_id": "collector_operational_metadata",
+      "display_name": "Toplayıcı operasyon ve kontrol kayıtları",
+      "provider": "Yerel sistem",
+      "source_mode": "local_operational",
+      "acquisition_owner": "user",
+      "match": {
+        "domains": ["operational_metadata", "unclassified"]
+      },
+      "policy": {
+        "registry_status": "internal_only",
+        "license_status": "local_system",
+        "public_display_allowed": false,
+        "scoring_allowed": false,
+        "attribution_required": false,
+        "retention_policy": "internal_operational"
+      }
+    },
+    {
+      "source_id": "tkgm_live_on_demand",
+      "display_name": "TKGM MEGSİS canlı parsel sorgusu",
+      "provider": "Tapu ve Kadastro Genel Müdürlüğü",
+      "source_mode": "live_page_on_demand",
+      "acquisition_owner": "user",
+      "active_without_assets": true,
+      "match": null,
+      "policy": {
+        "registry_status": "owner_rights_declared",
+        "license_status": "user_publication_rights_declared",
+        "public_display_allowed": true,
+        "scoring_allowed": true,
+        "attribution_required": false,
+        "retention_policy": "transient_live_evidence"
+      },
+      "notes": "Canlı yanıt, sorgu zamanı, ada/parsel ve ham kanıtla bağlanmalı; erişilemeyen alan doldurulmamalıdır."
+    },
+    {
+      "source_id": "multi_map_poi_live",
+      "display_name": "Çoklu harita canlı POI sorguları",
+      "provider": "Sağlayıcı bazında ayrılacak harita servisleri",
+      "source_mode": "live_api_on_demand",
+      "acquisition_owner": "user",
+      "active_without_assets": true,
+      "match": null,
+      "policy": {
+        "registry_status": "owner_rights_declared",
+        "license_status": "user_publication_rights_declared",
+        "public_display_allowed": true,
+        "scoring_allowed": true,
+        "attribution_required": false,
+        "retention_policy": "owner_controlled_provider_provenance"
+      },
+      "notes": "Koordinat, kategori, sorgu zamanı, sağlayıcı ve eşleştirme güveni birlikte tutulmalıdır."
+    },
+    {
+      "source_id": "unregistered_source",
+      "display_name": "Henüz sınıflandırılmamış kaynak",
+      "provider": "Bilinmiyor",
+      "source_mode": "unknown",
+      "acquisition_owner": "user",
+      "active_without_assets": false,
+      "match": {
+        "fallback": true
+      },
+      "policy": {
+        "registry_status": "unregistered",
+        "license_status": "unknown",
+        "public_display_allowed": false,
+        "scoring_allowed": false,
+        "attribution_required": true,
+        "retention_policy": "quarantine_until_registered"
+      }
+    }
+  ]
+}
