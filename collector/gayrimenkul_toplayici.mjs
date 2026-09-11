@@ -609,7 +609,9 @@ async function scrapeEmlakjetPage(page, url, targetCategory, defaultCity = '', d
       let mahalle = '';
       let ilce = defaultCounty;
       let il = defaultCity;
-
+      for (const p of props) {
+        const n = (p.name || '').toLowerCase();
+        const v = String(p.value || '').trim();
         if (n === 'konum' || n === 'location') {
           const parts = v.split(',');
           if (parts.length >= 1) {
