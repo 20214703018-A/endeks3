@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEOPROP AI - Türkiye Tam Vektör ve CBS Altyapı Haritası</title>
+  
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.85);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --accent-blue: #38bdf8;
+      --accent-green: #22c55e;
+      --accent-red: #ef4444;
+      --accent-amber: #f59e0b;
+      --accent-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Glassmorphism Floating Header */
+    .header-panel {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 1000;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      max-width: 440px;
+      pointer-events: auto;
+    }
+
+    .header-panel h1 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #ffffff;
+    }
+
+    .header-panel h1 span.badge {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.18);
+      color: var(--accent-blue);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      font-weight: 600;
+    }
+
+    .header-panel p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* Right Floating Layers Panel */
+    .layers-panel {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 1000;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+      width: 320px;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      pointer-events: auto;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .layer-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.4);
+      margin-bottom: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .layer-item:hover {
+      background: rgba(51, 65, 85, 0.5);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .layer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .layer-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .layer-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #e2e8f0;
+    }
+
+    .layer-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Custom Toggle Switch */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #334155;
+      transition: .3s;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--accent-blue);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(16px);
+    }
+
+    /* Bottom Info & Stats Bar */
+    .bottom-bar {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      z-index: 1000;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+
+    .bottom-bar span.metric {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* Quick Jump Buttons */
+    .jump-group {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .jump-btn {
+      padding: 4px 10px;
+      background: rgba(51, 65, 85, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .jump-btn:hover {
+      background: var(--accent-blue);
+      color: #0f172a;
+      border-color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    /* File Drag-and-Drop Zone */
+    .drop-zone {
+      margin-top: 14px;
+      padding: 10px;
+      border: 2px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.3);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .drop-zone:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.08);
+    }
+
+    /* Leaflet Popup Custom Styling */
+    .leaflet-popup-content-wrapper {
+      background: rgba(15, 23, 42, 0.95) !important;
+      backdrop-filter: blur(12px) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      border-radius: 12px !important;
+      color: #ffffff !important;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6) !important;
+    }
+
+    .leaflet-popup-tip {
+      background: rgba(15, 23, 42, 0.95) !important;
+    }
+
+    .popup-content {
+      padding: 4px 6px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .popup-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-bottom: 4px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 4px;
+    }
+
+    .popup-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 3px 0;
+    }
+
+    .popup-key {
+      color: var(--text-muted);
+    }
+
+    .popup-val {
+      color: #ffffff;
+      font-weight: 600;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Map Container -->
+  <div id="map"></div>
+
+  <!-- Header Panel -->
+  <div class="header-panel">
+    <h1>
+      GEOPROP AI
+      <span class="badge">CBS Vektör Envanteri</span>
+    </h1>
+    <p>Türkiye'nin değişmeyecek tüm fiziksel, hukuki ve altyapı katmanlarının tam poligon ve çizgi geometrileri.</p>
+    
+    <div class="jump-group">
+      <button class="jump-btn" onclick="jumpTo(41.0740, 28.2460, 13)">Silivri / İst</button>
+      <button class="jump-btn" onclick="jumpTo(41.0150, 28.9790, 12)">İstanbul</button>
+      <button class="jump-btn" onclick="jumpTo(38.4237, 27.1428, 12)">İzmir</button>
+      <button class="jump-btn" onclick="jumpTo(39.9334, 32.8597, 12)">Ankara</button>
+      <button class="jump-btn" onclick="jumpTo(37.5753, 36.9228, 12)">K.Maraş (DAF)</button>
+      <button class="jump-btn" onclick="jumpTo(36.8841, 30.7056, 12)">Antalya</button>
+    </div>
+  </div>
+
+  <!-- Right Layers Panel -->
+  <div class="layers-panel">
+    <div class="panel-title">
+      <span>Katman Yönetimi</span>
+      <span id="total-features-badge" style="color: var(--accent-blue);">0 Vektör</span>
+    </div>
+
+    <!-- 1. Diri Faylar -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #ef4444; box-shadow: 0 0 8px #ef4444;"></div>
+        <div>
+          <div class="layer-name">Diri Fay Hatları (895)</div>
+          <div class="layer-count" id="count-faylar">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-faylar" checked onchange="toggleLayer('faylar')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 2. Elektrik İletim Hatları -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #facc15; box-shadow: 0 0 8px #facc15;"></div>
+        <div>
+          <div class="layer-name">Elektrik Hatları (TEİAŞ)</div>
+          <div class="layer-count" id="count-elektrik">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-elektrik" checked onchange="toggleLayer('elektrik')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 3. Mevcut ve Gelecek Yollar -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #f97316;"></div>
+        <div>
+          <div class="layer-name">Yollar ve Projeler</div>
+          <div class="layer-count" id="count-yollar">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-yollar" checked onchange="toggleLayer('yollar')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 4. Demiryolları (TCDD/YHT) -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #e2e8f0; border: 1px dashed #000;"></div>
+        <div>
+          <div class="layer-name">Demiryolları & Tren</div>
+          <div class="layer-count" id="count-demiryollari">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-demiryollari" checked onchange="toggleLayer('demiryollari')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 5. Sit ve Korunan Alanlar -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #c084fc; border: 1px solid #9333ea;"></div>
+        <div>
+          <div class="layer-name">Sit & Korunan Alanlar</div>
+          <div class="layer-count" id="count-sit">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-sit" checked onchange="toggleLayer('sit')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 6. Sahil Şeridi (Kıyı Kanunu) -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #2dd4bf; box-shadow: 0 0 6px #2dd4bf;"></div>
+        <div>
+          <div class="layer-name">Sahil & Kıyı Şeridi</div>
+          <div class="layer-count" id="count-sahil">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-sahil" checked onchange="toggleLayer('sahil')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 7. Orman Alanları -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #22c55e; opacity: 0.8;"></div>
+        <div>
+          <div class="layer-name">Devlet Ormanları</div>
+          <div class="layer-count" id="count-orman">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-orman" checked onchange="toggleLayer('orman')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 8. Su Yolları, Dereler ve Kanallar -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #38bdf8;"></div>
+        <div>
+          <div class="layer-name">Akarsular & Kanallar</div>
+          <div class="layer-count" id="count-su">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-su" checked onchange="toggleLayer('su')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Drag & Drop Zone -->
+    <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+      📁 GeoJSON Dosyasını Buraya Bırakın veya Seçin
+      <input type="file" id="file-input" style="display: none;" accept=".geojson,.json" onchange="handleFileSelect(event)">
+    </div>
+  </div>
+
+  <!-- Bottom Coordinates Bar -->
+  <div class="bottom-bar">
+    <div>İmleç Konumu: <span class="metric" id="coord-display">39.00000, 35.00000</span></div>
+    <div>Zoom: <span class="metric" id="zoom-display">7</span></div>
+    <div>Harita Modu: <span class="metric" id="basemap-display">Uydu Hibrit</span></div>
+  </div>
+
+  <script>
+    // Initialize Leaflet Map (Centered over Turkey)
+    const map = L.map('map', {
+      center: [39.0, 35.2],
+      zoom: 7,
+      zoomControl: false,
+      preferCanvas: true // Render thousands of lines and polygons smoothly at 60 FPS
+    });
+
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    // Basemaps
+    const esriSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Esri World Imagery, Maxar, Earthstar Geographics'
+    }).addTo(map);
+
+    const cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: 'CartoDB Dark Matter, OpenStreetMap'
+    });
+
+    const osmStandard = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'OpenStreetMap contributors'
+    });
+
+    const baseMaps = {
+      "Uydu Hibrit (Esri)": esriSatellite,
+      "Karanlık Mod (CartoDB)": cartoDark,
+      "Açık Mod (OSM)": osmStandard
+    };
+
+    L.control.layers(baseMaps, null, { position: 'topleft' }).addTo(map);
+
+    // Dynamic Layer Groups
+    const layerGroups = {
+      faylar: L.layerGroup().addTo(map),
+      elektrik: L.layerGroup().addTo(map),
+      yollar: L.layerGroup().addTo(map),
+      demiryollari: L.layerGroup().addTo(map),
+      sit: L.layerGroup().addTo(map),
+      sahil: L.layerGroup().addTo(map),
+      orman: L.layerGroup().addTo(map),
+      su: L.layerGroup().addTo(map),
+      custom: L.layerGroup().addTo(map)
+    };
+
+    const layerCounts = {
+      faylar: 0,
+      elektrik: 0,
+      yollar: 0,
+      demiryollari: 0,
+      sit: 0,
+      sahil: 0,
+      orman: 0,
+      su: 0
+    };
+
+    // Styler Functions
+    function getFeatureStyle(feature) {
+      const katman = (feature.properties && feature.properties.katman) || '';
+      
+      if (katman === 'DİRİ_FAY_HATTI') {
+        return { color: '#ef4444', weight: 3, opacity: 0.9 };
+      }
+      if (katman === 'ELEKTRIK_HATTI') {
+        return { color: '#facc15', weight: 2.5, opacity: 0.85 };
+      }
+      if (katman === 'PLANLANAN_YOL_PROJESI') {
+        return { color: '#f97316', weight: 3, dashArray: '6, 6', opacity: 0.9 };
+      }
+      if (katman === 'MEVCUT_YOL') {
+        return { color: '#cbd5e1', weight: 2, opacity: 0.75 };
+      }
+      if (katman === 'DEMIRYOLU') {
+        return { color: '#ffffff', weight: 2.5, opacity: 0.9, dashArray: '8, 4' };
+      }
+      if (katman === 'SIT_VE_KORUNAN_ALAN') {
+        return { color: '#9333ea', weight: 2, fillColor: '#c084fc', fillOpacity: 0.35 };
+      }
+      if (katman === 'SAHIL_SERIDI') {
+        return { color: '#2dd4bf', weight: 2.5, opacity: 0.9 };
+      }
+      if (katman === 'ORMAN_ALANI') {
+        return { color: '#15803d', weight: 1.5, fillColor: '#22c55e', fillOpacity: 0.4 };
+      }
+      if (katman === 'GOL_BARAJ_HAZNE') {
+        return { color: '#0284c7', weight: 1.5, fillColor: '#38bdf8', fillOpacity: 0.45 };
+      }
+      if (katman === 'SU_YOLU_DERE' || katman === 'SU_BORU_HATTI') {
+        return { color: '#38bdf8', weight: 2, opacity: 0.85 };
+      }
+      return { color: '#94a3b8', weight: 2, opacity: 0.7 };
+    }
+
+    function onEachFeature(feature, layer) {
+      const p = feature.properties || {};
+      let html = `<div class="popup-content">`;
+      html += `<div class="popup-title">${p.ad || p.fay_id || 'İsimsiz Vektör'}</div>`;
+      html += `<div class="popup-row"><span class="popup-key">Katman:</span><span class="popup-val">${p.katman || 'Genel'}</span></div>`;
+      
+      if (p.alt_tur) {
+        html += `<div class="popup-row"><span class="popup-key">Tür:</span><span class="popup-val">${p.alt_tur}</span></div>`;
+      }
+      if (p.slip_type) {
+        html += `<div class="popup-row"><span class="popup-key">Fay Mekanizması:</span><span class="popup-val">${p.slip_type}</span></div>`;
+      }
+      if (p.kayma_hizi_mm_yil) {
+        html += `<div class="popup-row"><span class="popup-key">Kayma Hızı:</span><span class="popup-val">${p.kayma_hizi_mm_yil} mm/yıl</span></div>`;
+      }
+      if (p.nokta_sayisi) {
+        html += `<div class="popup-row"><span class="popup-key">Kırık Nokta Adedi:</span><span class="popup-val">${p.nokta_sayisi}</span></div>`;
+      }
+      if (p.tags && p.tags.voltage) {
+        html += `<div class="popup-row"><span class="popup-key">Voltaj:</span><span class="popup-val">${p.tags.voltage} V</span></div>`;
+      }
+      html += `</div>`;
+      layer.bindPopup(html);
+    }
+
+    // Toggle Layer
+    function toggleLayer(key) {
+      const checkbox = document.getElementById(`toggle-${key}`);
+      if (!checkbox) return;
+      if (checkbox.checked) {
+        map.addLayer(layerGroups[key]);
+      } else {
+        map.removeLayer(layerGroups[key]);
+      }
+    }
+
+    // Jump to Coordinate
+    function jumpTo(lat, lon, zoom) {
+      map.flyTo([lat, lon], zoom, { duration: 1.5 });
+    }
+
+    // Track Cursor
+    map.on('mousemove', function(e) {
+      document.getElementById('coord-display').textContent = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+    });
+    map.on('zoomend', function() {
+      document.getElementById('zoom-display').textContent = map.getZoom();
+    });
+
+    // Ingest GeoJSON Data into Layer Groups
+    function loadGeoJSONData(geojsonData, layerKey = null) {
+      const features = geojsonData.features || [];
+      let added = 0;
+
+      L.geoJSON(geojsonData, {
+        style: getFeatureStyle,
+        pointToLayer: function(feature, latlng) {
+          return L.circleMarker(latlng, {
+            radius: 5,
+            fillColor: "#38bdf8",
+            color: "#ffffff",
+            weight: 1.5,
+            opacity: 1,
+            fillOpacity: 0.9
+          });
+        },
+        onEachFeature: function(feature, layer) {
+          onEachFeature(feature, layer);
+          
+          // Katmana göre ilgili gruba yerleştir
+          const katman = (feature.properties && feature.properties.katman) || '';
+          let targetKey = layerKey;
+          
+          if (!targetKey) {
+            if (katman === 'DİRİ_FAY_HATTI') targetKey = 'faylar';
+            else if (katman === 'ELEKTRIK_HATTI') targetKey = 'elektrik';
+            else if (katman.includes('YOL')) targetKey = 'yollar';
+            else if (katman === 'DEMIRYOLU') targetKey = 'demiryollari';
+            else if (katman === 'SIT_VE_KORUNAN_ALAN') targetKey = 'sit';
+            else if (katman === 'SAHIL_SERIDI') targetKey = 'sahil';
+            else if (katman === 'ORMAN_ALANI') targetKey = 'orman';
+            else if (katman.includes('SU') || katman.includes('GOL') || katman.includes('CESME')) targetKey = 'su';
+            else targetKey = 'custom';
+          }
+
+          if (layerGroups[targetKey]) {
+            layerGroups[targetKey].addLayer(layer);
+            if (layerCounts[targetKey] !== undefined) layerCounts[targetKey]++;
+          }
+          added++;
+        }
+      });
+
+      updateBadgeCounts();
+      return added;
+    }
+
+    function updateBadgeCounts() {
+      let total = 0;
+      for (const [k, v] of Object.entries(layerCounts)) {
+        total += v;
+        const el = document.getElementById(`count-${k}`);
+        if (el) el.textContent = `${v.toLocaleString()} nesne`;
+      }
+      document.getElementById('total-features-badge').textContent = `${total.toLocaleString()} Vektör`;
+    }
+
+    // Auto-load available local GeoJSON files
+    const autoLoadSources = [
+      { url: 'data/cografya/turkiye_detayli_diri_faylar.geojson', key: 'faylar' },
+      { url: 'data/cografya/geojson/turkiye_detayli_diri_faylar.geojson', key: 'faylar' },
+      { url: 'data/cografya/geojson/turkiye_elektrik_hatlari.geojson', key: 'elektrik' },
+      { url: 'data/cografya/geojson/turkiye_yollar_ve_gelecek_projeler.geojson', key: 'yollar' },
+      { url: 'data/cografya/geojson/turkiye_demiryollari_ve_tren_hatlari.geojson', key: 'demiryollari' },
+      { url: 'data/cografya/geojson/turkiye_sit_alanlari_ve_korunan_bolgeler.geojson', key: 'sit' },
+      { url: 'data/cografya/geojson/turkiye_sahil_seritleri.geojson', key: 'sahil' },
+      { url: 'data/cografya/geojson/turkiye_orman_alanlari.geojson', key: 'orman' },
+      { url: 'data/cografya/geojson/turkiye_dere_yataklari.geojson', key: 'su' },
+      { url: 'data/cografya/master_harita_katmanlari/turkiye_tam_birlesik_envanter.geojson', key: null }
+    ];
+
+    autoLoadSources.forEach(src => {
+      fetch(src.url)
+        .then(res => {
+          if (!res.ok) throw new Error('Not found');
+          return res.json();
+        })
+        .then(data => {
+          loadGeoJSONData(data, src.key);
+        })
+        .catch(() => {
+          // Sessizce geç; dosya henüz çıkarılmamış olabilir
+        });
+    });
+
+    // File Drag-and-Drop Handler
+    const dropZone = document.getElementById('drop-zone');
+    ['dragenter', 'dragover'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--accent-blue)'; }, false);
+    });
+    ['dragleave', 'drop'].forEach(name => {
+      dropZone.addEventListener(name, (e) => { e.preventDefault(); dropZone.style.borderColor = 'rgba(255, 255, 255, 0.18)'; }, false);
+    });
+    dropZone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length) processFile(files[0]);
+    });
+
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (file) processFile(file);
+    }
+
+    function processFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const json = JSON.parse(evt.target.result);
+          const count = loadGeoJSONData(json);
+          alert(`${file.name} başarıyla yüklendi!\nToplam ${count} vektör haritaya eklendi.`);
+        } catch (err) {
+          alert('Geçersiz GeoJSON dosyası: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+  </script>
+</body>
+</html>

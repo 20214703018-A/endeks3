@@ -1,0 +1,105 @@
+name: "Turkiye Vektor Katmanlari (40 Makine - Fay, Su, Elektrik, Yol, Sit, Orman, Sahil)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      sektor_secimi:
+        description: 'Çıkarılacak Sektörler ("hepsi" veya tek bir sektör numarası 1-40)'
+        required: true
+        default: 'hepsi'
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  vektor_cikar_40_makine:
+    name: "Sektör ${{ matrix.sektor }}/40"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 40
+      matrix:
+        sektor: [
+           1,  2,  3,  4,  5,  6,  7,  8,
+           9, 10, 11, 12, 13, 14, 15, 16,
+          17, 18, 19, 20, 21, 22, 23, 24,
+          25, 26, 27, 28, 29, 30, 31, 32,
+          33, 34, 35, 36, 37, 38, 39, 40
+        ]
+
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Sektör Vektörlerini Çıkar (Fay, Su, Elektrik, Yol, Sit, Orman, Sahil)
+        run: |
+          if [ "${{ github.event.inputs.sektor_secimi }}" != "hepsi" ] && [ "${{ github.event.inputs.sektor_secimi }}" != "${{ matrix.sektor }}" ]; then
+            echo "Sektör ${{ matrix.sektor }} atlanıyor (Kullanıcı seçimi: ${{ github.event.inputs.sektor_secimi }})."
+            mkdir -p collector/data/cografya/vektor_sektorler/ extension/collector/data/cografya/vektor_sektorler/
+            exit 0
+          fi
+          
+          if [ -f "collector/turkiye_vektor_cikarici_40_makine.py" ]; then
+            python3 collector/turkiye_vektor_cikarici_40_makine.py --sektor ${{ matrix.sektor }}
+          else
+            python3 extension/collector/turkiye_vektor_cikarici_40_makine.py --sektor ${{ matrix.sektor }}
+          fi
+
+      - name: Sektör GeoJSON Çıktısını Arşivle
+        uses: actions/upload-artifact@v4
+        with:
+          name: sektor-${{ matrix.sektor }}-geojson
+          path: |
+            collector/data/cografya/vektor_sektorler/sektor_*.geojson
+            extension/collector/data/cografya/vektor_sektorler/sektor_*.geojson
+          if-no-files-found: ignore
+          retention-days: 14
+
+  birlestir_ve_haritalandir:
+    name: "40 Sektörü Birleştir & Master Harita Katmanlarını Oluştur"
+    needs: [vektor_cikar_40_makine]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu Çek
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Tüm Sektör GeoJSON Dosyalarını İndir
+        uses: actions/download-artifact@v4
+        with:
+          pattern: sektor-*-geojson
+          path: indirilen_sektorler
+          merge-multiple: true
+
+      - name: Sektörleri Birleştir ve Mükerrerleri Ayıkla
+        run: |
+          mkdir -p collector/data/cografya/vektor_sektorler/
+          cp -r indirilen_sektorler/* collector/data/cografya/vektor_sektorler/ 2>/dev/null || true
+          
+          if [ -f "collector/turkiye_vektor_birlestirici.py" ]; then
+            python3 collector/turkiye_vektor_birlestirici.py --girdi collector/data/cografya/vektor_sektorler/
+          else
+            python3 extension/collector/turkiye_vektor_birlestirici.py --girdi collector/data/cografya/vektor_sektorler/
+          fi
+
+      - name: Master GeoJSON Harita Katmanlarını Arşivle
+        uses: actions/upload-artifact@v4
+        with:
+          name: turkiye-master-harita-katmanlari-geojson
+          path: |
+            collector/data/cografya/master_harita_katmanlari/*.geojson
+            extension/collector/data/cografya/master_harita_katmanlari/*.geojson
+            collector/turkiye_vektor_haritasi.html
+            extension/collector/turkiye_vektor_haritasi.html
+          retention-days: 30
