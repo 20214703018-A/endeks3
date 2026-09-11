@@ -9,6 +9,9 @@ on:
         default: 'hepsi'
         type: string
 
+env:
+  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: "true"
+
 permissions:
   contents: write
 
@@ -36,7 +39,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
 
       - name: Sektör Vektörlerini Çıkar (Fay, Su, Elektrik, Yol, Sit, Orman, Sahil)
         run: |

@@ -152,8 +152,23 @@ def cikar_detayli_faylar(bbox: Tuple[float, float, float, float]) -> List[Dict[s
     """Sektör sınırları içerisinden geçen aktif fay segmentlerinin tam kırık polylinelerini çıkarır."""
     min_lat, min_lon, max_lat, max_lon = bbox
 
-    # Yerel GeoJSON yoksa GitHub'dan çek
-    if not LOCAL_FAY_GEOJSON.exists():
+    # Yerel GeoJSON adaylarını kontrol et
+    fay_path = None
+    for cand in [
+        BASE_DIR / "turkiye_detayli_diri_faylar.geojson",
+        DATA_DIR / "turkiye_detayli_diri_faylar.geojson",
+        DATA_DIR / "geojson" / "turkiye_detayli_diri_faylar.geojson"
+    ]:
+        if cand.exists():
+            fay_path = cand
+            break
+
+    features = []
+    if fay_path:
+        with open(fay_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            features = data.get("features", [])
+    else:
         log("GEM Active Faults veritabanı indiriliyor...", "STEP")
         req = urllib.request.Request(REMOTE_GEM_URL, headers={"User-Agent": "Mozilla/5.0"})
         try:
@@ -163,10 +178,6 @@ def cikar_detayli_faylar(bbox: Tuple[float, float, float, float]) -> List[Dict[s
         except Exception as e:
             log(f"Fay indirme hatası: {e}", "ERROR")
             return []
-    else:
-        with open(LOCAL_FAY_GEOJSON, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            features = data.get("features", [])
 
     sektor_faylar = []
     for f in features:
