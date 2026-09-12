@@ -471,12 +471,37 @@ class ParselImarToplayici:
         has_parameters = any(function_fields.get(key) is not None for key in (
             "plan_fonksiyon", "kaks_emsal", "taks", "gabari", "kat_adedi", "on_bahce", "yan_bahce"
         ))
+        
+        tipoloji_kaynak = None
+        tipoloji_veri = None
+        if not has_parameters:
+            try:
+                from bolgesel_imar_motoru import get_bolgesel_imar_motoru
+                tipoloji_veri = get_bolgesel_imar_motoru().tipoloji_bul(il, ilce, mahalle)
+                if tipoloji_veri:
+                    function_fields = {
+                        "imar_durumu": f"Bölgesel Tipoloji ({tipoloji_veri.get('bolge_karakteri', '')})",
+                        "plan_fonksiyon": tipoloji_veri.get("imar_fonksiyonu"),
+                        "kaks_emsal": tipoloji_veri.get("kaks_emsal"),
+                        "taks": tipoloji_veri.get("taks"),
+                        "gabari": tipoloji_veri.get("hmax_metre"),
+                        "kat_adedi": tipoloji_veri.get("kat_adedi"),
+                        "yapi_nizami": tipoloji_veri.get("yapi_nizami"),
+                        "on_bahce": tipoloji_veri.get("on_bahce_m"),
+                        "yan_bahce": tipoloji_veri.get("yan_bahce_m"),
+                    }
+                    tipoloji_kaynak = f"Bölgesel İmar Tipolojisi ({tipoloji_veri.get('yasal_dayanak_ve_plan_notu', '')})"
+                    has_parameters = True
+            except Exception:
+                pass
+
         return {
             **self._empty_zoning_result(),
             **function_fields,
             "success": True,
-            "veri_durumu": "imar_alani_kismen_dogrulandi" if has_parameters else "plan_kapsami_dogrulandi",
-            "kaynak": "ÇŞİDB E-Plan",
+            "veri_durumu": "bolgesel_tipoloji_ile_zenginlestirildi" if tipoloji_kaynak else ("imar_alani_kismen_dogrulandi" if has_parameters else "plan_kapsami_dogrulandi"),
+            "kaynak": f"ÇŞİDB E-Plan + {tipoloji_kaynak}" if tipoloji_kaynak else "ÇŞİDB E-Plan",
+            "tipoloji_detay": tipoloji_veri,
             "hata": None,
             "plan_adi": chosen.get("plan_adi"),
             "plan_turu": chosen.get("plan_turu"),
