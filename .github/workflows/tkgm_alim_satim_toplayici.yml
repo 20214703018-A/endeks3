@@ -1,0 +1,111 @@
+name: "TKGM Alım-Satım Yoğunluğu Toplayıcı (40 Paralel Makine)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      yil_bas:
+        description: 'Başlangıç yılı'
+        required: false
+        default: '2021'
+        type: string
+      yil_bit:
+        description: 'Bitiş yılı'
+        required: false
+        default: '2025'
+        type: string
+      tipler:
+        description: 'AnalizTip id (virgüllü). 1=Alım Satım Yoğunluğu, 2=Ana Taşınmaz Satış'
+        required: false
+        default: '1'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  # =========================================================================
+  # 1. FAZ: 81 İLİ 40 MAKİNEYE BÖLEREK PARALEL ÇEKİM
+  # =========================================================================
+  cek_shard:
+    name: "Shard ${{ matrix.shard }}/40"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 40
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+
+    steps:
+      - name: Kodu Checkout Et
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Python 3.12 Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: "Shard ${{ matrix.shard }}: illeri çek"
+        run: |
+          python collector/tkgm_alim_satim_yogunlugu_toplayici.py \
+            --shard "${{ matrix.shard }}/40" \
+            --tipler "${{ github.event.inputs.tipler || '1' }}" \
+            --yil-bas "${{ github.event.inputs.yil_bas || '2021' }}" \
+            --yil-bit "${{ github.event.inputs.yil_bit || '2025' }}" \
+            --db "shard_${{ matrix.shard }}.sqlite"
+
+      - name: "Shard çıktısını artifakt olarak yükle"
+        uses: actions/upload-artifact@v4
+        with:
+          name: astim-shard-${{ matrix.shard }}
+          path: shard_${{ matrix.shard }}.sqlite
+          retention-days: 3
+          if-no-files-found: warn
+
+  # =========================================================================
+  # 2. FAZ: 40 SHARD'I TEK AMBARDA BİRLEŞTİR
+  # =========================================================================
+  birlestir:
+    name: "Shard'ları Birleştir"
+    needs: [cek_shard]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu Checkout Et
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Python 3.12 Kurulumu
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: "Tüm shard artifaktlarını indir"
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: astim-shard-*
+          merge-multiple: true
+
+      - name: "Birleştir → tek ambar DB'si"
+        run: |
+          python collector/merge_tkgm_astim_shards.py \
+            --shards "artifacts/**/shard_*.sqlite" \
+            --out warehouse/product/tkgm_alim_satim.sqlite
+
+      - name: "Birleşik ambarı artifakt olarak yayınla"
+        uses: actions/upload-artifact@v4
+        with:
+          name: tkgm-alim-satim-ambar
+          path: warehouse/product/tkgm_alim_satim.sqlite
+          retention-days: 14
