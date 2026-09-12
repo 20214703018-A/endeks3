@@ -17,10 +17,19 @@ import json
 import math
 import os
 import re
+import time
 import urllib.parse
 import urllib.request
+from datetime import datetime
 from dataclasses import asdict, dataclass
 from typing import Dict, List, Optional, Tuple
+
+try:
+    from curl_cffi import requests as c_requests
+    HAS_CURL_CFFI = True
+except ImportError:
+    HAS_CURL_CFFI = False
+
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data", "airbnb")
 os.makedirs(DATA_DIR, exist_ok=True)
@@ -76,9 +85,17 @@ class AirbnbToplayici:
         }
 
     def _fetch_html(self, url: str) -> str:
+        if HAS_CURL_CFFI:
+            try:
+                r = c_requests.get(url, headers=self.headers, impersonate="chrome124", timeout=15)
+                if r.status_code == 200:
+                    return r.text
+            except Exception as e:
+                print(f"[!] curl_cffi hata ({e}), standart urllib ile deneniyor...")
         req = urllib.request.Request(url, headers=self.headers)
         with urllib.request.urlopen(req, timeout=15) as resp:
             return resp.read().decode("utf-8")
+
 
     def _parse_id(self, raw_id: str) -> str:
         if not raw_id:
@@ -233,6 +250,32 @@ class AirbnbToplayici:
         ilanlar = self._parse_search_results(html)
         print(f"[+] '{bolge_adi}' için {len(ilanlar)} aktif ilan başarıyla çekildi.")
         return ilanlar
+
+    def sorgula_coklu_bolge(self, bolge_listesi: List[str], limit_per_bolge: int = 50) -> List[AirbnbIlani]:
+        """Birden fazla bölge veya il için sırayla Airbnb sorgusu yapar, ilanları tekilleştirerek birleştirir."""
+        tum_ilanlar: List[AirbnbIlani] = []
+        gorulen_idler = set()
+        for b in bolge_listesi:
+            b_clean = b.strip()
+            if not b_clean:
+                continue
+            query_name = f"{b_clean}, Türkiye" if "türkiye" not in b_clean.lower() and "turkey" not in b_clean.lower() else b_clean
+            try:
+                ilanlar = self.sorgula_bolge(query_name)
+                eklenen = 0
+                for il in ilanlar:
+                    if il.id not in gorulen_idler:
+                        gorulen_idler.add(il.id)
+                        tum_ilanlar.append(il)
+                        eklenen += 1
+                        if eklenen >= limit_per_bolge:
+                            break
+                print(f"  -> '{b_clean}' bölgesinden {eklenen} tekil ilan eklendi (Gruptaki toplam: {len(tum_ilanlar)}).")
+                time.sleep(1.2)
+            except Exception as e:
+                print(f"[!] '{b_clean}' sorgulanırken hata: {e}")
+        return tum_ilanlar
+
 
     def sorgula_koordinat(self, lat: float, lon: float, yaricap_km: float = 3.0) -> List[AirbnbIlani]:
         """Verilen enlem/boylam ve yarıçap (km) çevresindeki kutuyu (bbox) Airbnb'de arar."""
@@ -390,24 +433,142 @@ class AirbnbToplayici:
         return filepath
 
 
+def birlestir_tum_sonuclari(data_dir: str = DATA_DIR):
+    """Tüm 40 makinenin artifaktlarını ve parça çıktılarını tek bir master dosyada birleştirir."""
+    print("=" * 70)
+    print("🚀 GEOPROP AI - 40 MAKİNE AIRBNB ÇIKTILARINI BİRLEŞTİRME VE MASTER KATMAN")
+    print("=" * 70)
+    
+    all_features = []
+    all_rows = []
+    seen_ids = set()
+    
+    search_dirs = [data_dir, "indirilmis_artifaktlar", "artifacts"]
+    for s_dir in search_dirs:
+        if not os.path.exists(s_dir):
+            continue
+        for root, _, files in os.walk(s_dir):
+            for file in files:
+                if file.endswith(".geojson") and ("airbnb" in file.lower() or "grup_" in file.lower()) and "tam" not in file.lower():
+                    fp = os.path.join(root, file)
+                    try:
+                        with open(fp, "r", encoding="utf-8") as gf:
+                            data = json.load(gf)
+                            feats = data.get("features", [])
+                            for feat in feats:
+                                pid = feat.get("properties", {}).get("id")
+                                if pid and pid not in seen_ids:
+                                    seen_ids.add(pid)
+                                    all_features.append(feat)
+                    except Exception as e:
+                        print(f"[!] GeoJSON okuma hatası ({fp}): {e}")
+                        
+                if file.endswith(".csv") and ("airbnb" in file.lower() or "grup_" in file.lower()) and "tam" not in file.lower():
+                    fp = os.path.join(root, file)
+                    try:
+                        with open(fp, "r", encoding="utf-8") as cf:
+                            reader = csv.DictReader(cf)
+                            for row in reader:
+                                rid = row.get("id")
+                                if rid and rid not in seen_ids:
+                                    seen_ids.add(rid)
+                                    all_rows.append(row)
+                    except Exception as e:
+                        print(f"[!] CSV okuma hatası ({fp}): {e}")
+
+    master_geojson_path = os.path.join(data_dir, "turkiye_tam_airbnb_ilanlari.geojson")
+    master_csv_path = os.path.join(data_dir, "turkiye_tam_airbnb_ilanlari.csv")
+    master_summary_path = os.path.join(data_dir, "turkiye_airbnb_pazar_analizi.json")
+
+    # Master GeoJSON Kaydet
+    with open(master_geojson_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "type": "FeatureCollection",
+            "features": all_features
+        }, f, ensure_ascii=False, indent=2)
+    print(f"[✔] Master Airbnb GeoJSON yazıldı: {master_geojson_path} ({len(all_features)} tekil ilan)")
+
+    # Master CSV Kaydet
+    csv_rows = all_rows
+    if not csv_rows and all_features:
+        for feat in all_features:
+            p = feat.get("properties", {})
+            g = feat.get("geometry", {}).get("coordinates", [0, 0])
+            csv_rows.append({
+                "id": p.get("id", ""),
+                "baslik": p.get("ad", ""),
+                "alt_baslik": "",
+                "oda_tipi": p.get("alt_tur", ""),
+                "gecelik_fiyat_tl": p.get("fiyat_tl", 0),
+                "puan": p.get("puan", ""),
+                "yorum_sayisi": p.get("yorum", 0),
+                "boylam": g[0],
+                "enlem": g[1],
+                "url": p.get("url", ""),
+                "resim_url": ""
+            })
+    fieldnames = ["id", "baslik", "alt_baslik", "oda_tipi", "gecelik_fiyat_tl", "puan", "yorum_sayisi", "enlem", "boylam", "url", "resim_url"]
+    with open(master_csv_path, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(csv_rows)
+    print(f"[✔] Master Airbnb CSV yazıldı: {master_csv_path} ({len(csv_rows)} kayıt)")
+
+    # İstatistiksel Pazar Özeti
+    if all_features:
+        fiyatlar = [f.get("properties", {}).get("fiyat_tl", 0) for f in all_features if f.get("properties", {}).get("fiyat_tl", 0) > 0]
+        if fiyatlar:
+            fiyatlar.sort()
+            medyan = fiyatlar[len(fiyatlar) // 2]
+            p25 = fiyatlar[int(len(fiyatlar) * 0.25)]
+            p75 = fiyatlar[int(len(fiyatlar) * 0.75)]
+            ozet = {
+                "toplam_aktif_ilan": len(all_features),
+                "medyan_gecelik_fiyat_tl": medyan,
+                "fiyat_bandi_25_75": [p25, p75],
+                "min_fiyat_tl": fiyatlar[0],
+                "max_fiyat_tl": fiyatlar[-1],
+                "tahmini_yillik_doluluk_orani": 0.60,
+                "ortalama_yillik_net_nakit_akisi_tl": round(medyan * 365 * 0.60 * 0.45),
+                "guncelleme_tarihi": datetime.now().isoformat()
+            }
+            with open(master_summary_path, "w", encoding="utf-8") as f:
+                json.dump(ozet, f, ensure_ascii=False, indent=2)
+            print(f"[✔] Master Airbnb Pazar Özeti yazıldı: {master_summary_path}")
+    print("=" * 70)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Doğrudan Python Airbnb Pazar & Potansiyel Toplayıcı")
-    parser.add_argument("--bolge", type=str, default="Bodrum, Muğla", help="Arama yapılacak bölge/şehir adı")
+    parser.add_argument("--bolge", type=str, help="Arama yapılacak tek bölge/şehir adı")
+    parser.add_argument("--iller", "--bolgeler", dest="iller", type=str, help="Virgülle ayrılmış il/bölge listesi (örn: 'Bodrum, Marmaris' veya 'adana,adiyaman')")
+    parser.add_argument("--cikis-ek", type=str, help="Çıktı dosyası grup eki (örn: 'grup_1')")
+    parser.add_argument("--birlestir", action="store_true", help="Tüm parçalı 40 makine çıktılarını birleştir")
     parser.add_argument("--lat", type=float, help="Merkez enlem koordinatı")
     parser.add_argument("--lon", type=float, help="Merkez boylam koordinatı")
     parser.add_argument("--yaricap", type=float, default=3.0, help="Koordinat aramasında yarıçap (km)")
+    parser.add_argument("--limit", type=int, default=50, help="Bölge başına maksimum çekilecek ilan sayısı")
     parser.add_argument("--klasik-kira", type=float, help="Bölgedeki ortalama aylık klasik kira (TL)")
     parser.add_argument("--export", action="store_true", help="Sonuçları CSV ve GeoJSON olarak dışa aktar")
 
     args = parser.parse_args()
+
+    if args.birlestir:
+        birlestir_tum_sonuclari()
+        return
+
     toplayici = AirbnbToplayici()
 
-    if args.lat is not None and args.lon is not None:
+    if args.iller:
+        bolge_list = [x.strip() for x in args.iller.split(",") if x.strip()]
+        bolge_adi = args.cikis_ek or (bolge_list[0] if len(bolge_list) == 1 else f"{len(bolge_list)}_bolge")
+        ilanlar = toplayici.sorgula_coklu_bolge(bolge_list, limit_per_bolge=args.limit)
+    elif args.lat is not None and args.lon is not None:
         bolge_adi = f"Koordinat_{args.lat:.4f}_{args.lon:.4f}"
         ilanlar = toplayici.sorgula_koordinat(args.lat, args.lon, args.yaricap)
     else:
-        bolge_adi = args.bolge
-        ilanlar = toplayici.sorgula_bolge(args.bolge)
+        bolge_adi = args.bolge or "Bodrum, Muğla"
+        ilanlar = toplayici.sorgula_bolge(bolge_adi)
 
     analiz = toplayici.potansiyel_analizi_yap(
         ilanlar,
@@ -439,11 +600,12 @@ def main():
     print(f"\n[Yasal Uyarı / 7464]: {analiz.yasal_7464_risk_durumu}")
     print("=" * 65)
 
-    if args.export and ilanlar:
-        safe_name = re.sub(r"[^\w\-_]", "_", bolge_adi.lower())
-        toplayici.export_csv(ilanlar, safe_name)
-        toplayici.export_geojson(ilanlar, safe_name)
+    if (args.export or args.cikis_ek) and ilanlar:
+        dosya_adi = f"airbnb_{args.cikis_ek}" if args.cikis_ek else re.sub(r"[^\w\-_]", "_", bolge_adi.lower())
+        toplayici.export_csv(ilanlar, dosya_adi)
+        toplayici.export_geojson(ilanlar, dosya_adi)
 
 
 if __name__ == "__main__":
     main()
+

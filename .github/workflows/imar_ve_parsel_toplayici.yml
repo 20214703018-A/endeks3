@@ -1,15 +1,15 @@
-name: "Turkiye Ada-Parsel İmar, Plan Künyesi ve Geo Harita Toplayıcı (40 Paralel Makine)"
+name: "Turkiye Airbnb Pazar & Kiralama Fiyat Toplayici (40 Paralel Makine)"
 
 on:
   workflow_dispatch:
     inputs:
-      limit_per_group:
-        description: 'Makinelerin Grup Başına Çekeceği Parsel Limiti'
+      limit_per_bolge:
+        description: 'Bölge Başına Çekilecek Maksimum İlan Sayısı'
         required: false
-        default: '200'
+        default: '50'
         type: string
   schedule:
-    # Her gece saat 03:30'da otomatik çalışarak tüm Türkiye ada ve parsellerini tarar
+    # Her gece saat 03:30'da otomatik çalışarak tüm Türkiye Airbnb pazarını tarar
     - cron: '30 3 * * *'
 
 permissions:
@@ -17,9 +17,9 @@ permissions:
 
 jobs:
   # =========================================================================
-  # 1. FAZ: 40 EŞZAMANLI PARALEL MAKİNE İLE TÜRKİYE GENELİ 81 İL TARAMASI
+  # 1. FAZ: 40 EŞZAMANLI PARALEL MAKİNE İLE TÜRKİYE GENELİ AIRBNB TARAMASI
   # =========================================================================
-  parsel_matrix:
+  airbnb_matrix:
     name: "Grup ${{ matrix.grup }}/40 - ${{ matrix.bolge }}"
     runs-on: ubuntu-latest
     strategy:
@@ -27,46 +27,46 @@ jobs:
       max-parallel: 40
       matrix:
         include:
-          - { grup: 1, bolge: "Adana & Adıyaman", iller: "adana,adiyaman" }
-          - { grup: 2, bolge: "Afyonkarahisar & Ağrı", iller: "afyonkarahisar,agri" }
-          - { grup: 3, bolge: "Amasya & Ankara", iller: "amasya,ankara" }
-          - { grup: 4, bolge: "Antalya & Artvin", iller: "antalya,artvin" }
-          - { grup: 5, bolge: "Aydın & Balıkesir", iller: "aydin,balikesir" }
-          - { grup: 6, bolge: "Bilecik & Bingöl", iller: "bilecik,bingol" }
-          - { grup: 7, bolge: "Bitlis & Bolu", iller: "bitlis,bolu" }
-          - { grup: 8, bolge: "Burdur & Bursa", iller: "burdur,bursa" }
-          - { grup: 9, bolge: "Çanakkale & Çankırı", iller: "canakkale,cankiri" }
-          - { grup: 10, bolge: "Çorum & Denizli", iller: "corum,denizli" }
-          - { grup: 11, bolge: "Diyarbakır & Edirne", iller: "diyarbakir,edirne" }
-          - { grup: 12, bolge: "Elazığ & Erzincan", iller: "elazig,erzincan" }
-          - { grup: 13, bolge: "Erzurum & Eskişehir", iller: "erzurum,eskisehir" }
-          - { grup: 14, bolge: "Gaziantep & Giresun", iller: "gaziantep,giresun" }
-          - { grup: 15, bolge: "Gümüşhane & Hakkari", iller: "gumushane,hakkari" }
-          - { grup: 16, bolge: "Hatay & Isparta", iller: "hatay,isparta" }
-          - { grup: 17, bolge: "Mersin", iller: "mersin" }
-          - { grup: 18, bolge: "İstanbul Megakent", iller: "istanbul" }
-          - { grup: 19, bolge: "İzmir Megakent", iller: "izmir" }
-          - { grup: 20, bolge: "Kars & Kastamonu", iller: "kars,kastamonu" }
-          - { grup: 21, bolge: "Kayseri & Kırklareli", iller: "kayseri,kirklareli" }
-          - { grup: 22, bolge: "Kırşehir & Kocaeli", iller: "kirsehir,kocaeli" }
-          - { grup: 23, bolge: "Konya & Kütahya", iller: "konya,kutahya" }
-          - { grup: 24, bolge: "Malatya & Manisa", iller: "malatya,manisa" }
-          - { grup: 25, bolge: "Kahramanmaraş & Mardin", iller: "kahramanmaras,mardin" }
-          - { grup: 26, bolge: "Muğla & Muş", iller: "mugla,mus" }
-          - { grup: 27, bolge: "Nevşehir & Niğde", iller: "nevsehir,nigde" }
-          - { grup: 28, bolge: "Ordu & Rize", iller: "ordu,rize" }
-          - { grup: 29, bolge: "Sakarya & Samsun", iller: "sakarya,samsun" }
-          - { grup: 30, bolge: "Siirt & Sinop", iller: "siirt,sinop" }
-          - { grup: 31, bolge: "Sivas & Tekirdağ", iller: "sivas,tekirdag" }
-          - { grup: 32, bolge: "Tokat & Trabzon", iller: "tokat,trabzon" }
-          - { grup: 33, bolge: "Tunceli & Şanlıurfa", iller: "tunceli,sanliurfa" }
-          - { grup: 34, bolge: "Uşak & Van", iller: "usak,van" }
-          - { grup: 35, bolge: "Yozgat & Zonguldak", iller: "yozgat,zonguldak" }
-          - { grup: 36, bolge: "Aksaray & Bayburt", iller: "aksaray,bayburt" }
-          - { grup: 37, bolge: "Karaman & Kırıkkale", iller: "karaman,kirikkale" }
-          - { grup: 38, bolge: "Batman, Şırnak & Bartın", iller: "batman,sirnak,bartin" }
-          - { grup: 39, bolge: "Ardahan, Iğdır & Yalova", iller: "ardahan,igdir,yalova" }
-          - { grup: 40, bolge: "Karabük, Kilis, Osmaniye & Düzce", iller: "karabuk,kilis,osmaniye,duzce" }
+          - { grup: 1, bolge: "Adana & Adıyaman", iller: "Adana, Adiyaman" }
+          - { grup: 2, bolge: "Afyonkarahisar & Ağrı", iller: "Afyonkarahisar, Agri" }
+          - { grup: 3, bolge: "Amasya & Ankara (Çankaya / Kızılay)", iller: "Amasya, Cankaya Ankara, Kizilay Ankara" }
+          - { grup: 4, bolge: "Antalya - Kaş & Kalkan", iller: "Kas Antalya, Kalkan Antalya, Demre Antalya" }
+          - { grup: 5, bolge: "Antalya - Alanya & Manavgat", iller: "Alanya Antalya, Manavgat Antalya, Side Antalya" }
+          - { grup: 6, bolge: "Antalya - Merkez & Kemer", iller: "Muratpasa Antalya, Konyaalti Antalya, Kemer Antalya" }
+          - { grup: 7, bolge: "Aydın - Kuşadası & Didim", iller: "Kusadasi Aydin, Didim Aydin" }
+          - { grup: 8, bolge: "Balıkesir - Ayvalık & Cunda", iller: "Ayvalik Balikesir, Cunda Balikesir, Edremit Balikesir" }
+          - { grup: 9, bolge: "Bursa & Yalova", iller: "Bursa, Mudanya Bursa, Yalova" }
+          - { grup: 10, bolge: "Çanakkale - Bozcaada & Gökçeada", iller: "Canakkale, Bozcaada Canakkale, Gokceada Canakkale" }
+          - { grup: 11, bolge: "Muğla - Bodrum & Yalıkavak", iller: "Bodrum Mugla, Yalikavak Mugla, Turkbuku Mugla" }
+          - { grup: 12, bolge: "Muğla - Fethiye & Ölüdeniz", iller: "Fethiye Mugla, Oludeniz Mugla, Gocek Mugla" }
+          - { grup: 13, bolge: "Muğla - Marmaris & Datça", iller: "Marmaris Mugla, Datca Mugla, Akyaka Mugla" }
+          - { grup: 14, bolge: "İzmir - Çeşme & Alaçatı", iller: "Cesme Izmir, Alacati Izmir, Ilica Izmir" }
+          - { grup: 15, bolge: "İzmir - Urla & Seferihisar", iller: "Urla Izmir, Seferihisar Izmir, Sigacik Izmir" }
+          - { grup: 16, bolge: "İzmir - Merkez (Karşıyaka / Konak)", iller: "Karsiyaka Izmir, Alsancak Izmir, Konak Izmir" }
+          - { grup: 17, bolge: "İstanbul - Kadıköy & Moda", iller: "Kadikoy Istanbul, Moda Istanbul, Bostanci Istanbul" }
+          - { grup: 18, bolge: "İstanbul - Beşiktaş & Şişli", iller: "Besiktas Istanbul, Sisli Istanbul, Nisantasi Istanbul" }
+          - { grup: 19, bolge: "İstanbul - Beyoğlu & Galata", iller: "Beyoglu Istanbul, Galata Istanbul, Cihangir Istanbul" }
+          - { grup: 20, bolge: "İstanbul - Fatih & Tarihi Yarımada", iller: "Fatih Istanbul, Sultanahmet Istanbul, Balat Istanbul" }
+          - { grup: 21, bolge: "İstanbul - Boğaz Hattı & Sarıyer", iller: "Sariyer Istanbul, Bebek Istanbul, Ortakoy Istanbul" }
+          - { grup: 22, bolge: "İstanbul - Üsküdar & Adalar", iller: "Uskudar Istanbul, Buyukada Istanbul, Heybeliada Istanbul" }
+          - { grup: 23, bolge: "Eskişehir & Bilecik", iller: "Tepebasi Eskisehir, Odunpazari Eskisehir, Bilecik" }
+          - { grup: 24, bolge: "Nevşehir - Kapadokya & Göreme", iller: "Goreme Nevsehir, Urgup Nevsehir, Uchisar Nevsehir" }
+          - { grup: 25, bolge: "Trabzon & Rize (Uzungöl & Ayder)", iller: "Trabzon, Uzungol Trabzon, Rize, Ayder Rize" }
+          - { grup: 26, bolge: "Samsun & Ordu & Giresun", iller: "Samsun, Ordu, Giresun" }
+          - { grup: 27, bolge: "Artvin & Kars & Ardahan", iller: "Artvin, Kars, Sarikamis Kars, Ardahan" }
+          - { grup: 28, bolge: "Gaziantep & Şanlıurfa & Kilis", iller: "Gaziantep, Sanliurfa, Kilis" }
+          - { grup: 29, bolge: "Mersin - Erdemli & Taşucu", iller: "Mersin, Erdemli Mersin, Silifke Mersin" }
+          - { grup: 30, bolge: "Hatay & Osmaniye & Kahramanmaraş", iller: "Hatay, Osmaniye, Kahramanmaras" }
+          - { grup: 31, bolge: "Denizli (Pamukkale) & Burdur & Isparta", iller: "Pamukkale Denizli, Burdur, Isparta" }
+          - { grup: 32, bolge: "Kocaeli & Sakarya (Sapanca)", iller: "Kocaeli, Sapanca Sakarya, Kartepe Kocaeli" }
+          - { grup: 33, bolge: "Bolu (Abant) & Düzce & Bartın (Amasra)", iller: "Bolu, Abant Bolu, Duzce, Amasra Bartin" }
+          - { grup: 34, bolge: "Sinop & Kastamonu & Karabük (Safranbolu)", iller: "Sinop, Kastamonu, Safranbolu Karabuk, Zonguldak" }
+          - { grup: 35, bolge: "Konya & Karaman & Aksaray", iller: "Konya, Karaman, Aksaray" }
+          - { grup: 36, bolge: "Kayseri & Sivas & Yozgat & Tokat", iller: "Kayseri, Sivas, Yozgat, Tokat" }
+          - { grup: 37, bolge: "Malatya & Elazığ & Tunceli & Erzincan", iller: "Malatya, Elazig, Tunceli, Erzincan" }
+          - { grup: 38, bolge: "Diyarbakır & Mardin & Batman & Siirt", iller: "Diyarbakir, Mardin, Midyat Mardin, Batman, Siirt" }
+          - { grup: 39, bolge: "Van & Bitlis & Muş & Hakkari & Şırnak", iller: "Van, Edremit Van, Tatvan Bitlis, Mus, Hakkari, Sirnak" }
+          - { grup: 40, bolge: "Erzurum (Palandöken) & Bingöl & Ağrı & Iğdır", iller: "Palandoken Erzurum, Bingol, Agri, Igdir" }
 
     steps:
       - name: Kodu Checkout Et
@@ -85,35 +85,34 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: "Bölgesel Ada & Parsel Taraması (Grup ${{ matrix.grup }}/40 - ${{ matrix.bolge }})"
+      - name: "Bölgesel Airbnb Taraması (Grup ${{ matrix.grup }}/40 - ${{ matrix.bolge }})"
         run: |
           echo "========================================================"
           echo "MAKİNE NO: ${{ matrix.grup }}/40"
           echo "BÖLGE: ${{ matrix.bolge }}"
-          echo "İLLER: ${{ matrix.iller }}"
-          echo "LİMİT: ${{ github.event.inputs.limit_per_group || '200' }}"
+          echo "HEDEFLER: ${{ matrix.iller }}"
+          echo "LİMİT: ${{ github.event.inputs.limit_per_bolge || '50' }}"
           echo "========================================================"
-          python collector/parsel_imar_ve_degisiklik_toplayici.py \
-            --otomatik-kesif \
-            --cikis-ek "grup_${{ matrix.grup }}" \
+          python collector/airbnb_fiyat_ve_potansiyel_toplayici.py \
             --iller "${{ matrix.iller }}" \
-            --limit "${{ github.event.inputs.limit_per_group || '200' }}"
+            --cikis-ek "grup_${{ matrix.grup }}" \
+            --limit "${{ github.event.inputs.limit_per_bolge || '50' }}"
 
       - name: "Grup Çıktılarını Artifakt Olarak Kaydet"
         uses: actions/upload-artifact@v4
         with:
-          name: parsel-grup-${{ matrix.grup }}
+          name: airbnb-grup-${{ matrix.grup }}
           path: |
-            collector/data/imar_ve_parseller/*grup_${{ matrix.grup }}*
+            collector/data/airbnb/*grup_${{ matrix.grup }}*
           retention-days: 1
           if-no-files-found: ignore
 
   # =========================================================================
-  # 2. FAZ: 40 BÖLGE SONUCUNU BİRLEŞTİRME VE ATOMİK GİT COMMIT & PUSH
+  # 2. FAZ: 40 BÖLGE AIRBNB SONUCUNU BİRLEŞTİRME VE ATOMİK GİT COMMIT & PUSH
   # =========================================================================
   birlestir_ve_yayinla:
-    name: "40 Bölge Sonuçlarını Birleştir ve Yayınla"
-    needs: [parsel_matrix]
+    name: "40 Bölge Airbnb Verilerini Birleştir ve Master Haritayı Güncelle"
+    needs: [airbnb_matrix]
     runs-on: ubuntu-latest
     
     steps:
@@ -130,36 +129,36 @@ jobs:
       - name: "Tüm Grup Artifaktlarını İndir"
         uses: actions/download-artifact@v4
         with:
-          pattern: parsel-grup-*
+          pattern: airbnb-grup-*
           path: indirilmis_artifaktlar/
           merge-multiple: true
 
       - name: "Artifaktları Veri Dizinine Taşı"
         run: |
-          mkdir -p collector/data/imar_ve_parseller/
-          find indirilmis_artifaktlar/ -type f -exec mv -f {} collector/data/imar_ve_parseller/ \;
-          ls -la collector/data/imar_ve_parseller/
+          mkdir -p collector/data/airbnb/
+          find indirilmis_artifaktlar/ -type f -exec mv -f {} collector/data/airbnb/ \;
+          ls -la collector/data/airbnb/
 
-      - name: "Bütün Bölgesel Sonuçları Tek Bir Veritabanı ve GeoJSON'da Birleştir"
+      - name: "40 Bölge Çıktılarını Master Airbnb GeoJSON & CSV'de Birleştir"
         run: |
-          python collector/parsel_imar_ve_degisiklik_toplayici.py --birlestir
-          # Geçici grup dosyalarını temizle, sadece ana nihai dosyalar kalsın
-          rm -f collector/data/imar_ve_parseller/*_grup_* || true
+          python collector/airbnb_fiyat_ve_potansiyel_toplayici.py --birlestir
+          # Geçici grup dosyalarını temizle, sadece ana nihai master dosyalar kalsın
+          rm -f collector/data/airbnb/*_grup_* || true
 
       - name: "Nihai Çıktıları Kontrol Et"
         run: |
-          ls -lh collector/data/imar_ve_parseller/
+          ls -lh collector/data/airbnb/
 
-      - name: "Nihai Verileri Git Depoya Atomik Kaydet ve Push Et"
+      - name: "Nihai Airbnb Verilerini Git Depoya Atomik Kaydet ve Push Et"
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f collector/data/imar_ve_parseller/
+          git add -f collector/data/airbnb/
           
           if git diff --staged --quiet; then
-            echo "Yeni parsel veya imar verisi değişikliği yok, push atlanıyor."
+            echo "Yeni Airbnb verisi değişikliği yok, push atlanıyor."
           else
-            git commit -m "feat(parsel): 40 bölgeden toplanan ada/parsel, imar ve GeoJSON harita katmanı birleştirildi [skip ci]"
+            git commit -m "feat(airbnb): 40 makineden toplanan Türkiye Airbnb pazar verileri ve master harita katmanı güncellendi [skip ci]"
             git pull --rebase origin main || true
             git push origin main
           fi
