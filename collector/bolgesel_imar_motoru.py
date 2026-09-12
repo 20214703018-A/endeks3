@@ -99,6 +99,68 @@ class BolgeselImarMotoru:
 
         return None
 
+    def karakter_ve_kat_analizi(self, il: str, ilce: str, mahalle: Optional[str] = None) -> Dict[str, Any]:
+        """Bir mahalle veya bölgenin villa, yüksek kat ve ortalama kat analizini çıkarır."""
+        tipoloji = self.tipoloji_bul(il, ilce, mahalle)
+        if not tipoloji:
+            return {
+                "bulundu": False,
+                "mesaj": "Bölge için tipoloji kuralı henüz tanımlanmamış. Belediye çapı gerekli."
+            }
+
+        kat = tipoloji.get("kat_adedi", 0)
+        try:
+            kat_num = float(kat)
+        except (ValueError, TypeError):
+            kat_num = 2.0
+
+        hmax = tipoloji.get("hmax_metre", 6.50)
+        kaks = tipoloji.get("kaks_emsal", 0.60)
+
+        is_villa = kat_num <= 2.5 and ("villa" in tipoloji.get("bolge_karakteri", "").lower() or "villa" in tipoloji.get("tipik_mimari", "").lower() or kaks <= 0.60)
+        is_yuksek_kat = kat_num >= 8.0 or hmax >= 25.0 or "rezidans" in tipoloji.get("bolge_karakteri", "").lower()
+
+        if is_villa:
+            kategori = "VİLLA & MÜSTAKİL KONUT BÖLGESİ"
+            kategori_kodu = "villa"
+        elif is_yuksek_kat:
+            kategori = "YÜKSEK KATLI REZİDANS & KULE BÖLGESİ"
+            kategori_kodu = "yuksek_kat"
+        else:
+            kategori = "ORTA KATLI APARTMAN & ŞEHİR SİTESİ BÖLGESİ"
+            kategori_kodu = "orta_kat"
+
+        return {
+            "bulundu": True,
+            "il": tipoloji.get("il"),
+            "ilce": tipoloji.get("ilce"),
+            "mahalle": tipoloji.get("mahalle"),
+            "alt_bolge": tipoloji.get("alt_bolge"),
+            "bolge_tipi": kategori,
+            "kategori_kodu": kategori_kodu,
+            "villa_bolgesi_mi": is_villa,
+            "yuksek_kat_bolgesi_mi": is_yuksek_kat,
+            "ortalama_kat_sayisi": kat_num,
+            "hmax_metre": hmax,
+            "kaks_emsal": kaks,
+            "taks": tipoloji.get("taks"),
+            "yapi_nizami": tipoloji.get("yapi_nizami"),
+            "bolge_karakteri": tipoloji.get("bolge_karakteri"),
+            "tipik_mimari": tipoloji.get("tipik_mimari"),
+            "guven": tipoloji.get("guven", "Yuksek"),
+            "kaynak": tipoloji.get("yasal_dayanak_ve_plan_notu")
+        }
+
+    def bolgeleri_filtrele(self, kategori_kodu: str = "villa", il: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Kategoriye ('villa', 'yuksek_kat', 'orta_kat') ve opsiyonel ile göre bölgeleri listeler."""
+        sonuclar = []
+        for k in self.kayitlar:
+            analiz = self.karakter_ve_kat_analizi(k["il"], k["ilce"], k.get("mahalle"))
+            if analiz.get("kategori_kodu") == kategori_kodu:
+                if not il or normalize_text(k["il"]) == normalize_text(il):
+                    sonuclar.append(analiz)
+        return sonuclar
+
 
 # Singleton instance
 _motor = None
