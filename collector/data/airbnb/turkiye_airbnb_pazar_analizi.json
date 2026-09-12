@@ -1,19 +1,19 @@
 {
-  "toplam_aktif_ilan": 1843,
-  "medyan_gecelik_fiyat_tl": 4408,
+  "toplam_aktif_ilan": 1888,
+  "medyan_gecelik_fiyat_tl": 4562,
   "fiyat_bandi_25_75": [
-    2870,
-    7000
+    2929,
+    7265
   ],
   "vade_medyan_fiyatlari": {
     "1_gun_sonrasi_tl": 4025,
-    "1_hafta_sonrasi_tl": 4515,
-    "1_ay_sonrasi_tl": 4145,
-    "3_ay_sonrasi_tl": 4988
+    "1_hafta_sonrasi_tl": 4576,
+    "1_ay_sonrasi_tl": 4400,
+    "3_ay_sonrasi_tl": 5330
   },
   "min_fiyat_tl": 650,
   "max_fiyat_tl": 120970,
   "tahmini_yillik_doluluk_orani": 0.6,
-  "ortalama_yillik_net_nakit_akisi_tl": 434408,
-  "guncelleme_tarihi": "2026-09-12T02:14:38.606985"
+  "ortalama_yillik_net_nakit_akisi_tl": 449585,
+  "guncelleme_tarihi": "2026-09-12T08:04:26.440502"
 }
