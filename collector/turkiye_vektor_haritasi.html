@@ -342,15 +342,28 @@
       GEOPROP AI
       <span class="badge">CBS Vektör Envanteri</span>
     </h1>
-    <p>Türkiye'nin değişmeyecek tüm fiziksel, hukuki ve altyapı katmanlarının tam poligon ve çizgi geometrileri.</p>
+    <p>Türkiye ve Ege Havzası değişmeyecek tüm fiziksel, altyapı ve kısıt vektör geometrileri.</p>
+
+    <!-- Sektör 1 Banner -->
+    <div style="margin-top: 10px; padding: 8px 12px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; font-size: 11.5px;">
+      <div style="font-weight: 700; color: var(--accent-blue); display: flex; align-items: center; justify-content: space-between;">
+        <span>📍 Sektör 1: Güneybatı Ege</span>
+        <span style="color: #ffffff; background: #0284c7; padding: 1px 6px; border-radius: 4px; font-size: 10px;">6.407 Vektör</span>
+      </div>
+      <div style="color: var(--text-muted); font-size: 10.5px; margin-top: 3px;">
+        Rodos - Marmaris - Datça - Bodrum - Gökova - Fethiye Kıyı Bandı
+      </div>
+    </div>
     
     <div class="jump-group">
-      <button class="jump-btn" onclick="jumpTo(41.0740, 28.2460, 13)">Silivri / İst</button>
-      <button class="jump-btn" onclick="jumpTo(41.0150, 28.9790, 12)">İstanbul</button>
-      <button class="jump-btn" onclick="jumpTo(38.4237, 27.1428, 12)">İzmir</button>
-      <button class="jump-btn" onclick="jumpTo(39.9334, 32.8597, 12)">Ankara</button>
-      <button class="jump-btn" onclick="jumpTo(37.5753, 36.9228, 12)">K.Maraş (DAF)</button>
-      <button class="jump-btn" onclick="jumpTo(36.8841, 30.7056, 12)">Antalya</button>
+      <button class="jump-btn" style="background: rgba(56, 189, 248, 0.25); border-color: var(--accent-blue); color: #ffffff; font-weight: 700;" onclick="jumpToSector1()">🎯 Tüm Sektör 1 (Geniş)</button>
+      <button class="jump-btn" onclick="jumpTo(36.8550, 28.2700, 13)">Marmaris Sahil</button>
+      <button class="jump-btn" onclick="jumpTo(36.7230, 27.6850, 13)">Datça Yarımadası</button>
+      <button class="jump-btn" onclick="jumpTo(37.0380, 27.4300, 13)">Bodrum Yarımadası</button>
+      <button class="jump-btn" onclick="jumpTo(36.4350, 28.2250, 12)">Rodos (Kuzey Fayları)</button>
+      <button class="jump-btn" onclick="jumpTo(37.0500, 28.3200, 12)">Gökova Fay Zonu</button>
+      <button class="jump-btn" onclick="jumpTo(41.0740, 28.2460, 12)">Silivri / Marmara</button>
+      <button class="jump-btn" onclick="jumpTo(39.0000, 35.2000, 6)">Tüm Türkiye</button>
     </div>
   </div>
 
@@ -366,7 +379,7 @@
       <div class="layer-left">
         <div class="layer-indicator" style="background: #ef4444; box-shadow: 0 0 8px #ef4444;"></div>
         <div>
-          <div class="layer-name">Diri Fay Hatları (895)</div>
+          <div class="layer-name">Diri Fay Hatları</div>
           <div class="layer-count" id="count-faylar">Yükleniyor...</div>
         </div>
       </div>
@@ -394,7 +407,7 @@
     <!-- 3. Mevcut ve Gelecek Yollar -->
     <div class="layer-item">
       <div class="layer-left">
-        <div class="layer-indicator" style="background: #f97316;"></div>
+        <div class="layer-indicator" style="background: #94a3b8;"></div>
         <div>
           <div class="layer-name">Yollar ve Projeler</div>
           <div class="layer-count" id="count-yollar">Yükleniyor...</div>
@@ -406,7 +419,82 @@
       </label>
     </div>
 
-    <!-- 4. Demiryolları (TCDD/YHT) -->
+    <!-- 4. Sahil Şeridi (Kıyı Kanunu) -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #06b6d4; box-shadow: 0 0 6px #06b6d4;"></div>
+        <div>
+          <div class="layer-name">Sahil & Kıyı Şeridi</div>
+          <div class="layer-count" id="count-sahil">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-sahil" checked onchange="toggleLayer('sahil')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 5. Sit ve Korunan Alanlar -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #a855f7; border: 1px solid #7c3aed;"></div>
+        <div>
+          <div class="layer-name">Sit & Korunan Alanlar</div>
+          <div class="layer-count" id="count-sit">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-sit" checked onchange="toggleLayer('sit')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 6. Orman Alanları -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #22c55e; opacity: 0.85;"></div>
+        <div>
+          <div class="layer-name">Devlet Ormanları</div>
+          <div class="layer-count" id="count-orman">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-orman" checked onchange="toggleLayer('orman')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 7. Su Yolları, Dereler ve Göller -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #38bdf8;"></div>
+        <div>
+          <div class="layer-name">Akarsu, Dere & Göller</div>
+          <div class="layer-count" id="count-su">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-su" checked onchange="toggleLayer('su')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 8. Su Kuyuları, Çeşmeler ve Pınarlar -->
+    <div class="layer-item">
+      <div class="layer-left">
+        <div class="layer-indicator" style="background: #0284c7; border: 1px solid #ffffff; border-radius: 50%;"></div>
+        <div>
+          <div class="layer-name">Kuyular & Çeşmeler</div>
+          <div class="layer-count" id="count-kuyular">Yükleniyor...</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="toggle-kuyular" checked onchange="toggleLayer('kuyular')">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- 9. Demiryolları (TCDD/YHT) -->
     <div class="layer-item">
       <div class="layer-left">
         <div class="layer-indicator" style="background: #e2e8f0; border: 1px dashed #000;"></div>
@@ -421,69 +509,24 @@
       </label>
     </div>
 
-    <!-- 5. Sit ve Korunan Alanlar -->
+    <!-- 10. Airbnb & Kısa Dönem İlanları -->
     <div class="layer-item">
       <div class="layer-left">
-        <div class="layer-indicator" style="background: #c084fc; border: 1px solid #9333ea;"></div>
+        <div class="layer-indicator" style="background: #ff385c; box-shadow: 0 0 6px #ff385c; border-radius: 50%;"></div>
         <div>
-          <div class="layer-name">Sit & Korunan Alanlar</div>
-          <div class="layer-count" id="count-sit">Yükleniyor...</div>
+          <div class="layer-name">Airbnb İlanları (STR)</div>
+          <div class="layer-count" id="count-airbnb">Yükleniyor...</div>
         </div>
       </div>
       <label class="switch">
-        <input type="checkbox" id="toggle-sit" checked onchange="toggleLayer('sit')">
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <!-- 6. Sahil Şeridi (Kıyı Kanunu) -->
-    <div class="layer-item">
-      <div class="layer-left">
-        <div class="layer-indicator" style="background: #2dd4bf; box-shadow: 0 0 6px #2dd4bf;"></div>
-        <div>
-          <div class="layer-name">Sahil & Kıyı Şeridi</div>
-          <div class="layer-count" id="count-sahil">Yükleniyor...</div>
-        </div>
-      </div>
-      <label class="switch">
-        <input type="checkbox" id="toggle-sahil" checked onchange="toggleLayer('sahil')">
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <!-- 7. Orman Alanları -->
-    <div class="layer-item">
-      <div class="layer-left">
-        <div class="layer-indicator" style="background: #22c55e; opacity: 0.8;"></div>
-        <div>
-          <div class="layer-name">Devlet Ormanları</div>
-          <div class="layer-count" id="count-orman">Yükleniyor...</div>
-        </div>
-      </div>
-      <label class="switch">
-        <input type="checkbox" id="toggle-orman" checked onchange="toggleLayer('orman')">
-        <span class="slider"></span>
-      </label>
-    </div>
-
-    <!-- 8. Su Yolları, Dereler ve Kanallar -->
-    <div class="layer-item">
-      <div class="layer-left">
-        <div class="layer-indicator" style="background: #38bdf8;"></div>
-        <div>
-          <div class="layer-name">Akarsular & Kanallar</div>
-          <div class="layer-count" id="count-su">Yükleniyor...</div>
-        </div>
-      </div>
-      <label class="switch">
-        <input type="checkbox" id="toggle-su" checked onchange="toggleLayer('su')">
+        <input type="checkbox" id="toggle-airbnb" checked onchange="toggleLayer('airbnb')">
         <span class="slider"></span>
       </label>
     </div>
 
     <!-- Drag & Drop Zone -->
     <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-      📁 GeoJSON Dosyasını Buraya Bırakın veya Seçin
+      📁 Başka GeoJSON Dosyası Bırakın veya Seçin
       <input type="file" id="file-input" style="display: none;" accept=".geojson,.json" onchange="handleFileSelect(event)">
     </div>
   </div>
@@ -532,11 +575,13 @@
       faylar: L.layerGroup().addTo(map),
       elektrik: L.layerGroup().addTo(map),
       yollar: L.layerGroup().addTo(map),
-      demiryollari: L.layerGroup().addTo(map),
-      sit: L.layerGroup().addTo(map),
       sahil: L.layerGroup().addTo(map),
+      sit: L.layerGroup().addTo(map),
       orman: L.layerGroup().addTo(map),
       su: L.layerGroup().addTo(map),
+      kuyular: L.layerGroup().addTo(map),
+      airbnb: L.layerGroup().addTo(map),
+      demiryollari: L.layerGroup().addTo(map),
       custom: L.layerGroup().addTo(map)
     };
 
@@ -544,11 +589,13 @@
       faylar: 0,
       elektrik: 0,
       yollar: 0,
-      demiryollari: 0,
-      sit: 0,
       sahil: 0,
+      sit: 0,
       orman: 0,
-      su: 0
+      su: 0,
+      kuyular: 0,
+      airbnb: 0,
+      demiryollari: 0
     };
 
     // Styler Functions
@@ -556,16 +603,16 @@
       const katman = (feature.properties && feature.properties.katman) || '';
       
       if (katman === 'DİRİ_FAY_HATTI') {
-        return { color: '#ef4444', weight: 3, opacity: 0.9 };
+        return { color: '#ef4444', weight: 3.5, opacity: 0.95 };
       }
       if (katman === 'ELEKTRIK_HATTI') {
-        return { color: '#facc15', weight: 2.5, opacity: 0.85 };
+        return { color: '#facc15', weight: 2.8, opacity: 0.9 };
       }
       if (katman === 'PLANLANAN_YOL_PROJESI') {
         return { color: '#f97316', weight: 3, dashArray: '6, 6', opacity: 0.9 };
       }
       if (katman === 'MEVCUT_YOL') {
-        return { color: '#cbd5e1', weight: 2, opacity: 0.75 };
+        return { color: '#94a3b8', weight: 2, opacity: 0.8 };
       }
       if (katman === 'DEMIRYOLU') {
         return { color: '#ffffff', weight: 2.5, opacity: 0.9, dashArray: '8, 4' };
@@ -574,18 +621,18 @@
         return { color: '#9333ea', weight: 2, fillColor: '#c084fc', fillOpacity: 0.35 };
       }
       if (katman === 'SAHIL_SERIDI') {
-        return { color: '#2dd4bf', weight: 2.5, opacity: 0.9 };
+        return { color: '#06b6d4', weight: 2.2, opacity: 0.9 };
       }
       if (katman === 'ORMAN_ALANI') {
         return { color: '#15803d', weight: 1.5, fillColor: '#22c55e', fillOpacity: 0.4 };
       }
       if (katman === 'GOL_BARAJ_HAZNE') {
-        return { color: '#0284c7', weight: 1.5, fillColor: '#38bdf8', fillOpacity: 0.45 };
+        return { color: '#0284c7', weight: 1.5, fillColor: '#38bdf8', fillOpacity: 0.5 };
       }
       if (katman === 'SU_YOLU_DERE' || katman === 'SU_BORU_HATTI') {
         return { color: '#38bdf8', weight: 2, opacity: 0.85 };
       }
-      return { color: '#94a3b8', weight: 2, opacity: 0.7 };
+      return { color: '#64748b', weight: 2, opacity: 0.7 };
     }
 
     function onEachFeature(feature, layer) {
@@ -603,11 +650,31 @@
       if (p.kayma_hizi_mm_yil) {
         html += `<div class="popup-row"><span class="popup-key">Kayma Hızı:</span><span class="popup-val">${p.kayma_hizi_mm_yil} mm/yıl</span></div>`;
       }
+      if (p.egim_dip) {
+        html += `<div class="popup-row"><span class="popup-key">Eğim (Dip):</span><span class="popup-val">${p.egim_dip}°</span></div>`;
+      }
+      if (p.derinlik_km) {
+        html += `<div class="popup-row"><span class="popup-key">Derinlik:</span><span class="popup-val">${p.derinlik_km} km</span></div>`;
+      }
       if (p.nokta_sayisi) {
-        html += `<div class="popup-row"><span class="popup-key">Kırık Nokta Adedi:</span><span class="popup-val">${p.nokta_sayisi}</span></div>`;
+        html += `<div class="popup-row"><span class="popup-key">Kırık Nokta:</span><span class="popup-val">${p.nokta_sayisi}</span></div>`;
       }
       if (p.tags && p.tags.voltage) {
-        html += `<div class="popup-row"><span class="popup-key">Voltaj:</span><span class="popup-val">${p.tags.voltage} V</span></div>`;
+        html += `<div class="popup-row"><span class="popup-key">Voltaj:</span><span class="popup-val">${Number(p.tags.voltage).toLocaleString()} Volt</span></div>`;
+      }
+      if (p.tags && p.tags.highway) {
+        html += `<div class="popup-row"><span class="popup-key">Yol Sınıfı:</span><span class="popup-val">${p.tags.highway}</span></div>`;
+      }
+      if (p.katman === 'AIRBNB_ILANI') {
+        if (p.fiyat_tl) {
+          html += `<div class="popup-row"><span class="popup-key">Gecelik Fiyat:</span><span class="popup-val" style="color: #ff385c; font-weight: 700;">₺${Number(p.fiyat_tl).toLocaleString()} / gece</span></div>`;
+        }
+        if (p.puan) {
+          html += `<div class="popup-row"><span class="popup-key">Değerlendirme:</span><span class="popup-val">★ ${p.puan} (${p.yorum || 0} yorum)</span></div>`;
+        }
+        if (p.url) {
+          html += `<div style="margin-top: 8px; text-align: center;"><a href="${p.url}" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600; font-size: 11px;">Airbnb İlan Sayfasını Aç ↗</a></div>`;
+        }
       }
       html += `</div>`;
       layer.bindPopup(html);
@@ -629,6 +696,14 @@
       map.flyTo([lat, lon], zoom, { duration: 1.5 });
     }
 
+    // Jump to Sector 1 Bounds (Rodos - Marmaris Sahil)
+    function jumpToSector1() {
+      map.flyToBounds([[35.4679, 24.4318], [37.5145, 28.4821]], {
+        padding: [30, 30],
+        duration: 1.5
+      });
+    }
+
     // Track Cursor
     map.on('mousemove', function(e) {
       document.getElementById('coord-display').textContent = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
@@ -645,13 +720,36 @@
       L.geoJSON(geojsonData, {
         style: getFeatureStyle,
         pointToLayer: function(feature, latlng) {
+          const katman = (feature.properties && feature.properties.katman) || '';
+          let fillColor = "#38bdf8";
+          let strokeColor = "#ffffff";
+          let radius = 6;
+
+          if (katman === 'SU_KUYUSU') {
+            fillColor = "#0284c7";
+            strokeColor = "#ffffff";
+            radius = 6;
+          } else if (katman === 'DOGAL_PINAR') {
+            fillColor = "#10b981";
+            strokeColor = "#ffffff";
+            radius = 7;
+          } else if (katman === 'CESME_ICME_SUYU') {
+            fillColor = "#06b6d4";
+            strokeColor = "#ffffff";
+            radius = 6;
+          } else if (katman === 'AIRBNB_ILANI') {
+            fillColor = "#ff385c";
+            strokeColor = "#ffffff";
+            radius = 7;
+          }
+
           return L.circleMarker(latlng, {
-            radius: 5,
-            fillColor: "#38bdf8",
-            color: "#ffffff",
-            weight: 1.5,
+            radius: radius,
+            fillColor: fillColor,
+            color: strokeColor,
+            weight: 2,
             opacity: 1,
-            fillOpacity: 0.9
+            fillOpacity: 0.95
           });
         },
         onEachFeature: function(feature, layer) {
@@ -669,7 +767,9 @@
             else if (katman === 'SIT_VE_KORUNAN_ALAN') targetKey = 'sit';
             else if (katman === 'SAHIL_SERIDI') targetKey = 'sahil';
             else if (katman === 'ORMAN_ALANI') targetKey = 'orman';
-            else if (katman.includes('SU') || katman.includes('GOL') || katman.includes('CESME')) targetKey = 'su';
+            else if (katman === 'SU_KUYUSU' || katman === 'DOGAL_PINAR' || katman === 'CESME_ICME_SUYU') targetKey = 'kuyular';
+            else if (katman === 'AIRBNB_ILANI') targetKey = 'airbnb';
+            else if (katman.includes('SU') || katman.includes('GOL')) targetKey = 'su';
             else targetKey = 'custom';
           }
 
@@ -697,6 +797,9 @@
 
     // Auto-load available local GeoJSON files
     const autoLoadSources = [
+      { url: 'sektor_01_guneybati_ege.geojson', key: null, isSector1: true },
+      { url: 'data/airbnb/koordinat_36_8508_28_2754.geojson', key: 'airbnb' },
+      { url: 'data/airbnb/bodrum__muğla.geojson', key: 'airbnb' },
       { url: 'data/cografya/turkiye_detayli_diri_faylar.geojson', key: 'faylar' },
       { url: 'data/cografya/geojson/turkiye_detayli_diri_faylar.geojson', key: 'faylar' },
       { url: 'data/cografya/geojson/turkiye_elektrik_hatlari.geojson', key: 'elektrik' },
@@ -705,18 +808,20 @@
       { url: 'data/cografya/geojson/turkiye_sit_alanlari_ve_korunan_bolgeler.geojson', key: 'sit' },
       { url: 'data/cografya/geojson/turkiye_sahil_seritleri.geojson', key: 'sahil' },
       { url: 'data/cografya/geojson/turkiye_orman_alanlari.geojson', key: 'orman' },
-      { url: 'data/cografya/geojson/turkiye_dere_yataklari.geojson', key: 'su' },
-      { url: 'data/cografya/master_harita_katmanlari/turkiye_tam_birlesik_envanter.geojson', key: null }
+      { url: 'data/cografya/geojson/turkiye_dere_yataklari.geojson', key: 'su' }
     ];
 
     autoLoadSources.forEach(src => {
       fetch(src.url)
         .then(res => {
-          if (!res.ok) throw new Error('Not found');
+          if (!res.ok) throw new Error('Not found: ' + src.url);
           return res.json();
         })
         .then(data => {
           loadGeoJSONData(data, src.key);
+          if (src.isSector1) {
+            jumpToSector1();
+          }
         })
         .catch(() => {
           // Sessizce geç; dosya henüz çıkarılmamış olabilir

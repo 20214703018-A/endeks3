@@ -1,4 +1,4 @@
-name: "Turkiye Ada-Parsel İmar, Plan Künyesi ve Geo Harita Toplayıcı (10 Paralel Makine)"
+name: "Turkiye Ada-Parsel İmar, Plan Künyesi ve Geo Harita Toplayıcı (40 Paralel Makine)"
 
 on:
   workflow_dispatch:
@@ -17,26 +17,56 @@ permissions:
 
 jobs:
   # =========================================================================
-  # 1. FAZ: 10 EŞZAMANLI PARALEL MAKİNE İLE TÜRKİYE GENELİ TARAMA
+  # 1. FAZ: 40 EŞZAMANLI PARALEL MAKİNE İLE TÜRKİYE GENELİ 81 İL TARAMASI
   # =========================================================================
   parsel_matrix:
-    name: "Grup ${{ matrix.grup }} - ${{ matrix.bolge }}"
+    name: "Grup ${{ matrix.grup }}/40 - ${{ matrix.bolge }}"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 10
+      max-parallel: 40
       matrix:
         include:
-          - { grup: 1, bolge: "Marmara Batı & Trakya", iller: "istanbul,edirne,kirklareli,tekirdag,canakkale" }
-          - { grup: 2, bolge: "Marmara Doğu & Güney", iller: "bursa,kocaeli,sakarya,yalova,balikesir,bilecik" }
-          - { grup: 3, bolge: "Ege", iller: "izmir,manisa,aydin,mugla,denizli,usak,kutahya,afyonkarahisar" }
-          - { grup: 4, bolge: "İç Anadolu Batı", iller: "ankara,eskisehir,konya,karaman,aksaray,cankiri" }
-          - { grup: 5, bolge: "İç Anadolu Doğu", iller: "kayseri,sivas,yozgat,kirsehir,nevsehir,nigde,kirikkale" }
-          - { grup: 6, bolge: "Akdeniz", iller: "antalya,burdur,isparta,mersin,adana,hatay,osmaniye,kahramanmaras" }
-          - { grup: 7, bolge: "Batı Karadeniz", iller: "bolu,duzce,zonguldak,bartin,karabuk,kastamonu,sinop" }
-          - { grup: 8, bolge: "Doğu Karadeniz", iller: "samsun,ordu,giresun,trabzon,rize,artvin,gumushane,bayburt,amasya,tokat,corum" }
-          - { grup: 9, bolge: "Doğu Anadolu", iller: "erzurum,erzincan,kars,agri,igdir,ardahan,van,mus,bitlis,hakkari,malatya,elazig,bingol,tunceli" }
-          - { grup: 10, bolge: "Güneydoğu Anadolu", iller: "gaziantep,sanliurfa,diyarbakir,mardin,batman,siirt,sirnak,adiyaman,kilis" }
+          - { grup: 1, bolge: "Adana & Adıyaman", iller: "adana,adiyaman" }
+          - { grup: 2, bolge: "Afyonkarahisar & Ağrı", iller: "afyonkarahisar,agri" }
+          - { grup: 3, bolge: "Amasya & Ankara", iller: "amasya,ankara" }
+          - { grup: 4, bolge: "Antalya & Artvin", iller: "antalya,artvin" }
+          - { grup: 5, bolge: "Aydın & Balıkesir", iller: "aydin,balikesir" }
+          - { grup: 6, bolge: "Bilecik & Bingöl", iller: "bilecik,bingol" }
+          - { grup: 7, bolge: "Bitlis & Bolu", iller: "bitlis,bolu" }
+          - { grup: 8, bolge: "Burdur & Bursa", iller: "burdur,bursa" }
+          - { grup: 9, bolge: "Çanakkale & Çankırı", iller: "canakkale,cankiri" }
+          - { grup: 10, bolge: "Çorum & Denizli", iller: "corum,denizli" }
+          - { grup: 11, bolge: "Diyarbakır & Edirne", iller: "diyarbakir,edirne" }
+          - { grup: 12, bolge: "Elazığ & Erzincan", iller: "elazig,erzincan" }
+          - { grup: 13, bolge: "Erzurum & Eskişehir", iller: "erzurum,eskisehir" }
+          - { grup: 14, bolge: "Gaziantep & Giresun", iller: "gaziantep,giresun" }
+          - { grup: 15, bolge: "Gümüşhane & Hakkari", iller: "gumushane,hakkari" }
+          - { grup: 16, bolge: "Hatay & Isparta", iller: "hatay,isparta" }
+          - { grup: 17, bolge: "Mersin", iller: "mersin" }
+          - { grup: 18, bolge: "İstanbul Megakent", iller: "istanbul" }
+          - { grup: 19, bolge: "İzmir Megakent", iller: "izmir" }
+          - { grup: 20, bolge: "Kars & Kastamonu", iller: "kars,kastamonu" }
+          - { grup: 21, bolge: "Kayseri & Kırklareli", iller: "kayseri,kirklareli" }
+          - { grup: 22, bolge: "Kırşehir & Kocaeli", iller: "kirsehir,kocaeli" }
+          - { grup: 23, bolge: "Konya & Kütahya", iller: "konya,kutahya" }
+          - { grup: 24, bolge: "Malatya & Manisa", iller: "malatya,manisa" }
+          - { grup: 25, bolge: "Kahramanmaraş & Mardin", iller: "kahramanmaras,mardin" }
+          - { grup: 26, bolge: "Muğla & Muş", iller: "mugla,mus" }
+          - { grup: 27, bolge: "Nevşehir & Niğde", iller: "nevsehir,nigde" }
+          - { grup: 28, bolge: "Ordu & Rize", iller: "ordu,rize" }
+          - { grup: 29, bolge: "Sakarya & Samsun", iller: "sakarya,samsun" }
+          - { grup: 30, bolge: "Siirt & Sinop", iller: "siirt,sinop" }
+          - { grup: 31, bolge: "Sivas & Tekirdağ", iller: "sivas,tekirdag" }
+          - { grup: 32, bolge: "Tokat & Trabzon", iller: "tokat,trabzon" }
+          - { grup: 33, bolge: "Tunceli & Şanlıurfa", iller: "tunceli,sanliurfa" }
+          - { grup: 34, bolge: "Uşak & Van", iller: "usak,van" }
+          - { grup: 35, bolge: "Yozgat & Zonguldak", iller: "yozgat,zonguldak" }
+          - { grup: 36, bolge: "Aksaray & Bayburt", iller: "aksaray,bayburt" }
+          - { grup: 37, bolge: "Karaman & Kırıkkale", iller: "karaman,kirikkale" }
+          - { grup: 38, bolge: "Batman, Şırnak & Bartın", iller: "batman,sirnak,bartin" }
+          - { grup: 39, bolge: "Ardahan, Iğdır & Yalova", iller: "ardahan,igdir,yalova" }
+          - { grup: 40, bolge: "Karabük, Kilis, Osmaniye & Düzce", iller: "karabuk,kilis,osmaniye,duzce" }
 
     steps:
       - name: Kodu Checkout Et
@@ -55,10 +85,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: "Bölgesel Ada & Parsel Taraması (Grup ${{ matrix.grup }})"
+      - name: "Bölgesel Ada & Parsel Taraması (Grup ${{ matrix.grup }}/40 - ${{ matrix.bolge }})"
         run: |
           echo "========================================================"
-          echo "MAKİNE NO: ${{ matrix.grup }}"
+          echo "MAKİNE NO: ${{ matrix.grup }}/40"
           echo "BÖLGE: ${{ matrix.bolge }}"
           echo "İLLER: ${{ matrix.iller }}"
           echo "LİMİT: ${{ github.event.inputs.limit_per_group || '200' }}"
@@ -76,12 +106,13 @@ jobs:
           path: |
             collector/data/imar_ve_parseller/*grup_${{ matrix.grup }}*
           retention-days: 1
+          if-no-files-found: ignore
 
   # =========================================================================
-  # 2. FAZ: TÜM BÖLGELERİ BİRLEŞTİRME VE ATOMİK GİT COMMIT & PUSH
+  # 2. FAZ: 40 BÖLGE SONUCUNU BİRLEŞTİRME VE ATOMİK GİT COMMIT & PUSH
   # =========================================================================
   birlestir_ve_yayinla:
-    name: "10 Bölge Sonuçlarını Birleştir ve Yayınla"
+    name: "40 Bölge Sonuçlarını Birleştir ve Yayınla"
     needs: [parsel_matrix]
     runs-on: ubuntu-latest
     
@@ -99,7 +130,9 @@ jobs:
       - name: "Tüm Grup Artifaktlarını İndir"
         uses: actions/download-artifact@v4
         with:
+          pattern: parsel-grup-*
           path: indirilmis_artifaktlar/
+          merge-multiple: true
 
       - name: "Artifaktları Veri Dizinine Taşı"
         run: |
@@ -126,7 +159,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "Yeni parsel veya imar verisi değişikliği yok, push atlanıyor."
           else
-            git commit -m "feat(parsel): 10 bölgeden toplanan ada/parsel, imar ve GeoJSON harita katmanı birleştirildi [skip ci]"
+            git commit -m "feat(parsel): 40 bölgeden toplanan ada/parsel, imar ve GeoJSON harita katmanı birleştirildi [skip ci]"
             git pull --rebase origin main || true
             git push origin main
           fi

@@ -1,0 +1,449 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+GEOPROP AI - Doğrudan Python Airbnb Pazar & Kısa Dönem Kiralama (STR) Potansiyeli Toplayıcı
+-----------------------------------------------------------------------------------------
+Bu modül, Airbnb arama motorunun dahili mimarisini doğrudan sorgulayarak:
+1. Türkiye'nin herhangi bir bölgesi (Bodrum, Marmaris, Kaş, Çeşme, Kadıköy vb.) veya
+2. Doğrudan verilen bir koordinat ve yarıçap (lat, lon, yarıçap km)
+için aktif Airbnb ilanlarını, gecelik fiyatları (ADR), doluluk tahminini,
+yıllık brüt/net getiri projeksiyonunu ve 7464 sayılı kanun risk analizini çıkarır.
+"""
+
+import argparse
+import base64
+import csv
+import json
+import math
+import os
+import re
+import urllib.parse
+import urllib.request
+from dataclasses import asdict, dataclass
+from typing import Dict, List, Optional, Tuple
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data", "airbnb")
+os.makedirs(DATA_DIR, exist_ok=True)
+
+USER_AGENT = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) "
+    "Chrome/124.0.0.0 Safari/537.36"
+)
+
+@dataclass
+class AirbnbIlani:
+    id: str
+    baslik: str
+    alt_baslik: str
+    oda_tipi: str
+    gecelik_fiyat_tl: float
+    puan: Optional[float]
+    yorum_sayisi: int
+    enlem: float
+    boylam: float
+    url: str
+    rozetler: List[str]
+    resim_url: Optional[str]
+
+@dataclass
+class BolgeselAirbnbPotansiyeli:
+    bolge_adi: str
+    toplam_ilan_sayisi: int
+    medyan_gecelik_tl: float
+    min_gecelik_tl: float
+    max_gecelik_tl: float
+    fiyat_bandi_25_75_tl: Tuple[float, float]
+    ortalama_puan: float
+    oda_tipi_dagilimi: Dict[str, int]
+    tahmini_yillik_doluluk_yuzde: float
+    tahmini_yillik_brut_gelir_tl: float
+    tahmini_yillik_net_gelir_tl: float
+    klasik_kira_tl: Optional[float]
+    airbnb_prim_carpani: Optional[float]
+    yasal_7464_risk_durumu: str
+
+class AirbnbToplayici:
+    """Airbnb arama motorunu doğrudan Python üzerinden sorgulayan toplayıcı sınıf."""
+
+    def __init__(self):
+        self.headers = {
+            "User-Agent": USER_AGENT,
+            "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache"
+        }
+
+    def _fetch_html(self, url: str) -> str:
+        req = urllib.request.Request(url, headers=self.headers)
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return resp.read().decode("utf-8")
+
+    def _parse_id(self, raw_id: str) -> str:
+        if not raw_id:
+            return ""
+        if raw_id.startswith("RGVt"):
+            try:
+                decoded = base64.b64decode(raw_id).decode("utf-8")
+                return decoded.split(":")[-1]
+            except Exception:
+                pass
+        if ":" in raw_id:
+            return raw_id.split(":")[-1]
+        return raw_id
+
+    def _extract_nightly_price(self, p_obj: dict) -> Optional[float]:
+        """Airbnb fiyat bloğundan net gecelik fiyatı çıkarır."""
+        if not p_obj:
+            return None
+
+        # 1. '5 gece x ₺11.437,56' açıklamasından net birim gecelik fiyat
+        expl = p_obj.get("explanationData") or {}
+        for grp in expl.get("priceDetails", []):
+            for item in grp.get("items", []):
+                desc = item.get("description", "")
+                match = re.search(r"\b(\d+)\s*gece\s*x\s*₺?([\d\.,]+)", desc)
+                if match:
+                    gecelik_str = match.group(2).replace(".", "").replace(",", ".")
+                    try:
+                        return float(gecelik_str)
+                    except ValueError:
+                        pass
+
+        # 2. primaryLine içinden indirimli veya standart fiyat
+        primary = p_obj.get("primaryLine") or {}
+        p_str = primary.get("discountedPrice") or primary.get("price")
+        qualifier = primary.get("qualifier", "")
+        if p_str:
+            nums = re.sub(r"[^\d]", "", p_str)
+            if nums:
+                total = float(nums)
+                q_match = re.search(r"(\d+)\s*gece", qualifier)
+                if q_match:
+                    nights = int(q_match.group(1))
+                    if nights > 0:
+                        return total / nights
+                return total
+        return None
+
+    def _parse_search_results(self, html: str) -> List[AirbnbIlani]:
+        """Airbnb HTML içerisindeki niobeClientData JSON ağacından ilanları ayrıştırır."""
+        scripts = re.findall(r'<script[^>]*type=[\"\']application/json[\"\'][^>]*>(.*?)</script>', html)
+        ilanlar: List[AirbnbIlani] = []
+
+        for s in scripts:
+            if "niobeClientData" not in s:
+                continue
+            try:
+                data = json.loads(s)
+                # staysSearch sonuç bloğunu bul
+                results = None
+                try:
+                    results = data["niobeClientData"][0][1]["data"]["presentation"]["staysSearch"]["results"]["searchResults"]
+                except (KeyError, IndexError, TypeError):
+                    pass
+
+                if not results:
+                    continue
+
+                for r in results:
+                    # Başlık & Alt Başlık
+                    title = (
+                        r.get("title")
+                        or (r.get("nameLocalized") or {}).get("localizedStringWithTranslationPreference")
+                        or "İsimsiz İlan"
+                    )
+                    sub = r.get("subtitle") or ""
+
+                    # Fiyat
+                    p_obj = r.get("structuredDisplayPrice")
+                    nightly = self._extract_nightly_price(p_obj)
+                    if not nightly or nightly <= 0:
+                        continue
+
+                    # Konum
+                    loc_obj = (r.get("demandStayListing") or {}).get("location", {}).get("coordinate", {})
+                    lat = loc_obj.get("latitude")
+                    lon = loc_obj.get("longitude")
+                    if lat is None or lon is None:
+                        continue
+
+                    # ID ve Link
+                    raw_id = (r.get("demandStayListing") or {}).get("id", "")
+                    clean_id = self._parse_id(raw_id)
+                    url = f"https://www.airbnb.com.tr/rooms/{clean_id}" if clean_id else ""
+
+                    # Puan & Değerlendirme
+                    rating_val = None
+                    reviews_cnt = 0
+                    rating_label = r.get("avgRatingA11yLabel") or ""
+                    # Örn: '5 üzerinden ortalama 5,0 puan, 47 değerlendirme'
+                    m_rate = re.search(r"(\d+[\.,]\d+)\s*puan", rating_label)
+                    if m_rate:
+                        rating_val = float(m_rate.group(1).replace(",", "."))
+                    m_cnt = re.search(r"(\d+)\s*değerlendirme", rating_label)
+                    if m_cnt:
+                        reviews_cnt = int(m_cnt.group(1))
+
+                    # Oda Tipi Tahmini
+                    oda_tipi = "Daire / Ev"
+                    if "villa" in title.lower() or "villa" in sub.lower():
+                        oda_tipi = "Müstakil Villa"
+                    elif "oda" in title.lower() or "oda" in sub.lower() or "room" in title.lower():
+                        oda_tipi = "Özel Oda"
+                    elif "daire" in title.lower() or "apart" in title.lower():
+                        oda_tipi = "Daire"
+                    elif "kır evi" in title.lower() or "bungalov" in title.lower() or "taş ev" in title.lower():
+                        oda_tipi = "Kır Evi / Bungalov"
+
+                    # Rozetler
+                    badges = [b.get("localKey") for b in r.get("badges", []) if b.get("localKey")]
+
+                    # Resim
+                    pic_id = (r.get("contextualPictures") or [{}])[0].get("id")
+                    img_url = f"https://a0.muscache.com/im/pictures/{pic_id}.jpg" if pic_id else None
+
+                    ilanlar.append(AirbnbIlani(
+                        id=clean_id,
+                        baslik=title,
+                        alt_baslik=sub,
+                        oda_tipi=oda_tipi,
+                        gecelik_fiyat_tl=round(nightly),
+                        puan=rating_val,
+                        yorum_sayisi=reviews_cnt,
+                        enlem=lat,
+                        boylam=lon,
+                        url=url,
+                        rozetler=badges,
+                        resim_url=img_url
+                    ))
+                break
+            except Exception:
+                continue
+
+        return ilanlar
+
+    def sorgula_bolge(self, bolge_adi: str) -> List[AirbnbIlani]:
+        """Şehir veya ilçe/bölge adına göre Airbnb'den aktif ilanları çeker."""
+        encoded = urllib.parse.quote(bolge_adi)
+        url = f"https://www.airbnb.com.tr/s/homes?query={encoded}"
+        print(f"[*] Airbnb araması yapılıyor: {bolge_adi} -> {url}")
+        html = self._fetch_html(url)
+        ilanlar = self._parse_search_results(html)
+        print(f"[+] '{bolge_adi}' için {len(ilanlar)} aktif ilan başarıyla çekildi.")
+        return ilanlar
+
+    def sorgula_koordinat(self, lat: float, lon: float, yaricap_km: float = 3.0) -> List[AirbnbIlani]:
+        """Verilen enlem/boylam ve yarıçap (km) çevresindeki kutuyu (bbox) Airbnb'de arar."""
+        # 1 derece enlem ~ 111 km
+        delta_lat = yaricap_km / 111.0
+        # 1 derece boylam ~ 111 * cos(lat) km
+        delta_lon = yaricap_km / (111.0 * math.cos(math.radians(lat)))
+
+        ne_lat = round(lat + delta_lat, 5)
+        ne_lng = round(lon + delta_lon, 5)
+        sw_lat = round(lat - delta_lat, 5)
+        sw_lng = round(lon - delta_lon, 5)
+
+        url = (
+            f"https://www.airbnb.com.tr/s/homes?"
+            f"ne_lat={ne_lat}&ne_lng={ne_lng}&sw_lat={sw_lat}&sw_lng={sw_lng}&search_by_map=true"
+        )
+        print(f"[*] Koordinat çevresi ({yaricap_km} km) kutusu sorgulanıyor: [{sw_lat}, {sw_lng}] - [{ne_lat}, {ne_lng}]")
+        html = self._fetch_html(url)
+        ilanlar = self._parse_search_results(html)
+        print(f"[+] Belirtilen koordinat yarıçapında {len(ilanlar)} aktif ilan bulundu.")
+        return ilanlar
+
+    def potansiyel_analizi_yap(
+        self,
+        ilanlar: List[AirbnbIlani],
+        bolge_adi: str = "Bölge",
+        klasik_aylik_kira_tl: Optional[float] = None
+    ) -> BolgeselAirbnbPotansiyeli:
+        """Toplanan ilanlar üzerinden getiri, doluluk, net nakit akışı ve 7464 uyumunu analiz eder."""
+        if not ilanlar:
+            return BolgeselAirbnbPotansiyeli(
+                bolge_adi=bolge_adi,
+                toplam_ilan_sayisi=0,
+                medyan_gecelik_tl=0.0,
+                min_gecelik_tl=0.0,
+                max_gecelik_tl=0.0,
+                fiyat_bandi_25_75_tl=(0.0, 0.0),
+                ortalama_puan=0.0,
+                oda_tipi_dagilimi={},
+                tahmini_yillik_doluluk_yuzde=0.0,
+                tahmini_yillik_brut_gelir_tl=0.0,
+                tahmini_yillik_net_gelir_tl=0.0,
+                klasik_kira_tl=klasik_aylik_kira_tl,
+                airbnb_prim_carpani=None,
+                yasal_7464_risk_durumu="Veri yok"
+            )
+
+        fiyatlar = sorted([i.gecelik_fiyat_tl for i in ilanlar])
+        medyan_fiyat = fiyatlar[len(fiyatlar) // 2]
+        min_fiyat = fiyatlar[0]
+        max_fiyat = fiyatlar[-1]
+        p25 = fiyatlar[int(len(fiyatlar) * 0.25)]
+        p75 = fiyatlar[int(len(fiyatlar) * 0.75)]
+
+        puanlar = [i.puan for i in ilanlar if i.puan is not None]
+        ort_puan = round(sum(puanlar) / len(puanlar), 2) if puanlar else 4.85
+
+        oda_dagilimi = {}
+        for i in ilanlar:
+            oda_dagilimi[i.oda_tipi] = oda_dagilimi.get(i.oda_tipi, 0) + 1
+
+        # Türkiye turizm ve şehir ortalamalarına göre sezonsal doluluk projeksiyonu
+        # Kıyı bölgeleri (Muğla, Antalya, İzmir vb.) yıllık ortalama %55 doluluk (Yazın %85, Kışın %30)
+        # Metropoller (İstanbul vb.) yıllık ortalama %68 doluluk
+        is_coastal = any(x in bolge_adi.lower() for x in ["bodrum", "marmaris", "kaş", "datça", "çeşme", "fethiye", "antalya"])
+        tahmini_doluluk = 0.55 if is_coastal else 0.65
+        kiralanan_gun = 365 * tahmini_doluluk
+
+        # Brüt Yıllık Gelir
+        brut_gelir = medyan_fiyat * kiralanan_gun
+
+        # Net Gelir Hesabı:
+        # - Platform Komisyonu (%15)
+        # - Temizlik ve Operasyon (%12)
+        # - Faturalar / Aidat (%10)
+        # - %2 Konaklama Vergisi + Gelir Vergisi/Stopaj (%18)
+        # Toplam gider ~ %55, Kalan Net ~ %45
+        net_gelir = brut_gelir * (1.0 - 0.15 - 0.12 - 0.10 - 0.20)
+
+        # Klasik kira ile karşılaştırma
+        prim_carpani = None
+        if klasik_aylik_kira_tl and klasik_aylik_kira_tl > 0:
+            yillik_klasik = klasik_aylik_kira_tl * 12
+            prim_carpani = round(net_gelir / yillik_klasik, 2)
+
+        # 7464 Sayılı Kanun Uyarısı
+        villa_orani = oda_dagilimi.get("Müstakil Villa", 0) / len(ilanlar)
+        if villa_orani >= 0.4:
+            yasal_risk = "DÜŞÜK RİSK: Bölgede müstakil villa/tek tapu yoğunlukta; 7464 izin belgesi alma şansı yüksektir."
+        else:
+            yasal_risk = "YÜKSEK RİSK: Bölgede apartman dairesi yoğunlukta; 7464 gereği bina maliklerinin %100 oybirliği şarttır."
+
+        return BolgeselAirbnbPotansiyeli(
+            bolge_adi=bolge_adi,
+            toplam_ilan_sayisi=len(ilanlar),
+            medyan_gecelik_tl=round(medyan_fiyat),
+            min_gecelik_tl=round(min_fiyat),
+            max_gecelik_tl=round(max_fiyat),
+            fiyat_bandi_25_75_tl=(round(p25), round(p75)),
+            ortalama_puan=ort_puan,
+            oda_tipi_dagilimi=oda_dagilimi,
+            tahmini_yillik_doluluk_yuzde=round(tahmini_doluluk * 100, 1),
+            tahmini_yillik_brut_gelir_tl=round(brut_gelir),
+            tahmini_yillik_net_gelir_tl=round(net_gelir),
+            klasik_kira_tl=klasik_aylik_kira_tl,
+            airbnb_prim_carpani=prim_carpani,
+            yasal_7464_risk_durumu=yasal_risk
+        )
+
+    def export_csv(self, ilanlar: List[AirbnbIlani], dosya_adi: str) -> str:
+        filepath = os.path.join(DATA_DIR, f"{dosya_adi}.csv")
+        with open(filepath, "w", encoding="utf-8", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                "id", "baslik", "alt_baslik", "oda_tipi", "gecelik_fiyat_tl",
+                "puan", "yorum_sayisi", "enlem", "boylam", "url", "resim_url"
+            ])
+            for i in ilanlar:
+                writer.writerow([
+                    i.id, i.baslik, i.alt_baslik, i.oda_tipi, i.gecelik_fiyat_tl,
+                    i.puan, i.yorum_sayisi, i.enlem, i.boylam, i.url, i.resim_url
+                ])
+        print(f"[+] CSV kaydedildi: {filepath}")
+        return filepath
+
+    def export_geojson(self, ilanlar: List[AirbnbIlani], dosya_adi: str) -> str:
+        filepath = os.path.join(DATA_DIR, f"{dosya_adi}.geojson")
+        features = []
+        for i in ilanlar:
+            features.append({
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [i.boylam, i.enlem]
+                },
+                "properties": {
+                    "katman": "AIRBNB_ILANI",
+                    "id": i.id,
+                    "ad": i.baslik,
+                    "alt_tur": i.oda_tipi,
+                    "fiyat_tl": i.gecelik_fiyat_tl,
+                    "puan": i.puan,
+                    "yorum": i.yorum_sayisi,
+                    "url": i.url
+                }
+            })
+        data = {
+            "type": "FeatureCollection",
+            "features": features
+        }
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        print(f"[+] GeoJSON kaydedildi: {filepath}")
+        return filepath
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Doğrudan Python Airbnb Pazar & Potansiyel Toplayıcı")
+    parser.add_argument("--bolge", type=str, default="Bodrum, Muğla", help="Arama yapılacak bölge/şehir adı")
+    parser.add_argument("--lat", type=float, help="Merkez enlem koordinatı")
+    parser.add_argument("--lon", type=float, help="Merkez boylam koordinatı")
+    parser.add_argument("--yaricap", type=float, default=3.0, help="Koordinat aramasında yarıçap (km)")
+    parser.add_argument("--klasik-kira", type=float, help="Bölgedeki ortalama aylık klasik kira (TL)")
+    parser.add_argument("--export", action="store_true", help="Sonuçları CSV ve GeoJSON olarak dışa aktar")
+
+    args = parser.parse_args()
+    toplayici = AirbnbToplayici()
+
+    if args.lat is not None and args.lon is not None:
+        bolge_adi = f"Koordinat_{args.lat:.4f}_{args.lon:.4f}"
+        ilanlar = toplayici.sorgula_koordinat(args.lat, args.lon, args.yaricap)
+    else:
+        bolge_adi = args.bolge
+        ilanlar = toplayici.sorgula_bolge(args.bolge)
+
+    analiz = toplayici.potansiyel_analizi_yap(
+        ilanlar,
+        bolge_adi=bolge_adi,
+        klasik_aylik_kira_tl=args.klasik_kira
+    )
+
+    print("\n" + "=" * 65)
+    print(f"  AIRBNB PAZAR & KISA DÖNEM GETİRİ ANALİZİ: {bolge_adi}")
+    print("=" * 65)
+    print(f"• Aktif İlan Sayısı       : {analiz.toplam_ilan_sayisi} adet")
+    print(f"• Medyan Gecelik Fiyat    : {analiz.medyan_gecelik_tl:,.0f} TL / gece")
+    print(f"• Gecelik Fiyat Bandı     : {analiz.fiyat_bandi_25_75_tl[0]:,.0f} TL - {analiz.fiyat_bandi_25_75_tl[1]:,.0f} TL")
+    print(f"• Min / Max Fiyat         : {analiz.min_gecelik_tl:,.0f} TL - {analiz.max_gecelik_tl:,.0f} TL")
+    print(f"• Ortalama Değerlendirme  : {analiz.ortalama_puan} / 5.0")
+    print(f"• Oda Tipi Dağılımı       : {analiz.oda_tipi_dagilimi}")
+    print(f"• Tahmini Yıllık Doluluk  : %{analiz.tahmini_yillik_doluluk_yuzde}")
+    print(f"• Tahmini Yıllık Brüt     : {analiz.tahmini_yillik_brut_gelir_tl:,.0f} TL")
+    print(f"• Tahmini Yıllık Net      : {analiz.tahmini_yillik_net_gelir_tl:,.0f} TL (Vergi/Giderler düşülmüş)")
+
+    if analiz.klasik_kira_tl:
+        print(f"• Klasik Yıllık Kira      : {analiz.klasik_kira_tl * 12:,.0f} TL")
+        print(f"• Airbnb Prim Çarpanı     : {analiz.airbnb_prim_carpani}x (Net Airbnb / Klasik Kira)")
+        if analiz.airbnb_prim_carpani >= 1.3:
+            print("  -> KARAR: Airbnb yüksek prim üretiyor, operasyona değer.")
+        else:
+            print("  -> KARAR: Klasik kiralama operasyonel zahmet ve risk açısından daha avantajlı.")
+
+    print(f"\n[Yasal Uyarı / 7464]: {analiz.yasal_7464_risk_durumu}")
+    print("=" * 65)
+
+    if args.export and ilanlar:
+        safe_name = re.sub(r"[^\w\-_]", "_", bolge_adi.lower())
+        toplayici.export_csv(ilanlar, safe_name)
+        toplayici.export_geojson(ilanlar, safe_name)
+
+
+if __name__ == "__main__":
+    main()

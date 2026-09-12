@@ -19,4 +19,8 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 collector/state_*.json
+collector/cache/
+collector/sektor_*.geojson
+
+
 
