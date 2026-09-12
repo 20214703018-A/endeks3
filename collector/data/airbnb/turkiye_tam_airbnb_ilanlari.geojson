@@ -1,0 +1,7265 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          2.8635,
+          49.9137
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1763909861825593664",
+        "ad": "Ev - Flaucourt, Fransa",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5069,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1763909861825593664"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.7624,
+          41.0593
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1728473516469160505",
+        "ad": "Bungalov - Perşembe, Türkiye",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 13300,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1728473516469160505"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          9.44899,
+          53.40641
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1755016804864404791",
+        "ad": "Ahlerstedt, Almanya bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2140,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1755016804864404791"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          36.1384,
+          41.4524
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1747260322242854761",
+        "ad": "Bungalov - Ondokuzmayıs, Türkiye",
+        "alt_tur": "Kır Evi / Bungalov",
+        "fiyat_tl": 15200,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1747260322242854761"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.9403,
+          18.5526
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1594261766918845899",
+        "ad": "Daire - Pune, Hindistan",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2449,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1594261766918845899"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -69.8624,
+          18.6202
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1741662804613796406",
+        "ad": "Ev - Santo Domingo, Dominik Cumhuriyeti",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 9961,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1741662804613796406"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.8655,
+          26.7893
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1760664002662467650",
+        "ad": "Daire - Jaipur, Hindistan",
+        "alt_tur": "Daire",
+        "fiyat_tl": 848,
+        "puan": 5.0,
+        "yorum": 6,
+        "url": "https://www.airbnb.com.tr/rooms/1760664002662467650"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.69547,
+          39.32107
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "43520934",
+        "ad": "Villa - Ayvalık",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 6608,
+        "puan": 4.87,
+        "yorum": 315,
+        "url": "https://www.airbnb.com.tr/rooms/43520934"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6605,
+          39.3313
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "672358453682036791",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 8420,
+        "puan": 4.88,
+        "yorum": 126,
+        "url": "https://www.airbnb.com.tr/rooms/672358453682036791"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6938,
+          39.3139
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1610296544501858092",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 8272,
+        "puan": 4.94,
+        "yorum": 53,
+        "url": "https://www.airbnb.com.tr/rooms/1610296544501858092"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.659,
+          39.3351
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1690573649678933173",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 12317,
+        "puan": 4.77,
+        "yorum": 13,
+        "url": "https://www.airbnb.com.tr/rooms/1690573649678933173"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6973,
+          39.32
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1503559904301517455",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6432,
+        "puan": 4.97,
+        "yorum": 32,
+        "url": "https://www.airbnb.com.tr/rooms/1503559904301517455"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.660100257067658,
+          39.33895890757323
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1472361762476150301",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 10525,
+        "puan": 4.93,
+        "yorum": 15,
+        "url": "https://www.airbnb.com.tr/rooms/1472361762476150301"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6595,
+          39.3422
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1392180299998469252",
+        "ad": "Villa - Ayvalık",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 9474,
+        "puan": 4.97,
+        "yorum": 39,
+        "url": "https://www.airbnb.com.tr/rooms/1392180299998469252"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.68,
+          39.3339
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "933255450913059473",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6532,
+        "puan": 5.0,
+        "yorum": 72,
+        "url": "https://www.airbnb.com.tr/rooms/933255450913059473"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6591,
+          39.3343
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "52552482",
+        "ad": "Misafir evi - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 10500,
+        "puan": 4.85,
+        "yorum": 93,
+        "url": "https://www.airbnb.com.tr/rooms/52552482"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.69237,
+          39.31543
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "7580815",
+        "ad": "Sıra ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 9227,
+        "puan": 4.96,
+        "yorum": 112,
+        "url": "https://www.airbnb.com.tr/rooms/7580815"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.693146340813342,
+          39.32242634102487
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1690818825582856018",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 8273,
+        "puan": 5.0,
+        "yorum": 22,
+        "url": "https://www.airbnb.com.tr/rooms/1690818825582856018"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.69679,
+          39.32402
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1211096917223750413",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5484,
+        "puan": 4.72,
+        "yorum": 39,
+        "url": "https://www.airbnb.com.tr/rooms/1211096917223750413"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.65877,
+          39.33358
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1245721746706952009",
+        "ad": "Misafir evi - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 9000,
+        "puan": 4.86,
+        "yorum": 42,
+        "url": "https://www.airbnb.com.tr/rooms/1245721746706952009"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6961,
+          39.3208
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1258474964853784249",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6559,
+        "puan": 4.79,
+        "yorum": 105,
+        "url": "https://www.airbnb.com.tr/rooms/1258474964853784249"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6939,
+          39.3153
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "50544491",
+        "ad": "Sıra ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6700,
+        "puan": 4.91,
+        "yorum": 148,
+        "url": "https://www.airbnb.com.tr/rooms/50544491"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6951,
+          39.3239
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1516753938671208130",
+        "ad": "Misafir evi - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 11400,
+        "puan": 4.88,
+        "yorum": 16,
+        "url": "https://www.airbnb.com.tr/rooms/1516753938671208130"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.694,
+          39.3137
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "13557542",
+        "ad": "Ev - Ayvalık",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6680,
+        "puan": 4.96,
+        "yorum": 56,
+        "url": "https://www.airbnb.com.tr/rooms/13557542"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.68066,
+          39.33439
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1128399522116786202",
+        "ad": "Misafir evi - Ayvalık",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3446,
+        "puan": 4.99,
+        "yorum": 67,
+        "url": "https://www.airbnb.com.tr/rooms/1128399522116786202"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.9969,
+          33.6851
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1767582280633452576",
+        "ad": "Ev - İslamabad, Pakistan",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 9709,
+        "puan": 5.0,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/1767582280633452576"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6526,
+          41.93656
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1403236499896175253",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 10592,
+        "puan": 4.39,
+        "yorum": 57,
+        "url": "https://www.airbnb.com.tr/rooms/1403236499896175253"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6538,
+          41.9376
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "773277395382707715",
+        "ad": "Lake View bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4272,
+        "puan": 4.93,
+        "yorum": 169,
+        "url": "https://www.airbnb.com.tr/rooms/773277395382707715"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.65372,
+          41.93731
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "26029969",
+        "ad": "Ev - Lake View",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 34858,
+        "puan": 4.99,
+        "yorum": 154,
+        "url": "https://www.airbnb.com.tr/rooms/26029969"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.65057,
+          41.93779
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1403334028064006586",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 9806,
+        "puan": 4.81,
+        "yorum": 47,
+        "url": "https://www.airbnb.com.tr/rooms/1403334028064006586"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6538,
+          41.9376
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "773214911162646829",
+        "ad": "Lake View bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4709,
+        "puan": 4.91,
+        "yorum": 167,
+        "url": "https://www.airbnb.com.tr/rooms/773214911162646829"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.65334,
+          41.93799
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "826845999960303927",
+        "ad": "Ev - Lake View",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 23126,
+        "puan": 4.95,
+        "yorum": 107,
+        "url": "https://www.airbnb.com.tr/rooms/826845999960303927"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.65081,
+          41.93733
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1588790062206481323",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6340,
+        "puan": 4.5,
+        "yorum": 16,
+        "url": "https://www.airbnb.com.tr/rooms/1588790062206481323"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6531,
+          41.9351
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1719693079197371118",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6573,
+        "puan": 4.91,
+        "yorum": 11,
+        "url": "https://www.airbnb.com.tr/rooms/1719693079197371118"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6529,
+          41.9383
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "6057908",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Daire",
+        "fiyat_tl": 10417,
+        "puan": 4.84,
+        "yorum": 518,
+        "url": "https://www.airbnb.com.tr/rooms/6057908"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.6515,
+          41.9392
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1424129600477029929",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Daire",
+        "fiyat_tl": 14806,
+        "puan": 4.8,
+        "yorum": 35,
+        "url": "https://www.airbnb.com.tr/rooms/1424129600477029929"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.648,
+          41.9357
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "773908539670296526",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 10783,
+        "puan": 4.86,
+        "yorum": 134,
+        "url": "https://www.airbnb.com.tr/rooms/773908539670296526"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.65192,
+          41.93398
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1403149280839446315",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 12427,
+        "puan": 4.7,
+        "yorum": 60,
+        "url": "https://www.airbnb.com.tr/rooms/1403149280839446315"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.65736,
+          41.93726
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "938609141427706305",
+        "ad": "Ev - Lake View",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 25524,
+        "puan": 4.95,
+        "yorum": 130,
+        "url": "https://www.airbnb.com.tr/rooms/938609141427706305"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.64911,
+          41.93791
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1226981901257520790",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Daire",
+        "fiyat_tl": 14311,
+        "puan": 4.94,
+        "yorum": 94,
+        "url": "https://www.airbnb.com.tr/rooms/1226981901257520790"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.65388,
+          41.93527
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1403228554052864782",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6515,
+        "puan": 4.68,
+        "yorum": 53,
+        "url": "https://www.airbnb.com.tr/rooms/1403228554052864782"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.64664,
+          41.93583
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "9165281",
+        "ad": "Site içi konut - Lake View",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 23223,
+        "puan": 4.96,
+        "yorum": 161,
+        "url": "https://www.airbnb.com.tr/rooms/9165281"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.64743,
+          41.93684
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "25015520",
+        "ad": "Site içi konut - Lake View",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 7243,
+        "puan": 4.99,
+        "yorum": 719,
+        "url": "https://www.airbnb.com.tr/rooms/25015520"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.65182,
+          41.93409
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1401898273765789928",
+        "ad": "Daire - Lake View",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5330,
+        "puan": 4.78,
+        "yorum": 63,
+        "url": "https://www.airbnb.com.tr/rooms/1401898273765789928"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.95746,
+          41.00606
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1575985930816805726",
+        "ad": "Daire - Fatih",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2924,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1575985930816805726"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.38864705635928,
+          28.572039992294375
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1620742477276072986",
+        "ad": "Noida, Hindistan bölgesinde konaklama yeri",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 1041,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1620742477276072986"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53774,
+          37.77817
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1167909259694595604",
+        "ad": "Site içi konut - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2500,
+        "puan": 4.75,
+        "yorum": 59,
+        "url": "https://www.airbnb.com.tr/rooms/1167909259694595604"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53912,
+          37.77806
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1167293237416842158",
+        "ad": "Site içi konut - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 3030,
+        "puan": 4.79,
+        "yorum": 75,
+        "url": "https://www.airbnb.com.tr/rooms/1167293237416842158"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.55,
+          37.7757
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1421208039060521020",
+        "ad": "Site içi konut - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2724,
+        "puan": 4.79,
+        "yorum": 14,
+        "url": "https://www.airbnb.com.tr/rooms/1421208039060521020"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5499,
+          37.7757
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1421195098431892997",
+        "ad": "Site içi konut - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2724,
+        "puan": 5.0,
+        "yorum": 8,
+        "url": "https://www.airbnb.com.tr/rooms/1421195098431892997"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5543,
+          37.7655
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1621804522241457730",
+        "ad": "Isparta bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2942,
+        "puan": 5.0,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1621804522241457730"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53713,
+          37.78002
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "949862442928407474",
+        "ad": "Site içi konut - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2750,
+        "puan": 4.87,
+        "yorum": 93,
+        "url": "https://www.airbnb.com.tr/rooms/949862442928407474"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.28558910142674,
+          37.71847169493459
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1649614266773261481",
+        "ad": "Ev - Burdur",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 3300,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1649614266773261481"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.2904,
+          37.7228
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1474852237146821402",
+        "ad": "Otel - Burdur",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4027,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1474852237146821402"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.54916,
+          37.78505
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "46385658",
+        "ad": "Butik otel - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 4946,
+        "puan": 4.82,
+        "yorum": 28,
+        "url": "https://www.airbnb.com.tr/rooms/46385658"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.28999,
+          37.72213
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1474865477683105475",
+        "ad": "Otel - Burdur",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6040,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1474865477683105475"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.55437,
+          37.76659
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1692036473526753717",
+        "ad": "Müşterek oda - Isparta",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2385,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1692036473526753717"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5542,
+          37.7655
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1639106327533708214",
+        "ad": "Isparta bölgesinde odalar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4796,
+        "puan": 3.67,
+        "yorum": 6,
+        "url": "https://www.airbnb.com.tr/rooms/1639106327533708214"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.2904,
+          37.7228
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1474693020483378823",
+        "ad": "Butik otel - Burdur",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2072,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1474693020483378823"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53898,
+          37.77999
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "949825051712832863",
+        "ad": "Site içi konut - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2300,
+        "puan": 4.77,
+        "yorum": 87,
+        "url": "https://www.airbnb.com.tr/rooms/949825051712832863"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.538,
+          37.7792
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "949893653778195717",
+        "ad": "Site içi konut - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2346,
+        "puan": 4.8,
+        "yorum": 109,
+        "url": "https://www.airbnb.com.tr/rooms/949893653778195717"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53743,
+          37.77858
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "907263968431747848",
+        "ad": "Site içi konut - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2323,
+        "puan": 4.67,
+        "yorum": 86,
+        "url": "https://www.airbnb.com.tr/rooms/907263968431747848"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.537064478552256,
+          37.77951135374863
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1318938534926248458",
+        "ad": "Site içi konut - Isparta",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2550,
+        "puan": 4.77,
+        "yorum": 44,
+        "url": "https://www.airbnb.com.tr/rooms/1318938534926248458"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5542,
+          37.7655
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1704410212957006238",
+        "ad": "Isparta Merkez bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3202,
+        "puan": 4.67,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1704410212957006238"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.9486,
+          47.0613
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1162995307514259082",
+        "ad": "Olympia bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2767,
+        "puan": 4.93,
+        "yorum": 14,
+        "url": "https://www.airbnb.com.tr/rooms/1162995307514259082"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -39.233,
+          -17.7455
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1756046030761150012",
+        "ad": "Ev - Caravelas, Brezilya",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 1800,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1756046030761150012"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          22.7717,
+          42.9982
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1756568573224980109",
+        "ad": "Ev - Dimitrovgrad, Sırbistan",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 7282,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1756568573224980109"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -7.7891,
+          43.7186
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1752008984366612053",
+        "ad": "Ev - Ortigueira, İspanya",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6364,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1752008984366612053"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.0669,
+          28.3906
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1765731257925170309",
+        "ad": "Daire - Gurugram, Hindistan",
+        "alt_tur": "Daire",
+        "fiyat_tl": 1524,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1765731257925170309"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -87.38506343074577,
+          20.360646266916593
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1727129749636962440",
+        "ad": "Villa - Playa del Carmen, Meksika",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 4474,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1727129749636962440"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1503,
+          38.4259
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "870876647623727018",
+        "ad": "Otel - Konak",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3410,
+        "puan": 4.79,
+        "yorum": 168,
+        "url": "https://www.airbnb.com.tr/rooms/870876647623727018"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.14417,
+          38.42084
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1322948085398128374",
+        "ad": "Müşterek oda - Konak",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 1300,
+        "puan": 4.88,
+        "yorum": 34,
+        "url": "https://www.airbnb.com.tr/rooms/1322948085398128374"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1201,
+          38.4084
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1757779894806142736",
+        "ad": "Daire - Konak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 7200,
+        "puan": 5.0,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/1757779894806142736"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1308,
+          38.4178
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1544989044130747188",
+        "ad": "Ev - Konak",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 4201,
+        "puan": 4.85,
+        "yorum": 33,
+        "url": "https://www.airbnb.com.tr/rooms/1544989044130747188"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1447,
+          38.4391
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1764397217326695977",
+        "ad": "Daire - Alsancak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5180,
+        "puan": 5.0,
+        "yorum": 4,
+        "url": "https://www.airbnb.com.tr/rooms/1764397217326695977"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.124070977533446,
+          38.41538657520752
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "853567266637200637",
+        "ad": "Daire - Konak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4699,
+        "puan": 4.86,
+        "yorum": 146,
+        "url": "https://www.airbnb.com.tr/rooms/853567266637200637"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1342,
+          38.4276
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1742833319019029973",
+        "ad": "Konak bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4910,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1742833319019029973"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.14353,
+          38.43697
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1692647184409090096",
+        "ad": "Daire - Alsancak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3500,
+        "puan": 4.89,
+        "yorum": 9,
+        "url": "https://www.airbnb.com.tr/rooms/1692647184409090096"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.14,
+          38.4251
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1420269311019520985",
+        "ad": "Konak bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 1895,
+        "puan": 4.27,
+        "yorum": 37,
+        "url": "https://www.airbnb.com.tr/rooms/1420269311019520985"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1161,
+          38.408
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1558880250209270194",
+        "ad": "Daire - Konak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4141,
+        "puan": 4.78,
+        "yorum": 72,
+        "url": "https://www.airbnb.com.tr/rooms/1558880250209270194"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1308,
+          38.4178
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1545020818505671448",
+        "ad": "Ev - Konak",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 3334,
+        "puan": 4.79,
+        "yorum": 38,
+        "url": "https://www.airbnb.com.tr/rooms/1545020818505671448"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1419,
+          38.4201
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "926644238998843448",
+        "ad": "Otel - Konak",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 3000,
+        "puan": 4.58,
+        "yorum": 19,
+        "url": "https://www.airbnb.com.tr/rooms/926644238998843448"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1492,
+          38.4265
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1752206417774183262",
+        "ad": "Daire - Konak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2800,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1752206417774183262"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.14451,
+          38.43872
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1084106138072755031",
+        "ad": "Daire - Alsancak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4678,
+        "puan": 4.91,
+        "yorum": 92,
+        "url": "https://www.airbnb.com.tr/rooms/1084106138072755031"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1446,
+          38.4368
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "764902919721986853",
+        "ad": "Daire - Alsancak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3690,
+        "puan": 4.82,
+        "yorum": 354,
+        "url": "https://www.airbnb.com.tr/rooms/764902919721986853"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1645,
+          38.4344
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1765886804265142868",
+        "ad": "Ev - Konak",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6000,
+        "puan": 5.0,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1765886804265142868"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1438,
+          38.4336
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "912122344378544245",
+        "ad": "Daire - Konak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3298,
+        "puan": 4.89,
+        "yorum": 197,
+        "url": "https://www.airbnb.com.tr/rooms/912122344378544245"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.151402196414978,
+          38.42829574251525
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1553545310750264921",
+        "ad": "Daire - Konak",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2565,
+        "puan": 4.48,
+        "yorum": 54,
+        "url": "https://www.airbnb.com.tr/rooms/1553545310750264921"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.97753,
+          40.23102
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1706409944683258780",
+        "ad": "Daire - Nilüfer",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2338,
+        "puan": 5.0,
+        "yorum": 21,
+        "url": "https://www.airbnb.com.tr/rooms/1706409944683258780"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9887,
+          40.2007
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1744969758649859185",
+        "ad": "Daire - Nilüfer",
+        "alt_tur": "Daire",
+        "fiyat_tl": 10864,
+        "puan": 5.0,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1744969758649859185"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.01728,
+          40.20062
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "29604902",
+        "ad": "Daire - Bursa",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2961,
+        "puan": 4.96,
+        "yorum": 185,
+        "url": "https://www.airbnb.com.tr/rooms/29604902"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.01855,
+          40.20058
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "54069339",
+        "ad": "Otel odası - Osmangazi",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2132,
+        "puan": 4.93,
+        "yorum": 99,
+        "url": "https://www.airbnb.com.tr/rooms/54069339"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.07032,
+          40.17802
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "767865136064757456",
+        "ad": "Daire - Yıldırım",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3883,
+        "puan": 4.92,
+        "yorum": 118,
+        "url": "https://www.airbnb.com.tr/rooms/767865136064757456"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.976079882448015,
+          40.18480393773771
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1184796160690453714",
+        "ad": "Ev - Gümüştepe",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 3800,
+        "puan": 4.92,
+        "yorum": 26,
+        "url": "https://www.airbnb.com.tr/rooms/1184796160690453714"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.99562,
+          40.21285
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "50986874",
+        "ad": "Otel odası - Bursa",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4250,
+        "puan": 4.87,
+        "yorum": 23,
+        "url": "https://www.airbnb.com.tr/rooms/50986874"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0079,
+          40.22185
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "652512107329910585",
+        "ad": "Ev - Osmangazi",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 4218,
+        "puan": 4.9,
+        "yorum": 68,
+        "url": "https://www.airbnb.com.tr/rooms/652512107329910585"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.06887,
+          40.18186
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "50975150",
+        "ad": "Daire - Osmangazi",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2658,
+        "puan": 4.86,
+        "yorum": 179,
+        "url": "https://www.airbnb.com.tr/rooms/50975150"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.01603,
+          40.18005
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "48174749",
+        "ad": "Ev - Osmangazi",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5052,
+        "puan": 4.77,
+        "yorum": 197,
+        "url": "https://www.airbnb.com.tr/rooms/48174749"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0712,
+          40.1808
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "47522663",
+        "ad": "Daire - Yıldırım",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4678,
+        "puan": 4.82,
+        "yorum": 317,
+        "url": "https://www.airbnb.com.tr/rooms/47522663"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0608,
+          40.1829
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1576816419599518453",
+        "ad": "Osmangazi bölgesinde odalar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2379,
+        "puan": 5.0,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/1576816419599518453"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.01702337083631,
+          40.205178295691624
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1415432627742826716",
+        "ad": "Ev - Osmangazi",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5450,
+        "puan": 4.89,
+        "yorum": 27,
+        "url": "https://www.airbnb.com.tr/rooms/1415432627742826716"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.975140194911077,
+          40.2081612890981
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1631143337612194380",
+        "ad": "Daire - Nilüfer",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3553,
+        "puan": 4.44,
+        "yorum": 18,
+        "url": "https://www.airbnb.com.tr/rooms/1631143337612194380"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.99232119793536,
+          40.20643599644682
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1681413536273908607",
+        "ad": "Nilüfer bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3680,
+        "puan": 4.71,
+        "yorum": 7,
+        "url": "https://www.airbnb.com.tr/rooms/1681413536273908607"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.074,
+          40.1825
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "865745324220544788",
+        "ad": "Daire - Yıldırım",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3097,
+        "puan": 4.76,
+        "yorum": 90,
+        "url": "https://www.airbnb.com.tr/rooms/865745324220544788"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0571,
+          40.1844
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "890422598428064549",
+        "ad": "Ev - Osmangazi",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6913,
+        "puan": 4.91,
+        "yorum": 115,
+        "url": "https://www.airbnb.com.tr/rooms/890422598428064549"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0711,
+          40.1792
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1591904535261178656",
+        "ad": "Daire - Yıldırım",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5097,
+        "puan": 4.96,
+        "yorum": 25,
+        "url": "https://www.airbnb.com.tr/rooms/1591904535261178656"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.4955,
+          40.5031
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "916092535417471832",
+        "ad": "Daire - Marmara",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3080,
+        "puan": 4.82,
+        "yorum": 11,
+        "url": "https://www.airbnb.com.tr/rooms/916092535417471832"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.68965,
+          40.50301
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "926757437024492051",
+        "ad": "Ev - Erdek",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5000,
+        "puan": 4.83,
+        "yorum": 35,
+        "url": "https://www.airbnb.com.tr/rooms/926757437024492051"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6666,
+          40.4074
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1179803911820711108",
+        "ad": "Daire - Gelibolu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 6300,
+        "puan": 4.91,
+        "yorum": 32,
+        "url": "https://www.airbnb.com.tr/rooms/1179803911820711108"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.8293,
+          40.57491
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "703432595763736912",
+        "ad": "Villa - Koruköy",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 6355,
+        "puan": 4.92,
+        "yorum": 37,
+        "url": "https://www.airbnb.com.tr/rooms/703432595763736912"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.7098,
+          40.3741
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1526608631454997804",
+        "ad": "Villa - Çardak",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 6040,
+        "puan": 5.0,
+        "yorum": 13,
+        "url": "https://www.airbnb.com.tr/rooms/1526608631454997804"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.4976,
+          40.5173
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1737870089668660316",
+        "ad": "Daire - Marmara",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2400,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1737870089668660316"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.6898,
+          40.50194
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "924078326585010157",
+        "ad": "Ev - Erdek",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5000,
+        "puan": 4.79,
+        "yorum": 42,
+        "url": "https://www.airbnb.com.tr/rooms/924078326585010157"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.8083,
+          40.5522
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1620225098533813340",
+        "ad": "Ev - Koruköy",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 4000,
+        "puan": 5.0,
+        "yorum": 22,
+        "url": "https://www.airbnb.com.tr/rooms/1620225098533813340"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.67278,
+          40.50592
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1156595993438335614",
+        "ad": "Küçük ev - Güneyli",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 7234,
+        "puan": 4.98,
+        "yorum": 57,
+        "url": "https://www.airbnb.com.tr/rooms/1156595993438335614"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.495989277729258,
+          40.51071256931163
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1400774420533721456",
+        "ad": "Daire - Marmara",
+        "alt_tur": "Daire",
+        "fiyat_tl": 1988,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1400774420533721456"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.5823,
+          40.4742
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1725214890776626635",
+        "ad": "Villa - Harmanlı",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 4887,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1725214890776626635"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.4964,
+          40.5074
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "925458155374631088",
+        "ad": "Butik otel - Avşa Island",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2339,
+        "puan": 4.9,
+        "yorum": 29,
+        "url": "https://www.airbnb.com.tr/rooms/925458155374631088"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.89331,
+          40.39952
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "35400330",
+        "ad": "Ev - Lapseki",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 7051,
+        "puan": 4.86,
+        "yorum": 71,
+        "url": "https://www.airbnb.com.tr/rooms/35400330"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.49795,
+          40.50884
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1694822430385667963",
+        "ad": "Marmara bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 1999,
+        "puan": 5.0,
+        "yorum": 9,
+        "url": "https://www.airbnb.com.tr/rooms/1694822430385667963"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.6669,
+          40.4073
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1223302367413860196",
+        "ad": "Daire - Gelibolu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 10100,
+        "puan": 5.0,
+        "yorum": 28,
+        "url": "https://www.airbnb.com.tr/rooms/1223302367413860196"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.66435,
+          40.41026
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "918213863860184039",
+        "ad": "Ev - Gelibolu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 7379,
+        "puan": 4.88,
+        "yorum": 41,
+        "url": "https://www.airbnb.com.tr/rooms/918213863860184039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.6074,
+          40.4901
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1182045537077783888",
+        "ad": "Daire - Erdek",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5847,
+        "puan": 5.0,
+        "yorum": 6,
+        "url": "https://www.airbnb.com.tr/rooms/1182045537077783888"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.926653886753172,
+          40.39366907070304
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1617369137409155669",
+        "ad": "Ev - Güreci",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5051,
+        "puan": 4.75,
+        "yorum": 4,
+        "url": "https://www.airbnb.com.tr/rooms/1617369137409155669"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -98.4934,
+          19.2378
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1754424829063250914",
+        "ad": "Kulübe - San Felipe Teotlalcingo, Meksika",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 4133,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1754424829063250914"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -111.8666,
+          34.8434
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1761207864783931383",
+        "ad": "Küçük ev - Sedona, Arizona, Amerika Birleşik Devletleri",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6456,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1761207864783931383"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -101.88425,
+          35.05195
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1669000010788439094",
+        "ad": "Çiftlikte konaklama - Amarillo, Teksas, Amerika Birleşik Devletleri",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 13107,
+        "puan": 5.0,
+        "yorum": 6,
+        "url": "https://www.airbnb.com.tr/rooms/1669000010788439094"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -98.8733,
+          30.2118
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1746147166656720452",
+        "ad": "Ev - Fredericksburg, Teksas, Amerika Birleşik Devletleri",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 8058,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1746147166656720452"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.0234,
+          45.5104
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1428517710975250943",
+        "ad": "Ev - Arichat, Kanada",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 8379,
+        "puan": 5.0,
+        "yorum": 8,
+        "url": "https://www.airbnb.com.tr/rooms/1428517710975250943"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.54135668019889,
+          34.6877309626784
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1737535602933760846",
+        "ad": "Kulübe - Ellijay, Georgia, Amerika Birleşik Devletleri",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 13650,
+        "puan": 5.0,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1737535602933760846"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.698,
+          12.9558
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1766520559682258349",
+        "ad": "Daire - Bangalor, Hindistan",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 1117,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1766520559682258349"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.797368567628617,
+          36.76302292938256
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1605748316787295858",
+        "ad": "Ev - Datça",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 11306,
+        "puan": 5.0,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1605748316787295858"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.797,
+          36.7659
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "51558548",
+        "ad": "Çiftlikte konaklama - Datça",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 10306,
+        "puan": 4.94,
+        "yorum": 49,
+        "url": "https://www.airbnb.com.tr/rooms/51558548"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.79539,
+          36.76582
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "45237364",
+        "ad": "Çiftlikte konaklama - Datça",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 9743,
+        "puan": 4.89,
+        "yorum": 37,
+        "url": "https://www.airbnb.com.tr/rooms/45237364"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.8,
+          36.7618
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1729215263695246996",
+        "ad": "Daire - Datça",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4500,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1729215263695246996"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.7996,
+          36.7615
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "911544080949264171",
+        "ad": "Ev - Datça",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 11694,
+        "puan": 4.8,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/911544080949264171"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.79863,
+          36.76651
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "49387123",
+        "ad": "Daire - Datça",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3224,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/49387123"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.79048730009653,
+          36.7594280021602
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1379724541255869742",
+        "ad": "Daire - Karaincir Plaji",
+        "alt_tur": "Daire",
+        "fiyat_tl": 6432,
+        "puan": 5.0,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/1379724541255869742"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.7974,
+          36.7658
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1769426544226369580",
+        "ad": "Daire - Datça",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2761,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1769426544226369580"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.79625,
+          36.76563
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "952763359374497320",
+        "ad": "Ev - Karaincir Plaji",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 7016,
+        "puan": 4.71,
+        "yorum": 7,
+        "url": "https://www.airbnb.com.tr/rooms/952763359374497320"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.7923,
+          36.7641
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "706181134786902969",
+        "ad": "Daire - Datça",
+        "alt_tur": "Daire",
+        "fiyat_tl": 8609,
+        "puan": 4.95,
+        "yorum": 20,
+        "url": "https://www.airbnb.com.tr/rooms/706181134786902969"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.77572,
+          36.76597
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1224563541986974845",
+        "ad": "Otel - Datça",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4737,
+        "puan": 4.75,
+        "yorum": 12,
+        "url": "https://www.airbnb.com.tr/rooms/1224563541986974845"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.7756,
+          36.7632
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "43654904",
+        "ad": "Otel odası - Kızlan",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 7106,
+        "puan": 4.94,
+        "yorum": 36,
+        "url": "https://www.airbnb.com.tr/rooms/43654904"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.7995,
+          36.7626
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "13135946",
+        "ad": "Villa - Datça",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 7250,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/13135946"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.7745,
+          36.7643
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1481017677438673474",
+        "ad": "Apart otel - Datça",
+        "alt_tur": "Daire",
+        "fiyat_tl": 7106,
+        "puan": 4.71,
+        "yorum": 7,
+        "url": "https://www.airbnb.com.tr/rooms/1481017677438673474"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.81527218039474,
+          36.778710889189576
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1367637767002514875",
+        "ad": "Villa - Emecik",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 8654,
+        "puan": 5.0,
+        "yorum": 6,
+        "url": "https://www.airbnb.com.tr/rooms/1367637767002514875"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.8131,
+          36.7748
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1447002812368441001",
+        "ad": "Ev - Emecik",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6623,
+        "puan": 4.77,
+        "yorum": 43,
+        "url": "https://www.airbnb.com.tr/rooms/1447002812368441001"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.79679,
+          36.76149
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1762273057742460659",
+        "ad": "Datça bölgesinde oda",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 9000,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1762273057742460659"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.8,
+          36.7618
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1729190027891376619",
+        "ad": "Daire - Datça",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4500,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1729190027891376619"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1417,
+          36.6272
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1145036851858817957",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4645,
+        "puan": 4.83,
+        "yorum": 18,
+        "url": "https://www.airbnb.com.tr/rooms/1145036851858817957"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.15,
+          36.6183
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "614233694316183318",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6900,
+        "puan": 4.94,
+        "yorum": 251,
+        "url": "https://www.airbnb.com.tr/rooms/614233694316183318"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1306,
+          36.6542
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1148573226133040026",
+        "ad": "Villa - Fethiye",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 8110,
+        "puan": 5.0,
+        "yorum": 22,
+        "url": "https://www.airbnb.com.tr/rooms/1148573226133040026"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.14543,
+          36.62737
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1178320773403392284",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Daire",
+        "fiyat_tl": 7040,
+        "puan": 5.0,
+        "yorum": 31,
+        "url": "https://www.airbnb.com.tr/rooms/1178320773403392284"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1422,
+          36.6303
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1387136670388845601",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5262,
+        "puan": 4.83,
+        "yorum": 58,
+        "url": "https://www.airbnb.com.tr/rooms/1387136670388845601"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1499,
+          36.6181
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "914455775677868560",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5520,
+        "puan": 4.91,
+        "yorum": 69,
+        "url": "https://www.airbnb.com.tr/rooms/914455775677868560"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1142,
+          36.6692
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1713775545930395685",
+        "ad": "Ev - Fethiye",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 10971,
+        "puan": 5.0,
+        "yorum": 6,
+        "url": "https://www.airbnb.com.tr/rooms/1713775545930395685"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.15599,
+          36.65459
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1177457371044384447",
+        "ad": "Ev - Fethiye",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 9086,
+        "puan": 4.95,
+        "yorum": 37,
+        "url": "https://www.airbnb.com.tr/rooms/1177457371044384447"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.17303,
+          36.66457
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1170756731821702223",
+        "ad": "Villa - Fethiye",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 5392,
+        "puan": 4.88,
+        "yorum": 95,
+        "url": "https://www.airbnb.com.tr/rooms/1170756731821702223"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.18744366101357,
+          36.63945829617259
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "914205222680874584",
+        "ad": "Ev - Fethiye",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 6000,
+        "puan": 4.93,
+        "yorum": 29,
+        "url": "https://www.airbnb.com.tr/rooms/914205222680874584"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1237,
+          36.6324
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1461334694075553928",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5913,
+        "puan": 5.0,
+        "yorum": 19,
+        "url": "https://www.airbnb.com.tr/rooms/1461334694075553928"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1153,
+          36.6241
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1002923067934305540",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 7749,
+        "puan": 4.97,
+        "yorum": 69,
+        "url": "https://www.airbnb.com.tr/rooms/1002923067934305540"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1306,
+          36.6362
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "926528780661743045",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5041,
+        "puan": 4.95,
+        "yorum": 73,
+        "url": "https://www.airbnb.com.tr/rooms/926528780661743045"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.135346611703188,
+          36.63199115110061
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1226596486632140844",
+        "ad": "Villa - Fethiye",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 11400,
+        "puan": 5.0,
+        "yorum": 7,
+        "url": "https://www.airbnb.com.tr/rooms/1226596486632140844"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1317,
+          36.612
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1502093586813899306",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5612,
+        "puan": 4.94,
+        "yorum": 17,
+        "url": "https://www.airbnb.com.tr/rooms/1502093586813899306"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.11388,
+          36.66389
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "657974384186084262",
+        "ad": "Villa - Fethiye",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 6549,
+        "puan": 4.88,
+        "yorum": 92,
+        "url": "https://www.airbnb.com.tr/rooms/657974384186084262"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1541,
+          36.6114
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1486149255455244135",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4874,
+        "puan": 5.0,
+        "yorum": 8,
+        "url": "https://www.airbnb.com.tr/rooms/1486149255455244135"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1384,
+          36.6282
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1729652090410477097",
+        "ad": "Daire - Fethiye",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4840,
+        "puan": 5.0,
+        "yorum": 18,
+        "url": "https://www.airbnb.com.tr/rooms/1729652090410477097"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -101.64369271573824,
+          21.102591333474074
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1594358801959347468",
+        "ad": "Ev - León, Meksika",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 3172,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1594358801959347468"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2649,
+          37.8711
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1719615474252869131",
+        "ad": "Kamp aracı/Karavan - Kuşadası",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2373,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1719615474252869131"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2673,
+          37.8731
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "657620964731485771",
+        "ad": "Daire - Kuşadası",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5699,
+        "puan": 4.9,
+        "yorum": 39,
+        "url": "https://www.airbnb.com.tr/rooms/657620964731485771"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.26471,
+          37.86527
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "36712350",
+        "ad": "Küçük ev - Kuşadası",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3114,
+        "puan": 4.63,
+        "yorum": 204,
+        "url": "https://www.airbnb.com.tr/rooms/36712350"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.265716558104476,
+          37.86611108804328
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1434283435089296825",
+        "ad": "Daire - Kuşadası",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4299,
+        "puan": 4.57,
+        "yorum": 21,
+        "url": "https://www.airbnb.com.tr/rooms/1434283435089296825"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.26851531095958,
+          37.86955122933149
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1279025291640210263",
+        "ad": "Daire - Kuşadası",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4571,
+        "puan": 4.74,
+        "yorum": 35,
+        "url": "https://www.airbnb.com.tr/rooms/1279025291640210263"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.266,
+          37.8657
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1740979138090009290",
+        "ad": "Daire - Kuşadası",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5301,
+        "puan": 5.0,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1740979138090009290"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.25758,
+          37.85989
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "561275012772914884",
+        "ad": "Ev - Kuşadası",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6217,
+        "puan": 4.9,
+        "yorum": 167,
+        "url": "https://www.airbnb.com.tr/rooms/561275012772914884"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2591,
+          37.8572
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1709647962091379988",
+        "ad": "Ev - Kuşadası",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6267,
+        "puan": 5.0,
+        "yorum": 20,
+        "url": "https://www.airbnb.com.tr/rooms/1709647962091379988"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.24813,
+          37.85541
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1743586415028312565",
+        "ad": "Ev - Kuşadası",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6195,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1743586415028312565"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2592,
+          37.8562
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "872418593863763563",
+        "ad": "Kuşadası bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3525,
+        "puan": 4.77,
+        "yorum": 88,
+        "url": "https://www.airbnb.com.tr/rooms/872418593863763563"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2593,
+          37.8563
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "897135245874797756",
+        "ad": "Otel - Kuşadası",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2440,
+        "puan": 4.6,
+        "yorum": 72,
+        "url": "https://www.airbnb.com.tr/rooms/897135245874797756"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2636,
+          37.8657
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "649681297503535846",
+        "ad": "Daire - Kuşadası",
+        "alt_tur": "Daire",
+        "fiyat_tl": 6321,
+        "puan": 5.0,
+        "yorum": 13,
+        "url": "https://www.airbnb.com.tr/rooms/649681297503535846"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2478,
+          37.8556
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1715388803441079927",
+        "ad": "Ev - Kuşadası",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 18594,
+        "puan": 5.0,
+        "yorum": 6,
+        "url": "https://www.airbnb.com.tr/rooms/1715388803441079927"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2766,
+          37.8667
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1474828588815870553",
+        "ad": "Daire - Kuşadası",
+        "alt_tur": "Daire",
+        "fiyat_tl": 6375,
+        "puan": 5.0,
+        "yorum": 23,
+        "url": "https://www.airbnb.com.tr/rooms/1474828588815870553"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.25046,
+          37.85354
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "951848832535988189",
+        "ad": "Ev - Kuşadası",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 5329,
+        "puan": 4.85,
+        "yorum": 88,
+        "url": "https://www.airbnb.com.tr/rooms/951848832535988189"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2567,
+          37.859
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "912958180408732823",
+        "ad": "Kuşadası bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3080,
+        "puan": 4.97,
+        "yorum": 88,
+        "url": "https://www.airbnb.com.tr/rooms/912958180408732823"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.25782,
+          37.85912
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "603711691094877077",
+        "ad": "Ev - Kuşadası",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6122,
+        "puan": 4.87,
+        "yorum": 139,
+        "url": "https://www.airbnb.com.tr/rooms/603711691094877077"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.2567,
+          37.859
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "885269981027161520",
+        "ad": "Kuşadası bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3554,
+        "puan": 4.95,
+        "yorum": 96,
+        "url": "https://www.airbnb.com.tr/rooms/885269981027161520"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.14798,
+          42.02683
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "949417347049300958",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4537,
+        "puan": 4.86,
+        "yorum": 43,
+        "url": "https://www.airbnb.com.tr/rooms/949417347049300958"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.12302730692709,
+          42.0152974308323
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1284931704816204091",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3450,
+        "puan": 4.81,
+        "yorum": 89,
+        "url": "https://www.airbnb.com.tr/rooms/1284931704816204091"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.14828,
+          42.02486
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1728157908776091436",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5059,
+        "puan": 4.33,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1728157908776091436"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.1231,
+          42.0166
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1018501248203400035",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 6605,
+        "puan": 4.94,
+        "yorum": 63,
+        "url": "https://www.airbnb.com.tr/rooms/1018501248203400035"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.14653,
+          42.02661
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "949395371390578219",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4439,
+        "puan": 4.78,
+        "yorum": 36,
+        "url": "https://www.airbnb.com.tr/rooms/949395371390578219"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.1943,
+          42.0189
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "940174690066601001",
+        "ad": "Site içi konut - Sinop",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 3495,
+        "puan": 4.88,
+        "yorum": 155,
+        "url": "https://www.airbnb.com.tr/rooms/940174690066601001"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.12576408043645,
+          42.01625274675277
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1415162821972997974",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3750,
+        "puan": 4.77,
+        "yorum": 47,
+        "url": "https://www.airbnb.com.tr/rooms/1415162821972997974"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.14626,
+          42.02584
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "949406121607518822",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4444,
+        "puan": 4.5,
+        "yorum": 34,
+        "url": "https://www.airbnb.com.tr/rooms/949406121607518822"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.1943,
+          42.0194
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1427658661419055994",
+        "ad": "Ev - Sinop",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 3800,
+        "puan": 4.96,
+        "yorum": 46,
+        "url": "https://www.airbnb.com.tr/rooms/1427658661419055994"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.1941,
+          42.0194
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1638345338330780897",
+        "ad": "Ev - Sinop",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 4799,
+        "puan": 4.84,
+        "yorum": 32,
+        "url": "https://www.airbnb.com.tr/rooms/1638345338330780897"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.1227,
+          42.0159
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1246781078861845523",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 7942,
+        "puan": 5.0,
+        "yorum": 103,
+        "url": "https://www.airbnb.com.tr/rooms/1246781078861845523"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.1248,
+          42.0169
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1600570170676360924",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4080,
+        "puan": 4.74,
+        "yorum": 23,
+        "url": "https://www.airbnb.com.tr/rooms/1600570170676360924"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.11278,
+          42.01661
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1509849327913448294",
+        "ad": "Ağaç ev - Sinop",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 7038,
+        "puan": 5.0,
+        "yorum": 8,
+        "url": "https://www.airbnb.com.tr/rooms/1509849327913448294"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.1068,
+          41.9977
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1263781368005580614",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3740,
+        "puan": 4.74,
+        "yorum": 81,
+        "url": "https://www.airbnb.com.tr/rooms/1263781368005580614"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.12276771367403,
+          42.01739444653652
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1456572950082219329",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4000,
+        "puan": 4.71,
+        "yorum": 17,
+        "url": "https://www.airbnb.com.tr/rooms/1456572950082219329"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.1177,
+          42.0141
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1704281885553707928",
+        "ad": "Ev - Sinop",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5964,
+        "puan": 4.73,
+        "yorum": 11,
+        "url": "https://www.airbnb.com.tr/rooms/1704281885553707928"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.192026306953345,
+          42.01666711049331
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1485545202618439846",
+        "ad": "Ev - Sinop",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 9474,
+        "puan": 4.8,
+        "yorum": 20,
+        "url": "https://www.airbnb.com.tr/rooms/1485545202618439846"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.17934,
+          42.01761
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "34814790",
+        "ad": "Daire - Sinop",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4099,
+        "puan": 5.0,
+        "yorum": 12,
+        "url": "https://www.airbnb.com.tr/rooms/34814790"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.7296,
+          4.1699
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1689992299510262286",
+        "ad": "Ev - Carmen de Apicalá, Kolombiya",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 8233,
+        "puan": 5.0,
+        "yorum": 36,
+        "url": "https://www.airbnb.com.tr/rooms/1689992299510262286"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.92573,
+          40.76286
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "833117492617696926",
+        "ad": "Ev - İzmit",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2830,
+        "puan": 4.54,
+        "yorum": 149,
+        "url": "https://www.airbnb.com.tr/rooms/833117492617696926"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.9591,
+          40.676
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1729141883703478608",
+        "ad": "Villa - Başiskele",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 15400,
+        "puan": 4.7,
+        "yorum": 10,
+        "url": "https://www.airbnb.com.tr/rooms/1729141883703478608"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.793429608274362,
+          40.69462646585293
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1666032536916627368",
+        "ad": "Dağ evi - Gölcük",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 9940,
+        "puan": 5.0,
+        "yorum": 20,
+        "url": "https://www.airbnb.com.tr/rooms/1666032536916627368"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.96137,
+          40.76468
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1618776495626789860",
+        "ad": "Ev - İzmit",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 3578,
+        "puan": 4.88,
+        "yorum": 24,
+        "url": "https://www.airbnb.com.tr/rooms/1618776495626789860"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.10999177155104,
+          40.70219322887811
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1260883335151538789",
+        "ad": "Ev - Kartepe",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 14200,
+        "puan": 4.96,
+        "yorum": 68,
+        "url": "https://www.airbnb.com.tr/rooms/1260883335151538789"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.8124,
+          40.6642
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1734598603110304656",
+        "ad": "Ev - Gölcük",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 16500,
+        "puan": 5.0,
+        "yorum": 12,
+        "url": "https://www.airbnb.com.tr/rooms/1734598603110304656"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.924,
+          40.7164
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1134650183001779761",
+        "ad": "Daire - Başiskele",
+        "alt_tur": "Daire",
+        "fiyat_tl": 11505,
+        "puan": 4.8,
+        "yorum": 10,
+        "url": "https://www.airbnb.com.tr/rooms/1134650183001779761"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.0251,
+          40.6825
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1447058535268460507",
+        "ad": "Ev - Kartepe",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 15000,
+        "puan": 4.93,
+        "yorum": 27,
+        "url": "https://www.airbnb.com.tr/rooms/1447058535268460507"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.9625,
+          40.7041
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1088303755055958118",
+        "ad": "Daire - Başiskele",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 9806,
+        "puan": 5.0,
+        "yorum": 28,
+        "url": "https://www.airbnb.com.tr/rooms/1088303755055958118"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.9235,
+          40.7839
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1064891344888104389",
+        "ad": "Ev - İzmit",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2399,
+        "puan": 4.08,
+        "yorum": 12,
+        "url": "https://www.airbnb.com.tr/rooms/1064891344888104389"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.2379,
+          40.6966
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1766106527159043425",
+        "ad": "Ev - Sapanca",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 11000,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1766106527159043425"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.23518324973913,
+          40.736040808229426
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1215339819822944216",
+        "ad": "Villa - Kartepe",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 13027,
+        "puan": 4.97,
+        "yorum": 227,
+        "url": "https://www.airbnb.com.tr/rooms/1215339819822944216"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.962375644581613,
+          40.703781706884634
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1115655224729497095",
+        "ad": "Daire - Başiskele",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 9806,
+        "puan": 4.93,
+        "yorum": 15,
+        "url": "https://www.airbnb.com.tr/rooms/1115655224729497095"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.9281,
+          40.7657
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1765906146441210527",
+        "ad": "Müşterek otel odası - İzmit",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2016,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1765906146441210527"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.8395,
+          40.637
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "46963683",
+        "ad": "Dağ evi - Gölcük",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6632,
+        "puan": 4.96,
+        "yorum": 137,
+        "url": "https://www.airbnb.com.tr/rooms/46963683"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.96192,
+          40.70479
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "934075740287993612",
+        "ad": "Daire - Başiskele",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 8320,
+        "puan": 4.98,
+        "yorum": 53,
+        "url": "https://www.airbnb.com.tr/rooms/934075740287993612"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.1369,
+          40.7053
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1679209692351252576",
+        "ad": "Ev - Maşukiye",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 12840,
+        "puan": 5.0,
+        "yorum": 8,
+        "url": "https://www.airbnb.com.tr/rooms/1679209692351252576"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.2155,
+          40.6964
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1429522171151714121",
+        "ad": "Villa - Sapanca",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 16561,
+        "puan": 4.84,
+        "yorum": 44,
+        "url": "https://www.airbnb.com.tr/rooms/1429522171151714121"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.974,
+          41.0273
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1492933264623845053",
+        "ad": "Butik otel - Beyoğlu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2421,
+        "puan": 4.5,
+        "yorum": 153,
+        "url": "https://www.airbnb.com.tr/rooms/1492933264623845053"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9768,
+          41.0263
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1328904017192710990",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2896,
+        "puan": 4.65,
+        "yorum": 26,
+        "url": "https://www.airbnb.com.tr/rooms/1328904017192710990"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9745,
+          41.0273
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1721131753420581137",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2497,
+        "puan": 4.76,
+        "yorum": 17,
+        "url": "https://www.airbnb.com.tr/rooms/1721131753420581137"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.978275559042107,
+          41.02676558296619
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1770118878537340327",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3537,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1770118878537340327"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9759,
+          41.0273
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1384648362072370463",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4320,
+        "puan": 4.86,
+        "yorum": 59,
+        "url": "https://www.airbnb.com.tr/rooms/1384648362072370463"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9803936389619,
+          41.0269431750906
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1764004092716542868",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4641,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1764004092716542868"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.978,
+          41.0252
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1686424072774072363",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2913,
+        "puan": 4.82,
+        "yorum": 17,
+        "url": "https://www.airbnb.com.tr/rooms/1686424072774072363"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.98019,
+          41.02784
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1728241385797075287",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3248,
+        "puan": 4.43,
+        "yorum": 14,
+        "url": "https://www.airbnb.com.tr/rooms/1728241385797075287"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9744,
+          41.0231
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "35611885",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3648,
+        "puan": 4.84,
+        "yorum": 843,
+        "url": "https://www.airbnb.com.tr/rooms/35611885"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9787,
+          41.0251
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1259919527373373425",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 6476,
+        "puan": 4.82,
+        "yorum": 119,
+        "url": "https://www.airbnb.com.tr/rooms/1259919527373373425"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.979777325504124,
+          41.02653859804983
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1764004514894757420",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6398,
+        "puan": 5.0,
+        "yorum": 4,
+        "url": "https://www.airbnb.com.tr/rooms/1764004514894757420"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.97338,
+          41.02776
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "21811046",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2605,
+        "puan": 4.72,
+        "yorum": 1855,
+        "url": "https://www.airbnb.com.tr/rooms/21811046"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9763,
+          41.0267
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1719442841154380141",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3400,
+        "puan": 4.88,
+        "yorum": 17,
+        "url": "https://www.airbnb.com.tr/rooms/1719442841154380141"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9761,
+          41.027
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1153718763091125099",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4998,
+        "puan": 4.92,
+        "yorum": 169,
+        "url": "https://www.airbnb.com.tr/rooms/1153718763091125099"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.97311,
+          41.0282
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "624575391004980934",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5171,
+        "puan": 4.84,
+        "yorum": 180,
+        "url": "https://www.airbnb.com.tr/rooms/624575391004980934"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9771,
+          41.0266
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1511723306481946839",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 7474,
+        "puan": 4.76,
+        "yorum": 37,
+        "url": "https://www.airbnb.com.tr/rooms/1511723306481946839"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9745,
+          41.0254
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1671178119124672501",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 14524,
+        "puan": 5.0,
+        "yorum": 27,
+        "url": "https://www.airbnb.com.tr/rooms/1671178119124672501"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.97807,
+          41.02517
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "881765606845584954",
+        "ad": "Daire - Beyoğlu",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3000,
+        "puan": 4.73,
+        "yorum": 64,
+        "url": "https://www.airbnb.com.tr/rooms/881765606845584954"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.7434,
+          40.982
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "812275561988066064",
+        "ad": "Daire - Avcılar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 1300,
+        "puan": 4.6,
+        "yorum": 10,
+        "url": "https://www.airbnb.com.tr/rooms/812275561988066064"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.706802988098374,
+          40.99263887155878
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1709570723610781039",
+        "ad": "Daire - Avcılar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2398,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1709570723610781039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.8695,
+          40.9791
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "658458671104156750",
+        "ad": "Daire - Bakırköy",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 7282,
+        "puan": 4.9,
+        "yorum": 98,
+        "url": "https://www.airbnb.com.tr/rooms/658458671104156750"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.70833,
+          40.99272
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1339009392541021637",
+        "ad": "Otel - Avcılar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 1939,
+        "puan": 4.33,
+        "yorum": 9,
+        "url": "https://www.airbnb.com.tr/rooms/1339009392541021637"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.62139695002271,
+          41.01844156747691
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1561522874923421956",
+        "ad": "Daire - Büyükçekmece",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6592,
+        "puan": 5.0,
+        "yorum": 21,
+        "url": "https://www.airbnb.com.tr/rooms/1561522874923421956"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.71784,
+          40.98984
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1207072222986202094",
+        "ad": "Otel - Avcılar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 1800,
+        "puan": 4.56,
+        "yorum": 9,
+        "url": "https://www.airbnb.com.tr/rooms/1207072222986202094"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.693688361714134,
+          41.00144077958321
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1392043800816233387",
+        "ad": "Daire - Esenyurt",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2870,
+        "puan": 4.67,
+        "yorum": 58,
+        "url": "https://www.airbnb.com.tr/rooms/1392043800816233387"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6657,
+          41.0055
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1317476063874107519",
+        "ad": "Daire - Beylikdüzü",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4582,
+        "puan": 4.97,
+        "yorum": 63,
+        "url": "https://www.airbnb.com.tr/rooms/1317476063874107519"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6042,
+          40.96743
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1202159063736083574",
+        "ad": "Ev - Beylikdüzü",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5801,
+        "puan": 5.0,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1202159063736083574"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.773140795231782,
+          41.04851397981625
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1636915254166706494",
+        "ad": "Daire - Küçükçekmece",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 9856,
+        "puan": 4.96,
+        "yorum": 50,
+        "url": "https://www.airbnb.com.tr/rooms/1636915254166706494"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.665885960111304,
+          41.00621590339906
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1313729198620512594",
+        "ad": "Daire - Beylikdüzü",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5097,
+        "puan": 4.92,
+        "yorum": 37,
+        "url": "https://www.airbnb.com.tr/rooms/1313729198620512594"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.7311,
+          40.9812
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1619554473073298649",
+        "ad": "Avcılar bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2059,
+        "puan": 4.64,
+        "yorum": 11,
+        "url": "https://www.airbnb.com.tr/rooms/1619554473073298649"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6819,
+          41.008
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "992855873315434009",
+        "ad": "Daire - Esenyurt",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3553,
+        "puan": 4.9,
+        "yorum": 117,
+        "url": "https://www.airbnb.com.tr/rooms/992855873315434009"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.770824189242965,
+          41.04856211580362
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1636826454157662920",
+        "ad": "Daire - Küçükçekmece",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6702,
+        "puan": 5.0,
+        "yorum": 25,
+        "url": "https://www.airbnb.com.tr/rooms/1636826454157662920"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.6079,
+          40.9664
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1397714506946025860",
+        "ad": "Villa - Beylikdüzü",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 32601,
+        "puan": 5.0,
+        "yorum": 14,
+        "url": "https://www.airbnb.com.tr/rooms/1397714506946025860"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.69199503869658,
+          41.00130939306949
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1634180265266933716",
+        "ad": "Daire - Esenyurt",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3500,
+        "puan": 5.0,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1634180265266933716"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.7207,
+          40.9713
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1487978174774984367",
+        "ad": "Otel - Avcılar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4495,
+        "puan": 5.0,
+        "yorum": 4,
+        "url": "https://www.airbnb.com.tr/rooms/1487978174774984367"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.73197,
+          40.98061
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1654712623357867101",
+        "ad": "Avcılar bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2099,
+        "puan": 5.0,
+        "yorum": 7,
+        "url": "https://www.airbnb.com.tr/rooms/1654712623357867101"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.6861,
+          40.6285
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1584921761288810355",
+        "ad": "Ev - Akyazı",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6000,
+        "puan": 5.0,
+        "yorum": 7,
+        "url": "https://www.airbnb.com.tr/rooms/1584921761288810355"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.37391,
+          40.59135
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "54053661",
+        "ad": "Mağara - Geyve",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6100,
+        "puan": 4.95,
+        "yorum": 77,
+        "url": "https://www.airbnb.com.tr/rooms/54053661"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.6482,
+          40.7792
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "870877145292796806",
+        "ad": "Ağaç ev - Bolu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6080,
+        "puan": 4.89,
+        "yorum": 122,
+        "url": "https://www.airbnb.com.tr/rooms/870877145292796806"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.7465,
+          40.7969
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1729665091369952662",
+        "ad": "Ev - Hendek",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 12500,
+        "puan": 4.91,
+        "yorum": 11,
+        "url": "https://www.airbnb.com.tr/rooms/1729665091369952662"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.5826,
+          40.719
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "44265778",
+        "ad": "Ev - Bolu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2500,
+        "puan": 4.85,
+        "yorum": 339,
+        "url": "https://www.airbnb.com.tr/rooms/44265778"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.4663,
+          40.7051
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1625177206708552094",
+        "ad": "Ev - Ömerler",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5921,
+        "puan": 5.0,
+        "yorum": 24,
+        "url": "https://www.airbnb.com.tr/rooms/1625177206708552094"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.6482,
+          40.7792
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "704630080416388808",
+        "ad": "Dağ evi - Bolu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6080,
+        "puan": 4.88,
+        "yorum": 94,
+        "url": "https://www.airbnb.com.tr/rooms/704630080416388808"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.69599,
+          40.68468
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "668816095068542814",
+        "ad": "Çiftlikte konaklama - Akyazı",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5847,
+        "puan": 4.97,
+        "yorum": 175,
+        "url": "https://www.airbnb.com.tr/rooms/668816095068542814"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.6482,
+          40.7792
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "688416326043454110",
+        "ad": "Dağ evi - Bolu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6500,
+        "puan": 4.83,
+        "yorum": 108,
+        "url": "https://www.airbnb.com.tr/rooms/688416326043454110"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.58378,
+          40.71826
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "47986411",
+        "ad": "Misafir evi - Bolu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 2298,
+        "puan": 4.86,
+        "yorum": 274,
+        "url": "https://www.airbnb.com.tr/rooms/47986411"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.5688,
+          40.7715
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "42114993",
+        "ad": "Küçük ev - Bolu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 4500,
+        "puan": 4.97,
+        "yorum": 158,
+        "url": "https://www.airbnb.com.tr/rooms/42114993"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.282165570198334,
+          40.664355514881315
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "691622608584974482",
+        "ad": "Bungalov - Sapanca",
+        "alt_tur": "Kır Evi / Bungalov",
+        "fiyat_tl": 9720,
+        "puan": 5.0,
+        "yorum": 20,
+        "url": "https://www.airbnb.com.tr/rooms/691622608584974482"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.67671,
+          40.6944
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "40103933",
+        "ad": "Villa - Bolu",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 9001,
+        "puan": 4.89,
+        "yorum": 144,
+        "url": "https://www.airbnb.com.tr/rooms/40103933"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.37189,
+          40.59197
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "33935299",
+        "ad": "Ağaç ev - Geyve",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 7600,
+        "puan": 5.0,
+        "yorum": 38,
+        "url": "https://www.airbnb.com.tr/rooms/33935299"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.08701,
+          40.76024
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1119540632158784508",
+        "ad": "Ağaç ev - Düzce",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5952,
+        "puan": 4.98,
+        "yorum": 57,
+        "url": "https://www.airbnb.com.tr/rooms/1119540632158784508"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.01503,
+          40.58611
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "710828057360616391",
+        "ad": "Kubbe - Bolu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6818,
+        "puan": 4.78,
+        "yorum": 40,
+        "url": "https://www.airbnb.com.tr/rooms/710828057360616391"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.6358,
+          40.787
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1310273511441014557",
+        "ad": "Ev - Bolu",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5237,
+        "puan": 4.94,
+        "yorum": 31,
+        "url": "https://www.airbnb.com.tr/rooms/1310273511441014557"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.2243,
+          40.8321
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1360953887014947240",
+        "ad": "Ağaç ev - Yeşilçimen",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 14968,
+        "puan": 4.92,
+        "yorum": 12,
+        "url": "https://www.airbnb.com.tr/rooms/1360953887014947240"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.09537,
+          40.7591
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1021820467526174004",
+        "ad": "Çiftlikte konaklama - Aydınpınar",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 4856,
+        "puan": 4.8,
+        "yorum": 84,
+        "url": "https://www.airbnb.com.tr/rooms/1021820467526174004"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.26593,
+          40.67124
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "903446887104705544",
+        "ad": "Ağaç ev - Sapanca",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 13700,
+        "puan": 4.91,
+        "yorum": 169,
+        "url": "https://www.airbnb.com.tr/rooms/903446887104705544"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.1843,
+          41.0927
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1492031514815027638",
+        "ad": "Ev - Akçakoca",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 10336,
+        "puan": 4.89,
+        "yorum": 18,
+        "url": "https://www.airbnb.com.tr/rooms/1492031514815027638"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.143995630439495,
+          41.086927176695625
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "785177695485782601",
+        "ad": "Daire - Akçakoca",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4678,
+        "puan": 4.85,
+        "yorum": 34,
+        "url": "https://www.airbnb.com.tr/rooms/785177695485782601"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.289579902122746,
+          40.66740537942863
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1259953377332531028",
+        "ad": "Ağaç ev - Sapanca",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 11920,
+        "puan": 4.76,
+        "yorum": 104,
+        "url": "https://www.airbnb.com.tr/rooms/1259953377332531028"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.85824904704583,
+          41.04667938876421
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1513225865238293253",
+        "ad": "Villa - Kocaali",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 9474,
+        "puan": 4.92,
+        "yorum": 12,
+        "url": "https://www.airbnb.com.tr/rooms/1513225865238293253"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.2473,
+          40.6912
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1327624048110468173",
+        "ad": "Kulübe - Sapanca",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 8882,
+        "puan": 4.95,
+        "yorum": 80,
+        "url": "https://www.airbnb.com.tr/rooms/1327624048110468173"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.26817,
+          40.68063
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1416497957252347712",
+        "ad": "Ağaç ev - Sapanca",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6165,
+        "puan": 4.92,
+        "yorum": 77,
+        "url": "https://www.airbnb.com.tr/rooms/1416497957252347712"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.224617283059622,
+          40.6948911518148
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "50336656",
+        "ad": "Bungalov - Sapanca",
+        "alt_tur": "Kır Evi / Bungalov",
+        "fiyat_tl": 7614,
+        "puan": 4.75,
+        "yorum": 174,
+        "url": "https://www.airbnb.com.tr/rooms/50336656"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0109,
+          41.0181
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1716962672170146048",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 8762,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1716962672170146048"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0152,
+          41.0225
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "947520235007685819",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4087,
+        "puan": 4.86,
+        "yorum": 90,
+        "url": "https://www.airbnb.com.tr/rooms/947520235007685819"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.01734,
+          41.02545
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1172334674126036486",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 16000,
+        "puan": 4.99,
+        "yorum": 117,
+        "url": "https://www.airbnb.com.tr/rooms/1172334674126036486"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0206,
+          41.02413
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "39712980",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4911,
+        "puan": 4.85,
+        "yorum": 118,
+        "url": "https://www.airbnb.com.tr/rooms/39712980"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.01491,
+          41.02337
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1539914071940867624",
+        "ad": "Daire - Üsküdar, İstanbul, Turkiye",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4087,
+        "puan": 5.0,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/1539914071940867624"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0114,
+          41.0248
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "897158382569063989",
+        "ad": "Ev - Üsküdar",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 12777,
+        "puan": 4.99,
+        "yorum": 201,
+        "url": "https://www.airbnb.com.tr/rooms/897158382569063989"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0139,
+          41.0255
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1759450395782148840",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 13750,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1759450395782148840"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0114,
+          41.0249
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1044202557937919157",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 15003,
+        "puan": 5.0,
+        "yorum": 135,
+        "url": "https://www.airbnb.com.tr/rooms/1044202557937919157"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0113,
+          41.0249
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1734031050960959842",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 18050,
+        "puan": 5.0,
+        "yorum": 4,
+        "url": "https://www.airbnb.com.tr/rooms/1734031050960959842"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.00897,
+          41.02248
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1644838555106966388",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 6465,
+        "puan": 4.9,
+        "yorum": 10,
+        "url": "https://www.airbnb.com.tr/rooms/1644838555106966388"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0209,
+          41.0246
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "898108896092363494",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 2350,
+        "puan": 4.67,
+        "yorum": 73,
+        "url": "https://www.airbnb.com.tr/rooms/898108896092363494"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.01658,
+          41.02185
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1568644012861305292",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4273,
+        "puan": 4.26,
+        "yorum": 27,
+        "url": "https://www.airbnb.com.tr/rooms/1568644012861305292"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.00857,
+          41.02001
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "613652767296145568",
+        "ad": "Çatı katı - Üsküdar",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6602,
+        "puan": 4.9,
+        "yorum": 73,
+        "url": "https://www.airbnb.com.tr/rooms/613652767296145568"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0152,
+          41.0207
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1168486961963219709",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4737,
+        "puan": 4.8,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/1168486961963219709"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0152,
+          41.0207
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1185617356991333545",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5169,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1185617356991333545"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02108,
+          41.02732
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "833532443566362860",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4314,
+        "puan": 4.78,
+        "yorum": 54,
+        "url": "https://www.airbnb.com.tr/rooms/833532443566362860"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0178,
+          41.027
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1259434396974742704",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4399,
+        "puan": 4.71,
+        "yorum": 31,
+        "url": "https://www.airbnb.com.tr/rooms/1259434396974742704"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.01603,
+          41.0219
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1720014043917572559",
+        "ad": "Daire - Üsküdar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4379,
+        "puan": 4.75,
+        "yorum": 8,
+        "url": "https://www.airbnb.com.tr/rooms/1720014043917572559"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.09529,
+          40.87628
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "35534459",
+        "ad": "Ev - Adalar",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 4200,
+        "puan": 4.97,
+        "yorum": 315,
+        "url": "https://www.airbnb.com.tr/rooms/35534459"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.11798,
+          40.86779
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "551828892898499255",
+        "ad": "Villa - Adalar",
+        "alt_tur": "Müstakil Villa",
+        "fiyat_tl": 9756,
+        "puan": 4.8,
+        "yorum": 288,
+        "url": "https://www.airbnb.com.tr/rooms/551828892898499255"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1305,
+          40.8698
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1027687653563413170",
+        "ad": "Butik otel - Adalar",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 12456,
+        "puan": 4.92,
+        "yorum": 150,
+        "url": "https://www.airbnb.com.tr/rooms/1027687653563413170"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.12343,
+          40.86553
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "8715436",
+        "ad": "Daire - Büyükada",
+        "alt_tur": "Daire",
+        "fiyat_tl": 11996,
+        "puan": 4.98,
+        "yorum": 319,
+        "url": "https://www.airbnb.com.tr/rooms/8715436"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.12571,
+          40.87373
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "838387276067870877",
+        "ad": "Daire - Adalar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 11330,
+        "puan": 4.9,
+        "yorum": 73,
+        "url": "https://www.airbnb.com.tr/rooms/838387276067870877"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.13758,
+          40.86952
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "3301481",
+        "ad": "Ev - Adalar",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 15686,
+        "puan": 4.78,
+        "yorum": 74,
+        "url": "https://www.airbnb.com.tr/rooms/3301481"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0961,
+          40.8785
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1470866746029522774",
+        "ad": "Ev - Adalar",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 9492,
+        "puan": 5.0,
+        "yorum": 38,
+        "url": "https://www.airbnb.com.tr/rooms/1470866746029522774"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1259,
+          40.8731
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "838387268606299909",
+        "ad": "Daire - Adalar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 12000,
+        "puan": 4.91,
+        "yorum": 67,
+        "url": "https://www.airbnb.com.tr/rooms/838387268606299909"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1302,
+          40.8752
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "944785284055094806",
+        "ad": "Daire - Adalar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 11893,
+        "puan": 4.98,
+        "yorum": 57,
+        "url": "https://www.airbnb.com.tr/rooms/944785284055094806"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.09001,
+          40.87219
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "607069272851808679",
+        "ad": "Adalar bölgesinde odalar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2296,
+        "puan": 4.9,
+        "yorum": 164,
+        "url": "https://www.airbnb.com.tr/rooms/607069272851808679"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.11775,
+          40.86341
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "944880520009513628",
+        "ad": "Ev - Adalar",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 8474,
+        "puan": 4.61,
+        "yorum": 140,
+        "url": "https://www.airbnb.com.tr/rooms/944880520009513628"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.13260353057673,
+          40.873331598051294
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "648205508375237249",
+        "ad": "Butik otel - Adalar ",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 8062,
+        "puan": 4.85,
+        "yorum": 61,
+        "url": "https://www.airbnb.com.tr/rooms/648205508375237249"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.12873,
+          40.87403
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "4044582",
+        "ad": "Daire - Büyükada",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5958,
+        "puan": 4.83,
+        "yorum": 72,
+        "url": "https://www.airbnb.com.tr/rooms/4044582"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1301,
+          40.8702
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1420206141361888279",
+        "ad": "Otel - Adalar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 7777,
+        "puan": 5.0,
+        "yorum": 25,
+        "url": "https://www.airbnb.com.tr/rooms/1420206141361888279"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.12785,
+          40.87265
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "979646474293838095",
+        "ad": "Daire - Adalar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4866,
+        "puan": 4.75,
+        "yorum": 114,
+        "url": "https://www.airbnb.com.tr/rooms/979646474293838095"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.12704,
+          40.86513
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "7531650",
+        "ad": "Daire - Büyükada",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 8695,
+        "puan": 4.82,
+        "yorum": 111,
+        "url": "https://www.airbnb.com.tr/rooms/7531650"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0982,
+          40.8772
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1621062989017287691",
+        "ad": "Daire - Adalar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 8097,
+        "puan": 4.85,
+        "yorum": 34,
+        "url": "https://www.airbnb.com.tr/rooms/1621062989017287691"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1279,
+          40.87298
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "584436275525749250",
+        "ad": "Butik otel - Adalar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3625,
+        "puan": 4.61,
+        "yorum": 89,
+        "url": "https://www.airbnb.com.tr/rooms/584436275525749250"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.09512,
+          40.87559
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "35727547",
+        "ad": "Ev - Adalar",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 5987,
+        "puan": 4.94,
+        "yorum": 206,
+        "url": "https://www.airbnb.com.tr/rooms/35727547"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0987,
+          40.8768
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1407906090536582846",
+        "ad": "Daire - Adalar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 7816,
+        "puan": 4.97,
+        "yorum": 36,
+        "url": "https://www.airbnb.com.tr/rooms/1407906090536582846"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.09685,
+          40.87577
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "947468060922760338",
+        "ad": "Daire - Adalar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 9004,
+        "puan": 4.96,
+        "yorum": 110,
+        "url": "https://www.airbnb.com.tr/rooms/947468060922760338"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.098059626453193,
+          40.87447059103814
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1379531941140930388",
+        "ad": "Daire - Adalar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 9004,
+        "puan": 4.94,
+        "yorum": 52,
+        "url": "https://www.airbnb.com.tr/rooms/1379531941140930388"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0945,
+          40.8751
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1526011561942231664",
+        "ad": "Adalar bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4155,
+        "puan": 4.83,
+        "yorum": 18,
+        "url": "https://www.airbnb.com.tr/rooms/1526011561942231664"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0887,
+          40.8786
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "50309924",
+        "ad": "Daire - Adalar",
+        "alt_tur": "Daire",
+        "fiyat_tl": 9474,
+        "puan": 4.92,
+        "yorum": 50,
+        "url": "https://www.airbnb.com.tr/rooms/50309924"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.1003,
+          40.8771
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1336179486544235364",
+        "ad": "Otel - Adalar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3625,
+        "puan": 4.73,
+        "yorum": 80,
+        "url": "https://www.airbnb.com.tr/rooms/1336179486544235364"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.05566,
+          40.99565
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1718464124357911382",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5301,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1718464124357911382"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0615,
+          40.9701
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "890646868580254923",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Daire",
+        "fiyat_tl": 8213,
+        "puan": 4.94,
+        "yorum": 160,
+        "url": "https://www.airbnb.com.tr/rooms/890646868580254923"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0263,
+          40.9903
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1462172050276737511",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 7748,
+        "puan": 4.96,
+        "yorum": 56,
+        "url": "https://www.airbnb.com.tr/rooms/1462172050276737511"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0941,
+          40.9991
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1283824000470066980",
+        "ad": "Daire - Ataşehir",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3120,
+        "puan": 4.97,
+        "yorum": 205,
+        "url": "https://www.airbnb.com.tr/rooms/1283824000470066980"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0305,
+          40.9923
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1677527038715510156",
+        "ad": "İstanbul bölgesinde oda",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 3600,
+        "puan": 4.91,
+        "yorum": 108,
+        "url": "https://www.airbnb.com.tr/rooms/1677527038715510156"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02467,
+          40.99325
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1462123591957088258",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3350,
+        "puan": 4.84,
+        "yorum": 116,
+        "url": "https://www.airbnb.com.tr/rooms/1462123591957088258"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.03052,
+          40.98682
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1552995492497027510",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 10777,
+        "puan": 5.0,
+        "yorum": 42,
+        "url": "https://www.airbnb.com.tr/rooms/1552995492497027510"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02943,
+          40.98422
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1560397274902595081",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Daire",
+        "fiyat_tl": 17942,
+        "puan": 4.97,
+        "yorum": 33,
+        "url": "https://www.airbnb.com.tr/rooms/1560397274902595081"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.03005,
+          40.99435
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1528491960930844215",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 7153,
+        "puan": 4.9,
+        "yorum": 42,
+        "url": "https://www.airbnb.com.tr/rooms/1528491960930844215"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0263,
+          40.9898
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1464983853349064051",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6922,
+        "puan": 4.95,
+        "yorum": 56,
+        "url": "https://www.airbnb.com.tr/rooms/1464983853349064051"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0657,
+          40.9938
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1611844686628589234",
+        "ad": "Site içi konut - İstanbul",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 9091,
+        "puan": 4.88,
+        "yorum": 8,
+        "url": "https://www.airbnb.com.tr/rooms/1611844686628589234"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0528,
+          40.9838
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1531988377023856577",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4832,
+        "puan": 4.92,
+        "yorum": 26,
+        "url": "https://www.airbnb.com.tr/rooms/1531988377023856577"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.03021,
+          40.98404
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1552864400446155072",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Daire",
+        "fiyat_tl": 10349,
+        "puan": 4.97,
+        "yorum": 31,
+        "url": "https://www.airbnb.com.tr/rooms/1552864400446155072"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0497,
+          40.98436
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1484789975067675061",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4678,
+        "puan": 4.81,
+        "yorum": 48,
+        "url": "https://www.airbnb.com.tr/rooms/1484789975067675061"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02687,
+          40.99565
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1727818454336007725",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 4491,
+        "puan": 5.0,
+        "yorum": 4,
+        "url": "https://www.airbnb.com.tr/rooms/1727818454336007725"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0319,
+          40.9885
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1743790667376970584",
+        "ad": "Daire - İstanbul",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 7640,
+        "puan": 5.0,
+        "yorum": 3,
+        "url": "https://www.airbnb.com.tr/rooms/1743790667376970584"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0731,
+          41.0004
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1756027805857767327",
+        "ad": "Site içi konut - Üsküdar",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 16332,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1756027805857767327"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02598,
+          40.98582
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1692162620201049628",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6195,
+        "puan": 5.0,
+        "yorum": 11,
+        "url": "https://www.airbnb.com.tr/rooms/1692162620201049628"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02852,
+          40.98821
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1413275809075547036",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3590,
+        "puan": 4.95,
+        "yorum": 93,
+        "url": "https://www.airbnb.com.tr/rooms/1413275809075547036"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0322,
+          40.9887
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "765756810814582109",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 5893,
+        "puan": 4.93,
+        "yorum": 137,
+        "url": "https://www.airbnb.com.tr/rooms/765756810814582109"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0224,
+          40.9868
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1498703935847504397",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 8097,
+        "puan": 4.93,
+        "yorum": 42,
+        "url": "https://www.airbnb.com.tr/rooms/1498703935847504397"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0285,
+          40.9922
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1760312050243890649",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3537,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1760312050243890649"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02919,
+          40.99002
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1564046636093948244",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Daire",
+        "fiyat_tl": 6549,
+        "puan": 4.88,
+        "yorum": 58,
+        "url": "https://www.airbnb.com.tr/rooms/1564046636093948244"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0261,
+          40.9847
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "889019180232917128",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 6301,
+        "puan": 4.9,
+        "yorum": 125,
+        "url": "https://www.airbnb.com.tr/rooms/889019180232917128"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02115,
+          40.97965
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "958800668464194240",
+        "ad": "Site içi konut - Kadıköy",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 7540,
+        "puan": 4.99,
+        "yorum": 92,
+        "url": "https://www.airbnb.com.tr/rooms/958800668464194240"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02875,
+          40.98787
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1099232310533033056",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Daire",
+        "fiyat_tl": 3168,
+        "puan": 4.83,
+        "yorum": 109,
+        "url": "https://www.airbnb.com.tr/rooms/1099232310533033056"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02487,
+          40.98892
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "49961526",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Daire",
+        "fiyat_tl": 5359,
+        "puan": 4.95,
+        "yorum": 114,
+        "url": "https://www.airbnb.com.tr/rooms/49961526"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02575,
+          40.98847
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1689763484929205374",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 8738,
+        "puan": 5.0,
+        "yorum": 12,
+        "url": "https://www.airbnb.com.tr/rooms/1689763484929205374"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0331,
+          40.9857
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "854159978346565486",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 8106,
+        "puan": 4.91,
+        "yorum": 58,
+        "url": "https://www.airbnb.com.tr/rooms/854159978346565486"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.02629,
+          40.98382
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1657271395061275050",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 5632,
+        "puan": 5.0,
+        "yorum": 8,
+        "url": "https://www.airbnb.com.tr/rooms/1657271395061275050"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0265,
+          40.9864
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1735308602695610698",
+        "ad": "Daire - Kadıköy",
+        "alt_tur": "Daire",
+        "fiyat_tl": 4850,
+        "puan": 5.0,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/1735308602695610698"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.75507,
+          5.2006
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1753753147576063424",
+        "ad": "Ev - Honda, Kolombiya",
+        "alt_tur": "Daire / Ev",
+        "fiyat_tl": 6910,
+        "puan": 5.0,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/1753753147576063424"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.9185,
+          18.5667
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1766711239871024477",
+        "ad": "Daire - Pune, Hindistan",
+        "alt_tur": "Özel Oda",
+        "fiyat_tl": 2285,
+        "puan": null,
+        "yorum": 0,
+        "url": "https://www.airbnb.com.tr/rooms/1766711239871024477"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          75.8541,
+          25.1431
+        ]
+      },
+      "properties": {
+        "katman": "AIRBNB_ILANI",
+        "id": "1757906931996539294",
+        "ad": "Daire - Kota, Hindistan",
+        "alt_tur": "Daire",
+        "fiyat_tl": 1224,
+        "puan": 5.0,
+        "yorum": 5,
+        "url": "https://www.airbnb.com.tr/rooms/1757906931996539294"
+      }
+    }
+  ]
+}

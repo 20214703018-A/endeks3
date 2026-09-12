@@ -1,0 +1,13 @@
+{
+  "toplam_aktif_ilan": 363,
+  "medyan_gecelik_fiyat_tl": 5801,
+  "fiyat_bandi_25_75": [
+    3625,
+    8273
+  ],
+  "min_fiyat_tl": 848,
+  "max_fiyat_tl": 34858,
+  "tahmini_yillik_doluluk_orani": 0.6,
+  "ortalama_yillik_net_nakit_akisi_tl": 571689,
+  "guncelleme_tarihi": "2026-09-12T02:08:20.690153"
+}
