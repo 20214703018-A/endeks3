@@ -667,7 +667,19 @@
       }
       if (p.katman === 'AIRBNB_ILANI') {
         if (p.fiyat_tl) {
-          html += `<div class="popup-row"><span class="popup-key">Gecelik Fiyat:</span><span class="popup-val" style="color: #ff385c; font-weight: 700;">₺${Number(p.fiyat_tl).toLocaleString()} / gece</span></div>`;
+          html += `<div class="popup-row"><span class="popup-key">Ort. Gecelik:</span><span class="popup-val" style="color: #ff385c; font-weight: 700;">₺${Number(p.fiyat_tl).toLocaleString()} / gece</span></div>`;
+        }
+        if (p.fiyat_1_gun_tl) {
+          html += `<div class="popup-row"><span class="popup-key">📅 1 Gün Sonra:</span><span class="popup-val" style="font-weight: 600;">₺${Number(p.fiyat_1_gun_tl).toLocaleString()}</span></div>`;
+        }
+        if (p.fiyat_1_hafta_tl) {
+          html += `<div class="popup-row"><span class="popup-key">📅 1 Hafta Sonra:</span><span class="popup-val" style="font-weight: 600;">₺${Number(p.fiyat_1_hafta_tl).toLocaleString()}</span></div>`;
+        }
+        if (p.fiyat_1_ay_tl) {
+          html += `<div class="popup-row"><span class="popup-key">📅 1 Ay Sonra:</span><span class="popup-val" style="font-weight: 600;">₺${Number(p.fiyat_1_ay_tl).toLocaleString()}</span></div>`;
+        }
+        if (p.fiyat_3_ay_tl) {
+          html += `<div class="popup-row"><span class="popup-key">📅 3 Ay Sonra:</span><span class="popup-val" style="font-weight: 600;">₺${Number(p.fiyat_3_ay_tl).toLocaleString()}</span></div>`;
         }
         if (p.puan) {
           html += `<div class="popup-row"><span class="popup-key">Değerlendirme:</span><span class="popup-val">★ ${p.puan} (${p.yorum || 0} yorum)</span></div>`;
