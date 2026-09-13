@@ -175,6 +175,11 @@ def koordinat(c: sqlite3.Connection, iller: list[int], workers: int = 6, shard: 
         else:
             c.executemany("UPDATE okul SET lat=?, lon=?, koordinat_kaynagi=?, guncellenme=? WHERE kurum_kodu=?", batch); c.commit()
 
+    # Blok tespiti: ilk 20 okulun hiçbirinden koordinat gelmezse (403/timeout) açık hata ver.
+    if todo:
+        deneme = [_harita(host) for _, host in todo[:20]]
+        if not any(deneme):
+            raise SystemExit("harita.php ilk 20 istekte yanıt vermedi — IP engeli olabilir; Türkiye IP'sinden çalıştırın")
     with ThreadPoolExecutor(max_workers=workers) as ex:
         futs = {ex.submit(_harita, host): kurum for kurum, host in todo}
         for f in as_completed(futs):
@@ -212,10 +217,17 @@ def lgs(c: sqlite3.Connection, iller: list[int]) -> None:
     hdr = {"Referer": EOKUL_URL}
     now = datetime.now(timezone.utc).isoformat()
     for il in iller:
-        h = op.open(urllib.request.Request(EOKUL_URL, headers={"User-Agent": UA}), timeout=30).read().decode("utf-8", "ignore")
-        form = {n: v for n, v in re.findall(r'<input type="hidden" name="([^"]+)"[^>]*value="([^"]*)"', h)}
-        form.update({"ddlIl": str(il), "ddlIlce": "-1", "chkFenSosyal": "on", "chkAnadolu": "on", "chkMesleki": "on", "chkAIHL": "on", "btnGiris": "Listele"})
-        r = _post(EOKUL_URL, form, headers=hdr, opener=op, timeout=120)
+        try:
+            h = op.open(urllib.request.Request(EOKUL_URL, headers={"User-Agent": UA}), timeout=30).read().decode("utf-8", "ignore")
+            form = {n: v for n, v in re.findall(r'<input type="hidden" name="([^"]+)"[^>]*value="([^"]*)"', h)}
+            form.update({"ddlIl": str(il), "ddlIlce": "-1", "chkFenSosyal": "on", "chkAnadolu": "on", "chkMesleki": "on", "chkAIHL": "on", "btnGiris": "Listele"})
+            r = _post(EOKUL_URL, form, headers=hdr, opener=op, timeout=120)
+        except urllib.error.HTTPError as exc:
+            # e-okul Türkiye dışı IP'leri 403 ile reddeder (GitHub Actions). Bu adım yerelden çalıştırılır.
+            print(f"  il {il:2}: LGS alınamadı (HTTP {exc.code}) — e-okul yurt dışı IP'ye kapalı olabilir; yerelden çalıştırın", flush=True)
+            if exc.code == 403 and il == iller[0]:
+                print("  ilk ilde 403 → LGS adımı atlanıyor"); return
+            continue
         trs = re.findall(r"<tr[^>]*>(.*?)</tr>", r, re.S)
         header, rows = None, []
         for tr in trs:

@@ -1,6 +1,7 @@
 name: MEB okul listesi + koordinat + LGS (40 makine)
 
-# 1) hazirlik: 81 il listesi + LGS taban puanları (hızlı) → taban DB
+# 1) hazirlik: 81 il listesi (hızlı) → taban DB. LGS (e-okul) yurt dışı IP'ye 403 verir → yerelden:
+#    python3.13 collector/meb_okul_toplayici.py --lgs --puanla
 # 2) koordinat: 40 shard, her biri kurum_kodu % 40 payındaki okulların harita.php koordinatını CSV'ye yazar
 # 3) birlestir: CSV'leri yükle, eşleştir + puanla, resmi_egitim.sqlite artifact
 # Nezaket: shard başına 3 eşzamanlı istek (toplam ≤120), sadece ~700 B'lik sayfalar.
@@ -18,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.13" }
-      - run: python collector/meb_okul_toplayici.py --liste --lgs
+      - run: python collector/meb_okul_toplayici.py --liste
       - uses: actions/upload-artifact@v4
         with:
           name: resmi_egitim_taban
