@@ -2,7 +2,8 @@ name: MEB okul listesi + koordinat + LGS (40 makine)
 
 # 1) hazirlik: 81 il listesi (hızlı) → taban DB. LGS (e-okul) yurt dışı IP'ye 403 verir → yerelden:
 #    python3.13 collector/meb_okul_toplayici.py --lgs --puanla
-# 2) koordinat: 40 shard, her biri kurum_kodu % 40 payındaki okulların harita.php koordinatını CSV'ye yazar
+# 2) koordinat: 40 shard, her biri kurum_kodu % 40 payındaki okulların harita.php koordinatı (CSV) + ana sayfa
+#    derslik/öğretmen/öğrenci/telefon/adres (JSONL)
 # 3) birlestir: CSV'leri yükle, eşleştir + puanla, resmi_egitim.sqlite artifact
 # Nezaket: shard başına 3 eşzamanlı istek (toplam ≤120), sadece ~700 B'lik sayfalar.
 
@@ -41,10 +42,13 @@ jobs:
       - uses: actions/download-artifact@v4
         with: { name: resmi_egitim_taban, path: warehouse/product }
       - run: python collector/meb_okul_toplayici.py --koordinat --shard ${{ matrix.shard }}/40 --workers 3 --csv koord_${{ matrix.shard }}.csv
+      - run: python collector/meb_okul_toplayici.py --istatistik --shard ${{ matrix.shard }}/40 --workers 3 --csv ist_${{ matrix.shard }}.jsonl
       - uses: actions/upload-artifact@v4
         with:
           name: koord_${{ matrix.shard }}
-          path: koord_${{ matrix.shard }}.csv
+          path: |
+            koord_${{ matrix.shard }}.csv
+            ist_${{ matrix.shard }}.jsonl
           retention-days: 7
           if-no-files-found: warn
 
@@ -63,11 +67,12 @@ jobs:
       - run: |
           ls koord | head
           python collector/meb_okul_toplayici.py --csv-yukle koord/*.csv
+          python collector/meb_okul_toplayici.py --istatistik-yukle koord/*.jsonl
           python collector/meb_okul_toplayici.py --puanla
           python - <<'EOF'
           import sqlite3
           c = sqlite3.connect("warehouse/product/resmi_egitim.sqlite")
-          print("okul:", c.execute("SELECT COUNT(*), SUM(lat IS NOT NULL) FROM okul").fetchone())
+          print("okul:", c.execute("SELECT COUNT(*), SUM(lat IS NOT NULL), SUM(ogrenci IS NOT NULL) FROM okul").fetchone())
           print("lgs:", c.execute("SELECT COUNT(*), SUM(kurum_kodu IS NOT NULL) FROM lgs_taban").fetchone())
           for r in c.execute("SELECT tur, COUNT(*) FROM okul GROUP BY tur ORDER BY 2 DESC"): print("  ", r)
           EOF

@@ -4,9 +4,11 @@ Kaynaklar (resmî, ücretsiz, anahtarsız):
   1. meb.gov.tr/baglantilar/okullar/okullar_ajax.php  → il başına tüm kurumlar (ad, host, YOL=il/ilçe/kurum kodu)
   2. https://<host>.meb.k12.tr/tema/harita.php           → her okulun koordinatı (≈700 B; nazik hız: eşzamanlı 6)
   3. e-okul SNV08008.ASPX (LGS tercih listesi)           → sınavla öğrenci alan liselerin taban puanı (ilk yerleştirme + 2. nakil)
+  4. https://<host>.meb.k12.tr/ (ana sayfa, ~22 KB)      → derslik / öğretmen / öğrenci sayısı, kurum telefonu, adres
 
 Tablolar:
-  okul(kurum_kodu PK, il_kodu, ilce_kodu, il, ilce, ad, ad_norm, tur, host, lat, lon, koordinat_kaynagi, guncellenme)
+  okul(kurum_kodu PK, il_kodu, ilce_kodu, il, ilce, ad, ad_norm, tur, host, lat, lon, koordinat_kaynagi,
+       derslik, ogretmen, ogrenci, telefon, adres, istatistik_guncellenme, guncellenme)
   lgs_taban(tercih_kodu PK, il_kodu, ilce, okul_adi, okul_adi_norm, okul_turu, alan, ogretim_sekli, pansiyon, dil,
             kontenjan, taban_ilk, taban_nakil, yil, kurum_kodu (eşleşme), ulusal_sira, ulusal_yuzdelik, il_sira, tur_sira)
   kapsama(tablo, satir, guncellenme)
@@ -94,6 +96,11 @@ def open_db() -> sqlite3.Connection:
         CREATE TABLE IF NOT EXISTS okul (kurum_kodu INTEGER PRIMARY KEY, il_kodu INTEGER, ilce_kodu INTEGER, il TEXT, ilce TEXT,
             ad TEXT, ad_norm TEXT, tur TEXT, host TEXT, lat REAL, lon REAL, koordinat_kaynagi TEXT, guncellenme TEXT);
         CREATE INDEX IF NOT EXISTS idx_okul_il ON okul (il_kodu, ilce_kodu);
+    """)
+    for col, typ in (("derslik", "INTEGER"), ("ogretmen", "INTEGER"), ("ogrenci", "INTEGER"), ("telefon", "TEXT"), ("adres", "TEXT"), ("istatistik_guncellenme", "TEXT")):
+        if col not in {r[1] for r in c.execute("PRAGMA table_info(okul)")}:
+            c.execute(f"ALTER TABLE okul ADD COLUMN {col} {typ}")
+    c.executescript("""
         CREATE INDEX IF NOT EXISTS idx_okul_tur_lat ON okul (tur, lat, lon);
         CREATE INDEX IF NOT EXISTS idx_okul_adnorm ON okul (il_kodu, ad_norm);
         CREATE TABLE IF NOT EXISTS lgs_taban (tercih_kodu INTEGER PRIMARY KEY, il_kodu INTEGER, ilce TEXT, okul_adi TEXT, okul_adi_norm TEXT,
@@ -198,6 +205,83 @@ def koordinat(c: sqlite3.Connection, iller: list[int], workers: int = 6, shard: 
     print(f"bitti: koordinatlı {done:,}, boş {bos:,}")
 
 
+# ---------- 2b) istatistik (ana sayfa) ----------
+# Tema başına markup değişir (tablo / <p class=okulumuz-sayi> / "Derslik:<strong>27</strong>");
+# etiketler atılıp düz metinde "Etiket [Sayısı] : 27" arandığında hepsi yakalanır.
+_STAT_RX = {
+    "derslik": re.compile(r"Derslik(?:\s*Say[ıi]s[ıi])?\s*:?\s*(\d{1,4})\b", re.I),
+    "ogretmen": re.compile(r"Ö[ğg]retmen(?:\s*Say[ıi]s[ıi])?\s*:?\s*(\d{1,4})\b", re.I),
+    "ogrenci": re.compile(r"Ö[ğg]renci(?:\s*Say[ıi]s[ıi])?\s*:?\s*(\d{1,5})\b", re.I),
+}
+
+
+def _anasayfa(host: str) -> dict | None:
+    url = f"https://{host}.meb.k12.tr/"
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=20) as r:
+                h = r.read(300_000).decode("utf-8", "ignore")
+            t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", h))
+            out = {k: int(m.group(1)) for k, rx in _STAT_RX.items() if (m := rx.search(t))}
+            m = re.search(r"Telefon\s*:\s*([0-9 ()+-]{7,20})", t); out["telefon"] = m.group(1).strip() if m else None
+            m = re.search(r"Adres\s*:\s*(.{5,200}?)\s*(?:Devam[ıi]|Kurumumuz|E-Posta|$)", t); out["adres"] = m.group(1).strip() if m else None
+            return out if any(out.get(k) is not None for k in ("derslik", "ogretmen", "ogrenci", "adres")) else None
+        except Exception:
+            time.sleep(1.0 + attempt)
+    return None
+
+
+def istatistik(c: sqlite3.Connection, iller: list[int], workers: int = 6, shard: tuple[int, int] | None = None,
+               csv_out: str | None = None) -> None:
+    ph = ",".join("?" for _ in iller)
+    todo = c.execute(f"SELECT kurum_kodu, host FROM okul WHERE istatistik_guncellenme IS NULL AND host IS NOT NULL AND host<>'' AND il_kodu IN ({ph})", iller).fetchall()
+    if shard:
+        i, n = shard; todo = [t for t in todo if t[0] % n == (i - 1)]
+    print(f"istatistik alınacak: {len(todo):,} okul, {workers} eşzamanlı{f', shard {shard[0]}/{shard[1]}' if shard else ''}", flush=True)
+    now = datetime.now(timezone.utc).isoformat()
+    done = bos = 0; t0 = time.time(); batch = []
+    csv_f = open(csv_out, "a", encoding="utf-8") if csv_out else None
+
+    def yaz(batch):
+        if csv_f:
+            for row in batch:
+                csv_f.write(json.dumps(row, ensure_ascii=False) + "\n")
+            csv_f.flush()
+        else:
+            c.executemany("UPDATE okul SET derslik=?, ogretmen=?, ogrenci=?, telefon=?, adres=?, istatistik_guncellenme=? WHERE kurum_kodu=?",
+                          [(r["derslik"], r["ogretmen"], r["ogrenci"], r["telefon"], r["adres"], r["ts"], r["kurum"]) for r in batch]); c.commit()
+
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = {ex.submit(_anasayfa, host): kurum for kurum, host in todo}
+        for f in as_completed(futs):
+            kurum = futs[f]; res = f.result()
+            if res:
+                batch.append({"kurum": kurum, "derslik": res.get("derslik"), "ogretmen": res.get("ogretmen"), "ogrenci": res.get("ogrenci"),
+                              "telefon": res.get("telefon"), "adres": res.get("adres"), "ts": now}); done += 1
+            else:
+                bos += 1
+            if len(batch) >= 100:
+                yaz(batch); batch = []
+                print(f"  {done + bos:6,}/{len(todo):,}  istatistikli {done:,}  boş {bos:,}  {time.time() - t0:5.0f}s", flush=True)
+    if batch:
+        yaz(batch)
+    if csv_f:
+        csv_f.close()
+    print(f"bitti: istatistikli {done:,}, boş {bos:,}")
+
+
+def istatistik_yukle(c: sqlite3.Connection, paths: list[str]) -> None:
+    n = 0
+    for pth in paths:
+        rows = []
+        with open(pth, encoding="utf-8") as f:
+            for line in f:
+                if line.strip():
+                    r = json.loads(line); rows.append((r["derslik"], r["ogretmen"], r["ogrenci"], r["telefon"], r["adres"], r["ts"], r["kurum"]))
+        c.executemany("UPDATE okul SET derslik=?, ogretmen=?, ogrenci=?, telefon=?, adres=?, istatistik_guncellenme=? WHERE kurum_kodu=?", rows); n += len(rows)
+    c.commit(); print(f"JSONL'den {n:,} istatistik yüklendi")
+
+
 def csv_yukle(c: sqlite3.Connection, paths: list[str]) -> None:
     n = 0
     for pth in paths:
@@ -292,6 +376,8 @@ def main() -> int:
     ap.add_argument("--shard", help="i/N: koordinat adımını N parçaya böl, i. parçayı işle (1 tabanlı)")
     ap.add_argument("--csv", help="koordinatları DB yerine bu CSV'ye yaz (shard çıktısı)")
     ap.add_argument("--csv-yukle", nargs="*", help="shard CSV'lerini DB'ye yükle")
+    ap.add_argument("--istatistik", action="store_true", help="ana sayfadan derslik/öğretmen/öğrenci/telefon/adres")
+    ap.add_argument("--istatistik-yukle", nargs="*", help="shard JSONL'lerini DB'ye yükle")
     a = ap.parse_args()
     iller = a.il or IL_KODLARI
     shard = None
@@ -301,6 +387,8 @@ def main() -> int:
     if a.liste: print("MEB okul listesi…"); liste(c, iller)
     if a.koordinat: print("koordinatlar…"); koordinat(c, iller, a.workers, shard, a.csv)
     if a.csv_yukle: csv_yukle(c, a.csv_yukle)
+    if a.istatistik: print("okul istatistikleri…"); istatistik(c, iller, a.workers, shard, a.csv)
+    if a.istatistik_yukle: istatistik_yukle(c, a.istatistik_yukle)
     if a.lgs: print("LGS taban puanları…"); lgs(c, iller)
     if a.puanla: print("eşleştirme + puanlama…"); puanla(c)
     c.close(); return 0
