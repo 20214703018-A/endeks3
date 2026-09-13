@@ -3,7 +3,7 @@ name: MEB okul listesi + koordinat + LGS (40 makine)
 # 1) hazirlik: 81 il listesi (hızlı) → taban DB. LGS (e-okul) yurt dışı IP'ye 403 verir → yerelden:
 #    python3.13 collector/meb_okul_toplayici.py --lgs --puanla
 # 2) koordinat: 40 shard, her biri kurum_kodu % 40 payındaki okulların harita.php koordinatı (CSV) + ana sayfa
-#    derslik/öğretmen/öğrenci/telefon/adres (JSONL)
+#    derslik/öğretmen/öğrenci (JSONL)
 # 3) birlestir: CSV'leri yükle, eşleştir + puanla, resmi_egitim.sqlite artifact
 # Nezaket: shard başına 3 eşzamanlı istek (toplam ≤120), sadece ~700 B'lik sayfalar.
 

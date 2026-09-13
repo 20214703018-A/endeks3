@@ -4,11 +4,11 @@ Kaynaklar (resmî, ücretsiz, anahtarsız):
   1. meb.gov.tr/baglantilar/okullar/okullar_ajax.php  → il başına tüm kurumlar (ad, host, YOL=il/ilçe/kurum kodu)
   2. https://<host>.meb.k12.tr/tema/harita.php           → her okulun koordinatı (≈700 B; nazik hız: eşzamanlı 6)
   3. e-okul SNV08008.ASPX (LGS tercih listesi)           → sınavla öğrenci alan liselerin taban puanı (ilk yerleştirme + 2. nakil)
-  4. https://<host>.meb.k12.tr/ (ana sayfa, ~22 KB)      → derslik / öğretmen / öğrenci sayısı, kurum telefonu, adres
+  4. https://<host>.meb.k12.tr/ (ana sayfa, ~22 KB)      → derslik / öğretmen / öğrenci sayısı (telefon/adres toplanmaz — karar 2026-09-13)
 
 Tablolar:
   okul(kurum_kodu PK, il_kodu, ilce_kodu, il, ilce, ad, ad_norm, tur, host, lat, lon, koordinat_kaynagi,
-       derslik, ogretmen, ogrenci, telefon, adres, istatistik_guncellenme, guncellenme)
+       derslik, ogretmen, ogrenci, istatistik_guncellenme, guncellenme)
   lgs_taban(tercih_kodu PK, il_kodu, ilce, okul_adi, okul_adi_norm, okul_turu, alan, ogretim_sekli, pansiyon, dil,
             kontenjan, taban_ilk, taban_nakil, yil, kurum_kodu (eşleşme), ulusal_sira, ulusal_yuzdelik, il_sira, tur_sira)
   kapsama(tablo, satir, guncellenme)
@@ -97,7 +97,7 @@ def open_db() -> sqlite3.Connection:
             ad TEXT, ad_norm TEXT, tur TEXT, host TEXT, lat REAL, lon REAL, koordinat_kaynagi TEXT, guncellenme TEXT);
         CREATE INDEX IF NOT EXISTS idx_okul_il ON okul (il_kodu, ilce_kodu);
     """)
-    for col, typ in (("derslik", "INTEGER"), ("ogretmen", "INTEGER"), ("ogrenci", "INTEGER"), ("telefon", "TEXT"), ("adres", "TEXT"), ("istatistik_guncellenme", "TEXT")):
+    for col, typ in (("derslik", "INTEGER"), ("ogretmen", "INTEGER"), ("ogrenci", "INTEGER"), ("istatistik_guncellenme", "TEXT")):
         if col not in {r[1] for r in c.execute("PRAGMA table_info(okul)")}:
             c.execute(f"ALTER TABLE okul ADD COLUMN {col} {typ}")
     c.executescript("""
@@ -223,9 +223,7 @@ def _anasayfa(host: str) -> dict | None:
                 h = r.read(300_000).decode("utf-8", "ignore")
             t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", h))
             out = {k: int(m.group(1)) for k, rx in _STAT_RX.items() if (m := rx.search(t))}
-            m = re.search(r"Telefon\s*:\s*([0-9 ()+-]{7,20})", t); out["telefon"] = m.group(1).strip() if m else None
-            m = re.search(r"Adres\s*:\s*(.{5,200}?)\s*(?:Devam[ıi]|Kurumumuz|E-Posta|$)", t); out["adres"] = m.group(1).strip() if m else None
-            return out if any(out.get(k) is not None for k in ("derslik", "ogretmen", "ogrenci", "adres")) else None
+            return out or None
         except Exception:
             time.sleep(1.0 + attempt)
     return None
@@ -248,16 +246,15 @@ def istatistik(c: sqlite3.Connection, iller: list[int], workers: int = 6, shard:
                 csv_f.write(json.dumps(row, ensure_ascii=False) + "\n")
             csv_f.flush()
         else:
-            c.executemany("UPDATE okul SET derslik=?, ogretmen=?, ogrenci=?, telefon=?, adres=?, istatistik_guncellenme=? WHERE kurum_kodu=?",
-                          [(r["derslik"], r["ogretmen"], r["ogrenci"], r["telefon"], r["adres"], r["ts"], r["kurum"]) for r in batch]); c.commit()
+            c.executemany("UPDATE okul SET derslik=?, ogretmen=?, ogrenci=?, istatistik_guncellenme=? WHERE kurum_kodu=?",
+                          [(r["derslik"], r["ogretmen"], r["ogrenci"], r["ts"], r["kurum"]) for r in batch]); c.commit()
 
     with ThreadPoolExecutor(max_workers=workers) as ex:
         futs = {ex.submit(_anasayfa, host): kurum for kurum, host in todo}
         for f in as_completed(futs):
             kurum = futs[f]; res = f.result()
             if res:
-                batch.append({"kurum": kurum, "derslik": res.get("derslik"), "ogretmen": res.get("ogretmen"), "ogrenci": res.get("ogrenci"),
-                              "telefon": res.get("telefon"), "adres": res.get("adres"), "ts": now}); done += 1
+                batch.append({"kurum": kurum, "derslik": res.get("derslik"), "ogretmen": res.get("ogretmen"), "ogrenci": res.get("ogrenci"), "ts": now}); done += 1
             else:
                 bos += 1
             if len(batch) >= 100:
@@ -277,8 +274,8 @@ def istatistik_yukle(c: sqlite3.Connection, paths: list[str]) -> None:
         with open(pth, encoding="utf-8") as f:
             for line in f:
                 if line.strip():
-                    r = json.loads(line); rows.append((r["derslik"], r["ogretmen"], r["ogrenci"], r["telefon"], r["adres"], r["ts"], r["kurum"]))
-        c.executemany("UPDATE okul SET derslik=?, ogretmen=?, ogrenci=?, telefon=?, adres=?, istatistik_guncellenme=? WHERE kurum_kodu=?", rows); n += len(rows)
+                    r = json.loads(line); rows.append((r["derslik"], r["ogretmen"], r["ogrenci"], r["ts"], r["kurum"]))
+        c.executemany("UPDATE okul SET derslik=?, ogretmen=?, ogrenci=?, istatistik_guncellenme=? WHERE kurum_kodu=?", rows); n += len(rows)
     c.commit(); print(f"JSONL'den {n:,} istatistik yüklendi")
 
 
@@ -376,7 +373,7 @@ def main() -> int:
     ap.add_argument("--shard", help="i/N: koordinat adımını N parçaya böl, i. parçayı işle (1 tabanlı)")
     ap.add_argument("--csv", help="koordinatları DB yerine bu CSV'ye yaz (shard çıktısı)")
     ap.add_argument("--csv-yukle", nargs="*", help="shard CSV'lerini DB'ye yükle")
-    ap.add_argument("--istatistik", action="store_true", help="ana sayfadan derslik/öğretmen/öğrenci/telefon/adres")
+    ap.add_argument("--istatistik", action="store_true", help="ana sayfadan derslik/öğretmen/öğrenci")
     ap.add_argument("--istatistik-yukle", nargs="*", help="shard JSONL'lerini DB'ye yükle")
     a = ap.parse_args()
     iller = a.il or IL_KODLARI
