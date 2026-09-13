@@ -147,16 +147,21 @@ def liste(c: sqlite3.Connection, iller: list[int]) -> None:
 _COORD_RX = re.compile(r"q=(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)")
 
 
-def _harita(host: str) -> tuple[float, float] | None:
+YOK = ("yok",)   # sayfa geldi ama koordinat girilmemiş (q=0,0) — tekrar denenmez
+
+
+def _harita(host: str):
+    """(lat, lon) | YOK (sayfa var, koordinat yok) | None (ağ/HTTP hatası)."""
     url = f"https://{host}.meb.k12.tr/tema/harita.php"
     for attempt in range(2):
         try:
             with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=15) as r:
-                m = _COORD_RX.search(r.read().decode("utf-8", "ignore"))
+                body = r.read().decode("utf-8", "ignore")
+            m = _COORD_RX.search(body)
             if not m:
-                return None
+                return YOK if "maps" in body else None
             lat, lon = float(m.group(1)), float(m.group(2))
-            return (lat, lon) if 35.0 <= lat <= 43.5 and 25.0 <= lon <= 45.5 else None
+            return (lat, lon) if 35.0 <= lat <= 43.5 and 25.0 <= lon <= 45.5 else YOK
         except Exception:
             time.sleep(1.0 + attempt)
     return None
@@ -165,7 +170,7 @@ def _harita(host: str) -> tuple[float, float] | None:
 def koordinat(c: sqlite3.Connection, iller: list[int], workers: int = 6, shard: tuple[int, int] | None = None,
               csv_out: str | None = None) -> None:
     ph = ",".join("?" for _ in iller)
-    todo = c.execute(f"SELECT kurum_kodu, host FROM okul WHERE lat IS NULL AND host IS NOT NULL AND host<>'' AND il_kodu IN ({ph})", iller).fetchall()
+    todo = c.execute(f"SELECT kurum_kodu, host FROM okul WHERE lat IS NULL AND koordinat_kaynagi IS NULL AND host IS NOT NULL AND host<>'' AND il_kodu IN ({ph})", iller).fetchall()
     if shard:
         i, n = shard
         todo = [t for t in todo if t[0] % n == (i - 1)]
@@ -177,21 +182,26 @@ def koordinat(c: sqlite3.Connection, iller: list[int], workers: int = 6, shard: 
     def yaz(batch):
         if csv_f:
             for lat, lon, src, ts, kurum in batch:
-                csv_f.write(f"{kurum},{lat},{lon},{src},{ts}\n")
+                csv_f.write(f"{kurum},{'' if lat is None else lat},{'' if lon is None else lon},{src},{ts}\n")
             csv_f.flush()
         else:
             c.executemany("UPDATE okul SET lat=?, lon=?, koordinat_kaynagi=?, guncellenme=? WHERE kurum_kodu=?", batch); c.commit()
 
     # Blok tespiti: ilk 20 okulun hiçbirinden koordinat gelmezse (403/timeout) açık hata ver.
     if todo:
-        deneme = [_harita(host) for _, host in todo[:20]]
-        if not any(deneme):
-            raise SystemExit("harita.php ilk 20 istekte yanıt vermedi — IP engeli olabilir; Türkiye IP'sinden çalıştırın")
+        import random
+        ornek = random.sample(todo, min(20, len(todo)))   # rastgele: koordinatsız okullar listenin başında kümelenir
+        if all(_harita(host) is None for _, host in ornek):
+            print("  20 rastgele istek yanıtsız; 30 s bekleyip yeniden deneniyor…", flush=True); time.sleep(30)
+            if all(_harita(host) is None for _, host in random.sample(todo, min(20, len(todo)))):
+                raise SystemExit("harita.php 40 istekte yanıt vermedi — IP engeli olabilir; Türkiye IP'sinden çalıştırın")
     with ThreadPoolExecutor(max_workers=workers) as ex:
         futs = {ex.submit(_harita, host): kurum for kurum, host in todo}
         for f in as_completed(futs):
             kurum = futs[f]; res = f.result()
-            if res:
+            if res is YOK:
+                batch.append((None, None, "harita.php: koordinat girilmemiş", now, kurum)); bos += 1
+            elif res:
                 batch.append((res[0], res[1], "meb.k12.tr/tema/harita.php", now, kurum)); done += 1
             else:
                 bos += 1
@@ -287,7 +297,7 @@ def csv_yukle(c: sqlite3.Connection, paths: list[str]) -> None:
             for line in f:
                 parts = line.rstrip("\n").split(",")
                 if len(parts) == 5:
-                    rows.append((float(parts[1]), float(parts[2]), parts[3], parts[4], int(parts[0])))
+                    rows.append((float(parts[1]) if parts[1] else None, float(parts[2]) if parts[2] else None, parts[3], parts[4], int(parts[0])))
         c.executemany("UPDATE okul SET lat=?, lon=?, koordinat_kaynagi=?, guncellenme=? WHERE kurum_kodu=?", rows); n += len(rows)
     c.commit(); print(f"CSV'den {n:,} koordinat yüklendi")
 
