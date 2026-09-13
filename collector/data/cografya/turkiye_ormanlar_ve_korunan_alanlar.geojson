@@ -1,0 +1,3029 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.00432,
+          39.91375
+        ]
+      },
+      "properties": {
+        "id": 305253,
+        "ad": "Mavi Göl Rekreasyon Alanı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1010,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.33333,
+          37.76667
+        ]
+      },
+      "properties": {
+        "id": 305478,
+        "ad": "Kürtoluğuormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1667,
+        "il_plaka": "33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          38.3,
+          39.95
+        ]
+      },
+      "properties": {
+        "id": 307236,
+        "ad": "Kızıldağormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 2289,
+        "il_plaka": "58"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.35888,
+          38.02635
+        ]
+      },
+      "properties": {
+        "id": 309971,
+        "ad": "Büyükşehir Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1679,
+        "il_plaka": "33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.81374,
+          38.67642
+        ]
+      },
+      "properties": {
+        "id": 317641,
+        "ad": "Göreme Tarihi Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1057,
+        "il_plaka": "50"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.8683,
+          37.82274
+        ]
+      },
+      "properties": {
+        "id": 319488,
+        "ad": "Çandır Atatürk Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1284,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.81667,
+          38.28333
+        ]
+      },
+      "properties": {
+        "id": 319582,
+        "ad": "Çamormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1194,
+        "il_plaka": "33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.88333,
+          39.96667
+        ]
+      },
+      "properties": {
+        "id": 322795,
+        "ad": "Altınpark",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 891,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.15,
+          37.73333
+        ]
+      },
+      "properties": {
+        "id": 324285,
+        "ad": "Aladağlar Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 3263,
+        "il_plaka": "73"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.56667,
+          39.88333
+        ]
+      },
+      "properties": {
+        "id": 324300,
+        "ad": "Alaçamormanları",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1283,
+        "il_plaka": "16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.14062,
+          41.67493
+        ]
+      },
+      "properties": {
+        "id": 737047,
+        "ad": "Küre Dağları Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 702,
+        "il_plaka": "37"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.78333,
+          40.35
+        ]
+      },
+      "properties": {
+        "id": 745399,
+        "ad": "İğdir Ormanları",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1763,
+        "il_plaka": "52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.70193,
+          41.05319
+        ]
+      },
+      "properties": {
+        "id": 745905,
+        "ad": "Ilgaz Dağı Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1869,
+        "il_plaka": "82"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          38.42694,
+          40.67344
+        ]
+      },
+      "properties": {
+        "id": 746949,
+        "ad": "Gengene Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 829,
+        "il_plaka": "28"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.71402,
+          41.24836
+        ]
+      },
+      "properties": {
+        "id": 750792,
+        "ad": "Belgrad Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 99,
+        "il_plaka": "34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.75081,
+          41.44013
+        ]
+      },
+      "properties": {
+        "id": 751639,
+        "ad": "Gölköy Orman Fidanlığı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 785,
+        "il_plaka": "37"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.11847,
+          40.99676
+        ]
+      },
+      "properties": {
+        "id": 6692331,
+        "ad": "Tema Nezahat Gokyigit Park",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 78,
+        "il_plaka": "34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.9486,
+          41.06
+        ]
+      },
+      "properties": {
+        "id": 6947675,
+        "ad": "Miniatürk",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 39,
+        "il_plaka": "34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0156,
+          41.0483
+        ]
+      },
+      "properties": {
+        "id": 6947685,
+        "ad": "Yıldız-Park",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 42,
+        "il_plaka": "34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          38.76095,
+          37.98644
+        ]
+      },
+      "properties": {
+        "id": 7513625,
+        "ad": "Nemrut Dağı Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1934,
+        "il_plaka": "02"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.2594,
+          36.81818
+        ]
+      },
+      "properties": {
+        "id": 7542402,
+        "ad": "Tek Tek Dağları Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 515,
+        "il_plaka": "63"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          42.42858,
+          41.24048
+        ]
+      },
+      "properties": {
+        "id": 7547244,
+        "ad": "Sahara Karagöl Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1481,
+        "il_plaka": "08"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.71301,
+          40.71104
+        ]
+      },
+      "properties": {
+        "id": 7549100,
+        "ad": "Altındere Vadisi Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1801,
+        "il_plaka": "61"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          36.23854,
+          37.31639
+        ]
+      },
+      "properties": {
+        "id": 7633187,
+        "ad": "Karatepe Aslantaşı Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 210,
+        "il_plaka": "91"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.81127,
+          39.80464
+        ]
+      },
+      "properties": {
+        "id": 7686973,
+        "ad": "Yozgat Çamlığı Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1524,
+        "il_plaka": "66"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.70979,
+          40.2202
+        ]
+      },
+      "properties": {
+        "id": 7752545,
+        "ad": "Alacahüyük Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1131,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.62148,
+          40.46529
+        ]
+      },
+      "properties": {
+        "id": 7925073,
+        "ad": "Soğuksu Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1196,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.8762,
+          39.99334
+        ]
+      },
+      "properties": {
+        "id": 7927084,
+        "ad": "Gökçek Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 917,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.7849,
+          39.96058
+        ]
+      },
+      "properties": {
+        "id": 7927115,
+        "ad": "Cemre Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 857,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.85057,
+          39.93707
+        ]
+      },
+      "properties": {
+        "id": 7927152,
+        "ad": "Gençlik Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 853,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.85357,
+          39.91994
+        ]
+      },
+      "properties": {
+        "id": 7927359,
+        "ad": "Güven Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 870,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.86395,
+          39.9268
+        ]
+      },
+      "properties": {
+        "id": 7927360,
+        "ad": "Kurtuluş Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 869,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.87636,
+          39.92464
+        ]
+      },
+      "properties": {
+        "id": 7927386,
+        "ad": "Elli Yıl Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 957,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.98805,
+          36.54316
+        ]
+      },
+      "properties": {
+        "id": 8069896,
+        "ad": "Yüz Yıl Atatürk Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 10,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.6304,
+          37.03615
+        ]
+      },
+      "properties": {
+        "id": 8072987,
+        "ad": "Altın Beşik Mağarası Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 678,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.17085,
+          37.18382
+        ]
+      },
+      "properties": {
+        "id": 8073097,
+        "ad": "Köprülü Kanyon Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 376,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.50475,
+          37.00559
+        ]
+      },
+      "properties": {
+        "id": 8073676,
+        "ad": "Güllük Dağı Termessos Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 636,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.68107,
+          36.88427
+        ]
+      },
+      "properties": {
+        "id": 8073907,
+        "ad": "Kuğulu Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 22,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.66956,
+          36.88362
+        ]
+      },
+      "properties": {
+        "id": 8073908,
+        "ad": "Atatürk Kültür Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 75,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.70178,
+          36.88654
+        ]
+      },
+      "properties": {
+        "id": 8073919,
+        "ad": "Tophane Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 41,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.70511,
+          36.88001
+        ]
+      },
+      "properties": {
+        "id": 8073931,
+        "ad": "Karaalioğlu Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 34,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.75911,
+          36.84632
+        ]
+      },
+      "properties": {
+        "id": 8073964,
+        "ad": "Fener Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 40,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.78149,
+          36.85039
+        ]
+      },
+      "properties": {
+        "id": 8073967,
+        "ad": "Gençlik Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 16,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.64953,
+          36.96302
+        ]
+      },
+      "properties": {
+        "id": 8074211,
+        "ad": "Duacı Orman Alanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 292,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.51146,
+          36.54158
+        ]
+      },
+      "properties": {
+        "id": 8077814,
+        "ad": "Beydağları Sahil Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 374,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.29168,
+          40.59786
+        ]
+      },
+      "properties": {
+        "id": 8184043,
+        "ad": "Abant Gölü Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1616,
+        "il_plaka": "14"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.75629,
+          40.94077
+        ]
+      },
+      "properties": {
+        "id": 8185250,
+        "ad": "Yedigöller Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 984,
+        "il_plaka": "14"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.89549,
+          37.64591
+        ]
+      },
+      "properties": {
+        "id": 8212788,
+        "ad": "Kovada Gölü Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1068,
+        "il_plaka": "33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.87599,
+          37.45309
+        ]
+      },
+      "properties": {
+        "id": 8212789,
+        "ad": "Yazılı Kanyon Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 348,
+        "il_plaka": "33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.99371,
+          41.04374
+        ]
+      },
+      "properties": {
+        "id": 8521674,
+        "ad": "Maçka Park",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 27,
+        "il_plaka": "34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.16754,
+          40.08553
+        ]
+      },
+      "properties": {
+        "id": 8522085,
+        "ad": "Uludağ Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 2304,
+        "il_plaka": "16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.98691,
+          41.0385
+        ]
+      },
+      "properties": {
+        "id": 8533175,
+        "ad": "Taksim Gezi Park",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 83,
+        "il_plaka": "34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.94542,
+          39.66349
+        ]
+      },
+      "properties": {
+        "id": 8543900,
+        "ad": "Kazdağı Milli Parkı Hasan Boğuldu",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 798,
+        "il_plaka": "10"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.74659,
+          39.63848
+        ]
+      },
+      "properties": {
+        "id": 8543901,
+        "ad": "Kazdağı Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 861,
+        "il_plaka": "10"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          41.64574,
+          41.21112
+        ]
+      },
+      "properties": {
+        "id": 8642664,
+        "ad": "Hatila Vadisi Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 2354,
+        "il_plaka": "08"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          41.77236,
+          41.15237
+        ]
+      },
+      "properties": {
+        "id": 8642687,
+        "ad": "Kafkasör Ormanici Dinleme Yeri",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1551,
+        "il_plaka": "08"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.09363,
+          38.39958
+        ]
+      },
+      "properties": {
+        "id": 9888678,
+        "ad": "Susuzdede Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 47,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.20473,
+          38.38806
+        ]
+      },
+      "properties": {
+        "id": 9888772,
+        "ad": "Barış Manço Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 258,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.06203,
+          38.50061
+        ]
+      },
+      "properties": {
+        "id": 9888781,
+        "ad": "Yetmişbeşince Yıl Türk Dünyası Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 83,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.09056,
+          38.45691
+        ]
+      },
+      "properties": {
+        "id": 9888801,
+        "ad": "Olof Palme Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 3,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.10071,
+          38.45279
+        ]
+      },
+      "properties": {
+        "id": 9888802,
+        "ad": "Adnan Saygun Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 11,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.11093,
+          38.4494
+        ]
+      },
+      "properties": {
+        "id": 9888803,
+        "ad": "İnsan Hakları Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": -9999,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1472,
+          38.47808
+        ]
+      },
+      "properties": {
+        "id": 9888820,
+        "ad": "Atatürk Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 66,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.12568,
+          38.4576
+        ]
+      },
+      "properties": {
+        "id": 9888823,
+        "ad": "Muammer Aksoy Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 6,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.16552,
+          38.45855
+        ]
+      },
+      "properties": {
+        "id": 9888824,
+        "ad": "Turgut Özal Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": -1,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.21665,
+          38.46286
+        ]
+      },
+      "properties": {
+        "id": 9888859,
+        "ad": "Bornova Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 41,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.14626,
+          38.42877
+        ]
+      },
+      "properties": {
+        "id": 9889120,
+        "ad": "Kültürpark Fuar Alanı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 10,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1278,
+          38.41462
+        ]
+      },
+      "properties": {
+        "id": 9889152,
+        "ad": "Bahribaba Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 9,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.13066,
+          38.41278
+        ]
+      },
+      "properties": {
+        "id": 9889174,
+        "ad": "Cici Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 65,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.14906,
+          38.41842
+        ]
+      },
+      "properties": {
+        "id": 9889175,
+        "ad": "Şehitlik Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 58,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.1115,
+          38.40595
+        ]
+      },
+      "properties": {
+        "id": 9889176,
+        "ad": "Mehmet Yüce Sonkurt Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 102,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.24077,
+          37.83226
+        ]
+      },
+      "properties": {
+        "id": 9889279,
+        "ad": "Yağmur Aqua Park",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 33,
+        "il_plaka": "09"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.22854,
+          36.80582
+        ]
+      },
+      "properties": {
+        "id": 9889471,
+        "ad": "İçmeler Belediye Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 7,
+        "il_plaka": "48"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.28606,
+          36.84723
+        ]
+      },
+      "properties": {
+        "id": 9889498,
+        "ad": "Günnücek Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 6,
+        "il_plaka": "48"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.89493,
+          38.35293
+        ]
+      },
+      "properties": {
+        "id": 9922408,
+        "ad": "Onbeş Yıl Atatürk Anı Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 155,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.68545,
+          36.71765
+        ]
+      },
+      "properties": {
+        "id": 9922416,
+        "ad": "Datça Şehir Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 18,
+        "il_plaka": "48"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.57846,
+          38.2885
+        ]
+      },
+      "properties": {
+        "id": 9922468,
+        "ad": "Uzunyol Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 200,
+        "il_plaka": "35"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.4314,
+          38.56988
+        ]
+      },
+      "properties": {
+        "id": 9985756,
+        "ad": "Spil Dağı Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 932,
+        "il_plaka": "45"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.2866,
+          37.72108
+        ]
+      },
+      "properties": {
+        "id": 10181041,
+        "ad": "Honaz Dağı Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1130,
+        "il_plaka": "20"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.10421,
+          37.6766
+        ]
+      },
+      "properties": {
+        "id": 10182498,
+        "ad": "Dilek Yarımadası Büyük Menderes Detası Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 276,
+        "il_plaka": "09"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.99353,
+          36.72886
+        ]
+      },
+      "properties": {
+        "id": 10248844,
+        "ad": "Günlük Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 199,
+        "il_plaka": "48"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.37131,
+          36.98025
+        ]
+      },
+      "properties": {
+        "id": 10250821,
+        "ad": "Günlük Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 426,
+        "il_plaka": "48"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.5127,
+          41.69469
+        ]
+      },
+      "properties": {
+        "id": 10262787,
+        "ad": "Hıdır Baba Tabyaları",
+        "tur": "Doğa Koruma Alanı / Rezerv",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 110,
+        "il_plaka": "22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.52981,
+          41.68695
+        ]
+      },
+      "properties": {
+        "id": 10262804,
+        "ad": "Hacı Sarraf Mahallesi Çocuk Gençlık Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 52,
+        "il_plaka": "22"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.94569,
+          40.53314
+        ]
+      },
+      "properties": {
+        "id": 10309408,
+        "ad": "Fevzi Çakmak Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 795,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95095,
+          40.53157
+        ]
+      },
+      "properties": {
+        "id": 10309411,
+        "ad": "Mimar Sinan Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 802,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95123,
+          40.52631
+        ]
+      },
+      "properties": {
+        "id": 10309415,
+        "ad": "Bosna Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 823,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.94763,
+          40.52378
+        ]
+      },
+      "properties": {
+        "id": 10309418,
+        "ad": "Çıraklık Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 841,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95695,
+          40.52674
+        ]
+      },
+      "properties": {
+        "id": 10309428,
+        "ad": "Bağcılar Yörük Evler Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 823,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.96713,
+          40.52357
+        ]
+      },
+      "properties": {
+        "id": 10309429,
+        "ad": "Bilal-İ Habeşi Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 861,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.96209,
+          40.53283
+        ]
+      },
+      "properties": {
+        "id": 10309432,
+        "ad": "Kafkas Evleri Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 826,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.9571,
+          40.53234
+        ]
+      },
+      "properties": {
+        "id": 10309433,
+        "ad": "Mustafa Özel Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 830,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.96926,
+          40.53523
+        ]
+      },
+      "properties": {
+        "id": 10309438,
+        "ad": "Lozan Evler Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 840,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.97692,
+          40.5436
+        ]
+      },
+      "properties": {
+        "id": 10309441,
+        "ad": "Ali Kocabıyık Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 875,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.97492,
+          40.5455
+        ]
+      },
+      "properties": {
+        "id": 10309445,
+        "ad": "Barış Manço Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 862,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.97037,
+          40.53958
+        ]
+      },
+      "properties": {
+        "id": 10309451,
+        "ad": "Veysel Karani Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 846,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.96157,
+          40.53955
+        ]
+      },
+      "properties": {
+        "id": 10309453,
+        "ad": "Şehitler Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 831,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.9471,
+          40.54224
+        ]
+      },
+      "properties": {
+        "id": 10309470,
+        "ad": "Örnek Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 792,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95732,
+          40.54507
+        ]
+      },
+      "properties": {
+        "id": 10309483,
+        "ad": "Kale Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 818,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95043,
+          40.5456
+        ]
+      },
+      "properties": {
+        "id": 10309486,
+        "ad": "Hitit Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 798,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.61067,
+          40.07541
+        ]
+      },
+      "properties": {
+        "id": 10309521,
+        "ad": "Boğazkale Alaçahöyük Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 949,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.79159,
+          40.64434
+        ]
+      },
+      "properties": {
+        "id": 10309732,
+        "ad": "Çatak Tabiat Parkı",
+        "tur": "Doğa Koruma Alanı / Rezerv",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1733,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.94362,
+          40.57361
+        ]
+      },
+      "properties": {
+        "id": 10309822,
+        "ad": "Şerap Sitesi Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 812,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.94673,
+          40.57225
+        ]
+      },
+      "properties": {
+        "id": 10309824,
+        "ad": "İbrahim Çayırı Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 812,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95102,
+          40.5677
+        ]
+      },
+      "properties": {
+        "id": 10309831,
+        "ad": "Selçuk Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 811,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95268,
+          40.56915
+        ]
+      },
+      "properties": {
+        "id": 10309832,
+        "ad": "Buhara Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 817,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95406,
+          40.57159
+        ]
+      },
+      "properties": {
+        "id": 10309899,
+        "ad": "Manas Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 824,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95663,
+          40.57479
+        ]
+      },
+      "properties": {
+        "id": 10309901,
+        "ad": "Osman Gazi Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 826,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95874,
+          40.57585
+        ]
+      },
+      "properties": {
+        "id": 10309902,
+        "ad": "Recep Yazıcıoğlu Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 829,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95434,
+          40.57476
+        ]
+      },
+      "properties": {
+        "id": 10309904,
+        "ad": "Feyzullah Kıyılık Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 822,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95684,
+          40.56996
+        ]
+      },
+      "properties": {
+        "id": 10309906,
+        "ad": "Tek Ceviz Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 821,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.95563,
+          40.56728
+        ]
+      },
+      "properties": {
+        "id": 10309910,
+        "ad": "Adnan Menderes Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 818,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.94396,
+          40.55497
+        ]
+      },
+      "properties": {
+        "id": 10309973,
+        "ad": "Altınpark",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 793,
+        "il_plaka": "19"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.03924,
+          40.22044
+        ]
+      },
+      "properties": {
+        "id": 10350621,
+        "ad": "Bursa Botanik Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 98,
+        "il_plaka": "16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.99279,
+          40.22902
+        ]
+      },
+      "properties": {
+        "id": 10350630,
+        "ad": "Ziraaat Piknik Alanı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 104,
+        "il_plaka": "16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.98965,
+          40.23942
+        ]
+      },
+      "properties": {
+        "id": 10350632,
+        "ad": "Teoman Özalp Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 103,
+        "il_plaka": "16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.98995,
+          40.18755
+        ]
+      },
+      "properties": {
+        "id": 10350657,
+        "ad": "Atatürk Kent Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 259,
+        "il_plaka": "16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.00077,
+          40.20952
+        ]
+      },
+      "properties": {
+        "id": 10350683,
+        "ad": "Mihraplı Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 107,
+        "il_plaka": "16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0435,
+          40.19651
+        ]
+      },
+      "properties": {
+        "id": 10350717,
+        "ad": "Kültür Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 136,
+        "il_plaka": "16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.14085,
+          40.17842
+        ]
+      },
+      "properties": {
+        "id": 10350750,
+        "ad": "Fidyekızık Çocuk Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 295,
+        "il_plaka": "16"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.41157,
+          40.12628
+        ]
+      },
+      "properties": {
+        "id": 10409806,
+        "ad": "Yetmişbeş Yıl Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 6,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.41045,
+          40.13658
+        ]
+      },
+      "properties": {
+        "id": 10409814,
+        "ad": "Barbaros Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 9,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.4028,
+          40.14305
+        ]
+      },
+      "properties": {
+        "id": 10409815,
+        "ad": "Osnabrück Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 6,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.41396,
+          40.13696
+        ]
+      },
+      "properties": {
+        "id": 10409816,
+        "ad": "Ahmet Taner Kışlalı Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 8,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.40595,
+          40.15062
+        ]
+      },
+      "properties": {
+        "id": 10409837,
+        "ad": "Çanakkale Halk Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 13,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.40405,
+          40.15127
+        ]
+      },
+      "properties": {
+        "id": 10409838,
+        "ad": "Morabin Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 10,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.4049,
+          40.14988
+        ]
+      },
+      "properties": {
+        "id": 10409839,
+        "ad": "Muammer Aksoy Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 9,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.407,
+          40.1622
+        ]
+      },
+      "properties": {
+        "id": 10409888,
+        "ad": "Özgüırlük Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 37,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.40686,
+          40.16621
+        ]
+      },
+      "properties": {
+        "id": 10409889,
+        "ad": "Atatürkçü Düşünce Derneği Ağaçlandırma Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 49,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.41837,
+          40.16622
+        ]
+      },
+      "properties": {
+        "id": 10409891,
+        "ad": "Rotary Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 32,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.42234,
+          40.16664
+        ]
+      },
+      "properties": {
+        "id": 10409892,
+        "ad": "Çakader Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 24,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.42036,
+          40.16392
+        ]
+      },
+      "properties": {
+        "id": 10409893,
+        "ad": "Satranç Derneği Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 36,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.41835,
+          40.15982
+        ]
+      },
+      "properties": {
+        "id": 10409894,
+        "ad": "Uğur Mumcu Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 51,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.41355,
+          40.15859
+        ]
+      },
+      "properties": {
+        "id": 10409895,
+        "ad": "Havan Tabya Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 34,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.41747,
+          40.15673
+        ]
+      },
+      "properties": {
+        "id": 10409899,
+        "ad": "Beşyüz Yıl Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 28,
+        "il_plaka": "17"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.19048,
+          41.45349
+        ]
+      },
+      "properties": {
+        "id": 10419584,
+        "ad": "Soğukpınar Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 357,
+        "il_plaka": "34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.91372,
+          36.91806
+        ]
+      },
+      "properties": {
+        "id": 10630828,
+        "ad": "Kuvai Milliye Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 21,
+        "il_plaka": "32"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.61363,
+          36.83854
+        ]
+      },
+      "properties": {
+        "id": 10631455,
+        "ad": "Yeşil Vadi Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 72,
+        "il_plaka": "32"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.63008,
+          36.79545
+        ]
+      },
+      "properties": {
+        "id": 10631480,
+        "ad": "Atatürk Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 8,
+        "il_plaka": "32"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.07039,
+          36.81836
+        ]
+      },
+      "properties": {
+        "id": 10632250,
+        "ad": "Karakuz Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1417,
+        "il_plaka": "32"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.14798,
+          36.40645
+        ]
+      },
+      "properties": {
+        "id": 10632387,
+        "ad": "Yumaklı Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1368,
+        "il_plaka": "32"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.1895,
+          36.57151
+        ]
+      },
+      "properties": {
+        "id": 10636542,
+        "ad": "Kara Orman",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1550,
+        "il_plaka": "78"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.79018,
+          36.88765
+        ]
+      },
+      "properties": {
+        "id": 10636590,
+        "ad": "Kandevir Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1639,
+        "il_plaka": "78"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.22039,
+          37.10514
+        ]
+      },
+      "properties": {
+        "id": 10637113,
+        "ad": "Atatürk Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1204,
+        "il_plaka": "78"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.9125,
+          41.99232
+        ]
+      },
+      "properties": {
+        "id": 10800481,
+        "ad": "Pakaz Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 35,
+        "il_plaka": "57"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          36.44212,
+          41.07265
+        ]
+      },
+      "properties": {
+        "id": 10803459,
+        "ad": "Akpınar Ormanları",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 786,
+        "il_plaka": "55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          36.44561,
+          40.93708
+        ]
+      },
+      "properties": {
+        "id": 10803460,
+        "ad": "Hemşinler Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 906,
+        "il_plaka": "55"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.34334,
+          37.06297
+        ]
+      },
+      "properties": {
+        "id": 10833293,
+        "ad": "Yüzünü Yıl Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 856,
+        "il_plaka": "83"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.34368,
+          37.05998
+        ]
+      },
+      "properties": {
+        "id": 10833294,
+        "ad": "Parkantep Harikalar Diyarı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 871,
+        "il_plaka": "83"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.35689,
+          37.06421
+        ]
+      },
+      "properties": {
+        "id": 10833296,
+        "ad": "Masal Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 847,
+        "il_plaka": "83"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.37012,
+          37.06279
+        ]
+      },
+      "properties": {
+        "id": 10834161,
+        "ad": "Kırkayak Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 846,
+        "il_plaka": "83"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.37283,
+          37.06412
+        ]
+      },
+      "properties": {
+        "id": 10834162,
+        "ad": "Yüz Yıl Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 838,
+        "il_plaka": "83"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.4224,
+          37.06135
+        ]
+      },
+      "properties": {
+        "id": 10834704,
+        "ad": "Şirinevler Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 875,
+        "il_plaka": "83"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.4075,
+          37.05851
+        ]
+      },
+      "properties": {
+        "id": 10834706,
+        "ad": "Yüzüncü Yıl Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 808,
+        "il_plaka": "83"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.33076,
+          37.0212
+        ]
+      },
+      "properties": {
+        "id": 10838499,
+        "ad": "Şahinbey Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 910,
+        "il_plaka": "83"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.4101,
+          38.08224
+        ]
+      },
+      "properties": {
+        "id": 10861449,
+        "ad": "Kızıl Dağ Milli Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1232,
+        "il_plaka": "33"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.43951,
+          38.80008
+        ]
+      },
+      "properties": {
+        "id": 10904190,
+        "ad": "Doluca Korusu",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 959,
+        "il_plaka": "23"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.29212,
+          36.99031
+        ]
+      },
+      "properties": {
+        "id": 10916410,
+        "ad": "Çandır Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1950,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.32612,
+          40.65066
+        ]
+      },
+      "properties": {
+        "id": 10953524,
+        "ad": "Killik Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1383,
+        "il_plaka": "52"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.69149,
+          41.06929
+        ]
+      },
+      "properties": {
+        "id": 11838489,
+        "ad": "Bahçeşehir Gölet Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 17,
+        "il_plaka": "34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.83453,
+          39.92166
+        ]
+      },
+      "properties": {
+        "id": 11963774,
+        "ad": "Anıtpark",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 882,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.86023,
+          39.90226
+        ]
+      },
+      "properties": {
+        "id": 11963781,
+        "ad": "Kuğulu Parkı",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 935,
+        "il_plaka": "68"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          41.20417,
+          40.80031
+        ]
+      },
+      "properties": {
+        "id": 12280435,
+        "ad": "Kaçkar Dağları Milli Parkı",
+        "tur": "Doğa Koruma Alanı / Rezerv",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 3158,
+        "il_plaka": "00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.8227,
+          40.8966
+        ]
+      },
+      "properties": {
+        "id": 12493778,
+        "ad": "Michael Jackson Hatıra Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 236,
+        "il_plaka": "59"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.85861,
+          40.97537
+        ]
+      },
+      "properties": {
+        "id": 12908692,
+        "ad": "Baruthane-i Âmire",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": -9999,
+        "il_plaka": "34"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.75259,
+          36.69847
+        ]
+      },
+      "properties": {
+        "id": 13096624,
+        "ad": "Meriç Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1002,
+        "il_plaka": "78"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.78204,
+          36.64333
+        ]
+      },
+      "properties": {
+        "id": 13096654,
+        "ad": "Eşeköldüğü Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1004,
+        "il_plaka": "78"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.82838,
+          37.01091
+        ]
+      },
+      "properties": {
+        "id": 13617568,
+        "ad": "Kurşunlu Şelâlesi Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 101,
+        "il_plaka": "07"
+      }
+    }
+  ]
+}
