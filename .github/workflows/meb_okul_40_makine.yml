@@ -1,0 +1,77 @@
+name: MEB okul listesi + koordinat + LGS (40 makine)
+
+# 1) hazirlik: 81 il listesi + LGS taban puanları (hızlı) → taban DB
+# 2) koordinat: 40 shard, her biri kurum_kodu % 40 payındaki okulların harita.php koordinatını CSV'ye yazar
+# 3) birlestir: CSV'leri yükle, eşleştir + puanla, resmi_egitim.sqlite artifact
+# Nezaket: shard başına 3 eşzamanlı istek (toplam ≤120), sadece ~700 B'lik sayfalar.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 1 * *"   # ayda bir (MEB listesi/LGS nadiren değişir; LGS yılda bir)
+
+jobs:
+  hazirlik:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: python collector/meb_okul_toplayici.py --liste --lgs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: resmi_egitim_taban
+          path: warehouse/product/resmi_egitim.sqlite
+          retention-days: 7
+
+  koordinat:
+    needs: hazirlik
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - uses: actions/download-artifact@v4
+        with: { name: resmi_egitim_taban, path: warehouse/product }
+      - run: python collector/meb_okul_toplayici.py --koordinat --shard ${{ matrix.shard }}/40 --workers 3 --csv koord_${{ matrix.shard }}.csv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: koord_${{ matrix.shard }}
+          path: koord_${{ matrix.shard }}.csv
+          retention-days: 7
+          if-no-files-found: warn
+
+  birlestir:
+    needs: koordinat
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - uses: actions/download-artifact@v4
+        with: { name: resmi_egitim_taban, path: warehouse/product }
+      - uses: actions/download-artifact@v4
+        with: { pattern: koord_*, path: koord, merge-multiple: true }
+      - run: |
+          ls koord | head
+          python collector/meb_okul_toplayici.py --csv-yukle koord/*.csv
+          python collector/meb_okul_toplayici.py --puanla
+          python - <<'EOF'
+          import sqlite3
+          c = sqlite3.connect("warehouse/product/resmi_egitim.sqlite")
+          print("okul:", c.execute("SELECT COUNT(*), SUM(lat IS NOT NULL) FROM okul").fetchone())
+          print("lgs:", c.execute("SELECT COUNT(*), SUM(kurum_kodu IS NOT NULL) FROM lgs_taban").fetchone())
+          for r in c.execute("SELECT tur, COUNT(*) FROM okul GROUP BY tur ORDER BY 2 DESC"): print("  ", r)
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: resmi_egitim_sqlite
+          path: warehouse/product/resmi_egitim.sqlite
+          retention-days: 90
