@@ -90,6 +90,32 @@ Bu doküman, GEOPROP veri madenciliği motoru tarafından toplanan, normalize ed
   - `marka`: PTT, Yurtiçi Kargo, Aras Kargo, MNG Kargo, Sürat Kargo, Trendyol Express.
   - `sube_adi`, `adres_acik`, `telefon`, `lat`, `lon`, `il`, `ilce`.
 
+### 2.7. `google_places_ve_yogunluk.sqlite`
+* **Tablo: `google_places_ticari_yogunluk`**
+  - `google_place_id`: Google Haritalar benzersiz yer kimliği (`ChIJ...`).
+  - `cid`: Hex formatlı müşteri/yer kimliği.
+  - `isim`: İşletme veya mekanın resmî tabelası.
+  - `ana_kategori` & `tum_kategoriler`: Google kategori sınıflandırması (JSON dizi).
+  - `puan`: Müşteri memnuniyet skoru (1.0 - 5.0).
+  - `yorum_sayisi`: Toplam Google değerlendirme hacmi (işletmenin kümülatif müşteri hacmi ve ciro vekili).
+  - `lat`, `lon`: Hassas WGS84 koordinatları.
+  - `tam_adres`, `mahalle`, `ilce`, `il`: İdari lokasyon hiyerarşisi.
+  - `calisma_saatleri`: 7 günlük çalışma saatleri ve gün bazlı zaman çizelgesi.
+  - `kaynak`: `Google Maps (Reverse Engineered)`.
+
+### 2.8. `yemek_ve_market_teslimat_ekosistemi.sqlite`
+* **Tablo: `teslimat_depolari_darkstore`**
+  - `platform`: `YEMEKSEPETI_MARKET`, `GETIR`, `TRENDYOL_GO`, `MIGROS_HEMEN`.
+  - `depo_kodu`, `depo_adi`: Dağıtım merkezinin resmî adı.
+  - `tam_adres`, `sehir`, `ilce`, `mahalle`: Depo açık lokasyon bilgisi.
+  - `lat`, `lon`: Hassas depo koordinatları.
+  - `kaynak`: `Resmî Platform Sitemap & JSON-LD / OSM`.
+* **Tablo: `uye_restoranlar_ve_hacim`**
+  - `platform`: `YEMEKSEPETI`.
+  - `restoran_adi`, `mutfaklar` (JSON dizi), `fiyat_segmenti` (₺, ₺₺, ₺₺₺).
+  - `puan` (1.0 - 5.0), `degerlendirme_sayisi` (Gerçekleşen sipariş ve yorum hacmi vekili).
+  - `tam_adres`, `sehir`, `ilce`, `lat`, `lon`.
+
 ---
 
 ## 3. SQL Analitik Sorgu ve Çapraz Birleştirme Şablonları
@@ -148,4 +174,26 @@ SELECT
 FROM bkm_aylik_sektorel_harcama
 GROUP BY sektor_adi
 ORDER BY yillik_artis_yuzde DESC;
+```
+
+### 3.5. Google Haritalar Müşteri Hacmi (Yorum Sayısı) ve Memnuniyet Sıralaması
+```sql
+SELECT 
+    isim, ana_kategori, puan, yorum_sayisi, il, ilce, lat, lon
+FROM google_places_ticari_yogunluk
+WHERE yorum_sayisi IS NOT NULL
+ORDER BY yorum_sayisi DESC
+LIMIT 15;
+```
+
+### 3.6. İlçe Bazında Darkstore (Hızlı Market Deposu) Yoğunluğu ve Dağılımı
+```sql
+SELECT 
+    COALESCE(sehir, 'Bilinmeyen İl') AS sehir,
+    COALESCE(ilce, 'Merkez/Tüm') AS ilce,
+    COUNT(*) AS darkstore_sayisi,
+    GROUP_CONCAT(DISTINCT platform) AS platformlar
+FROM teslimat_depolari_darkstore
+GROUP BY sehir, ilce
+ORDER BY darkstore_sayisi DESC;
 ```

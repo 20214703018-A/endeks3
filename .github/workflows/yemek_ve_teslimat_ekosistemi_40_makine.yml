@@ -1,0 +1,70 @@
+name: Yemek & Hızlı Market Teslimat Ekosistemi Madenciliği (40 Makine)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * 3" # Her Çarşamba sabaha karşı haftalık güncelleme
+
+jobs:
+  madencilik:
+    name: Shard ${{ matrix.shard }}/40 Teslimat & Darkstore
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
+    steps:
+      - name: Depoyu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Shard Verilerini Madencile
+        run: |
+          python collector/yemek_teslimat_ekosistemi_toplayici.py \
+            --shard ${{ matrix.shard }}/40 \
+            --out shard_${{ matrix.shard }}.sqlite \
+            --workers 3
+
+      - name: Shard Çıktısını Yükle (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: yemek_shard_${{ matrix.shard }}
+          path: shard_${{ matrix.shard }}.sqlite
+          retention-days: 7
+
+  birlestir:
+    name: 🏆 Tüm Teslimat Shard'larını Ambar Veritabanında Birleştir
+    needs: madencilik
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Depoyu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Tüm Shard'ları İndir
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Shard'ları Birleştir
+        run: |
+          python collector/merge_yemek_teslimat_shards.py \
+            --shards "artifacts/**/shard_*.sqlite" \
+            --out warehouse/product/yemek_ve_market_teslimat_ekosistemi.sqlite
+
+      - name: Nihai Ambarı Yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: yemek_ve_market_teslimat_tam
+          path: warehouse/product/yemek_ve_market_teslimat_ekosistemi.sqlite
+          retention-days: 30
