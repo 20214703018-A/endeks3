@@ -1,8 +1,7 @@
 # Veri ve geçici dosyalar
-collector/data/*
+collector/data/
 !collector/turkiye_il_ilce_rehberi.json
 !collector/mahalle_koordinatlari.json
-!collector/data/bolgesel_imar_tipolojisi.json
 data/
 warehouse/
 reports/veri-katalogu-tam.json
@@ -12,16 +11,26 @@ reports/veri-katalogu-tam.csv
 *.db
 *.db-wal
 *.db-shm
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
 *.zip
+VERİLER/
+VERİLER/
+Klasör/
+Klasör/
+Yeni/
+scratch/
+scratch_*.json
+.claude/
 
 # İşletim sistemi ve geçici dosyalar
 .DS_Store
 Thumbs.db
 __pycache__/
 *.py[cod]
-collector/state_*.json
-collector/cache/
-collector/sektor_*.geojson
 
-
+# Gizli anahtarlar (Copernicus S3 vb.) — asla commit edilmez
+.env
+.env.*
 

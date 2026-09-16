@@ -34,7 +34,41 @@ class LandAnalysisTest(unittest.TestCase):
                 )
         return path
 
-    def test_emsal_secimi_aykiri_fiyati_dislar_ve_link_dondurmez(self):
+    def add_market_index(self, path: Path) -> None:
+        with sqlite3.connect(path) as connection:
+            connection.execute(
+                """CREATE TABLE arsa_mahalle_ozet (
+                kategori TEXT, city_id INTEGER, county_id INTEGER, district_id INTEGER,
+                il TEXT, ilce TEXT, mahalle TEXT, donem TEXT, satilik_m2_fiyat REAL,
+                min_m2_fiyat REAL, max_m2_fiyat REAL, ortalama_fiyat REAL,
+                ortalama_m2 REAL, fiyat_endeksi REAL, aylik_fiyat_degisim REAL,
+                yillik_fiyat_degisim REAL, ilan_sayisi INTEGER,
+                ilanda_kalma_suresi_gun INTEGER, stok_degisim_orani REAL,
+                yillik_stok_degisim REAL, guncellenme_tarihi TEXT)"""
+            )
+            connection.execute(
+                "INSERT INTO arsa_mahalle_ozet VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                ("arsa",77,1,2,"Yalova","Çiftlikköy","Sultaniye Mahallesi","2026-08",
+                 12000,10000,14000,3000000,250,180,0.02,0.30,40,50,0.1,0.2,"2026-09-11"),
+            )
+
+    def test_mahalle_endeksi_ve_emsaller_bagimsiz_sunulur(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = self.make_database(Path(tmp))
+            self.add_market_index(path)
+            result = LandAnalysisEngine(path).analyze({
+                "il":"Yalova","ilce":"Çiftlikköy","mahalle":"Sultaniye","alan_m2":284,
+                "lat":40.6438,"lon":29.3246,
+            })
+
+            self.assertEqual(result["market_index"]["match_scope"], "mahalle")
+            self.assertEqual(result["market_index"]["satilik_m2_fiyat"], 12000)
+            # Aykırı ayrımı yok; medyan 1 km içindeki tüm ilanlar üzerinden.
+            self.assertEqual(result["comparable_statistics"]["median_unit_price"], 10250)
+            self.assertFalse(result["valuation"]["inputs_combined"])
+            self.assertIsNone(result["valuation"]["estimated_total_price"])
+
+    def test_emsal_secimi_1km_icinde_hepsini_donduru_aykiri_isaretlemez(self):
         with tempfile.TemporaryDirectory() as tmp:
             engine = LandAnalysisEngine(self.make_database(Path(tmp)))
             result = engine.analyze(
@@ -46,13 +80,42 @@ class LandAnalysisTest(unittest.TestCase):
                 }
             )
 
+            selection = result["comparable_selection"]
             self.assertEqual(result["status"], "success")
-            self.assertEqual(result["comparable_selection"]["removed_outlier_count"], 1)
-            self.assertEqual(result["comparable_selection"]["selected_count"], 5)
-            self.assertGreater(result["valuation"]["estimated_total_price"], 0)
+            self.assertEqual(selection["scope"], "1_km_yaricap")
+            self.assertEqual(selection["radius_km"], 1.0)
+            # 1 km içindeki tüm emsaller döner (6 kayıt); 12 sınırı yok.
+            self.assertEqual(selection["selected_count"], 6)
+            # Aykırı işaretlemesi yapılmaz.
+            self.assertEqual(selection["flagged_outlier_count"], 0)
+            self.assertFalse(any(c["is_price_outlier"] for c in selection["comparables"]))
+            # Hepsi 1 km içinde olmalı.
+            self.assertTrue(all(c["distance_km"] <= 1.0 for c in selection["comparables"]))
+            # Aykırı ayrımı olmadığından medyan tüm ilanlar üzerinden hesaplanır.
+            self.assertEqual(result["comparable_statistics"]["median_unit_price"], 10250)
+            self.assertEqual(result["comparable_statistics"]["flagged_outlier_count"], 0)
+            self.assertIsNone(result["valuation"]["estimated_total_price"])
             self.assertFalse(result["data_policy"]["public_source_links"])
             self.assertTrue(result["data_policy"]["internal_provenance_retained"])
-            self.assertNotIn("url", result["comparable_selection"]["comparables"][0])
+            self.assertNotIn("url", selection["comparables"][0])
+
+    def test_koordinat_yoksa_1km_emsal_araması_acik_durum_doner(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            engine = LandAnalysisEngine(self.make_database(Path(tmp)))
+            result = engine.analyze(
+                {"il": "Yalova", "ilce": "Çiftlikköy",
+                 "mahalle": "Sultaniye Mahallesi", "alan_m2": 284}
+            )
+
+            selection = result["comparable_selection"]
+            self.assertEqual(result["status"], "success")
+            self.assertEqual(selection["scope"], "koordinat_gerekli")
+            self.assertEqual(selection["selected_count"], 0)
+            self.assertEqual(selection["comparables"], [])
+            self.assertIn("koordinat", selection["message"].lower())
+            self.assertEqual(
+                result["comparable_statistics"]["status"], "coordinate_required"
+            )
 
     def test_dogrulanmis_imar_parametrelerinden_ornek_proje_hesaplanir(self):
         with tempfile.TemporaryDirectory() as tmp:

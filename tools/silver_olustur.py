@@ -411,7 +411,7 @@ def entity_variant(entity: str, record: dict, source_table: str, locator: str) -
             return "land_listing_zoning"
         return "parcel"
     if entity == "listing":
-        return str(record.get("kategori") or "listing")
+        return normalize_text(str(record.get("kategori") or record.get("ana_kategori") or "listing"))
     if source_table:
         return normalize_text(source_table)
     name = Path(locator.rsplit("::", 1)[-1]).stem
@@ -439,7 +439,7 @@ ENTITY_KEYS = {
     "price_trend": [],
     "price_distribution": [],
     "annual_sales": [],
-    "listing": [("ilan_id",), ("id",), ("url",)],
+    "listing": [],
     "land_listing": [("ilan_id",), ("url",)],
     "residential_listing": [("ilan_id",), ("url",)],
     "commercial_listing": [("ilan_id",), ("url",)],
@@ -450,6 +450,45 @@ ENTITY_KEYS = {
     "construction_company": [("sirket_id",), ("sirket_adi",)],
     "delivery_point": [("tip", "kod"), ("ad", "adres")],
 }
+
+
+def listing_provider(record: dict) -> str | None:
+    provider = record.get("kaynak") or record.get("portal")
+    if provider not in (None, ""):
+        return normalize_text(str(provider))
+    url = str(record.get("url") or record.get("ilan_linki") or "").casefold()
+    if "emlakjet." in url:
+        return "emlakjet"
+    if "sahibinden." in url:
+        return "sahibinden"
+    return None
+
+
+def listing_natural_key(entity: str, variant: str, record: dict) -> dict | None:
+    """Portal-içi ilan kimliğini eski ve yeni şemalar arasında birleştirir.
+
+    ``ej_123`` ile eski kayıttaki ``123`` aynı EmlakJet ilanıdır. Kaynak adı
+    anahtara dahil edilerek farklı portalların aynı sayısal kimliği yanlışlıkla
+    birleştirilmez. URL yalnız kimlik bulunmadığında yedek anahtardır.
+    """
+    provider = listing_provider(record)
+    listing_id = record.get("ilan_id") or record.get("ilan_no")
+    if listing_id not in (None, ""):
+        normalized_id = normalize_text(str(listing_id))
+        if provider == "emlakjet" and normalized_id.startswith("ej_"):
+            normalized_id = normalized_id[3:]
+        if normalized_id:
+            return {
+                "entity": entity,
+                "variant": variant,
+                "provider": provider or "unknown",
+                "listing_id": normalized_id,
+            }
+    url = str(record.get("url") or record.get("ilan_linki") or "").strip()
+    if url:
+        canonical_url = url.split("#", 1)[0].split("?", 1)[0].rstrip("/").casefold()
+        return {"entity": entity, "variant": variant, "url": canonical_url}
+    return None
 
 
 def nonempty(record: dict, fields: tuple[str, ...]) -> bool:
@@ -473,6 +512,11 @@ def natural_key(
     source_table: str,
     row_number: int,
 ) -> tuple[dict, str]:
+    if entity in {"listing", "land_listing", "residential_listing", "commercial_listing"}:
+        key = listing_natural_key("listing", variant, record)
+        if key:
+            return key, "natural"
+
     candidates = list(ENTITY_KEYS.get(entity, []))
     location = location_fields(record)
     if entity == "price_summary":
@@ -482,7 +526,7 @@ def natural_key(
     elif entity == "price_distribution":
         candidates = [
             location
-            + tuple(x for x in ("kategori", "tip", "donem", "dagilim_turu", "dagilim", "segment") if x in record)
+            + tuple(x for x in ("kategori", "tip", "donem", "dagilim_turu", "dagilim", "segment", "segment_adi") if x in record)
         ]
     elif entity == "annual_sales":
         candidates = [location + tuple(x for x in ("yil",) if x in record)]
@@ -625,7 +669,19 @@ def append_observation(
 ) -> tuple[str, str, str]:
     classification = unit["classification"]
     period = first_text(record, ("ay", "donem", "yil", "veri_donemi", "guncellenme_yili"))
-    collection_time = first_text(record, ("toplanma_zamani", "guncellenme_tarihi", "tarih", "created_at"))
+    collection_time = first_text(
+        record,
+        (
+            "toplanma_zamani",
+            "crawled_at",
+            "eklenme_tarihi",
+            "veritabani_kayit_zamani",
+            "guncellenme_tarihi",
+            "created_at",
+            "tarih",
+            "ilan_tarihi",
+        ),
+    )
     classification_reference_time = collection_time or unit["reference_time"]
     record_class, record_class_reason, projection_origin = row_class(
         classification["data_class"],

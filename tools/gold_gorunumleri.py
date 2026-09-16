@@ -81,8 +81,8 @@ def governance_rows(source_registry: dict | None) -> list[tuple]:
     ]
 
 
-def create_views(connection: duckdb.DuckDBPyConnection, silver_glob: str) -> None:
-    source = quote_sql(silver_glob)
+def create_views(connection: duckdb.DuckDBPyConnection, silver_source_sql: str) -> None:
+    source = silver_source_sql
     connection.execute(
         f"""
         CREATE VIEW silver_observations AS
@@ -193,7 +193,15 @@ def create_views(connection: duckdb.DuckDBPyConnection, silver_glob: str) -> Non
 
         CREATE VIEW resolution_ranked_candidates AS
         SELECT
-            *,
+            observation_id,
+            natural_key_sha256,
+            record_class_rank,
+            source_governance_rank,
+            quality_score,
+            payload_completeness,
+            collection_time,
+            period,
+            source_content_sha256,
             row_number() OVER (
                 PARTITION BY natural_key_sha256
                 ORDER BY
@@ -211,58 +219,59 @@ def create_views(connection: duckdb.DuckDBPyConnection, silver_glob: str) -> Non
         CREATE VIEW conflict_resolution_decisions AS
         SELECT
             conflicts.*,
-            winner.observation_id AS selected_observation_id,
+            winner_rank.observation_id AS selected_observation_id,
             winner.source_content_sha256 AS selected_source_content_sha256,
             winner.source_table AS selected_source_table,
-            winner.quality_score AS selected_quality_score,
+            winner_rank.quality_score AS selected_quality_score,
             winner.normalized_record_json AS selected_record_json,
             greatest(conflicts.observation_count - 1, 0) AS alternative_observation_count,
             CASE
-                WHEN winner.record_class_rank > coalesce(runner.record_class_rank, -1)
+                WHEN winner_rank.record_class_rank > coalesce(runner_rank.record_class_rank, -1)
                     THEN 'record_class_priority'
-                WHEN winner.source_governance_rank > coalesce(runner.source_governance_rank, -1)
+                WHEN winner_rank.source_governance_rank > coalesce(runner_rank.source_governance_rank, -1)
                     THEN 'source_governance_priority'
-                WHEN winner.quality_score > coalesce(runner.quality_score, -1)
+                WHEN winner_rank.quality_score > coalesce(runner_rank.quality_score, -1)
                     THEN 'quality_score'
-                WHEN winner.payload_completeness > coalesce(runner.payload_completeness, -1)
+                WHEN winner_rank.payload_completeness > coalesce(runner_rank.payload_completeness, -1)
                     THEN 'payload_completeness'
-                WHEN winner.collection_time IS NOT NULL
-                 AND winner.collection_time IS DISTINCT FROM runner.collection_time
+                WHEN winner_rank.collection_time IS NOT NULL
+                 AND winner_rank.collection_time IS DISTINCT FROM runner_rank.collection_time
                     THEN 'latest_collection_time'
-                WHEN winner.period IS NOT NULL
-                 AND winner.period IS DISTINCT FROM runner.period
+                WHEN winner_rank.period IS NOT NULL
+                 AND winner_rank.period IS DISTINCT FROM runner_rank.period
                     THEN 'latest_period'
                 ELSE 'stable_content_hash_tiebreak'
             END AS selection_reason,
             CASE
-                WHEN winner.record_class_rank > coalesce(runner.record_class_rank, -1)
+                WHEN winner_rank.record_class_rank > coalesce(runner_rank.record_class_rank, -1)
                     THEN 'high'
-                WHEN winner.source_governance_rank > coalesce(runner.source_governance_rank, -1)
+                WHEN winner_rank.source_governance_rank > coalesce(runner_rank.source_governance_rank, -1)
                     THEN 'high'
-                WHEN winner.quality_score >= coalesce(runner.quality_score, -1) + 10
+                WHEN winner_rank.quality_score >= coalesce(runner_rank.quality_score, -1) + 10
                     THEN 'high'
-                WHEN winner.quality_score > coalesce(runner.quality_score, -1)
-                  OR winner.payload_completeness > coalesce(runner.payload_completeness, -1)
+                WHEN winner_rank.quality_score > coalesce(runner_rank.quality_score, -1)
+                  OR winner_rank.payload_completeness > coalesce(runner_rank.payload_completeness, -1)
                     THEN 'medium'
                 ELSE 'low'
             END AS resolution_confidence,
             'resolved_for_internal_canonical' AS decision_status,
             {quote_sql(RESOLUTION_RULE_VERSION)} AS resolution_rule_version
         FROM data_conflict_groups AS conflicts
-        JOIN resolution_ranked_candidates AS winner
-          ON conflicts.natural_key_sha256 = winner.natural_key_sha256
-         AND winner.resolution_rank = 1
-        LEFT JOIN resolution_ranked_candidates AS runner
-          ON conflicts.natural_key_sha256 = runner.natural_key_sha256
-         AND runner.resolution_rank = 2;
+        JOIN resolution_ranked_candidates AS winner_rank
+          ON conflicts.natural_key_sha256 = winner_rank.natural_key_sha256
+         AND winner_rank.resolution_rank = 1
+        JOIN resolution_evidence AS winner
+          ON winner.observation_id = winner_rank.observation_id
+        LEFT JOIN resolution_ranked_candidates AS runner_rank
+          ON conflicts.natural_key_sha256 = runner_rank.natural_key_sha256
+         AND runner_rank.resolution_rank = 2;
 
         CREATE VIEW canonical_resolution AS
         SELECT
-            * EXCLUDE (
+            evidence.* EXCLUDE (
                 source_governance_rank,
                 record_class_rank,
-                payload_completeness,
-                resolution_rank
+                payload_completeness
             ),
             {quote_sql(RESOLUTION_RULE_VERSION)} AS resolution_rule_version,
             'provisional_unverified_source' AS canonical_status,
@@ -275,9 +284,11 @@ def create_views(connection: duckdb.DuckDBPyConnection, silver_glob: str) -> Non
                 ELSE 'single_distinct_payload'
             END AS conflict_status
         FROM resolution_ranked_candidates AS ranked
-        WHERE resolution_rank = 1
-          AND record_class = 'observed'
-          AND product_policy = 'eligible_after_quality_and_license_validation';
+        JOIN resolution_evidence AS evidence
+          ON evidence.observation_id = ranked.observation_id
+        WHERE ranked.resolution_rank = 1
+          AND evidence.record_class = 'observed'
+          AND evidence.product_policy = 'eligible_after_quality_and_license_validation';
 
         CREATE VIEW canonical_with_provenance AS
         SELECT
@@ -354,9 +365,19 @@ def build_gold(
     output_database = output_database.expanduser().resolve()
     output_database.parent.mkdir(parents=True, exist_ok=True)
     silver_root = Path(silver_manifest["output_root"]).resolve()
-    silver_glob = str(silver_root / "**" / "*.parquet")
-    if not any(silver_root.rglob("*.parquet")):
+    silver_paths = sorted(
+        {
+            str(Path(item["output"]).expanduser().resolve())
+            for item in silver_manifest.get("sources", [])
+            if item.get("output") and item.get("status") in {"written", "reused"}
+        }
+    )
+    if not silver_paths:
         raise RuntimeError(f"Silver Parquet bulunamadı: {silver_root}")
+    missing_paths = [path for path in silver_paths if not Path(path).exists()]
+    if missing_paths:
+        raise RuntimeError(f"Manifestte olup diskte bulunmayan Silver dosyası: {missing_paths[0]}")
+    silver_source_sql = "[" + ",".join(quote_sql(path) for path in silver_paths) + "]"
 
     temporary = output_database.with_name(f".{output_database.name}.{os.getpid()}.tmp")
     temporary.unlink(missing_ok=True)
@@ -408,7 +429,7 @@ def build_gold(
                 "INSERT INTO source_governance VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 rows,
             )
-        create_views(connection, silver_glob)
+        create_views(connection, silver_source_sql)
         counts = {
             "silver_observations": connection.execute("SELECT count(*) FROM silver_observations").fetchone()[0],
             "eligible_observations": connection.execute("SELECT count(*) FROM eligible_observations").fetchone()[0],
@@ -469,7 +490,7 @@ def build_gold(
             else None
         ),
         "database": str(output_database),
-        "silver_glob": silver_glob,
+        "silver_manifest_file_count": len(silver_paths),
         "counts": counts,
         "views": [
             "silver_observations",

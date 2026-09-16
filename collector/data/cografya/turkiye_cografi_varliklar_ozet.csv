@@ -427,6 +427,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 10206414,Dikenli Dağı,Dağ,DAG_VE_TEPE,39.8246,41.59572,2842,25
 10249069,Solar Tepesi,Tepe,DAG_VE_TEPE,40.17266,41.12682,2842,25
 743801,Kavaklıdere Tepe,Dağ,DAG_VE_TEPE,40.11047,41.06944,2841,25
+314532,Geyik Dağı,Sıradağlar,DAG_VE_TEPE,36.88882,32.17226,2840,07
 10248987,Keçitaşı Tepesi,Tepe,DAG_VE_TEPE,40.0946,40.8432,2840,25
 10249142,Kırpınar Tepesi,Tepe,DAG_VE_TEPE,40.17489,41.35738,2840,25
 314680,Gelincik Tepe,Dağ,DAG_VE_TEPE,37.51181,42.91712,2839,80
@@ -554,7 +555,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 297413,Yaylıca Dağı,Dağ,DAG_VE_TEPE,37.67473,42.98436,2760,80
 322000,Barla Dağı,Sıradağlar,DAG_VE_TEPE,38.05309,30.7025,2760,33
 751218,Bakir Dağ,Dağ,DAG_VE_TEPE,40.65,42.65,2758,84
-314532,Geyik Dağı,Dağ,DAG_VE_TEPE,36.89316,32.1672,2757,07
 448060,Güzeldere Geçidi,Dağ Geçidi,DAG_VE_TEPE,38.18046,43.9064,2757,65
 298917,Tosun Dağı,Dağ,DAG_VE_TEPE,38.6,41.25,2756,21
 299523,Tayran Dağı,Dağ,DAG_VE_TEPE,39.58333,39.41667,2756,24
@@ -638,6 +638,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 6970479,Işık Dağı,Dağ,DAG_VE_TEPE,38.83374,43.60495,2704,65
 10330867,Dumanlı Dağları,Sıradağlar,DAG_VE_TEPE,39.72071,40.76542,2702,25
 10330944,Avcılar Tepesi,Tepe,DAG_VE_TEPE,39.32431,40.87099,2702,12
+324765,Akdağ,Zirve / Doruk,DAG_VE_TEPE,36.80147,32.18842,2701,07
 316192,Duman Dağı,Dağ,DAG_VE_TEPE,37.43333,44.6,2700,70
 6611273,Varbirin Tepesi,Dağ,DAG_VE_TEPE,37.67132,44.44362,2700,70
 305487,Kurtlu Tepe,Tepe,DAG_VE_TEPE,39.86321,38.8901,2699,24
@@ -671,7 +672,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 12536516,Biryasbahyan Tepesi,Dağ,DAG_VE_TEPE,37.53637,42.87854,2680,80
 314583,Geriali Dağı,Dağ,DAG_VE_TEPE,38.05743,43.56246,2679,65
 438842,Kayalı Tepe,Dağ,DAG_VE_TEPE,37.57333,42.88778,2679,80
-324765,Akdağ,Dağ,DAG_VE_TEPE,36.80242,32.18394,2678,07
 9806553,Subaşı Dağı,Dağ,DAG_VE_TEPE,37.67705,43.79995,2678,70
 309714,Karakaya Dağı,Dağ,DAG_VE_TEPE,39.51737,41.61601,2677,25
 438903,Evrek Tepesi,Zirve / Doruk,DAG_VE_TEPE,37.60528,43.27861,2677,80
@@ -1350,7 +1350,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 323588,Armut Dağı,Dağ,DAG_VE_TEPE,37.89181,36.55197,2368,46
 6969386,Çöplük Göleti,Göl,SU_KUTLESI,38.46123,43.96523,2367,65
 10330901,Esmen Tepesi,Tepe,DAG_VE_TEPE,39.04041,41.11849,2367,12
-10867227,Göbekçal Tepe,Dağ,DAG_VE_TEPE,36.97786,32.10769,2367,07
+10867227,Göbekçal Tepe,Tepe,DAG_VE_TEPE,36.97786,32.10769,2367,07
 6970488,Sivri Tepesi,Tepe,DAG_VE_TEPE,39.18952,43.77724,2366,65
 10201629,Şehitlik Sırtı,Sırt / Tepe Sırası,DAG_VE_TEPE,40.401,42.57992,2366,84
 10331042,Keklikkale Tepesi,Tepe,DAG_VE_TEPE,39.73293,41.43211,2366,25
@@ -1771,6 +1771,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 10006990,Çengel Deresi,Nehir / Akarsu,SU_KUTLESI,39.46459,43.49828,2224,04
 10870020,Gelincik Dağı,Dağ,DAG_VE_TEPE,37.68756,30.57442,2224,15
 298530,Üçtepeler,Dağ,DAG_VE_TEPE,39.65,42.85,2223,04
+10330886,Kabaktepe Sırtı,Sırt / Tepe Sırası,DAG_VE_TEPE,39.66737,40.84542,2223,25
 10483834,Sit Tepe,Tepe,DAG_VE_TEPE,38.08705,37.73257,2223,44
 324608,Kilimatan Tepesi,Tepe,DAG_VE_TEPE,38.40194,30.419,2222,03
 10015111,Kırmızıdağ Tepesi,Tepe,DAG_VE_TEPE,39.08041,39.30983,2222,62
@@ -2873,7 +2874,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 743807,Kavaklıdağ Tepesi,Dağ,DAG_VE_TEPE,40.3528,32.13687,1964,14
 6610954,Oğlan Deresi,Nehir / Akarsu,SU_KUTLESI,38.006,44.11765,1964,65
 10201679,Büyük Dere,Nehir / Akarsu,SU_KUTLESI,40.99665,43.24101,1964,86
-10867213,Erkeçdeliği Tepesi,Dağ,DAG_VE_TEPE,36.84199,32.18119,1964,07
 12257623,Düzlük Deresi,Nehir / Akarsu,SU_KUTLESI,41.06083,43.32348,1964,86
 12279684,Bakır Deresi,Nehir / Akarsu,SU_KUTLESI,40.9555,42.56521,1964,86
 12662947,Suluçukurbeleni Tepesi,Tepe,DAG_VE_TEPE,36.28772,32.73137,1964,32
@@ -2926,6 +2926,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 306200,Kov Dağı,Dağ,DAG_VE_TEPE,38.21667,42.21667,1953,74
 314899,Foso Dağı,Dağ,DAG_VE_TEPE,38.55,40.9,1953,21
 448070,Haruna Geçidi,Dağ Geçidi,DAG_VE_TEPE,37.43201,44.44557,1953,70
+10867213,Erkeçdeliği Tepe,Tepe,DAG_VE_TEPE,36.84177,32.18571,1953,07
 320676,Bozdağ Tepesi,Tepe,DAG_VE_TEPE,38.0537,32.40038,1952,71
 10140716,Zerzemin Sırtı,Sırt / Tepe Sırası,DAG_VE_TEPE,38.43401,42.7352,1952,13
 10330979,Gümüş Deresi,Nehir / Akarsu,SU_KUTLESI,39.14903,41.00155,1952,12
@@ -3104,6 +3105,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 12671613,Kahve Tepesi,Tepe,DAG_VE_TEPE,36.46209,32.57349,1918,32
 315895,Eğrikaya Tepesi,Dağ,DAG_VE_TEPE,38.06667,31.11667,1917,33
 316709,Dikkulak Dağı,Dağ,DAG_VE_TEPE,39.26667,36.9,1917,58
+10867211,Mor Kaya,Kaya / Kayalık Alan,DAG_VE_TEPE,36.88085,32.12196,1917,07
 12649895,Gaysen Tepesi,Dağ,DAG_VE_TEPE,36.38009,32.80564,1917,32
 296169,Yüksün Tepe,Tepe,DAG_VE_TEPE,37.9008,35.68332,1916,81
 312904,Haçreş Dağları,Sıradağlar,DAG_VE_TEPE,38.63333,41.61667,1916,49
@@ -4741,7 +4743,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 12261141,Şorak Deresi,Nehir / Akarsu,SU_KUTLESI,41.05407,41.283,1644,53
 13137235,Yavşan Tepe,Tepe,DAG_VE_TEPE,36.68917,32.32103,1644,07
 10014985,Kayayurdu Deresi,Nehir / Akarsu,SU_KUTLESI,39.39014,38.7626,1643,24
-10867211,Morkaya,Kaya / Kayalık Alan,DAG_VE_TEPE,36.87504,32.12716,1643,07
 11028888,Nacaklı Tepe,Tepe,DAG_VE_TEPE,39.40515,36.32144,1643,58
 301080,Serkurut Tepesi,Zirve / Doruk,DAG_VE_TEPE,38.48333,29.76667,1642,64
 305629,Küpkıran Çayı,Nehir / Akarsu,SU_KUTLESI,39.72998,43.10374,1642,04
@@ -8088,9 +8089,11 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 10971180,Körpınar Deresi,Nehir / Akarsu,SU_KUTLESI,38.32361,37.27526,1221,46
 12299376,Lülük Dere,Nehir / Akarsu,SU_KUTLESI,40.64225,42.33485,1221,25
 13678392,Kütüklü Tepe,Tepe,DAG_VE_TEPE,36.31707,33.09148,1221,32
+297116,Andızlı Tepe,Dağ,DAG_VE_TEPE,36.66222,30.51215,1220,07
 298291,Üsgülüç Çayı,Nehir / Akarsu,SU_KUTLESI,39.62603,36.57386,1220,58
 300506,Söğudün Dağı,Dağ,DAG_VE_TEPE,37.3,36.7,1220,46
 306866,Ulu Dere,Nehir / Akarsu,SU_KUTLESI,37.46453,31.45428,1220,71
+308807,Bağlık Dağı,Dağ,DAG_VE_TEPE,36.63834,30.50494,1220,07
 325415,Acısu,Nehir / Akarsu,SU_KUTLESI,39.35663,36.37404,1220,58
 436648,Kulak Tepe,Tepe,DAG_VE_TEPE,36.89313,36.34393,1220,31
 10632453,Suolmaz Geçidi,Dağ Geçidi,DAG_VE_TEPE,36.31814,33.01623,1220,32
@@ -11859,7 +11862,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 12503483,Adaüstü Tepesi,Tepe,DAG_VE_TEPE,39.90606,32.3548,893,68
 12506492,Karaağıl Tepesi,Tepe,DAG_VE_TEPE,39.95532,32.45467,893,68
 12532723,Feran Tepesi,Tepe,DAG_VE_TEPE,37.90879,41.93255,893,74
-308807,Bağlık Dağı,Dağ,DAG_VE_TEPE,36.63418,30.51734,892,07
 436996,Büyükikiz Dağı,Dağ,DAG_VE_TEPE,36.89278,36.85556,892,90
 743974,Kiraz Tepe,Tepe,DAG_VE_TEPE,40.06052,27.46385,892,17
 752871,Acısu Deresi,Nehir / Akarsu,SU_KUTLESI,41.25384,33.57213,892,37
@@ -14148,7 +14150,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 6611610,Sip Dere,Nehir / Akarsu,SU_KUTLESI,38.24583,41.05861,663,21
 7318657,Doruk Tepe,Tepe,DAG_VE_TEPE,40.17389,25.80997,663,17
 10636543,Zeyve Deresi,Nehir / Akarsu,SU_KUTLESI,36.50947,32.94169,663,78
-10869799,Sarıçınar Deresi,Nehir / Akarsu,SU_KUTLESI,36.68336,30.52795,663,07
 10902294,Seyhan Çayı,Nehir / Akarsu,SU_KUTLESI,38.1613,39.46263,663,76
 10933589,Kuş Tepe,Tepe,DAG_VE_TEPE,40.83583,35.40797,663,05
 12903953,Kuzbelen Tepesi,Tepe,DAG_VE_TEPE,36.24246,32.44337,663,07
@@ -14779,7 +14780,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 12724277,Çalbalı Sırt,Sırt / Tepe Sırası,DAG_VE_TEPE,36.39859,32.37091,589,07
 13252406,Bediryeri Tepesi,Dağ,DAG_VE_TEPE,36.68807,31.84971,589,07
 13370290,Sinekasarı Tepesi,Tepe,DAG_VE_TEPE,36.89635,31.57488,589,07
-297116,Andızlı Tepe,Dağ,DAG_VE_TEPE,36.65809,30.51113,588,07
 317619,Danışmen Dağı,Dağ,DAG_VE_TEPE,38.91667,27.18333,588,35
 439264,Borazlı Dere,Nehir / Akarsu,SU_KUTLESI,37.90694,40.54833,588,21
 738414,Ulugöz Tepesi,Tepe,DAG_VE_TEPE,41.01667,34.68333,588,19
@@ -16539,7 +16539,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 12904041,Yaşlıcakaya Tepesi,Dağ,DAG_VE_TEPE,36.20336,32.47282,321,07
 13252396,Göbet Tepesi,Tepe,DAG_VE_TEPE,36.64434,31.86457,321,07
 13394445,Döşemebaşı Tepesi,Tepe,DAG_VE_TEPE,36.97134,31.35775,321,07
-305427,Kuru Çay,Nehir / Akarsu,SU_KUTLESI,36.94766,30.56414,320,07
 12560184,Düzbelen Tepesi,Tepe,DAG_VE_TEPE,36.17266,33.4826,320,32
 12724355,Cirbat Deresi,Nehir / Akarsu,SU_KUTLESI,36.42887,32.30629,320,07
 749032,Çıplak Tepe,Dağ,DAG_VE_TEPE,41.14611,28.43028,319,34
@@ -16565,7 +16564,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 10307350,Gürgen Dere,Nehir / Akarsu,SU_KUTLESI,41.94708,27.05069,316,39
 12562588,Şereflerin Tepesi,Tepe,DAG_VE_TEPE,36.2634,33.4406,316,32
 12598683,Kurt Tepe,Tepe,DAG_VE_TEPE,36.1377,32.93066,316,32
-388228,Çam Dağı,Tepe,DAG_VE_TEPE,36.74821,30.55992,315,07
 10253198,Gezbil Tepesi,Tepe,DAG_VE_TEPE,36.83614,28.58975,315,48
 12552575,Kaklık Tepesi,Tepe,DAG_VE_TEPE,36.14223,33.03494,315,32
 745106,Işıklar Dağı,Dağ,DAG_VE_TEPE,40.83966,27.31833,314,59
@@ -16758,6 +16756,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 12553868,Çeftesigi Sırtı,Sırt / Tepe Sırası,DAG_VE_TEPE,36.17014,33.1716,282,32
 13241952,Evliyayeri Sırtı,Sırt / Tepe Sırası,DAG_VE_TEPE,36.61479,32.07823,282,07
 13518050,Yarıkkaya Tepesi,Tepe,DAG_VE_TEPE,36.7361,31.65831,282,07
+388228,Çam Dağı,Sıradağlar,DAG_VE_TEPE,36.7,30.55,281,07
 10253204,Yeldeğirmen Tepesi,Tepe,DAG_VE_TEPE,36.72686,28.64376,281,48
 10410704,Bedre Deresi,Nehir / Akarsu,SU_KUTLESI,40.08826,29.54425,281,16
 10875688,Yürük Deresi,Nehir / Akarsu,SU_KUTLESI,37.17521,34.93868,281,81
@@ -16853,6 +16852,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 10410706,Koca Çay,Nehir / Akarsu,SU_KUTLESI,40.13638,29.50978,263,16
 10801790,Gök Çay,Nehir / Akarsu,SU_KUTLESI,41.16445,35.4937,263,55
 10934512,İmbat Deresi,Nehir / Akarsu,SU_KUTLESI,40.66558,36.57796,263,60
+305427,Kuru Çay,Nehir / Akarsu,SU_KUTLESI,36.95,30.56667,262,07
 7318612,Zından Tepesi,Tepe,DAG_VE_TEPE,39.54638,26.53417,262,17
 12108597,Tall Kālūshik,Tepe,DAG_VE_TEPE,36.55329,36.57879,262,31
 12574803,Büyükkıyın Tepesi,Tepe,DAG_VE_TEPE,36.12136,32.82502,262,32
@@ -17655,6 +17655,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 10419669,Göller Deresi,Nehir / Akarsu,SU_KUTLESI,40.97377,29.63372,135,34
 10796492,Hisar Deresi,Nehir / Akarsu,SU_KUTLESI,41.01011,29.90781,135,41
 10796549,Kızılöz Deresi,Nehir / Akarsu,SU_KUTLESI,40.37682,30.02638,135,11
+10869799,Sarıçınar Deresi,Nehir / Akarsu,SU_KUTLESI,36.68436,30.52907,135,07
 13517919,Söğütcük Tepesi,Tepe,DAG_VE_TEPE,36.70306,31.65717,135,07
 13518013,Küçükyalçı Tepesi,Sırt / Tepe Sırası,DAG_VE_TEPE,36.70727,31.6574,135,07
 299427,Tekke Deresi,Nehir / Akarsu,SU_KUTLESI,37.93333,28.8,134,20
@@ -17958,6 +17959,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 438339,Kholm Adzharkëy,Tepe,DAG_VE_TEPE,36.32778,36.55528,100,31
 9985656,Armutlu Deresi,Nehir / Akarsu,SU_KUTLESI,38.44989,27.54453,100,35
 10796520,Kara Dere,Nehir / Akarsu,SU_KUTLESI,40.64374,29.48886,100,41
+10867340,Doyran Deresi,Nehir / Akarsu,SU_KUTLESI,36.89507,30.52344,100,07
 12903920,Kızılkaya Tepesi,Dağ,DAG_VE_TEPE,36.19461,32.39173,100,07
 12903990,Zeytinliketir Tepesi,Tepe,DAG_VE_TEPE,36.20849,32.3811,100,07
 13455107,Nalçeken Tepesi,Tepe,DAG_VE_TEPE,36.2127,32.38273,100,07
@@ -18189,7 +18191,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 7318658,Keltepe,Tepe,DAG_VE_TEPE,40.20099,25.78079,78,17
 10252491,Kızılderebaşı Tepesi,Tepe,DAG_VE_TEPE,36.78799,27.86727,78,48
 10253195,Gök Deresi,Nehir / Akarsu,SU_KUTLESI,36.83397,28.55987,78,48
-10867340,Doyran Deresi,Nehir / Akarsu,SU_KUTLESI,36.90248,30.56968,78,07
 12786580,Evliya Sırtı,Sırt / Tepe Sırası,DAG_VE_TEPE,36.47331,32.23786,78,07
 13394279,Azgınlıtaş Tepesi,Tepe,DAG_VE_TEPE,36.84528,31.26923,78,07
 13394307,Koyunlar Tepesi,Tepe,DAG_VE_TEPE,36.84477,31.27333,78,07
@@ -18226,7 +18227,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 743208,Kiremitlikışla Sırtı,Sırt / Tepe Sırası,DAG_VE_TEPE,41.93333,28.01667,75,39
 746944,Keşlik Göleti,Baraj Gölü / Rezervuar,SU_KUTLESI,40.26924,28.25074,75,16
 6686930,Koca Tepesi,Dağ,DAG_VE_TEPE,38.44166,26.7658,75,35
-8073908,Atatürk Kültür Parkı,Milli Park / Tabiat Parkı,ORMAN_VE_KORUMA_ALANI,36.88362,30.66956,75,07
 10419342,İnsaniye,Nehir / Akarsu,SU_KUTLESI,41.24039,28.81036,75,34
 10642910,Karınca Deresi,Nehir / Akarsu,SU_KUTLESI,39.45724,27.00263,75,10
 12758923,Kahyalardikmeni Tepesi,Tepe,DAG_VE_TEPE,36.30717,32.28794,75,07
@@ -18509,6 +18509,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 13599398,Camiyıkığı Tepesi,Tepe,DAG_VE_TEPE,36.92958,30.95954,49,07
 13617524,Aksazak Tepesi,Tepe,DAG_VE_TEPE,36.98354,30.83814,49,07
 307424,Kıyas Ovası,Ova,YAYLA_VE_OVA,38.16667,27.23333,48,35
+313890,Göynük Çayı,Nehir / Akarsu,SU_KUTLESI,36.68333,30.56667,48,07
 739627,Şimşir Deresi,Nehir / Akarsu,SU_KUTLESI,40.9596,37.50539,48,52
 9855451,Boztepe,Tepe,DAG_VE_TEPE,41.75207,32.38338,48,87
 10253182,Sulu Dere,Nehir / Akarsu,SU_KUTLESI,36.8705,28.50044,48,48
@@ -18711,7 +18712,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 317893,Çukurova,Ova,YAYLA_VE_OVA,37.3,35.91667,34,00
 740654,Pedina Gölü,Göl,SU_KUTLESI,41.83333,27.93333,34,39
 746523,Gozlemen Tepe,Tepe,DAG_VE_TEPE,40.71667,29.81667,34,41
-8073931,Karaalioğlu Parkı,Milli Park / Tabiat Parkı,ORMAN_VE_KORUMA_ALANI,36.88001,30.70511,34,07
+8073931,Karaalioğlu Parkı,Milli Park / Tabiat Parkı,ORMAN_VE_KORUMA_ALANI,36.88005,30.70549,34,07
 10307283,Akan Dere,Nehir / Akarsu,SU_KUTLESI,41.36963,27.22807,34,39
 10409895,Havan Tabya Parkı,Milli Park / Tabiat Parkı,ORMAN_VE_KORUMA_ALANI,40.15859,26.41355,34,17
 10870949,Sumbas Çayı,Nehir / Akarsu,SU_KUTLESI,37.29123,35.9059,34,81
@@ -18735,7 +18736,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 13571935,Adazeytin Tepesi,Tepe,DAG_VE_TEPE,36.86852,31.1302,33,07
 296140,Yumru Tepesi,Tepe,DAG_VE_TEPE,36.80118,34.60414,32,32
 307601,Yaylaköy Deresi,Nehir / Akarsu,SU_KUTLESI,39.1,27.25,32,35
-314194,Boğa Çayı,Nehir / Akarsu,SU_KUTLESI,36.85329,30.62516,32,07
 438144,Kyuyuk-kara chay,Nehir / Akarsu,SU_KUTLESI,36.12,36.09472,32,31
 740106,Sarıçorak Deresi,Nehir / Akarsu,SU_KUTLESI,41.36667,32.08333,32,85
 9985329,Çakalboğazı Deresi,Nehir / Akarsu,SU_KUTLESI,38.72862,26.73449,32,35
@@ -18790,6 +18790,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 740842,Havsa Deresi,Nehir / Akarsu,SU_KUTLESI,41.38333,26.93333,29,39
 745696,Hayrabolu Deresi,Nehir / Akarsu,SU_KUTLESI,41.3438,27.07,29,59
 746714,Asarsuyu,Nehir / Akarsu,SU_KUTLESI,41.1,36.68333,29,55
+8073908,Atatürk Kültür Parkı,Milli Park / Tabiat Parkı,ORMAN_VE_KORUMA_ALANI,36.88403,30.68509,29,07
 10307032,Azmak Deresi,Nehir / Akarsu,SU_KUTLESI,41.34867,27.07704,29,59
 10307033,Büyük Dere,Nehir / Akarsu,SU_KUTLESI,41.35014,27.06507,29,39
 10410253,Büyükçay Deresi,Nehir / Akarsu,SU_KUTLESI,40.24074,27.13953,29,17
@@ -19199,6 +19200,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 303935,Kargıçayı Deresi,Nehir / Akarsu,SU_KUTLESI,36.82025,31.4524,6,07
 305884,Küçükmenderes Çayı,Nehir / Akarsu,SU_KUTLESI,40.00232,26.22789,6,17
 307037,Kaleboğazı Deresi,Nehir / Akarsu,SU_KUTLESI,36.85283,35.87898,6,81
+314194,Boğa Çayı,Nehir / Akarsu,SU_KUTLESI,36.85372,30.62331,6,07
 388073,Sazlı Tepe,Tepe,DAG_VE_TEPE,36.584,35.29167,6,81
 437638,Koca Dere,Nehir / Akarsu,SU_KUTLESI,36.64556,36.2125,6,31
 437718,Anba Deresi,Nehir / Akarsu,SU_KUTLESI,36.53083,36.03639,6,31
@@ -19293,6 +19295,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 317401,Değirmen Dere,Nehir / Akarsu,SU_KUTLESI,37.81358,27.26986,4,09
 320263,Büyük Çay,Nehir / Akarsu,SU_KUTLESI,38.05396,27.03475,4,35
 325158,Ağva Deresi,Nehir / Akarsu,SU_KUTLESI,36.56241,30.57524,4,07
+388226,Kuruçay Dere,Nehir / Akarsu,SU_KUTLESI,36.74121,30.56667,4,07
 738054,Yalak Deresi,Nehir / Akarsu,SU_KUTLESI,40.69433,29.45983,4,92
 738166,Veziroğlu Çayı,Nehir / Akarsu,SU_KUTLESI,41.18333,37.03333,4,55
 739661,Sığırcı Gölü,Göl,SU_KUTLESI,40.81667,26.31667,4,22
@@ -19444,13 +19447,11 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 303942,Namnam Çayı,Nehir / Akarsu,SU_KUTLESI,36.92153,28.62516,1,48
 311410,İnceağrı Çayı,Nehir / Akarsu,SU_KUTLESI,36.26026,32.32637,1,07
 313232,Güzelhisar Çayı,Nehir / Akarsu,SU_KUTLESI,38.84528,26.97694,1,35
-313890,Göynük Çayı,Nehir / Akarsu,SU_KUTLESI,36.67843,30.57065,1,07
 314184,Göksu Nehri,Nehir / Akarsu,SU_KUTLESI,36.31667,34.03333,1,00
 315719,Almadagh,Dağ,DAG_VE_TEPE,36.6,36.2,1,31
 317405,Değirmen Dere,Nehir / Akarsu,SU_KUTLESI,36.77162,27.62072,1,48
 318672,Ceyhan Nehri,Nehir / Akarsu,SU_KUTLESI,36.58333,35.56667,1,00
 321140,Bıçkıcı Deresi,Nehir / Akarsu,SU_KUTLESI,36.28759,32.27671,1,07
-388226,Kuruçay Deresi,Nehir / Akarsu,SU_KUTLESI,36.741,30.56815,1,07
 388328,Eskiceyhanyatağı,Nehir / Akarsu,SU_KUTLESI,36.7,35.7,1,31
 388337,Gölceyhan,Nehir / Akarsu,SU_KUTLESI,36.56667,35.56667,1,31
 738368,Umurbey Çayı,Nehir / Akarsu,SU_KUTLESI,40.28107,26.59927,1,17

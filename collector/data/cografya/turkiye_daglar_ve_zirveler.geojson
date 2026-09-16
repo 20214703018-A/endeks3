@@ -1356,8 +1356,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.51113,
-          36.65809
+          30.51215,
+          36.66222
         ]
       },
       "properties": {
@@ -1365,7 +1365,7 @@
         "ad": "Andızlı Tepe",
         "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 588,
+        "rakim_metre": 1220,
         "il_plaka": "07"
       }
     },
@@ -19572,8 +19572,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.51734,
-          36.63418
+          30.50494,
+          36.63834
         ]
       },
       "properties": {
@@ -19581,7 +19581,7 @@
         "ad": "Bağlık Dağı",
         "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 892,
+        "rakim_metre": 1220,
         "il_plaka": "07"
       }
     },
@@ -28698,16 +28698,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.1672,
-          36.89316
+          32.17226,
+          36.88882
         ]
       },
       "properties": {
         "id": 314532,
         "ad": "Geyik Dağı",
-        "tur": "Dağ",
+        "tur": "Sıradağlar",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 2757,
+        "rakim_metre": 2840,
         "il_plaka": "07"
       }
     },
@@ -41982,16 +41982,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.18394,
-          36.80242
+          32.18842,
+          36.80147
         ]
       },
       "properties": {
         "id": 324765,
         "ad": "Akdağ",
-        "tur": "Dağ",
+        "tur": "Zirve / Doruk",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 2678,
+        "rakim_metre": 2701,
         "il_plaka": "07"
       }
     },
@@ -43368,16 +43368,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.55992,
-          36.74821
+          30.55,
+          36.7
         ]
       },
       "properties": {
         "id": 388228,
         "ad": "Çam Dağı",
-        "tur": "Tepe",
+        "tur": "Sıradağlar",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 315,
+        "rakim_metre": 281,
         "il_plaka": "07"
       }
     },
@@ -113838,6 +113838,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          40.84542,
+          39.66737
+        ]
+      },
+      "properties": {
+        "id": 10330886,
+        "ad": "Kabaktepe Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2223,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           41.07377,
           39.48792
         ]
@@ -129192,16 +129210,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.12716,
-          36.87504
+          32.12196,
+          36.88085
         ]
       },
       "properties": {
         "id": 10867211,
-        "ad": "Morkaya",
+        "ad": "Mor Kaya",
         "tur": "Kaya / Kayalık Alan",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 1643,
+        "rakim_metre": 1917,
         "il_plaka": "07"
       }
     },
@@ -129210,16 +129228,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.18119,
-          36.84199
+          32.18571,
+          36.84177
         ]
       },
       "properties": {
         "id": 10867213,
-        "ad": "Erkeçdeliği Tepesi",
-        "tur": "Dağ",
+        "ad": "Erkeçdeliği Tepe",
+        "tur": "Tepe",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 1964,
+        "rakim_metre": 1953,
         "il_plaka": "07"
       }
     },
@@ -129451,7 +129469,7 @@
       "properties": {
         "id": 10867227,
         "ad": "Göbekçal Tepe",
-        "tur": "Dağ",
+        "tur": "Tepe",
         "kategori": "DAG_VE_TEPE",
         "rakim_metre": 2367,
         "il_plaka": "07"

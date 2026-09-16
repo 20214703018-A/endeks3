@@ -99,21 +99,40 @@ def validate_definitions(definitions: dict) -> None:
         raise ValueError("Tam olarak bir fallback kaynak tanımı bulunmalıdır")
 
 
-def rule_matches(rule: dict, domain: str | None, entity: str | None) -> bool:
+def rule_matches(
+    rule: dict,
+    domain: str | None,
+    entity: str | None,
+    locator: str = "",
+    source_table: str = "",
+) -> bool:
     match = rule.get("match")
     if not match or match.get("fallback"):
         return False
     domains = match.get("domains")
     entities = match.get("entities")
-    return (not domains or domain in domains) and (not entities or entity in entities)
+    locator_contains = match.get("locator_contains")
+    source_tables = match.get("source_tables")
+    return (
+        (not domains or domain in domains)
+        and (not entities or entity in entities)
+        and (not locator_contains or any(token.casefold() in locator.casefold() for token in locator_contains))
+        and (not source_tables or source_table in source_tables)
+    )
 
 
-def select_source(definitions: dict, domain: str | None, entity: str | None) -> tuple[dict, bool]:
+def select_source(
+    definitions: dict,
+    domain: str | None,
+    entity: str | None,
+    locator: str = "",
+    source_table: str = "",
+) -> tuple[dict, bool]:
     fallback = None
     for rule in definitions["sources"]:
         if (rule.get("match") or {}).get("fallback"):
             fallback = rule
-        elif rule_matches(rule, domain, entity):
+        elif rule_matches(rule, domain, entity, locator, source_table):
             return rule, False
     if fallback is None:
         raise ValueError("Fallback kaynak tanımı bulunamadı")
@@ -176,7 +195,13 @@ def build_registry(silver: dict, catalog: dict, definitions: dict) -> dict:
             used_fallback = False
             mapping_method = "empty_local_collector_artifact"
         else:
-            source, used_fallback = select_source(definitions, domain, entity)
+            source, used_fallback = select_source(
+                definitions,
+                domain,
+                entity,
+                locator,
+                unit.get("source_table", ""),
+            )
             mapping_method = "fallback" if used_fallback else "domain_entity_rule"
         fallback_count += int(used_fallback)
         policy = merged_policy(definitions, source)

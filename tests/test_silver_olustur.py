@@ -8,11 +8,25 @@ from pathlib import Path
 import pyarrow.parquet as pq
 
 from tools.kayipsiz_bronze import build_bronze
-from tools.silver_olustur import build_silver, row_class
+from tools.silver_olustur import build_silver, natural_key, row_class
 from tools.veri_katalogu import build_catalog
 
 
 class SilverOlusturTest(unittest.TestCase):
+    def test_eski_ve_yeni_emlakjet_ilan_kimligi_ayni_anahtara_duser(self):
+        old_key, old_kind = natural_key(
+            "listing", "arsa",
+            {"ilan_id": "19831512", "url": "https://www.emlakjet.com/ilan/x-19831512"},
+            content_hash="a" * 64, source_table="ilanlar", row_number=1,
+        )
+        new_key, new_kind = natural_key(
+            "listing", "arsa", {"ilan_id": "ej_19831512", "kaynak": "emlakjet"},
+            content_hash="b" * 64, source_table="ilanlar", row_number=2,
+        )
+
+        self.assertEqual((old_kind, new_kind), ("natural", "natural"))
+        self.assertEqual(old_key, new_key)
+
     def test_toplayici_yillik_satis_projeksiyon_kaynagi_taninir(self):
         for year in (2025, 2026, 2027):
             with self.subTest(year=year):

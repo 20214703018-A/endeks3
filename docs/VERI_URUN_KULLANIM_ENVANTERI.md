@@ -102,9 +102,15 @@ beyandan bağımsız olarak ürün skorlamasına kapalıdır.
   KAKS/emsal, gabari, kat adedi, yapı nizamı, plan fonksiyonu ve plan süreci var;
   ancak doluluk çok değişken.
 - Bu havuzdan yayın hakkı açık, geçerli ve gözlemlenmiş kayıtlar seçilerek
-  16.027 benzersiz ilanlık `warehouse/product/arsa_emsalleri.sqlite` ürün indeksi
-  üretildi. Aynı ilan kimliğinin eski gözlemleri Silver'da korunur; ürün
-  indeksinde yalnız deterministik seçim bulunur ve URL alanı daima boştur.
+  63.082 benzersiz ilanlık `warehouse/product/arsa_emsalleri.sqlite` ürün indeksi
+  üretildi. Önceki ürünle yeni pakette 15.416 doğrudan ilan kimliği çakıştı;
+  ürün genelinde 16.056 anahtar birden fazla kanonik adaya sahipti. Eski
+  gözlemler Silver'da korunur; ürün indeksinde yalnız deterministik seçim
+  bulunur, URL ve satıcı telefonu taşınmaz.
+- Aynı ürün veritabanında 49.776 arsa/tarla mahalle özeti, 2.715.520 aylık trend
+  ve 2.851 alan segmenti vardır. Trendlerin 2.308.192'si gözlem, 407.328'i
+  projeksiyondur. Kapsam 80 il, 949 ilçe ve 31.893 mahalle kimliğidir; Yalova
+  yeni endeks paketinde yoktur ve ilan emsali geri dönüşüyle çalışır.
 - Durum: **Emsal analizi için hazır.** İlan metnindeki imar beyanı “resmî imar
   durumu” olarak gösterilmez. TKGM/belediye/E-Plan sonucu ve sorgu zamanı ayrı
   kanıt katmanıdır.
@@ -259,16 +265,16 @@ beyandan bağımsız olarak ürün skorlamasına kapalıdır.
 
 ## Tamamlanan çekirdek işler ve kalan sınırlar
 
-1. **Tamamlandı:** 2.890 kaynak biriminin tamamı hak siciline bağlandı; eşleşme
-   ve 9.140.813 satırlık denge tamdır. Kullanıcının yayın hakkı beyanına göre
-   2.592 birim yayın/skorlamaya açıktır. 193 kişisel veri inceleme birimi, 103
+1. **Tamamlandı:** 2.902 kaynak biriminin tamamı hak siciline bağlandı; eşleşme
+   ve 15.091.739 satırlık denge tamdır. Kullanıcının yayın hakkı beyanına göre
+   2.604 birim yayın/skorlamaya açıktır. 193 kişisel veri inceleme birimi, 103
    kısıtlı bağlam birimi ve 2 iç sistem birimi kapalıdır. Yasal hak sahibi
    adı/unvanı lisans bildiriminde hâlâ doldurulmalıdır.
 2. **Tamamlandı:** 633.341 gözlem etiketli gelecek piyasa satırı kayıp olmadan
    projeksiyona taşındı; ayrıca 2025–2026 dönemindeki 36 sabit katsayılı yıllık
    satış satırı projeksiyon olarak ayrıldı. Gold denetiminde geleceğe tarihli
    gözlem anomalisi `0`.
-3. **Tamamlandı:** 2.566.651 çakışma grubu; kayıt sınıfı, kaynak yönetişimi,
+3. **Tamamlandı:** 5.542.004 çakışma grubu; kayıt sınıfı, kaynak yönetişimi,
    kalite, doluluk, toplama zamanı, dönem ve sabit hash sırasıyla çözülüp karar
    tablosuna yazıldı. Alternatif gözlemler silinmedi.
 4. **Tamamlandı:** Salt-okunur TKGM canlı kadastro katmanı ve kaynak bulunursa

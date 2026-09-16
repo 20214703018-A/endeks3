@@ -10,6 +10,26 @@ from tools.veri_katalogu import build_catalog, classify, main
 
 
 class VeriKataloguTest(unittest.TestCase):
+    def test_yeni_arsa_endeks_ve_ilan_sema_siniflari(self):
+        summary = classify(
+            "paket::arsa_piyasa_istihbarati.db",
+            ["kategori", "city_id", "county_id", "district_id", "donem", "satilik_m2_fiyat"],
+            table_name="arsa_mahalle_ozet",
+        )
+        trend = classify(
+            "paket::arsa_piyasa_istihbarati.db",
+            ["kategori", "district_id", "ay", "projeksiyon"],
+            table_name="arsa_mahalle_trend",
+        )
+        listing = classify(
+            "paket::turkiye_arsa_ayrintili.csv",
+            ["İlan No", "Portal", "Ana Kategori", "İlan Linki"],
+        )
+
+        self.assertEqual((summary["domain"], summary["entity"]), ("property_market", "price_summary"))
+        self.assertEqual((trend["domain"], trend["entity"]), ("property_market", "price_trend"))
+        self.assertEqual((listing["domain"], listing["entity"]), ("listing_observation", "listing"))
+
     def test_fiziksel_ve_arsiv_kopyalari_silinmeden_hash_ile_gruplanir(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

@@ -690,8 +690,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.66956,
-          36.88362
+          30.68509,
+          36.88403
         ]
       },
       "properties": {
@@ -699,7 +699,7 @@
         "ad": "Atatürk Kültür Parkı",
         "tur": "Milli Park / Tabiat Parkı",
         "kategori": "ORMAN_VE_KORUMA_ALANI",
-        "rakim_metre": 75,
+        "rakim_metre": 29,
         "il_plaka": "07"
       }
     },
@@ -726,8 +726,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.70511,
-          36.88001
+          30.70549,
+          36.88005
         ]
       },
       "properties": {

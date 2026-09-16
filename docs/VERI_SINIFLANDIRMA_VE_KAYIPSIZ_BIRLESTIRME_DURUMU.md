@@ -39,18 +39,18 @@ yazıldı; bütün dosya ve arşiv yolları katalog üzerinden aynı içeriğe b
 
 | Ölçü | Sonuç |
 | --- | ---: |
-| Benzersiz veri varlığı | 2.529 |
-| CSV içeriği | 412 |
+| Benzersiz veri varlığı | 2.538 |
+| CSV içeriği | 419 |
 | JSON/GeoJSON belgesi | 2.054 |
-| SQLite/DB içeriği | 62 |
-| Kaynak mantıksal satır/belge | 9.140.813 |
-| Yazılan ve doğrulanan satır/belge | 9.140.813 |
-| Parquet dosyası | 2.889 |
+| SQLite/DB içeriği | 64 |
+| Kaynak mantıksal satır/belge | 15.091.739 |
+| Yazılan ve doğrulanan satır/belge | 15.091.739 |
+| Parquet dosyası | 2.901 |
 | Teknik yazım hatası | 0 |
 | Satır dengesi | Tam |
-| Sıkıştırılmış Bronze boyutu | Yaklaşık 703 MB |
+| Sıkıştırılmış Bronze boyutu | Yaklaşık 1,1 GB |
 
-Bağımsız doğrulamada 2.889 Parquet dosyasının tamamı açıldı; manifest satır
+Bağımsız doğrulamada 2.901 Parquet dosyasının tamamı açıldı; manifest satır
 sayılarıyla eşleşti, `rules_v2` sınıflandırma metadata’sını taşıdı ve geçici
 dosya kalmadı.
 
@@ -58,8 +58,8 @@ Mantıksal kayıtların sınıf dağılımı (SQLite içerikleri tablo sınıfı
 
 | Sınıf | Kayıt/belge |
 | --- | ---: |
-| `observed` | 4.229.050 |
-| `mixed_observed_projection` | 4.849.602 |
+| `observed` | 4.748.936 |
+| `mixed_observed_projection` | 10.280.642 |
 | `demo` | 62.114 |
 | `quarantine` | 47 |
 
@@ -106,21 +106,21 @@ anahtar, dönem, satır sınıfı, kalite, politika ve kaynak bağlantısı tutu
 
 | Ölçü | Sonuç |
 | --- | ---: |
-| Silver kaynak birimi | 2.890 |
-| Silver Parquet dosyası | 2.889 |
-| Kaynak mantıksal satır/belge | 9.140.813 |
-| Yazılan ve doğrulanan satır/belge | 9.140.813 |
-| Doğal anahtarlı kayıt | 9.138.746 |
+| Silver kaynak birimi | 2.902 |
+| Silver Parquet dosyası | 2.901 |
+| Kaynak mantıksal satır/belge | 15.091.739 |
+| Yazılan ve doğrulanan satır/belge | 15.091.739 |
+| Doğal anahtarlı kayıt | 15.089.672 |
 | Lineage anahtarlı/uzman adaptör bekleyen | 2.067 |
 | Teknik hata | 0 |
-| Sıkıştırılmış Silver boyutu | Yaklaşık 1,5 GB |
+| Sıkıştırılmış Silver boyutu | Yaklaşık 2,5 GB |
 
 Silver satır sınıfları:
 
 | Sınıf | Kayıt |
 | --- | ---: |
-| `observed` | 8.399.523 |
-| `projection` | 679.129 |
+| `observed` | 13.535.793 |
+| `projection` | 1.493.785 |
 | `demo` | 62.114 |
 | `quarantine` | 47 |
 
@@ -131,27 +131,27 @@ gerektirir.
 
 ## Gold sorgu katmanı
 
-`warehouse/gold/gold.duckdb` Silver dosyalarını kopyalamadan sorgulayan görünümler
+`warehouse/gold/gayrimenkul.duckdb` Silver dosyalarını kopyalamadan sorgulayan görünümler
 içerir. `canonical_resolution` fiziksel silme yapmaz ve seçtiği her satırı kaynak
 oluşumlarına geri bağlar.
 
 | Görünüm/ölçü | Sonuç |
 | --- | ---: |
-| Tüm Silver gözlemleri | 9.140.813 |
-| Ürün için ilk elemeden geçen gözlem | 6.947.626 |
-| Açıklanabilir kanonik satır | 3.209.792 |
-| Farklı payload içeren doğal anahtar | 2.566.651 |
-| Karar tablosuna yazılan çözülmüş çatışma | 2.566.651 |
-| Birebir payload tekrarı grubu | 178.726 |
-| Projeksiyon görünümü | 679.129 |
-| Piyasa projeksiyonu | 674.981 |
+| Tüm Silver gözlemleri | 15.091.739 |
+| Ürün için ilk elemeden geçen gözlem | 12.083.896 |
+| Açıklanabilir kanonik satır | 5.744.762 |
+| Farklı payload içeren doğal anahtar | 5.542.004 |
+| Karar tablosuna yazılan çözülmüş çatışma | 5.542.004 |
+| Birebir payload tekrarı grubu | 178.696 |
+| Projeksiyon görünümü | 1.493.785 |
+| Piyasa projeksiyonu | 1.489.637 |
 | Geleceğe tarihli gözlem anomalisi | 0 |
 | Karantina görünümü | 47 |
 | Doğrulama incelemesi | 2.067 |
-| Sicile bağlanan kaynak birimi | 2.890 / 2.890 |
+| Sicile bağlanan kaynak birimi | 2.902 / 2.902 |
 | Sicil eşleme kaybı | 0 |
-| Açık yayına açık kanonik satır | 3.203.251 |
-| Değerleme/skorlamaya açık kanonik satır | 3.203.251 |
+| Açık yayına açık kanonik satır | 5.738.221 |
+| Değerleme/skorlamaya açık kanonik satır | 5.738.221 |
 
 Kullanıcının özgün istatistiksel modelleri, model çıktıları ve veri tabanı
 düzeni `PROPRIETARY-DATA-1.0` sahiplik beyanına bağlandı. Kullanıcı ayrıca veri
@@ -180,8 +180,9 @@ doğrulaması değildir.
 - `reports/kaynak-sicili-ozet.csv`: kaynak ailesi bazında insan-okunur özet.
 - `LICENSE-DATA.md`: kullanıcı modeli ve özgün veri tabanı düzeni için kapalı
   lisans taslağı; yasal ad/unvan girilmeden nihai değildir.
-- `warehouse/product/arsa_emsalleri.sqlite`: 16.027 benzersiz arsa ilanından,
-  açık bağlantı içermeyen hızlı emsal ürün indeksi.
+- `warehouse/product/arsa_emsalleri.sqlite`: 63.082 benzersiz arsa ilanı,
+  49.776 mahalle özeti, 2.715.520 aylık trend ve 2.851 alan segmentinden oluşan;
+  açık bağlantı ve satıcı telefonu içermeyen hızlı arsa ürün indeksi.
 
 Araçlar:
 

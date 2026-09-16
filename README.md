@@ -2,9 +2,10 @@
 
 Bu checkout artık dört birlikte çalışan çekirdek modül içerir:
 
-1. 9.140.813 Silver gözlemden kayıpsız veri soy ağacı ve 2.566.651 veri
+1. 15.091.739 Silver gözlemden kayıpsız veri soy ağacı ve 5.542.004 veri
    çatışması için açıklanabilir Gold kararı,
-2. 16.027 benzersiz ve yayımlanabilir arsa ilanından linksiz emsal indeksi,
+2. 63.082 benzersiz arsa ilanı ile 49.776 mahalle özeti, 2.715.520 aylık
+   arsa/tarla trendi ve 2.851 alan segmentinden oluşan linksiz ürün indeksi,
 3. istek anında salt-okunur TKGM kadastro ve kaynak bulunursa E-Plan/belediye
    imar katmanı,
 4. alıcı için emsal, güven, fiyat aralığı, faktörler ve doğrulanmış KAKS/TAKS
@@ -34,9 +35,15 @@ python3 tools/arsa_emsal_indeksi.py --calistir \
   --output-database warehouse/product/arsa_emsalleri.sqlite
 ```
 
-Çıktı ilan URL'si içermez. Aynı ilan kimliğinin farklı gözlemleri kalite,
-güncellik ve sabit kaynak karmasıyla tekilleştirilir; geçmiş sürümler Silver'da
-silinmez.
+Çıktı ilan URL'si veya satıcı telefonu içermez. Aynı portal ve ilan kimliğinin
+farklı gözlemleri kalite, alan doluluğu, güncellik ve sabit kaynak karmasıyla
+tekilleştirilir; geçmiş sürümler Silver'da silinmez. Mahalle endeksi ile ilan
+emsalleri iki bağımsız veri ailesi olarak sunulur; ağırlıklandırılmaz ve bedel
+üretmek için birleştirilmez. Ayrı bedel algoritması tanımlanana kadar tahmini
+değer alanları boş döner.
+2021-01–2027-08 serisinin 407.328 projeksiyon satırı gözlem satırlarından ayrı
+etiketlenir. Yeni endeks paketi 80 ili kapsar; Yalova bu pakette bulunmadığı
+için orada mevcut ilan emsali geri dönüşü kullanılır.
 
 ## Eski toplayıcı kapsamı
 

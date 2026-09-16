@@ -9,7 +9,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="alici_arsa_analiz.css?v=1.0.2">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.css">
+  <link rel="stylesheet" href="alici_arsa_analiz.css?v=3.10.0">
 </head>
 <body>
   <a class="skip-link" href="#analysisForm">Analiz formuna geç</a>
@@ -35,7 +38,7 @@
       </div>
       <div class="hero-proof" aria-label="Sistem kapsamı">
         <div><strong>2.566.651</strong><span>çakışma grubu karara bağlı</span></div>
-        <div><strong>12</strong><span>en yakın emsale kadar</span></div>
+        <div><strong>1 km</strong><span>yarıçaptaki tüm emsaller</span></div>
         <div><strong>0</strong><span>uydurulan imar alanı</span></div>
       </div>
     </section>
@@ -93,16 +96,17 @@
       <div class="map-panel">
         <div id="map" aria-label="Parsel ve emsal haritası"></div>
         <div class="map-toolbar">
-          <span id="mapStatus"><i></i> Arsa konumu hazır</span>
+          <span id="mapStatus"><i></i> Haritaya tıklayıp parsel seçin</span>
+          <button id="satToggle" type="button">🛰️ Uydu geçmişi</button>
           <button id="fitMap" type="button">Parsele odaklan</button>
         </div>
-        <div class="map-legend"><span><i class="parcel-dot"></i> Seçilen parsel</span><span><i class="comp-dot"></i> Emsal ilan</span></div>
+        <div class="map-legend"><span><i class="parcel-dot"></i> Seçilen parsel</span><span><i class="comp-dot"></i> Emsal ilan</span><span class="map-hint">🖱️ Yakınlaşıp parsele tıklayın</span></div>
       </div>
     </section>
 
     <section id="results" class="results" aria-live="polite">
       <div class="results-heading">
-        <div><p class="eyebrow">AÇIKLANABİLİR SONUÇ</p><h2 id="resultTitle">Yalova / Çiftlikköy arsa analizi</h2></div>
+        <div><p class="eyebrow">BAĞIMSIZ PİYASA KANITLARI</p><h2 id="resultTitle">Yalova / Çiftlikköy arsa analizi</h2></div>
         <div id="analysisMeta" class="analysis-meta">Model hazırlanıyor</div>
       </div>
 
@@ -110,11 +114,327 @@
       <div id="resultAlert" class="alert" role="status">Örnek form hazır. Analizi başlatın.</div>
 
       <div class="metric-grid">
-        <article class="metric feature"><span>Tahmini değer aralığı</span><strong id="priceRange">—</strong><small id="priceRangeNote">Emsal verisi bekleniyor</small></article>
-        <article class="metric"><span>Merkez tahmin</span><strong id="priceEstimate">—</strong><small id="unitEstimate">— / m²</small></article>
-        <article class="metric"><span>Güven puanı</span><strong id="confidence">—</strong><small id="confidenceLabel">Veri bekleniyor</small></article>
+        <article class="metric feature"><span>Endeks m² aralığı</span><strong id="priceRange">—</strong><small id="priceRangeNote">Endeks verisi bekleniyor</small></article>
+        <article class="metric"><span>Mahalle endeksi</span><strong id="priceEstimate">—</strong><small id="unitEstimate">Bağımsız veri</small></article>
+        <article class="metric"><span>Emsal medyanı</span><strong id="confidence">—</strong><small id="confidenceLabel">Bağımsız veri</small></article>
         <article class="metric"><span>Seçilen emsal</span><strong id="comparableCount">—</strong><small id="comparableScope">—</small></article>
       </div>
+
+      <article class="detail-card history-card" id="indexHistoryCard" hidden>
+        <div class="card-title"><div><span class="step">📈</span><h3>Mahalle endeks geçmişi</h3></div><span id="historyBadge" class="badge">—</span></div>
+        <div id="indexHistoryChart" class="history-chart" role="img" aria-label="Mahalle m² satılık endeks geçmişi grafiği"></div>
+        <div class="history-legend">
+          <span><i class="hist-dot observed"></i> Gözlenen</span>
+          <span><i class="hist-dot projection"></i> Projeksiyon (tahmin)</span>
+          <span id="historyRange" class="history-range">—</span>
+        </div>
+        <p class="card-note">Aylık m² satılık endeksi. Projeksiyon dönemi kesikli çizgiyle gösterilir; kesin değer değildir.</p>
+      </article>
+
+      <article class="detail-card region-card" id="regionDynamicsCard" hidden>
+        <div class="card-title"><div><span class="step">📊</span><h3>Bölge dinamikleri</h3></div><span id="regionBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>Yıllık fiyat değişimi</span><strong id="regYoy">—</strong></div>
+          <div><span>Satış kolaylığı (ilanda kalma)</span><strong id="regDom">—</strong></div>
+          <div><span>Arz / stok trendi (yıllık)</span><strong id="regStock">—</strong></div>
+          <div><span>Mahalle ilan sayısı</span><strong id="regListings">—</strong></div>
+          <div><span>İlçe gelişmişliği (SEGE)</span><strong id="regSege">—</strong></div>
+          <div><span>Mahalle konut m² (ort.)</span><strong id="regKonutM2">—</strong></div>
+          <div><span>Yapılaşma (ort. / maks. kat)</span><strong id="regKat">—</strong></div>
+          <div><span>Amortisman (konut)</span><strong id="regAmortisman">—</strong></div>
+          <div><span>Kira getirisi (konut)</span><strong id="regGetiri">—</strong></div>
+          <div><span>Ort. bina yaşı</span><strong id="regBinaYasi">—</strong></div>
+          <div><span>Ort. konut kirası</span><strong id="regKira">—</strong></div>
+        </div>
+        <p class="card-note" id="regionNote">Mahalle endeks ambarı + SEGE ilçe gelişmişlik + konut ilan agregatı. Yatırım / likidite bağlamı; kesin değer değildir.</p>
+      </article>
+
+      <article class="detail-card bolge-card" id="bolgeDemografiCard" hidden>
+        <div class="card-title"><div><span class="step">👥</span><h3>Nüfus ve sosyoekonomi</h3></div><span id="bolgeDemografiBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>Nüfus</span><strong id="bdNufus">—</strong></div>
+          <div><span>Hane sayısı</span><strong id="bdHane">—</strong></div>
+          <div><span>Ort. hane geliri</span><strong id="bdGelir">—</strong></div>
+          <div><span>Ev sahibi / kiracı</span><strong id="bdEvSahibi">—</strong></div>
+          <div><span>Üniversite mezunu</span><strong id="bdUni">—</strong></div>
+          <div><span>Yaş dağılımı (genç / orta / yaşlı)</span><strong id="bdYas">—</strong></div>
+        </div>
+        <div class="ses-bar" id="bdSes" aria-label="Sosyoekonomi sınıf dağılımı"></div>
+        <div class="region-grid" id="bdEkstra"></div>
+        <p class="card-note" id="bolgeDemografiNote">Bölge istatistik ambarı (demografi, SES, eğitim). Mahalle bulunamazsa ilçe / il düzeyi gösterilir.</p>
+      </article>
+
+      <article class="detail-card bolge-card" id="bolgeSatisCard" hidden>
+        <div class="card-title"><div><span class="step">🏷️</span><h3>Yıllık tapu satışları</h3></div><span id="bolgeSatisBadge" class="badge">—</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Yıl</th><th>Konut satışı</th><th>İpotekli konut</th><th>Arsa / arazi satışı</th><th>İpotekli arsa</th></tr></thead>
+            <tbody id="bolgeSatisRows"></tbody>
+          </table>
+        </div>
+        <p class="card-note" id="bolgeSatisNote">Yıllık gerçekleşen tapu satış adetleri (konut ve arsa/arazi). Fiyat değil, işlem sayısıdır.</p>
+      </article>
+
+      <article class="detail-card bolge-card" id="bolgeFiyatCard" hidden>
+        <div class="card-title"><div><span class="step">🏠</span><h3>Konut ve arsa piyasası özeti</h3></div><span id="bolgeFiyatBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>Konut satılık m²</span><strong id="bfKonutM2">—</strong></div>
+          <div><span>Konut kiralık m²</span><strong id="bfKiraM2">—</strong></div>
+          <div><span>Ort. konut fiyatı</span><strong id="bfKonutFiyat">—</strong></div>
+          <div><span>Amortisman / brüt getiri</span><strong id="bfAmortisman">—</strong></div>
+          <div><span>Ort. bina yaşı</span><strong id="bfBinaYasi">—</strong></div>
+          <div><span>İlanda kalma (satılık / kiralık)</span><strong id="bfKalma">—</strong></div>
+          <div><span>Arsa satılık m²</span><strong id="bfArsaM2">—</strong></div>
+          <div><span>Arsa ilan sayısı / kalma</span><strong id="bfArsaIlan">—</strong></div>
+        </div>
+        <p class="card-note" id="bolgeFiyatNote">Ulusal bölge fiyat özeti (konut + arsa). Endeks kartından bağımsız bir kaynaktır; arsa fiyatlaması için birleştirilmez.</p>
+      </article>
+
+      <article class="detail-card bolge-card" id="bolgeKirilimCard" hidden>
+        <div class="card-title"><div><span class="step">🧱</span><h3>Konut stoku kırılımı</h3></div><span id="bolgeKirilimBadge" class="badge">—</span></div>
+        <div class="kirilim-grid" id="bolgeKirilimGroups"></div>
+        <p class="card-note">Oda sayısı, bina yaşı, kat ve ısıtma türüne göre ilan payı ve m² fiyatı. Bölgenin konut dokusunu gösterir.</p>
+      </article>
+
+      <article class="detail-card bolge-card" id="bolgePoiCard" hidden>
+        <div class="card-title"><div><span class="step">📍</span><h3>İlçe donanımı (POI)</h3></div><span id="bolgePoiBadge" class="badge">—</span></div>
+        <div class="poi-grid" id="bolgePoiGroups"></div>
+        <p class="card-note">İlçe genelindeki sağlık, eğitim, ulaşım, alışveriş ve sosyal tesis sayıları. Koordinat içermez; parsele uzaklık değil ilçe donanımıdır.</p>
+      </article>
+
+      <article class="detail-card segment-card" id="areaSegmentCard" hidden>
+        <div class="card-title"><div><span class="step">📐</span><h3>Alan bandına göre m² fiyatı</h3></div><span id="segmentBadge" class="badge">—</span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Alan bandı</th><th>m² fiyatı</th><th>min – max</th><th>İlan payı</th><th>Ort. alan</th><th>Ort. ilanda kalma</th></tr></thead>
+            <tbody id="segmentRows"><tr><td colspan="6" class="table-empty">İlçe alan segmenti verisi analiz sonrası gösterilir.</td></tr></tbody>
+          </table>
+        </div>
+        <p class="card-note">İlçe düzeyinde, arsanın büyüklük bandına göre m² fiyat kırılımı. Girilen alanın bandı vurgulanır.</p>
+      </article>
+
+      <p class="eyebrow section-eyebrow">KONUM İNCELEMESİ · HER KONU AYRI</p>
+      <div class="focus-grid">
+        <article class="focus-card" id="focusEmsal">
+          <div class="focus-head"><span class="focus-ic">🏘️</span><div><h3>Emsal arsalar</h3><small id="emsalSummary">Analiz sonrası 1 km içindeki ilanlar</small></div></div>
+          <div id="mapEmsal" class="mini-map"></div>
+        </article>
+        <article class="focus-card" id="focusDensity">
+          <div class="focus-head"><span class="focus-ic">🔥</span><div><h3>Satış ısı haritası</h3><small id="densitySummary">Tapu satış yoğunluğu</small></div></div>
+          <div id="mapDensity" class="mini-map"></div>
+          <div id="densityYearBars" class="density-bars"></div>
+        </article>
+        <article class="focus-card" id="focusSu">
+          <div class="focus-head"><span class="focus-ic">💧</span><div><h3>Suya uzaklık</h3><small id="suSummary">2 km çevresindeki su kaynakları</small></div></div>
+          <div id="mapSu" class="mini-map"></div>
+        </article>
+        <article class="focus-card" id="focusFay">
+          <div class="focus-head"><span class="focus-ic">⚠️</span><div><h3>Fay hattı</h3><small id="fauSummary">En yakın diri fay hattı</small></div></div>
+          <div id="mapFay" class="mini-map"></div>
+        </article>
+        <article class="focus-card" id="focusElektrik">
+          <div class="focus-head"><span class="focus-ic">⚡</span><div><h3>Elektrik hattı</h3><small id="elektrikSummary">Parsel üzerinden geçen hat</small></div></div>
+          <div id="mapElektrik" class="mini-map"></div>
+        </article>
+        <article class="focus-card sat-focus" id="focusSat">
+          <div class="focus-head"><span class="focus-ic">🛰️</span><div><h3>Uydu geçmişi</h3><small>2014–2026 yıllara göre yüksek çözünürlük</small></div></div>
+          <button id="satOpen" type="button" class="focus-btn">Yıllara göre uydu fotoğraflarını aç →</button>
+        </article>
+      </div>
+
+      <article class="detail-card yakin-card" id="yakinCard" hidden>
+        <div class="card-title"><div><span class="step">📍</span><h3>Yakın önemli noktalar</h3></div><span id="yakinBadge" class="badge">—</span></div>
+        <div class="yakin-layout">
+          <div id="mapYakin" class="mini-map yakin-map"></div>
+          <div class="yakin-groups" id="yakinGroups"></div>
+        </div>
+        <div class="yakin-transit" id="yakinTransit"></div>
+        <div class="yakin-chains" id="yakinChains"></div>
+        <div class="yakin-chains" id="yakinYogunluk"></div>
+        <div class="yakin-chains" id="yakinDegisim"></div>
+        <div id="yakinGecmis" class="gecmis-wrap"></div>
+        <p class="card-note" id="yakinNote">—</p>
+      </article>
+
+      <article class="detail-card okul-card" id="okulCard" hidden>
+        <div class="card-title"><div><span class="step">🎓</span><h3>Okullar ve eğitim kalitesi</h3></div><span id="okulBadge" class="badge">—</span></div>
+        <div class="yakin-layout">
+          <div id="mapOkul" class="mini-map yakin-map"></div>
+          <div>
+            <div class="okul-best" id="okulBest"></div>
+            <div class="yakin-groups" id="okulGroups"></div>
+          </div>
+        </div>
+        <p class="card-note" id="okulNote">—</p>
+      </article>
+
+      <article class="detail-card yurt-card" id="yurtCard" hidden>
+        <div class="card-title"><div><span class="step">🛏️</span><h3>Öğrenci yurtları</h3></div><span id="yurtBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>1 km: yurt (KYK / özel)</span><strong id="yt1Yurt">—</strong></div>
+          <div><span>1 km: bilinen kapasite (kız / erkek)</span><strong id="yt1Kap">—</strong></div>
+          <div><span>3 km: yurt (KYK / özel)</span><strong id="yt3Yurt">—</strong></div>
+          <div><span>3 km: bilinen kapasite (kız / erkek)</span><strong id="yt3Kap">—</strong></div>
+        </div>
+        <div class="yakin-layout">
+          <div id="mapYurt" class="mini-map yakin-map" style="height:300px"></div>
+          <div class="yakin-groups"><div><h4>En yakın yurtlar</h4><ul id="yurtList"></ul></div></div>
+        </div>
+        <p class="card-note" id="yurtNote">—</p>
+      </article>
+
+      <article class="detail-card uni-card" id="uniCard" hidden>
+        <div class="card-title"><div><span class="step">🎓</span><h3>Üniversite kampüsleri</h3></div><span id="uniBadge" class="badge">—</span></div>
+        <div class="yakin-layout">
+          <div id="mapUni" class="mini-map yakin-map" style="height:340px"></div>
+          <div class="yakin-groups"><div><h4>En yakın kampüsler</h4><ul id="uniList"></ul></div></div>
+        </div>
+        <p class="card-note" id="uniNote">—</p>
+      </article>
+
+      <article class="detail-card pazar-card" id="pazarCard" hidden>
+        <div class="card-title"><div><span class="step">🧺</span><h3>Semt pazarları</h3></div><span id="pazarBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>1 km / 3 km pazar</span><strong id="pzSayi">—</strong></div>
+          <div><span>Kapalı pazar (3 km)</span><strong id="pzKapali">—</strong></div>
+          <div><span>Kurulum günleri (3 km)</span><strong id="pzGun">—</strong></div>
+        </div>
+        <div class="yakin-layout">
+          <div id="mapPazar" class="mini-map yakin-map" style="height:260px"></div>
+          <div class="yakin-groups"><div><h4>En yakın pazarlar</h4><ul id="pazarList"></ul></div></div>
+        </div>
+        <p class="card-note" id="pazarNote">—</p>
+      </article>
+
+      <article class="detail-card tuik-card" id="tuikCard" hidden>
+        <div class="card-title"><div><span class="step">📊</span><h3>Bölge dinamikleri (TÜİK)</h3></div><span id="tuikBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>İlçe nüfusu</span><strong id="tkNufus">—</strong></div>
+          <div><span>Mahalle nüfusu</span><strong id="tkMahalle">—</strong></div>
+          <div><span>İl net göç hızı (‰)</span><strong id="tkGoc">—</strong></div>
+          <div><span>Sosyoekonomik seviye (SES)</span><strong id="tkSes">—</strong></div>
+          <div><span>Yapı ruhsatı (daire, son yıl)</span><strong id="tkRuhsat">—</strong></div>
+          <div><span>Yapı kullanma izni (daire)</span><strong id="tkKullanma">—</strong></div>
+          <div><span>Konut satışı (son 12 ay)</span><strong id="tkSatis">—</strong></div>
+          <div><span>1000 kişiye satış / ruhsat</span><strong id="tkOran">—</strong></div>
+        </div>
+        <div class="tuik-charts">
+          <div><h4>İlçe konut satışı (aylık, son 24 ay)</h4><div id="tkSatisChart" class="bar-chart"></div></div>
+          <div><h4>Yapı ruhsatı / kullanma izni (daire, yıllık)</h4><div id="tkArzChart" class="bar-chart"></div></div>
+        </div>
+        <div id="tkSesBar" class="ses-bar"></div>
+        <div class="tuik-charts" style="margin-top:22px"><div><h4 id="tkAmacBaslik">Yapı ruhsatı kullanım amacı (yüzölçümü)</h4><div id="tkAmacBar" class="ses-bar" style="margin-top:6px"></div><div id="tkAmacLegend" class="yakin-chains"></div></div></div>
+        <p class="card-note" id="tuikNote">—</p>
+      </article>
+
+      <article class="detail-card hava-card" id="havaCard" hidden>
+        <div class="card-title"><div><span class="step">🌫️</span><h3>Hava kalitesi (son 12 ay)</h3></div><span id="havaBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>PM10 yıllık ort. (µg/m³)</span><strong id="hvPm10">—</strong></div>
+          <div><span>PM2.5 yıllık ort.</span><strong id="hvPm25">—</strong></div>
+          <div><span>NO₂ yıllık ort.</span><strong id="hvNo2">—</strong></div>
+          <div><span>PM10 &gt; 50 olan gün</span><strong id="hvAsim">—</strong></div>
+        </div>
+        <div class="yakin-layout">
+          <div id="mapHava" class="mini-map yakin-map" style="height:220px"></div>
+          <div class="yakin-groups"><div><h4>En yakın istasyonlar</h4><ul id="havaList"></ul></div><div><h4>Aylık PM10 (en yakın istasyon)</h4><div id="hvChart" class="bar-chart"></div></div></div>
+        </div>
+        <p class="card-note" id="havaNote">—</p>
+      </article>
+
+      <article class="detail-card rg-card" id="rgCard" hidden>
+        <div class="card-title"><div><span class="step">📜</span><h3>Resmî Gazete kararları</h3></div><span id="rgBadge" class="badge">—</span></div>
+        <ul id="rgList" class="rg-list"></ul>
+        <p class="card-note" id="rgNote">—</p>
+      </article>
+
+      <article class="detail-card uydu-card" id="uyduCard" hidden>
+        <div class="card-title"><div><span class="step">🛰️</span><h3>Uydu değişimi (Sentinel-2)</h3></div><span id="uyduBadge" class="badge muted">hesaplanıyor…</span></div>
+        <div class="region-grid">
+          <div><span>Yapılaşmış / çıplak yüzey (1 km)</span><strong id="uyYapili">—</strong></div>
+          <div><span>Bitki örtüsü payı (1 km)</span><strong id="uyBitki">—</strong></div>
+          <div><span>1 yıla göre yapılaşma</span><strong id="uy1y">—</strong></div>
+          <div><span>3 yıla göre yapılaşma</span><strong id="uy3y">—</strong></div>
+        </div>
+        <div id="uyduSahneler" class="yakin-chains"></div>
+        <p class="card-note" id="uyduNote">Copernicus Sentinel-2 sahneleri okunuyor (ilk sorguda 30–60 sn, sonraki sorgular önbellekten).</p>
+      </article>
+
+      <article class="detail-card risk-card" id="riskCard" hidden>
+        <div class="card-title"><div><span class="step">🏚️</span><h3>Deprem senaryosu ve gürültü (İBB)</h3></div><span id="riskBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>Mahallede ağır+çok ağır hasar oranı</span><strong id="rkHasar">—</strong></div>
+          <div><span>Senaryoda hasarlı bina (ç.ağır / ağır / orta)</span><strong id="rkBina">—</strong></div>
+          <div><span>Bina stoku yaşı (2017)</span><strong id="rkYas">—</strong></div>
+          <div><span>Can kaybı / geçici barınma</span><strong id="rkCan">—</strong></div>
+          <div><span>Gürültü (gündüz)</span><strong id="rkGunduz">—</strong></div>
+          <div><span>Gürültü (gece)</span><strong id="rkGece">—</strong></div>
+        </div>
+        <p class="card-note" id="riskNote">—</p>
+      </article>
+
+      <article class="detail-card trafik-card" id="trafikCard" hidden>
+        <div class="card-title"><div><span class="step">🚗</span><h3>Saatlik yoğunluk (İBB trafik)</h3></div><span id="trafikBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>Hafta içi ort. araç / saat (hücre)</span><strong id="trOrt">—</strong></div>
+          <div><span>İstanbul ortalamasına göre</span><strong id="trGoreli">—</strong></div>
+          <div><span>Zirve saat</span><strong id="trZirve">—</strong></div>
+          <div><span>En yavaş saat / hız</span><strong id="trYavas">—</strong></div>
+        </div>
+        <div class="tuik-charts">
+          <div><h4>Hafta içi — saatlik araç sayısı</h4><div id="trChartHi" class="bar-chart"></div></div>
+          <div><h4>Hafta sonu — saatlik araç sayısı</h4><div id="trChartHs" class="bar-chart"></div></div>
+        </div>
+        <p class="card-note" id="trafikNote">—</p>
+      </article>
+
+      <article class="detail-card afet-card" id="afetCard" hidden>
+        <div class="card-title"><div><span class="step">🌊</span><h3>Taşkın ve heyelan (vekil gösterge)</h3></div><span id="afetBadge" class="badge muted">resmî değil</span></div>
+        <div class="region-grid">
+          <div><span>Taşkın vekili</span><strong id="afTaskin">—</strong></div>
+          <div><span>En yakın dere / göl-baraj</span><strong id="afDere">—</strong></div>
+          <div><span>Heyelan vekili</span><strong id="afHeyelan">—</strong></div>
+          <div><span>Çevre eğimi (ort / maks)</span><strong id="afEgim">—</strong></div>
+        </div>
+        <p class="card-note" id="afetNote">—</p>
+      </article>
+
+      <article class="detail-card arazi-card" id="araziCard" hidden>
+        <div class="card-title"><div><span class="step">⛰️</span><h3>Arazi ve eğim (3D)</h3></div><span id="araziBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>Rakım (parsel merkezi)</span><strong id="arRakim">—</strong></div>
+          <div><span>Arazi eğimi (90 m pencere)</span><strong id="arEgim">—</strong></div>
+          <div><span>Bakı (yamaç yönü)</span><strong id="arBaki">—</strong></div>
+          <div><span>Çevre 300 m: eğim / kot farkı</span><strong id="arCevre">—</strong></div>
+        </div>
+        <div class="map3d-wrap">
+          <div id="map3d" class="map3d"></div>
+          <div class="map3d-tools">
+            <button type="button" class="chip" id="btn3d">3D</button>
+            <button type="button" class="chip" id="btn2d">2D</button>
+            <button type="button" class="chip" id="btnRotate">Döndür</button>
+          </div>
+        </div>
+        <p class="card-note" id="araziNote">—</p>
+      </article>
+
+      <article class="detail-card jeoloji-card" id="jeolojiCard" hidden>
+        <div class="card-title"><div><span class="step">🪨</span><h3>Zemin ve jeolojik birim</h3></div><span id="jeolojiBadge" class="badge">—</span></div>
+        <div class="region-grid">
+          <div><span>Jeolojik birim</span><strong id="jeoBirim">—</strong></div>
+          <div><span>Jeolojik yaş</span><strong id="jeoYas">—</strong></div>
+          <div><span>Simge / kod</span><strong id="jeoSimge">—</strong></div>
+          <div><span>En yakın diri fay</span><strong id="jeoFay">—</strong></div>
+        </div>
+        <div id="mapJeoloji" class="mini-map jeoloji-map"></div>
+        <p class="card-note" id="jeolojiNote">—</p>
+      </article>
+
+      <article class="detail-card geo-card" id="geoFindingsCard" hidden>
+        <div class="card-title"><div><span class="step">🌐</span><h3>Diğer coğrafi bulgular</h3></div><span id="geoBadge" class="badge">—</span></div>
+        <div id="geoFindings" class="geo-findings"></div>
+        <p id="geoNote" class="card-note"></p>
+      </article>
 
       <div class="detail-grid">
         <article class="detail-card zoning-card">
@@ -123,6 +443,7 @@
             <div><dt>TKGM durumu</dt><dd id="cadastreStatus">—</dd></div>
             <div><dt>Ada / parsel</dt><dd id="parcelIdentity">—</dd></div>
             <div><dt>Parsel alanı</dt><dd id="parcelArea">—</dd></div>
+            <div><dt>Parsel şekli</dt><dd id="parcelShape">—</dd></div>
             <div><dt>Taşınmaz niteliği</dt><dd id="parcelQuality">—</dd></div>
             <div><dt>Tapu / zemin statüsü</dt><dd id="groundTitleStatus">—</dd></div>
             <div><dt>Plan fonksiyonu</dt><dd id="planFunction">—</dd></div>
@@ -135,6 +456,7 @@
           </dl>
           <div id="eplanPlans" class="eplan-plan-list" hidden></div>
           <p id="zoningWarning" class="card-note">Canlı kaynak sonucu geldiğinde doldurulur.</p>
+          <p id="cityExpansion" class="card-note"></p>
         </article>
 
         <article class="detail-card project-card">
@@ -163,7 +485,7 @@
 
       <div class="detail-grid lower-grid">
         <article class="detail-card">
-          <div class="card-title"><div><span class="step">05</span><h3>Değer ayarları</h3></div><span id="factorTotal" class="badge">×1,000</span></div>
+          <div class="card-title"><div><span class="step">05</span><h3>Parsel özellikleri</h3></div><span id="factorTotal" class="badge">Bedelde uygulanmadı</span></div>
           <div id="factorList" class="factor-list"></div>
         </article>
         <article class="detail-card evidence-card">
@@ -180,8 +502,35 @@
     </section>
   </main>
 
-  <footer><span>GEOPROP · İstatistiksel ön değerlendirme</span><span>Kesin değer, ekspertiz veya resmî imar belgesi değildir.</span></footer>
+  <div id="satGallery" class="sat-gallery" hidden role="dialog" aria-modal="true" aria-label="Yıllara göre uydu fotoğrafları">
+    <div class="sat-gallery-inner">
+      <div class="sat-gallery-head">
+        <div><strong>Yıllara göre uydu fotoğrafları</strong><small id="satGalleryLoc">Parsel konumu</small></div>
+        <button id="satGalleryClose" class="sat-g-close" aria-label="Kapat">✕</button>
+      </div>
+      <div class="sat-gallery-stage">
+        <button id="satPrev" class="sat-nav" aria-label="Önceki yıl">‹</button>
+        <div class="sat-photo-wrap">
+          <canvas id="satPhoto" width="768" height="512"></canvas>
+          <span class="sat-crosshair" aria-hidden="true"></span>
+          <span id="satPhotoYear" class="sat-photo-year">—</span>
+        </div>
+        <button id="satNext" class="sat-nav" aria-label="Sonraki yıl">›</button>
+      </div>
+      <div class="sat-gallery-controls">
+        <button id="satGalleryPlay" type="button">▶ Oynat</button>
+        <input id="satGallerySlider" type="range" min="0" max="12" value="12" aria-label="Yıl seç">
+        <span id="satGalleryYear" class="sat-year">2026</span>
+      </div>
+      <div class="sat-gallery-strip" id="satStrip"></div>
+      <p class="sat-gallery-note">Esri World Imagery (Wayback) · yüksek çözünürlük görüntü. Görüntü tarihleri bölgeye göre değişir; bazı yıllarda aynı uçuş görülebilir. Gündüz optik uydu/hava görüntüsüdür.</p>
+    </div>
+  </div>
+
+  <footer><span>GEOPROP · Arsa piyasa kanıtları</span><span>Endeks ve emsaller birleştirilmez; kesin değer veya ekspertiz değildir.</span></footer>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="alici_arsa_analiz.js?v=1.0.2"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/4.7.1/maplibre-gl.js"></script>
+  <script src="alici_arsa_analiz.js?v=3.10.0"></script>
 </body>
 </html>

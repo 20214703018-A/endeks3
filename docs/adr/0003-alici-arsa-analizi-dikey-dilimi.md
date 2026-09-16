@@ -17,7 +17,9 @@ aynı kullanıcı sonucunda birleştirmelidir.
 - Gold çatışma kararları fiziksel veri silmez ve açıklanabilir kanıt taşır.
 - Arsa emsalleri Silver'dan atomik üretilen küçük SQLite ürün indeksinden okunur.
 - Emsal seçimi mahalle/mesafe, ilçe/mesafe, ilçe ve il kapsamlarını kademeli
-  genişletir; MAD aykırı değer filtresi ve ağırlıklı medyan kullanır.
+  genişletir ve MAD aykırı değer filtresi uygular. Emsal istatistikleri ile
+  mahalle endeksi ayrı kanıt aileleri olarak döner; birbirleriyle
+  ağırlıklandırılmaz ve otomatik bedel üretmez.
 - Canlı kadastro sorgusu salt okunurdur. Canlı alan ile kullanıcı alanı yüzde
   beşten fazla ayrışırsa canlı alan kullanılır ve uyarı gösterilir.
 - İmar kaynağında bulunmayan alanlar tahmin edilmez. Örnek proje yalnız canlı
@@ -33,7 +35,8 @@ aynı kullanıcı sonucunda birleştirmelidir.
 
 ## Sınırlar
 
-Sonuç istatistiksel ön değerlemedir; gerçekleşmiş satış fiyatı, ekspertiz,
-ruhsat veya kazanılmış imar hakkı değildir. İlk performans hedefi sıcak yerel
+Bedel belirleme algoritması ayrıca kararlaştırılacaktır. Mevcut sonuç, birbirine
+karıştırılmayan endeks ve ilan emsali verileridir; gerçekleşmiş satış fiyatı,
+ekspertiz, ruhsat veya kazanılmış imar hakkı değildir. İlk performans hedefi sıcak yerel
 isteklerde 500 ms altı API yanıtıdır; bu hedef yük testi yapılmış üretim SLO'su
 değildir.

@@ -226,17 +226,12 @@ _STAT_RX = {
 
 
 def _anasayfa(host: str) -> dict | None:
-    url = f"https://{host}.meb.k12.tr/"
-    for attempt in range(2):
-        try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=20) as r:
-                h = r.read(300_000).decode("utf-8", "ignore")
-            t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", h))
-            out = {k: int(m.group(1)) for k, rx in _STAT_RX.items() if (m := rx.search(t))}
-            return out or None
-        except Exception:
-            time.sleep(1.0 + attempt)
-    return None
+    h = _sayfa(host)   # https → http düşüşü (bazı okul siteleri sertifika/DNS sorunlu)
+    if not h:
+        return None
+    t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", h))
+    out = {k: int(m.group(1)) for k, rx in _STAT_RX.items() if (m := rx.search(t))}
+    return out or None
 
 
 def istatistik(c: sqlite3.Connection, iller: list[int], workers: int = 6, shard: tuple[int, int] | None = None,
@@ -287,6 +282,135 @@ def istatistik_yukle(c: sqlite3.Connection, paths: list[str]) -> None:
                     r = json.loads(line); rows.append((r["derslik"], r["ogretmen"], r["ogrenci"], r["ts"], r["kurum"]))
         c.executemany("UPDATE okul SET derslik=?, ogretmen=?, ogrenci=?, istatistik_guncellenme=? WHERE kurum_kodu=?", rows); n += len(rows)
     c.commit(); print(f"JSONL'den {n:,} istatistik yüklendi")
+
+
+# ---------- 2c) koordinat tamamlama (harita.php boş olanlar) ----------
+def _ilce_merkezi(c: sqlite3.Connection) -> dict[tuple[int, int], tuple[float, float]]:
+    """İlçe başına koordinatlı okulların medyan merkezi (eşleşme yarıçapı için referans)."""
+    out = {}
+    for il, ilce, lat, lon in c.execute("SELECT il_kodu, ilce_kodu, AVG(lat), AVG(lon) FROM okul WHERE lat IS NOT NULL GROUP BY il_kodu, ilce_kodu"):
+        out[(il, ilce)] = (lat, lon)
+    return out
+
+
+def koordinat_tamamla_osm(c: sqlite3.Connection, osm_db: str) -> int:
+    """Koordinatsız okulu OSM ambarındaki (osm_poi.sqlite) aynı normalize adlı okulla eşler; aday, okulun
+    ilçe merkezine ≤ 25 km olmalı ve tek olmalı (belirsizse atlanır — uydurma yok)."""
+    import math
+    if not os.path.exists(osm_db):
+        print("OSM ambarı yok:", osm_db); return 0
+    o = sqlite3.connect(f"file:{osm_db}?mode=ro", uri=True)
+    osm = {}
+    for ad_norm, lat, lon in o.execute("SELECT ad_norm, lat, lon FROM poi WHERE kategori='egitim' AND ad_norm IS NOT NULL"):
+        osm.setdefault(ad_norm, []).append((lat, lon))
+    o.close()
+    merkez = _ilce_merkezi(c)
+    now = datetime.now(timezone.utc).isoformat(); upd = []
+    for kurum, il, ilce, ad_norm in c.execute("SELECT kurum_kodu, il_kodu, ilce_kodu, ad_norm FROM okul WHERE lat IS NULL"):
+        m = merkez.get((il, ilce)); adaylar = osm.get(ad_norm) or []
+        if not m or not adaylar:
+            continue
+        yakin = [(lat, lon) for lat, lon in adaylar if math.hypot((lat - m[0]) * 111, (lon - m[1]) * 111 * math.cos(math.radians(m[0]))) <= 25]
+        if len(yakin) == 1:
+            upd.append((yakin[0][0], yakin[0][1], "osm: ad eşleşmesi (ilçe ≤25 km)", now, kurum))
+    c.executemany("UPDATE okul SET lat=?, lon=?, koordinat_kaynagi=?, guncellenme=? WHERE kurum_kodu=?", upd); c.commit()
+    print(f"OSM eşleşmesiyle {len(upd):,} koordinat tamamlandı"); return len(upd)
+
+
+def koordinat_tamamla_nominatim(c: sqlite3.Connection, limit: int | None = None) -> int:
+    """Kalanlar için Nominatim (OSM) coğrafi kodlama: 'okul adı, ilçe, il, Türkiye'. Kullanım politikası:
+    ≤1 istek/sn, tanımlayıcı UA. Sonuç ilçe merkezine ≤ 25 km değilse reddedilir."""
+    import math
+    merkez = _ilce_merkezi(c)
+    rows = c.execute("SELECT kurum_kodu, il_kodu, ilce_kodu, il, ilce, ad FROM okul WHERE lat IS NULL AND (koordinat_kaynagi IS NULL OR koordinat_kaynagi NOT LIKE 'nominatim%')").fetchall()
+    if limit:
+        rows = rows[:limit]
+    print(f"Nominatim ile denenecek: {len(rows):,} (≈{len(rows)/60:.0f} dk)", flush=True)
+    now = datetime.now(timezone.utc).isoformat(); ok = 0
+    for i, (kurum, il, ilce, il_ad, ilce_ad, ad) in enumerate(rows, 1):
+        q = f"{ad}, {(ilce_ad or '').title()}, {(il_ad or '').title()}, Türkiye"
+        url = "https://nominatim.openstreetmap.org/search?" + urllib.parse.urlencode({"q": q, "format": "json", "limit": 3, "countrycodes": "tr"})
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=20) as r:
+                res = json.loads(r.read().decode("utf-8"))
+        except Exception:
+            res = []
+        m = merkez.get((il, ilce)); hit = None
+        for x in res:
+            lat, lon = float(x["lat"]), float(x["lon"])
+            if m and math.hypot((lat - m[0]) * 111, (lon - m[1]) * 111 * math.cos(math.radians(m[0]))) <= 25:
+                hit = (lat, lon); break
+        if hit:
+            c.execute("UPDATE okul SET lat=?, lon=?, koordinat_kaynagi=?, guncellenme=? WHERE kurum_kodu=?", (hit[0], hit[1], "nominatim: ad+ilçe+il", now, kurum)); ok += 1
+        else:
+            c.execute("UPDATE okul SET koordinat_kaynagi=?, guncellenme=? WHERE kurum_kodu=?", ("nominatim: bulunamadı", now, kurum))
+        if i % 50 == 0:
+            c.commit(); print(f"  {i:,}/{len(rows):,}  bulundu {ok:,}", flush=True)
+        time.sleep(1.05)
+    c.commit(); print(f"Nominatim ile {ok:,} koordinat tamamlandı"); return ok
+
+
+_MAH_RX = re.compile(r"([A-ZÇĞİÖŞÜa-zçğıöşü0-9\.\- ]{2,50}?)\s*(?:Mahallesi|Mah\.|MAHALLESİ|MAH\.|MAHALLESI)", re.I)
+_KOY_RX = re.compile(r"([A-ZÇĞİÖŞÜa-zçğıöşü\- ]{2,40}?)\s*(?:Köyü|KÖYÜ|Koyu|Beldesi|BELDESİ)")
+
+
+def tr_title(text: str) -> str:
+    """Türkçe güvenli baş harf: I→ı, İ→i (str.title() 'Ağri'/'Ci̇hanbeyli̇' üretir)."""
+    words = []
+    for w in (text or "").split():
+        low = w.replace("I", "ı").replace("İ", "i").lower()
+        first = low[:1].replace("i", "İ").replace("ı", "I").upper()
+        words.append(first + low[1:])
+    return " ".join(words)
+
+
+def _sayfa(host: str) -> str | None:
+    for scheme in ("https", "http"):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(f"{scheme}://{host}.meb.k12.tr/", headers={"User-Agent": UA}), timeout=15) as r:
+                return r.read(300_000).decode("utf-8", "ignore")
+        except Exception:
+            continue
+    return None
+
+
+def _nominatim(q: str) -> list[tuple[float, float, str]]:
+    """(lat, lon, display_name) — display_name idari doğrulama için (ilçe adı geçmeli)."""
+    url = "https://nominatim.openstreetmap.org/search?" + urllib.parse.urlencode({"q": q, "format": "json", "limit": 3, "countrycodes": "tr"})
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=20) as r:
+            return [(float(x["lat"]), float(x["lon"]), x.get("display_name", "")) for x in json.loads(r.read().decode("utf-8"))]
+    except Exception:
+        return []
+    finally:
+        time.sleep(1.05)   # Nominatim politikası: ≤1 istek/sn
+
+
+def koordinat_tamamla_adres(c: sqlite3.Connection, limit: int | None = None) -> int:
+    """harita.php'de koordinat olmayan okullar: site altbilgisindeki adres → collector.geocode (Photon→Nominatim,
+    sokak/mahalle/köy düzeyi, idari doğrulama). Bulunamazsa okul adıyla denenir. Etiketler 'yaklaşık' der."""
+    from collector.geocode import adres_kodla
+    rows = c.execute("SELECT kurum_kodu, il, ilce, ad, host FROM okul WHERE lat IS NULL AND host<>'' "
+                     "AND (koordinat_kaynagi IS NULL OR koordinat_kaynagi LIKE 'harita.php%' OR koordinat_kaynagi LIKE '%bulunamad%' OR koordinat_kaynagi LIKE '%adres yok%')").fetchall()
+    if limit:
+        rows = rows[:limit]
+    print(f"adres tamamlama: {len(rows):,} okul", flush=True)
+    now = datetime.now(timezone.utc).isoformat(); ok = 0
+    for i, (kurum, il_ad, ilce_ad, ad, host) in enumerate(rows, 1):
+        html = _sayfa(host); t = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html)) if html else ""
+        m = re.search(r"Adres\s*:?\s*(.{5,200}?)(?:Telefon|E-Posta|Devam|Kurumumuz|$)", t)
+        adres = m.group(1) if m else (t[:0])
+        if not adres:
+            mm = _MAH_RX.search(t)
+            adres = t[max(0, mm.start() - 60): mm.end() + 80] if mm else ""
+        hit = adres_kodla(adres, il_ad or "", ilce_ad, ad)
+        if hit:
+            c.execute("UPDATE okul SET lat=?, lon=?, koordinat_kaynagi=?, guncellenme=? WHERE kurum_kodu=?", (hit[0], hit[1], hit[2], now, kurum)); ok += 1
+        else:
+            c.execute("UPDATE okul SET koordinat_kaynagi=?, guncellenme=? WHERE kurum_kodu=?", ("adres: bulunamadı", now, kurum))
+        if i % 25 == 0:
+            c.commit(); print(f"  {i:,}/{len(rows):,}  bulundu {ok:,}", flush=True)
+    c.commit(); print(f"adresle {ok:,} koordinat tamamlandı"); return ok
 
 
 def csv_yukle(c: sqlite3.Connection, paths: list[str]) -> None:
@@ -385,6 +509,10 @@ def main() -> int:
     ap.add_argument("--csv-yukle", nargs="*", help="shard CSV'lerini DB'ye yükle")
     ap.add_argument("--istatistik", action="store_true", help="ana sayfadan derslik/öğretmen/öğrenci")
     ap.add_argument("--istatistik-yukle", nargs="*", help="shard JSONL'lerini DB'ye yükle")
+    ap.add_argument("--tamamla-osm", action="store_true", help="koordinatsız okulları OSM ambarıyla ad eşleşmesinden tamamla")
+    ap.add_argument("--tamamla-nominatim", action="store_true", help="kalan koordinatsızları Nominatim ile kodla (1 istek/sn)")
+    ap.add_argument("--tamamla-adres", action="store_true", help="koordinatsızları site adresi (mahalle/köy) → Nominatim ile yaklaşık kodla")
+    ap.add_argument("--limit", type=int)
     a = ap.parse_args()
     iller = a.il or IL_KODLARI
     shard = None
@@ -396,6 +524,9 @@ def main() -> int:
     if a.csv_yukle: csv_yukle(c, a.csv_yukle)
     if a.istatistik: print("okul istatistikleri…"); istatistik(c, iller, a.workers, shard, a.csv)
     if a.istatistik_yukle: istatistik_yukle(c, a.istatistik_yukle)
+    if a.tamamla_osm: koordinat_tamamla_osm(c, os.path.join(REPO, "warehouse", "product", "osm_poi.sqlite"))
+    if a.tamamla_nominatim: koordinat_tamamla_nominatim(c, a.limit)
+    if a.tamamla_adres: koordinat_tamamla_adres(c, a.limit)
     if a.lgs: print("LGS taban puanları…"); lgs(c, iller)
     if a.puanla: print("eşleştirme + puanlama…"); puanla(c)
     c.close(); return 0

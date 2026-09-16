@@ -3,13 +3,25 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from tools.kaynak_sicili import build_registry
+from tools.kaynak_sicili import build_registry, select_source
 
 
 class KaynakSiciliTest(unittest.TestCase):
     def setUp(self):
         definitions_path = Path(__file__).parents[1] / "config" / "kaynak_sicili_tanimlari.json"
         self.definitions = json.loads(definitions_path.read_text(encoding="utf-8"))
+
+    def test_yeni_paket_locator_kurali_genel_kuraldan_once_eslesir(self):
+        source, fallback = select_source(
+            self.definitions,
+            "property_market",
+            "price_summary",
+            "/data/turkiye_arsa_tarla_tam_veriseti.zip::arsa_piyasa_istihbarati.db",
+            "arsa_mahalle_ozet",
+        )
+
+        self.assertFalse(fallback)
+        self.assertEqual(source["source_id"], "owner_land_neighbourhood_index_2026_09")
 
     def test_her_silver_birimi_tek_kaynaga_baglanir(self):
         silver = {

@@ -85,3 +85,17 @@ def ensure_normalized_name_columns(connection, table: str, columns=("il", "ilce"
         connection.execute(f'CREATE INDEX IF NOT EXISTS "idx_{table}_norm" ON "{table}" ({", ".join(added)})')
         connection.commit()
     return added
+
+
+def tr_title(text: Any) -> str:
+    """Türkçe güvenli baş harf büyütme (str.title() 'İ/ı' karakterlerini bozar)."""
+    words = []
+    for w in str(text or "").split():
+        low = w.replace("I", "ı").replace("İ", "i").lower()
+        words.append(low[:1].replace("i", "İ").replace("ı", "I").upper() + low[1:])
+    return " ".join(words)
+
+
+def tr_upper(text: Any) -> str:
+    """Türkçe güvenli büyük harf (i→İ, ı→I)."""
+    return str(text or "").replace("i", "İ").replace("ı", "I").upper()

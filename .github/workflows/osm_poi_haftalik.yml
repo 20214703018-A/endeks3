@@ -1,0 +1,43 @@
+name: OSM POI ambarı (haftalık)
+
+# Geofabrik Türkiye kesitini indirir, collector/osm_poi_toplayici.py ile osm_poi.sqlite üretir ve
+# artifact olarak yayınlar. Sunucuya kopyalama: artifact indir → warehouse/product/osm_poi.sqlite.
+# (Ambar dosyaları repo'ya commit edilmez; bkz. .gitignore warehouse/)
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"   # her pazartesi 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Bağımlılıklar
+        run: pip install osmium
+      - name: PBF indir (Geofabrik Türkiye)
+        run: |
+          mkdir -p warehouse/raw/osm
+          curl -sSL -o warehouse/raw/osm/turkey-latest.osm.pbf https://download.geofabrik.de/europe/turkey-latest.osm.pbf
+          ls -la warehouse/raw/osm/
+      - name: Ambarı üret
+        run: python collector/osm_poi_toplayici.py
+      - name: Özet
+        run: |
+          python - <<'EOF'
+          import sqlite3
+          c = sqlite3.connect("warehouse/product/osm_poi.sqlite")
+          print(dict(c.execute("SELECT key, value FROM meta")))
+          for r in c.execute("SELECT kategori, SUM(sayi) FROM kapsama GROUP BY 1 ORDER BY 2 DESC"): print(r)
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: osm_poi_sqlite
+          path: warehouse/product/osm_poi.sqlite
+          retention-days: 30

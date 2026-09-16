@@ -563,7 +563,13 @@ Uydu görüntüsü mülkiyet, imar hakkı, yeraltı suyu veya zemin taşıma gü
 
 #### 6.4.9 Algoritmik arsa fiyatlama
 
-Tek rakam yerine P10/P50/P90 değer aralığı ve açıklanabilir düzeltmeler üretilir:
+Bu bölümdeki önceki ağırlıklı emsal formülü uygulama kararı olmaktan çıkarıldı.
+Mahalle endeksi ile ilan emsalleri kullanıcıya iki bağımsız veri ailesi olarak
+sunulur; sabit oranla veya otomatik bir formülle birleştirilmez. Bedel belirleme
+algoritması ayrıca kararlaştırılıncaya kadar sistem nihai fiyat üretmez.
+
+Aşağıdaki metin yalnız ileride değerlendirilebilecek model girdilerinin çalışma
+notudur, mevcut algoritma değildir:
 
 ```text
 taban_m2 = zaman + mesafe + alan + kullanım bakımından ağırlıklı emsal medyanı

@@ -18,6 +18,7 @@ import urllib.parse
 import urllib.request
 import urllib.error
 import http.server
+import threading
 
 # Collector dizinini ekle
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -28,6 +29,7 @@ if PARENT_DIR not in sys.path:
     sys.path.insert(0, PARENT_DIR)
 
 from geoprop.land_analysis import LandAnalysisEngine, LandAnalysisError
+from geoprop.kisitli_veri import RestrictedDataEngine
 from geoprop.live_parcel import LiveParcelGateway, ParcelQueryError
 from collector.parsel_imar_ve_degisiklik_toplayici import ParselImarToplayici
 
@@ -40,7 +42,33 @@ PRODUCT_LAND_DATABASE = os.path.join(PARENT_DIR, "warehouse", "product", "arsa_e
 LEGACY_LISTING_DATABASE = os.path.join(COLLECTOR_DIR, "data", "ilanlar.db")
 LAND_DATABASE = PRODUCT_LAND_DATABASE if os.path.exists(PRODUCT_LAND_DATABASE) else LEGACY_LISTING_DATABASE
 arsa_motoru = LandAnalysisEngine(LAND_DATABASE)
+from geoprop.uydu import SatelliteChangeEngine  # noqa: E402
+uydu_motoru = SatelliteChangeEngine(os.path.join(os.path.dirname(str(LAND_DATABASE)), "uydu_onbellek.sqlite"))
+_uydu_kilit = threading.Lock()   # CDSE S3 eşzamanlı okumaları sınırla
+# Kısıtlı setler (seçim/hemşehri/tütün) yalnız bu motor ve yalnız kimlik bağlamıyla okunur.
+kisitli_motoru = RestrictedDataEngine(arsa_motoru._bolge_engine)
 poi_cache = {}
+
+# Kimlik çözümleme — TEK nokta. Üretimde oturum → üyelik paketi eşlemesi buraya bağlanır.
+#  - Admin: GEOPROP_ADMIN_TOKEN ortam değişkeni ile X-Geoprop-Admin-Token başlığı eşleşirse.
+#  - Paket: yalnız GEOPROP_DEMO_KIMLIK=1 iken X-Geoprop-Paket başlığından okunur (demo);
+#    aksi halde herkes "anonim"dir. Başlık asla tek başına yetki vermez.
+ADMIN_TOKEN = os.environ.get("GEOPROP_ADMIN_TOKEN") or None
+DEMO_KIMLIK = os.environ.get("GEOPROP_DEMO_KIMLIK") == "1"
+
+
+def kimlik_cozumle(headers, sorgu_tipi):
+    admin_mi = bool(ADMIN_TOKEN) and headers.get("X-Geoprop-Admin-Token") == ADMIN_TOKEN
+    paket = "admin" if admin_mi else "anonim"
+    if not admin_mi and DEMO_KIMLIK:
+        aday = (headers.get("X-Geoprop-Paket") or "anonim").strip()
+        paket = aday if aday in ("anonim", "uye_temel", "uye_pro", "uye_kurumsal") else "anonim"
+    return {
+        "kullanici_id": (headers.get("X-Geoprop-Kullanici") or "").strip()[:64] or None,
+        "uye_paketi": paket,
+        "sorgu_tipi": sorgu_tipi,
+        "admin_mi": admin_mi,
+    }
 
 
 def haversine_m(lat1, lon1, lat2, lon2):
@@ -159,6 +187,9 @@ class GeopropApiHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_POST(self):
         path = urllib.parse.urlparse(self.path).path
+        if path == "/api/v1/bolge/kisitli":
+            self.handle_kisitli()
+            return
         if path != "/api/v1/arsa/analiz":
             self.send_json({"status": "error", "message": "Uç nokta bulunamadı."}, 404)
             return
@@ -193,6 +224,25 @@ class GeopropApiHandler(http.server.SimpleHTTPRequestHandler):
                 500,
             )
 
+    def handle_kisitli(self):
+        """Kısıtlı bölge setleri: gövde {il, ilce, mahalle, sorgu_tipi}. Erişim kararı ve denetim
+        kaydı RestrictedDataEngine → erisim_politikasi.kisitli_erisim içinde verilir; reddedilen
+        set yalnız {"status": "restricted"} olarak döner, sunucu asla ham satır sızdırmaz."""
+        try:
+            body = self.read_json_body()
+            sorgu_tipi = str(body.get("sorgu_tipi") or "bolge_raporu")[:32]
+            kimlik = kimlik_cozumle(self.headers, sorgu_tipi)
+            request_data = {k: body.get(k) for k in ("il", "ilce", "mahalle")}
+            if not str(request_data.get("il") or "").strip():
+                raise ValueError("İl bilgisi gereklidir.")
+            sonuc = kisitli_motoru.profil(request_data, kimlik)
+            sonuc["kimlik"] = {"uye_paketi": kimlik["uye_paketi"], "admin_mi": kimlik["admin_mi"], "sorgu_tipi": sorgu_tipi}
+            self.send_json(sonuc)
+        except ValueError as exc:
+            self.send_json({"status": "validation_error", "message": str(exc)}, 400)
+        except Exception as exc:
+            self.send_json({"status": "error", "message": "Kısıtlı bölge sorgusu tamamlanamadı.", "detail": str(exc)}, 500)
+
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path
@@ -202,6 +252,19 @@ class GeopropApiHandler(http.server.SimpleHTTPRequestHandler):
             self.send_response(302)
             self.send_header("Location", "/alici_arsa_analiz.html")
             self.end_headers()
+            return
+
+        if path == "/api/v1/uydu/degisim":
+            # Uzun süren (30-60 s, önbellekte anında) Sentinel-2 değişim analizi; analiz yanıtından ayrı çağrılır.
+            try:
+                lat, lon = float(query.get("lat", [""])[0]), float(query.get("lon", [""])[0])
+            except ValueError:
+                self.send_json({"status": "validation_error", "message": "lat/lon gerekli."}, 400); return
+            with _uydu_kilit:
+                try:
+                    self.send_json(uydu_motoru.analyze(lat, lon))
+                except Exception as exc:
+                    self.send_json({"status": "error", "message": "Uydu analizi tamamlanamadı.", "detail": type(exc).__name__}, 500)
             return
 
         if path == "/api/v1/veri-durumu":
@@ -350,7 +413,7 @@ class GeopropApiHandler(http.server.SimpleHTTPRequestHandler):
                 "sege": None,
                 "ciro_potansiyeli": None,
                 "lojistik": {"toplam_kargomat": 0, "toplam_sube": 0, "en_yakin_kargomat": None, "en_yakin_sube": None},
-                "tutun_saglik": None,
+                "tutun_saglik": {"status": "restricted", "uc_nokta": "/api/v1/bolge/kisitli"},
                 "mahalle_harcama": None
             }
 
@@ -389,10 +452,8 @@ class GeopropApiHandler(http.server.SimpleHTTPRequestHandler):
                     row_ciro = cm.fetchone()
                     if row_ciro: res["ciro_potansiyeli"] = dict(row_ciro)
 
-                # 4. TÜİK Tütün & Sigara 2026
-                cm.execute("SELECT * FROM tuik_tutun_ve_sigara_istatistikleri WHERE bolge_adi LIKE ? OR bolge_adi LIKE ? LIMIT 1", (f"%{il}%", "%Türkiye Geneli%"))
-                row_tutun = cm.fetchone()
-                if row_tutun: res["tutun_saglik"] = dict(row_tutun)
+                # 4. TÜİK Tütün & Sigara: KISITLI set — yalnız POST /api/v1/bolge/kisitli
+                #    üzerinden, paket × sorgu tipi denetimiyle sunulur (bkz. erisim_politikasi).
 
                 conn_m.close()
 

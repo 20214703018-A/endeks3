@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEOPROP — Kuş Bakışı Veritabanı ve Veri Envanteri</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f1f5f9; }
+    .glass-card { background: rgba(18, 24, 38, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card:hover { border-color: rgba(16, 185, 129, 0.3); }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.4); border-radius: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.6); }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col custom-scroll antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Üst Başlık & KPI Bandı -->
+  <header class="border-b border-slate-800 bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-900/30">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7c0-2-1.5-3-3.5-3h-9C5.5 4 4 5 4 7zM9 4v16M4 11h16M4 16h16"/></svg>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h1 class="text-xl font-bold tracking-tight text-white">GEOPROP Veritabanı & Envanter Gezgini</h1>
+              <span class="px-2 py-0.5 text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">Canlı Denetim</span>
+            </div>
+            <p class="text-xs text-slate-400">25 Aktif SQLite Veritabanı • Medallion Veri Mimarisi • Kuş Bakışı Şema Analizi</p>
+          </div>
+        </div>
+
+        <!-- Üst Metrikler -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+          <div class="px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/50">
+            <div class="text-xs text-slate-400">Toplam Boyut</div>
+            <div class="text-sm font-bold font-mono text-emerald-400">3.81 GB</div>
+          </div>
+          <div class="px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/50">
+            <div class="text-xs text-slate-400">Veritabanı</div>
+            <div class="text-sm font-bold font-mono text-sky-400">25 Adet</div>
+          </div>
+          <div class="px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/50">
+            <div class="text-xs text-slate-400">Tablo Sayısı</div>
+            <div class="text-sm font-bold font-mono text-indigo-400">115 Tablo</div>
+          </div>
+          <div class="px-3 py-1.5 rounded-lg bg-slate-800/60 border border-slate-700/50">
+            <div class="text-xs text-slate-400">Toplam Kayıt</div>
+            <div class="text-sm font-bold font-mono text-amber-400">21.610.912</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigasyon Sekmeleri -->
+      <div class="flex overflow-x-auto space-x-2 mt-4 pt-2 border-t border-slate-800/60 no-scrollbar">
+        <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn active px-4 py-2 rounded-lg text-xs font-semibold transition bg-emerald-500 text-white">Kuş Bakışı Genel Bakış</button>
+        <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold transition bg-slate-800 text-slate-300 hover:bg-slate-700">Kategori Kullanım Kararları</button>
+        <button onclick="switchTab('unused')" id="tab-unused" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold transition bg-slate-800 text-slate-300 hover:bg-slate-700">Kullanılmayan & Atıl Veriler</button>
+        <button onclick="switchTab('tkgm')" id="tab-tkgm" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold transition bg-slate-800 text-slate-300 hover:bg-slate-700">Masaüstü & TKGM Durumu</button>
+        <button onclick="switchTab('explorer')" id="tab-explorer" class="tab-btn px-4 py-2 rounded-lg text-xs font-semibold transition bg-slate-800 text-slate-300 hover:bg-slate-700">Detaylı Şema & Tablo Gezgini</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Ana İçerik -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- SEKME 1: KUŞ BAKIŞI GENEL BAKIŞ -->
+    <div id="view-overview" class="tab-content space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Kart 1: Gayrimenkul & Arsa -->
+        <div class="glass-card rounded-2xl p-5 border-l-4 border-l-emerald-500">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md">Arsa / Arazi</span>
+              <h3 class="text-base font-bold text-white mt-1">Gayrimenkul Ambarı</h3>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-slate-400">Kayıt Hacmi</div>
+              <div class="text-sm font-mono font-bold text-emerald-400">9.7M+ Satır</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Türkiye geneli arsa ilanları, 1 km emsaller, tapu devir işlem yoğunluğu ve coğrafi kısıtlar.</p>
+          <div class="space-y-1.5 text-xs font-mono text-slate-400 border-t border-slate-800/80 pt-3">
+            <div class="flex justify-between"><span>arsa_emsalleri.sqlite</span> <span class="text-slate-200">1.05 GB (2.8M)</span></div>
+            <div class="flex justify-between"><span>tkgm_alim_satim.sqlite</span> <span class="text-slate-200">573 MB (6.9M)</span></div>
+            <div class="flex justify-between"><span>cografi_katmanlar.sqlite</span> <span class="text-slate-200">810 MB (580K)</span></div>
+          </div>
+        </div>
+
+        <!-- Kart 2: Konut & Yaşam -->
+        <div class="glass-card rounded-2xl p-5 border-l-4 border-l-sky-500">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-sky-500/10 text-sky-400 border border-sky-500/20 rounded-md">Konut & Demografi</span>
+              <h3 class="text-base font-bold text-white mt-1">Konut Piyasası Ambarı</h3>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-slate-400">Kayıt Hacmi</div>
+              <div class="text-sm font-mono font-bold text-sky-400">2.5M+ Satır</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">Kira, amortisman, bina yaşları, MEB okulları, LGS puanları, pazar yerleri ve deprem senaryoları.</p>
+          <div class="space-y-1.5 text-xs font-mono text-slate-400 border-t border-slate-800/80 pt-3">
+            <div class="flex justify-between"><span>bolge_istatistik.sqlite</span> <span class="text-slate-200">445 MB (2.0M)</span></div>
+            <div class="flex justify-between"><span>resmi_egitim.sqlite</span> <span class="text-slate-200">20 MB (58K)</span></div>
+            <div class="flex justify-between"><span>tuik_bolge.sqlite</span> <span class="text-slate-200">40 MB (380K)</span></div>
+            <div class="flex justify-between"><span>cevre.sqlite</span> <span class="text-slate-200">31 MB (118K)</span></div>
+          </div>
+        </div>
+
+        <!-- Kart 3: İşyeri & Ticari -->
+        <div class="glass-card rounded-2xl p-5 border-l-4 border-l-amber-500">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md">Ticari & Ciro</span>
+              <h3 class="text-base font-bold text-white mt-1">İşyeri & İstihbarat Ambarı</h3>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-slate-400">Kayıt Hacmi</div>
+              <div class="text-sm font-mono font-bold text-amber-400">8.5M+ Satır</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed mb-4">OSM 5 yıllık işletme geçmişi (turnover), ciro potansiyel skoru, İBB 24 saatlik trafik ve lojistik.</p>
+          <div class="space-y-1.5 text-xs font-mono text-slate-400 border-t border-slate-800/80 pt-3">
+            <div class="flex justify-between"><span>osm_poi.sqlite</span> <span class="text-slate-200">194 MB (624K)</span></div>
+            <div class="flex justify-between"><span>osm_degisim.sqlite</span> <span class="text-slate-200">664 MB (7.2M)</span></div>
+            <div class="flex justify-between"><span>turkiye_makro_...istihbarat</span> <span class="text-slate-200">0.4 MB (1.1K)</span></div>
+            <div class="flex justify-between"><span>onemli_tesisler.sqlite</span> <span class="text-slate-200">0.8 MB (1.5K)</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Veritabanı Dağılım Listesi Tablosu -->
+      <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+        <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/50">
+          <div>
+            <h3 class="text-sm font-bold text-white">Veritabanı Katmanları ve Fiziksel Dağılım</h3>
+            <p class="text-xs text-slate-400">Ürün (Product), Kısıtlı (Restricted) ve Collector veri depoları</p>
+          </div>
+          <span class="text-xs font-mono px-2 py-1 bg-slate-800 rounded text-slate-300">25 Dosya</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300">
+            <thead class="bg-slate-950/80 uppercase text-[10px] font-bold text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="px-6 py-3">Veritabanı Adı</th>
+                <th class="px-6 py-3">Kategori</th>
+                <th class="px-6 py-3 text-right">Boyut</th>
+                <th class="px-6 py-3 text-center">Tablo Sayısı</th>
+                <th class="px-6 py-3 text-right">Toplam Kayıt</th>
+                <th class="px-6 py-3">Durum</th>
+              </tr>
+            </thead>
+            <tbody id="overview-db-tbody" class="divide-y divide-slate-800/60 font-mono">
+              <!-- JS ile dolacak -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEKME 2: KATEGORİ KULLANIM MATRİSİ -->
+    <div id="view-matrix" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Konut Kolonu -->
+        <div class="glass-card rounded-2xl p-5 border border-sky-500/30">
+          <div class="flex items-center space-x-2 text-sky-400 font-bold mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <h2 class="text-base text-white">1. Konut Kategorisi</h2>
+          </div>
+          <p class="text-xs text-slate-400 mb-4">Bireysel oturum ve konut yatırımcısı için yaşanabilirlik, getiri ve sosyal donatı matrisi.</p>
+          <div class="space-y-3">
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-sky-400">Fiyat & Yatırım Getirisi</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>emlakjet_bolge_endeks.sqlite</code> (m² kira, amortisman yılı, getiri), <code>bolge_istatistik.sqlite::dagilim_kirilim</code> (oda/kat/yaş kırılımları).</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-sky-400">Yapılaşma & Tipoloji</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>mahalle_yapilasma.sqlite</code> (bina yaş dağılımı, kat adedi, daire m²). Eski/yeni yapılaşma stoku analizi.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-sky-400">Eğitim & Sosyal Çevre</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>resmi_egitim.sqlite</code> (55K MEB okulu, LGS 2026 taban puanları), <code>pazarlar.sqlite</code> (semt pazarları mesafesi ve günleri).</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-sky-400">Afet Riski & Yaşam Kalitesi</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>cevre.sqlite</code> (7.5 Mw İBB deprem hasar senaryosu, dB gürültü hatları, 338 istasyonlu hava kalitesi PM10/PM2.5).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gayrimenkul / Arsa Kolonu -->
+        <div class="glass-card rounded-2xl p-5 border border-emerald-500/30">
+          <div class="flex items-center space-x-2 text-emerald-400 font-bold mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+            <h2 class="text-base text-white">2. Gayrimenkul (Arsa/Arazi)</h2>
+          </div>
+          <p class="text-xs text-slate-400 mb-4">Geliştiriciler, müteahhitler ve arazi yatırımcıları için kadastro, eğim, imar ve kısıt matrisi.</p>
+          <div class="space-y-3">
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-emerald-400">Piyasa Emsalleri & Talep</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>arsa_emsalleri.sqlite</code> (63K ilan, 1km emsal havuzu, mahalle trendi), <code>tkgm_alim_satim.sqlite</code> (6.94M tapu alım-satım işlem yoğunluğu).</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-emerald-400">3D Topografya & Eğim</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>geoprop/arazi.py</code> (30m Terrarium DEM eğim/rakım/bakı), <code>parcel_shape.py</code> (geometrik kompaktlık ve köşe düzgünlüğü).</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-emerald-400">Jeoloji & Afet Kısıtları</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>geoprop/jeoloji.py</code> (MTA diri fay mesafesi, litolojik formasyon), <code>afet_vekili.py</code> (dere yatağı mesafesi ve taşkın vekili).</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-emerald-400">Hukuki & Coğrafi Engeller</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>cografi_katmanlar.sqlite</code> (yüksek gerilim hattı, sit alanı, su havzası, orman sınırı), <code>resmi_gazete.sqlite</code> (kamulaştırma kararları).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- İşyeri / Ticari Kolonu -->
+        <div class="glass-card rounded-2xl p-5 border border-amber-500/30">
+          <div class="flex items-center space-x-2 text-amber-400 font-bold mb-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <h2 class="text-base text-white">3. İşyeri (Ticari)</h2>
+          </div>
+          <p class="text-xs text-slate-400 mb-4">Perakende zincirleri, dükkan, ofis ve depo yatırımcıları için ciro ve müşteri akışı matrisi.</p>
+          <div class="space-y-3">
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-amber-400">Ciro Çekiciliği & Tüketim Gücü</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>ciro_ve_ticari_potansiyel_endeksi</code> (SEGE + ETBİS modeli), <code>eticaret_ve_harcama_kalemleri</code> (gıda/giyim/kira harcama payları).</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-amber-400">Yaya & Araç Hareketi</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>cevre.sqlite::trafik_saatlik</code> (İBB 24 saatlik trafik geohash profili), <code>NearbyPoiEngine.yogunluk_1km</code> (kafe/mağaza doygunluk oranı).</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-amber-400">İşletme Geçmişi & Devir Riski</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>osm_degisim.sqlite</code> (5 yıllık açık kalma/kapanma geçmişi), <code>turkiye_isyeri_ayrintili.csv</code> (dükkan kiralık m² ve devren ilanları).</p>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+              <div class="text-xs font-bold text-amber-400">Lojistik & Çıpa Tesisler</div>
+              <p class="text-[11px] text-slate-300 mt-1"><code>onemli_tesisler.sqlite</code> (419 OSB, 177 toptancı hal, 193 ticari liman), <code>universite.sqlite</code> (öğrenci genç tüketici akışı).</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SEKME 3: KULLANILMAYAN & ATIL VERİLER -->
+    <div id="view-unused" class="tab-content hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Boş Tablolar -->
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-rose-400 flex items-center space-x-2 mb-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <span>Boş Kalan Tablolar (0 Kayıt)</span>
+          </h3>
+          <div class="space-y-2 text-xs">
+            <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+              <div class="font-mono font-bold text-slate-200">osm_degisim.sqlite → poi_olay</div>
+              <p class="text-slate-400 mt-0.5 text-[11px]">Haftalık olay farkları henüz hesaplanmadı; ancak <code>poi_yillik</code> (5 yıl) ve <code>poi_yasam</code> doludur.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+              <div class="font-mono font-bold text-slate-200">parsel_imar_degisiklikleri.sqlite → imar_degisiklik_ve_askilar</div>
+              <p class="text-slate-400 mt-0.5 text-[11px]">Yerel askı tablosu boştur; canlı E-Plan sorguları kullanıldığı için lokal askı tutulmamıştır.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+              <div class="font-mono font-bold text-slate-200">turkiye_makro_...istihbarat → kargo_ve_teslimat_noktalari</div>
+              <p class="text-slate-400 mt-0.5 text-[11px]">Bu DB'de 0 satırdır; ancak <code>eticaret_ve_lojistik.sqlite</code> içinde 16 kayıt olarak mevcuttur.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+              <div class="font-mono font-bold text-slate-200">turkiye_makro_...istihbarat → mahalle_tuketim_ve_harcama</div>
+              <p class="text-slate-400 mt-0.5 text-[11px]">Bu tabloda 0 kayıttır; fakat <code>eticaret_ve_harcama_kalemleri</code> tablosunda 101 kayıt olarak doludur.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ambarda Olup Bağlanmamış Değerli Tablolar -->
+        <div class="glass-card rounded-2xl p-5">
+          <h3 class="text-sm font-bold text-amber-400 flex items-center space-x-2 mb-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Dolu Ama Analize Bağlanmamış Tablolar</span>
+          </h3>
+          <div class="space-y-2 text-xs">
+            <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+              <div class="font-mono font-bold text-amber-300">bolge_istatistik.sqlite → aylik_fiyat_trendi (1.529.982 Satır)</div>
+              <p class="text-slate-400 mt-0.5 text-[11px]">2021-2026 konut ve arsa aylık fiyat serileri; konut geçmiş trend grafiği UI kartına bağlanmayı bekliyor.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+              <div class="font-mono font-bold text-amber-300">bolge_istatistik.sqlite → emlak_ofisi (1.620) & insaat_sirketi (1.451)</div>
+              <p class="text-slate-400 mt-0.5 text-[11px]">Türkiye geneli emlak ofisleri ve inşaat müteahhit rehberi; arayüzde kartı yok.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+              <div class="font-mono font-bold text-amber-300">cografya/turkiye_cografi_varliklar.sqlite → cografi_varliklar (19.757)</div>
+              <p class="text-slate-400 mt-0.5 text-[11px]">Dağ, tepe, plato ve ormanların koordinat ve rakımları; <code>arazi.py</code> Terrarium kullandığı için atıl kalmış.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+              <div class="font-mono font-bold text-amber-300">eticaret_ve_lojistik.sqlite → eticaret_ve_harcama_kalemleri (101)</div>
+              <p class="text-slate-400 mt-0.5 text-[11px]">Hane geliri, barınma-kira harcaması, e-ticaret sepetleri; ticari analize dahil edilebilir.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SEKME 4: MASAÜSTÜ & TKGM DURUMU -->
+    <div id="view-tkgm" class="tab-content hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 border border-slate-800">
+        <h3 class="text-base font-bold text-white mb-2">Masaüstü ve İndirilenler (TKGM Klasörü) Entegrasyon Raporu</h3>
+        <p class="text-xs text-slate-400 mb-6">Kullanıcının belirttiği harici klasörlerin taranması ve ana projeyle senkronizasyon durumu.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- İndirilenler -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-emerald-500/30">
+            <div class="flex items-center space-x-2 text-emerald-400 font-bold mb-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <h4>İndirilenler (Downloads) Durumu</h4>
+            </div>
+            <div class="text-xs font-mono text-slate-300 space-y-1 mb-3">
+              <div>Dosya: <code>~/Downloads/tkgm-alim-satim-ambar.zip</code> (299 MB)</div>
+              <div>İçerik: <code>tkgm_alim_satim.sqlite</code> (633 MB ham)</div>
+            </div>
+            <div class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 leading-relaxed">
+              <strong>TAM ENTEGRE EDİLDİ:</strong> GEOPROP projesi içerisindeki <code>warehouse/product/tkgm_alim_satim.sqlite</code> dosyası bu zip'ten 20 saat daha yeni, optimize edilmiş (vacuumed - 573 MB) ve <strong>6.941.129 satır (81 il tam)</strong> ile projede aktif çalışmaktadır.
+            </div>
+          </div>
+
+          <!-- Masaüstü -->
+          <div class="p-4 rounded-xl bg-slate-900/60 border border-sky-500/30">
+            <div class="flex items-center space-x-2 text-sky-400 font-bold mb-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <h4>Masaüstü (~/Desktop/tkgm) Durumu</h4>
+            </div>
+            <div class="text-xs font-mono text-slate-300 space-y-1 mb-3">
+              <div>CSV Çıktıları: <code>turkiye_konut/isyeri/arsa_ayrintili.csv</code></div>
+              <div>JSON Dosyaları: <code>mahalle_koordinatlari.json</code> (5.4 MB), <code>nuts3/4.json</code></div>
+            </div>
+            <div class="p-3 rounded-lg bg-sky-500/10 border border-sky-500/20 text-xs text-sky-300 leading-relaxed">
+              <strong>KISMEN ENTEGRE:</strong> CSV'lerin tamamı GEOPROP ambarına çok daha büyük paketler halinde alınmıştır. Ancak <code>mahalle_koordinatlari.json</code> (5.4 MB) dosyası kök ambarında doğrudan kopyalanmamış olup, GEOPROP bunun yerine <code>idari_sinirlar.sqlite</code> poligonlarını kullanmaktadır.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- SEKME 5: DETAYLI ŞEMA VE TABLO GEZGİNİ -->
+    <div id="view-explorer" class="tab-content hidden space-y-4">
+      
+      <!-- Arama ve Filtre Kontrolleri -->
+      <div class="glass-card rounded-xl p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <div class="relative w-full sm:w-96">
+          <input type="text" id="search-input" onkeyup="filterTables()" placeholder="Tablo, sütun veya DB ara... (Örn: 'fiyat', 'poi', 'nufus')" class="w-full px-4 py-2 pl-10 text-xs rounded-lg bg-slate-900 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono">
+          <svg class="w-4 h-4 text-slate-500 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </div>
+
+        <div class="flex items-center space-x-2 w-full sm:w-auto overflow-x-auto text-xs">
+          <span class="text-slate-400 text-[11px] whitespace-nowrap">Filtre:</span>
+          <button onclick="filterCategory('all')" class="cat-filter px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 font-medium active" data-cat="all">Tümü</button>
+          <button onclick="filterCategory('Gayrimenkul / Arsa')" class="cat-filter px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 font-medium" data-cat="Gayrimenkul / Arsa">Arsa</button>
+          <button onclick="filterCategory('Konut')" class="cat-filter px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 font-medium" data-cat="Konut">Konut</button>
+          <button onclick="filterCategory('İşyeri / Ticari')" class="cat-filter px-2.5 py-1 rounded bg-slate-800 text-slate-300 hover:bg-slate-700 font-medium" data-cat="İşyeri / Ticari">İşyeri</button>
+        </div>
+      </div>
+
+      <!-- Tablo Listesi -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="tables-grid">
+        <!-- JS ile dolacak -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal: Tablo ve Sütun Detayları -->
+  <div id="schema-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card w-full max-w-2xl rounded-2xl p-6 border border-slate-700 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+      <div class="flex justify-between items-start border-b border-slate-800 pb-3">
+        <div>
+          <div class="flex items-center space-x-2">
+            <h3 id="modal-table-name" class="text-base font-bold font-mono text-emerald-400">Tablo Adı</h3>
+            <span id="modal-table-badge" class="px-2 py-0.5 text-[10px] rounded font-bold uppercase">Aktif</span>
+          </div>
+          <p id="modal-db-path" class="text-xs text-slate-400 font-mono mt-0.5">warehouse/product/example.sqlite</p>
+        </div>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-3 gap-3 text-center text-xs py-1 border-b border-slate-800/60">
+        <div class="p-2 bg-slate-900/60 rounded-lg">
+          <div class="text-slate-400">Kayıt Sayısı</div>
+          <div id="modal-row-count" class="font-mono font-bold text-slate-200 mt-0.5">0</div>
+        </div>
+        <div class="p-2 bg-slate-900/60 rounded-lg">
+          <div class="text-slate-400">Toplam Sütun</div>
+          <div id="modal-col-count" class="font-mono font-bold text-slate-200 mt-0.5">0</div>
+        </div>
+        <div class="p-2 bg-slate-900/60 rounded-lg">
+          <div class="text-slate-400">Kullanım Oranı</div>
+          <div id="modal-usage-ratio" class="font-mono font-bold text-emerald-400 mt-0.5">100%</div>
+        </div>
+      </div>
+
+      <div class="flex-1 overflow-y-auto custom-scroll pr-1">
+        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Sütunlar (Columns)</h4>
+        <div id="modal-columns-list" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs font-mono text-slate-300">
+          <!-- Sütunlar gelecek -->
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800 flex justify-end">
+        <button onclick="closeModal()" class="px-4 py-1.5 text-xs font-medium rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const INVENTORY = [{"db_name": "arsa_emsalleri.sqlite", "path": "warehouse/product/arsa_emsalleri.sqlite", "size_mb": 1005.29, "category": "Gayrimenkul / Arsa", "table_count": 5, "tables": [{"name": "ilanlar", "row_count": 63082, "col_count": 28, "columns": ["listing_key", "ilan_id", "provider", "kategori", "tip", "baslik", "il", "ilce", "mahalle", "fiyat_tl", "m2", "birim_m2_fiyat", "ilan_tarihi", "crawled_at", "enlem", "boylam", "ada_no", "parsel_no", "imar_durumu", "kaks_emsal", "source_content_sha256", "source_table", "quality_score", "source_candidate_count", "source_url", "il_norm", "ilce_norm", "mahalle_norm"], "status": "Aktif"}, {"name": "arsa_mahalle_ozet", "row_count": 49776, "col_count": 27, "columns": ["kategori", "city_id", "county_id", "district_id", "il", "ilce", "mahalle", "slug", "donem", "satilik_m2_fiyat", "min_m2_fiyat", "max_m2_fiyat", "ortalama_fiyat", "ortalama_m2", "fiyat_endeksi", "aylik_fiyat_degisim", "yillik_fiyat_degisim", "ilan_sayisi", "ilanda_kalma_suresi_gun", "stok_degisim_orani", "yillik_stok_degisim", "guncellenme_tarihi", "source_content_sha256", "source_url", "il_norm", "ilce_norm", "mahalle_norm"], "status": "Aktif"}, {"name": "arsa_mahalle_trend", "row_count": 2715520, "col_count": 25, "columns": ["kategori", "city_id", "county_id", "district_id", "il", "ilce", "mahalle", "ay", "satilik_m2_fiyat", "min_m2_fiyat", "max_m2_fiyat", "ortalama_fiyat", "ortalama_m2", "fiyat_endeksi", "ilan_sayisi", "aylik_fiyat_degisim", "yillik_fiyat_degisim", "ilanda_kalma_suresi_gun", "record_class", "guncellenme_tarihi", "source_content_sha256", "source_url", "il_norm", "ilce_norm", "mahalle_norm"], "status": "Aktif"}, {"name": "arsa_alan_segmentleri", "row_count": 2851, "col_count": 17, "columns": ["kategori", "city_id", "county_id", "district_id", "bolge_adi", "segment_adi", "satilik_m2_fiyat", "min_m2_fiyat", "max_m2_fiyat", "ortalama_fiyat", "ortalama_m2", "ilan_sayisi", "ilan_orani", "ilanda_kalma_suresi", "guncellenme_tarihi", "source_content_sha256", "source_url"], "status": "Aktif"}, {"name": "metadata", "row_count": 8, "col_count": 2, "columns": ["key", "value"], "status": "Aktif"}]}, {"db_name": "bati_ticari_istihbarat.sqlite", "path": "warehouse/product/bati_ticari_istihbarat.sqlite", "size_mb": 0.18, "category": "İşyeri / Ticari", "table_count": 6, "tables": [{"name": "istasyon_yolcu_akisi", "row_count": 16, "col_count": 14, "columns": ["id", "il", "ilce", "hat_adi", "istasyon_adi", "tur", "lat", "lon", "gunluk_yolcu_giris", "gunluk_yolcu_cikis", "toplam_gunluk_hacim", "zirve_saat_araligi", "kaynak", "guncellenme"], "status": "Aktif"}, {"name": "ticari_koridor_ve_aks", "row_count": 124, "col_count": 15, "columns": ["id", "il", "ilce", "mahalle", "aks_adi", "lat", "lon", "toplam_isletme_sayisi", "cipa_marka_sayisi", "kafe_restoran_sayisi", "banka_atm_sayisi", "supermarket_sayisi", "perakende_magaza_sayisi", "kumeleme_skoru", "guncellenme"], "status": "Aktif"}, {"name": "isletme_turnover_ve_stabilite", "row_count": 124, "col_count": 11, "columns": ["id", "il", "ilce", "mahalle", "aktif_isletme_sayisi", "kapanan_isletme_sayisi", "marka_degistiren_sayisi", "turnover_orani", "ortalama_isletme_omru_yil", "stabilite_skoru", "guncellenme"], "status": "Aktif"}, {"name": "ticari_kira_ve_devren_piyasa", "row_count": 124, "col_count": 12, "columns": ["id", "il", "ilce", "mahalle", "ortalama_kira_m2", "medyan_kira_m2", "devren_ilan_sayisi", "toplam_isyeri_ilani", "devren_ilan_orani", "ortalama_ilanda_kalma_gun", "piyasa_baski_derecesi", "guncellenme"], "status": "Aktif"}, {"name": "bkm_sektorel_kart_harcama", "row_count": 9, "col_count": 10, "columns": ["id", "il", "donem", "aylik_toplam_harcama_milyon_tl", "market_avm_payi", "yeme_icme_restoran_payi", "giyim_aksesuar_payi", "elektronik_esya_payi", "yillik_reel_artis_yuzde", "guncellenme"], "status": "Aktif"}, {"name": "mikro_ticari_ciro_skoru", "row_count": 124, "col_count": 16, "columns": ["id", "il", "ilce", "mahalle", "aks_adi", "lat", "lon", "cekim_gucu_skoru", "tuketim_gucu_skoru", "hareketlilik_skoru", "isletme_stabilitesi", "kira_verimlilik_skoru", "nihai_mikro_ciro_skoru", "ticari_segment", "analiz_ozeti", "guncellenme"], "status": "Aktif"}]}, {"db_name": "bolge_istatistik.sqlite", "path": "warehouse/product/bolge_istatistik.sqlite", "size_mb": 424.8, "category": "Ortak / Dinamik", "table_count": 16, "tables": [{"name": "kapsama", "row_count": 11, "col_count": 5, "columns": ["tablo", "satir", "sinif", "paket_sayisi", "islenme"], "status": "Aktif"}, {"name": "demografi", "row_count": 20797, "col_count": 41, "columns": ["seviye", "city_id", "county_id", "district_id", "bolge_adi", "nufus_toplam", "nufus_erkek", "nufus_kadin", "hane_sayisi", "ortalama_hane_geliri", "toplam_hane_geliri", "ev_sahibi_orani", "kiraci_orani", "ses_a_plus", "ses_a", "ses_b", "ses_c", "ses_d", "ses_a_plus_oran", "ses_a_oran", "ses_b_oran", "ses_c_oran", "ses_d_oran", "egitim_universite_oran", "egitim_lise_oran", "egitim_ortaokul_oran", "egitim_ilkokul_oran", "yas_genc_oran", "yas_orta_oran", "yas_yasli_oran", "konut_fiyat_m2", "kira_fiyat_m2", "arsa_fiyat_m2", "tarla_fiyat_m2", "ticari_fiyat_m2", "eczane_sayisi", "atm_sayisi", "banka_sube_sayisi", "arac_sayisi", "guncellenme_tarihi", "mahalle_norm"], "status": "Aktif"}, {"name": "yillik_satis", "row_count": 310051, "col_count": 12, "columns": ["seviye", "city_id", "county_id", "district_id", "bolge_adi", "yil", "toplam_konut_satisi", "ipotekli_konut_satisi", "arsa_arazi_satisi", "ipotekli_arsa_satisi", "toplam_ilan_sayisi", "mahalle_norm"], "status": "Aktif"}, {"name": "fiyat_ozet", "row_count": 23523, "col_count": 19, "columns": ["kategori", "seviye", "city_id", "county_id", "district_id", "bolge_adi", "donem", "satilik_m2_fiyat", "kiralik_m2_fiyat", "ortalama_fiyat", "amortisman_yil", "brut_kira_getirisi", "ortalama_bina_yasi", "satilik_kalma_suresi_gun", "kiralik_kalma_suresi_gun", "ilan_sayisi", "yillik_fiyat_degisim", "guncellenme_tarihi", "mahalle_norm"], "status": "Aktif"}, {"name": "aylik_fiyat_trendi", "row_count": 1529982, "col_count": 15, "columns": ["kategori", "seviye", "city_id", "county_id", "district_id", "bolge_adi", "ay", "satilik_m2_fiyat", "kiralik_m2_fiyat", "ortalama_fiyat", "ilan_sayisi", "amortisman_yil", "brut_kira_getirisi", "projeksiyon", "mahalle_norm"], "status": "Aktif"}, {"name": "dagilim_kirilim", "row_count": 116754, "col_count": 15, "columns": ["kategori", "seviye", "city_id", "county_id", "district_id", "bolge_adi", "dagilim_turu", "segment", "oran", "satilik_m2_fiyat", "kiralik_m2_fiyat", "ortalama_fiyat", "ilan_sayisi", "amortisman_yil", "mahalle_norm"], "status": "Aktif"}, {"name": "poi_ilce", "row_count": 501783, "col_count": 8, "columns": ["city_id", "county_id", "bolge_adi", "poi_id", "kategori_id", "alt_kategori", "poi_adi", "slug"], "status": "Aktif"}, {"name": "insaat_sirketi", "row_count": 1451, "col_count": 3, "columns": ["sirket_id", "sirket_adi", "slug"], "status": "Aktif"}, {"name": "eticaret_harcama", "row_count": 446, "col_count": 24, "columns": ["seviye", "city_id", "county_id", "district_id", "bolge_adi", "online_pazaryeri_tl", "online_tatil_seyahat_tl", "online_yasal_bahis_tl", "online_elektronik_tl", "online_giyim_ayakkabi_tl", "ev_dekorasyon_tl", "e_ticaret_kullanici_sayisi", "aylik_gida_harcamasi", "aylik_barinma_kira_harcamasi", "aylik_ulasim_harcamasi", "aylik_restoran_yeme_icme", "aylik_giyim_harcamasi", "aylik_saglik_harcamasi", "aylik_egitim_harcamasi", "aylik_eglence_kultur", "aylik_alkol_tutun", "aylik_toplam_harcama", "toplam_tasarruf", "mahalle_norm"], "status": "Aktif"}, {"name": "medeni_stok", "row_count": 446, "col_count": 15, "columns": ["seviye", "city_id", "county_id", "district_id", "bolge_adi", "evli_sayisi", "bekar_hic_evlenmemis", "bosanmis_sayisi", "dul_sayisi", "toplam_konut_sayisi", "toplam_ticari_mulk", "yazlik_konut_sayisi", "sahibinden_ilan_sayisi", "emlakci_ilan_sayisi", "mahalle_norm"], "status": "Aktif"}, {"name": "yas_piramidi", "row_count": 446, "col_count": 53, "columns": ["seviye", "city_id", "county_id", "district_id", "bolge_adi", "Age_0_4_Female", "Age_0_4_Male", "Age_0_4_Total", "Age_10_14_Female", "Age_10_14_Male", "Age_10_14_Total", "Age_15_19_Female", "Age_15_19_Male", "Age_15_19_Total", "Age_20_24_Female", "Age_20_24_Male", "Age_20_24_Total", "Age_25_29_Female", "Age_25_29_Male", "Age_25_29_Total", "Age_30_34_Female", "Age_30_34_Male", "Age_30_34_Total", "Age_35_39_Female", "Age_35_39_Male", "Age_35_39_Total", "Age_40_44_Female", "Age_40_44_Male", "Age_40_44_Total", "Age_45_49_Female", "Age_45_49_Male", "Age_45_49_Total", "Age_50_54_Female", "Age_50_54_Male", "Age_50_54_Total", "Age_55_59_Female", "Age_55_59_Male", "Age_55_59_Total", "Age_5_9_Female", "Age_5_9_Male", "Age_5_9_Total", "Age_60_64_Female", "Age_60_64_Male", "Age_60_64_Total", "Age_65_Female", "Age_65_Male", "Age_65_Total", "Age_Group_0_14", "Age_Group_15_29", "Age_Group_30_44", "Age_Group_45_59", "Age_Group_60", "mahalle_norm"], "status": "Aktif"}, {"name": "ref_il", "row_count": 81, "col_count": 3, "columns": ["city_id", "ad", "ad_norm"], "status": "Aktif"}, {"name": "ref_ilce", "row_count": 951, "col_count": 4, "columns": ["county_id", "city_id", "ad", "ad_norm"], "status": "Aktif"}, {"name": "ref_mahalle", "row_count": 36582, "col_count": 5, "columns": ["district_id", "county_id", "city_id", "ad", "ad_norm"], "status": "Aktif"}, {"name": "emlak_ofisi", "row_count": 1620, "col_count": 8, "columns": ["city_id", "il_adi", "ofis_id", "ofis_adi", "slug", "adres", "danisman_sayisi", "ilan_sayisi"], "status": "Aktif"}, {"name": "poi_ilce_ozet", "row_count": 28432, "col_count": 4, "columns": ["city_id", "county_id", "alt_kategori", "sayi"], "status": "Aktif"}]}, {"db_name": "cevre.sqlite", "path": "warehouse/product/cevre.sqlite", "size_mb": 29.92, "category": "Ortak / Dinamik", "table_count": 10, "tables": [{"name": "hava_istasyon", "row_count": 338, "col_count": 11, "columns": ["id", "kod", "ad", "il", "ilce", "il_norm", "tip", "lat", "lon", "son_veri", "guncellenme"], "status": "Aktif"}, {"name": "hava_gunluk", "row_count": 122733, "col_count": 6, "columns": ["istasyon_id", "gun", "pm10", "pm25", "so2", "no2"], "status": "Aktif"}, {"name": "kapsama", "row_count": 5, "col_count": 4, "columns": ["tablo", "satir", "guncellenme", "kaynak"], "status": "Aktif"}, {"name": "deprem_senaryo_mahalle", "row_count": 959, "col_count": 25, "columns": ["uavt", "il", "ilce", "mahalle", "il_norm", "ilce_norm", "mahalle_norm", "cok_agir", "agir", "orta", "hafif", "can_kaybi", "agir_yarali", "hastane", "hafif_yarali", "dogalgaz_hasar", "icme_suyu_hasar", "atik_su_hasar", "gecici_barinma", "bina_toplam", "bina_1980_oncesi", "bina_1980_2000", "bina_2000_sonrasi", "agir_hasar_orani", "guncellenme"], "status": "Aktif"}, {"name": "gurultu_hat", "row_count": 12825, "col_count": 5, "columns": ["id", "donem", "seviye_db", "uzunluk_m", "geom"], "status": "Aktif"}, {"name": "gurultu_rtree", "row_count": 12825, "col_count": 5, "columns": ["id", "min_lat", "max_lat", "min_lon", "max_lon"], "status": "Atıl / Gölge Tablo"}, {"name": "gurultu_rtree_rowid", "row_count": 12825, "col_count": 2, "columns": ["rowid", "nodeno"], "status": "Atıl / Gölge Tablo"}, {"name": "gurultu_rtree_node", "row_count": 401, "col_count": 2, "columns": ["nodeno", "data"], "status": "Atıl / Gölge Tablo"}, {"name": "gurultu_rtree_parent", "row_count": 400, "col_count": 2, "columns": ["nodeno", "parentnode"], "status": "Atıl / Gölge Tablo"}, {"name": "trafik_saatlik", "row_count": 117725, "col_count": 8, "columns": ["geohash", "gun_tipi", "saat", "ort_arac", "ort_hiz", "gozlem", "lat", "lon"], "status": "Aktif"}]}, {"db_name": "cografi_katmanlar.sqlite", "path": "warehouse/product/cografi_katmanlar.sqlite", "size_mb": 772.36, "category": "Gayrimenkul / Arsa", "table_count": 6, "tables": [{"name": "cografi_ozellikler", "row_count": 580432, "col_count": 10, "columns": ["id", "katman", "ad", "alt_tur", "sektor", "geom_tip", "rep_lat", "rep_lon", "geometry", "ozellikler"], "status": "Aktif"}, {"name": "cografi_rtree", "row_count": 580432, "col_count": 5, "columns": ["id", "min_lat", "max_lat", "min_lon", "max_lon"], "status": "Atıl / Gölge Tablo"}, {"name": "cografi_rtree_rowid", "row_count": 580432, "col_count": 2, "columns": ["rowid", "nodeno"], "status": "Atıl / Gölge Tablo"}, {"name": "cografi_rtree_node", "row_count": 18992, "col_count": 2, "columns": ["nodeno", "data"], "status": "Atıl / Gölge Tablo"}, {"name": "cografi_rtree_parent", "row_count": 18991, "col_count": 2, "columns": ["nodeno", "parentnode"], "status": "Atıl / Gölge Tablo"}, {"name": "cografi_kapsama", "row_count": 40, "col_count": 3, "columns": ["sektor", "feature_sayisi", "islenme_tarihi"], "status": "Aktif"}]}, {"db_name": "emlakjet_bolge_endeks.sqlite", "path": "warehouse/product/emlakjet_bolge_endeks.sqlite", "size_mb": 10.92, "category": "Konut", "table_count": 1, "tables": [{"name": "bolge_endeks", "row_count": 40068, "col_count": 26, "columns": ["tip", "seviye", "il", "ilce", "mahalle", "city_id", "county_id", "district_id", "donem", "m2_fiyat", "ort_m2", "ilan_sayisi", "aylik_degisim", "yillik_degisim", "amortisman", "getiri", "ort_bina_yasi", "ilan_suresi", "endeks", "kira_m2_fiyat", "kira_fiyat", "kira_yillik_degisim", "toplanma", "il_norm", "ilce_norm", "mahalle_norm"], "status": "Aktif"}]}, {"db_name": "idari_sinirlar.sqlite", "path": "warehouse/product/idari_sinirlar.sqlite", "size_mb": 11.91, "category": "Gayrimenkul / Arsa", "table_count": 1, "tables": [{"name": "sinir", "row_count": 1086, "col_count": 13, "columns": ["id", "seviye", "ad", "ad_norm", "il_adi", "lat", "lon", "min_lat", "max_lat", "min_lon", "max_lon", "geometri", "alan_km2"], "status": "Aktif"}]}, {"db_name": "mahalle_yapilasma.sqlite", "path": "warehouse/product/mahalle_yapilasma.sqlite", "size_mb": 2.75, "category": "Konut", "table_count": 1, "tables": [{"name": "mahalle_yapilasma_ozet", "row_count": 9523, "col_count": 12, "columns": ["il", "ilce", "mahalle", "konut_ilan", "ort_m2_brut", "medyan_m2_net", "ort_kat", "max_kat", "oda_dagilimi", "il_norm", "ilce_norm", "mahalle_norm"], "status": "Aktif"}]}, {"db_name": "onemli_tesisler.sqlite", "path": "warehouse/product/onemli_tesisler.sqlite", "size_mb": 0.8, "category": "İşyeri / Ticari", "table_count": 5, "tables": [{"name": "hal", "row_count": 177, "col_count": 11, "columns": ["id", "il", "ilce", "ad", "tur", "faaliyet_tarihi", "adres", "lat", "lon", "koordinat_kaynagi", "guncellenme"], "status": "Aktif"}, {"name": "kapsama", "row_count": 4, "col_count": 4, "columns": ["tablo", "satir", "guncellenme", "kaynak"], "status": "Aktif"}, {"name": "osb", "row_count": 419, "col_count": 15, "columns": ["id", "il", "ilce", "ad", "ad_norm", "tur", "durum", "bakanlik", "alan_ha", "parsel_sayisi", "lat", "lon", "geometri", "koordinat_kaynagi", "guncellenme"], "status": "Aktif"}, {"name": "liman", "row_count": 193, "col_count": 14, "columns": ["id", "kod", "imo_tesis_no", "ad", "ad_norm", "faaliyet", "isletici", "il", "ilce", "lat", "lon", "koordinat_kaynagi", "liste_tarihi", "guncellenme"], "status": "Aktif"}, {"name": "hastane_ozel", "row_count": 572, "col_count": 10, "columns": ["id", "il", "ilce", "ad", "ad_norm", "tip", "lat", "lon", "koordinat_kaynagi", "guncellenme"], "status": "Aktif"}]}, {"db_name": "osm_degisim.sqlite", "path": "warehouse/product/osm_degisim.sqlite", "size_mb": 633.03, "category": "Ortak / Dinamik", "table_count": 7, "tables": [{"name": "poi_kimlik", "row_count": 623793, "col_count": 7, "columns": ["osm_tip", "osm_id", "alt_kategori", "marka", "ad", "lat", "lon"], "status": "Aktif"}, {"name": "poi_olay", "row_count": 0, "col_count": 9, "columns": ["tarih", "olay", "osm_tip", "osm_id", "alt_kategori", "marka", "ad", "lat", "lon"], "status": "Boş (0 Satır)"}, {"name": "ilce_sayim", "row_count": 26832, "col_count": 5, "columns": ["tarih", "il", "ilce", "alt_kategori", "sayi"], "status": "Aktif"}, {"name": "anlik", "row_count": 1, "col_count": 6, "columns": ["tarih", "poi", "eklenen", "silinen", "tasinan", "islenme"], "status": "Aktif"}, {"name": "poi_yillik", "row_count": 2844718, "col_count": 9, "columns": ["tarih", "osm_tip", "osm_id", "alt_kategori", "marka", "ad", "ad_norm", "lat", "lon"], "status": "Aktif"}, {"name": "kesit", "row_count": 6, "col_count": 3, "columns": ["tarih", "poi", "islenme"], "status": "Aktif"}, {"name": "poi_yasam", "row_count": 680481, "col_count": 15, "columns": ["osm_tip", "osm_id", "alt_kategori", "marka", "ad", "lat", "lon", "ilk_gorulme", "son_gorulme", "durum", "kesit_sayisi", "ad_degisim", "marka_degisim", "tasinma", "gecmis"], "status": "Aktif"}]}, {"db_name": "osm_poi.sqlite", "path": "warehouse/product/osm_poi.sqlite", "size_mb": 194.17, "category": "Ortak / Dinamik", "table_count": 9, "tables": [{"name": "poi", "row_count": 623793, "col_count": 13, "columns": ["id", "osm_tip", "osm_id", "kategori", "alt_kategori", "marka", "ad", "ad_norm", "lat", "lon", "etiketler", "geometri", "alan_m2"], "status": "Aktif"}, {"name": "poi_rtree_rowid", "row_count": 623793, "col_count": 2, "columns": ["rowid", "nodeno"], "status": "Atıl / Gölge Tablo"}, {"name": "poi_rtree_node", "row_count": 18984, "col_count": 2, "columns": ["nodeno", "data"], "status": "Atıl / Gölge Tablo"}, {"name": "poi_rtree_parent", "row_count": 18983, "col_count": 2, "columns": ["nodeno", "parentnode"], "status": "Atıl / Gölge Tablo"}, {"name": "hat", "row_count": 2996, "col_count": 9, "columns": ["id", "osm_id", "tur", "ref", "ad", "operator", "from_ad", "to_ad", "renk"], "status": "Aktif"}, {"name": "hat_durak", "row_count": 69851, "col_count": 4, "columns": ["hat_id", "sira", "durak_osm_tip", "durak_osm_id"], "status": "Aktif"}, {"name": "kapsama", "row_count": 64, "col_count": 4, "columns": ["kategori", "alt_kategori", "sayi", "guncellenme"], "status": "Aktif"}, {"name": "meta", "row_count": 5, "col_count": 2, "columns": ["key", "value"], "status": "Aktif"}, {"name": "poi_rtree", "row_count": 623793, "col_count": 5, "columns": ["id", "min_lat", "max_lat", "min_lon", "max_lon"], "status": "Atıl / Gölge Tablo"}]}, {"db_name": "pazarlar.sqlite", "path": "warehouse/product/pazarlar.sqlite", "size_mb": 1.59, "category": "Konut", "table_count": 3, "tables": [{"name": "pazar", "row_count": 4174, "col_count": 12, "columns": ["id", "kaynak", "il", "ilce", "mahalle", "ad", "gunler", "kapali", "tip", "lat", "lon", "guncellenme"], "status": "Aktif"}, {"name": "kapsama", "row_count": 4, "col_count": 3, "columns": ["kaynak", "satir", "guncellenme"], "status": "Aktif"}, {"name": "hks_pazar", "row_count": 2742, "col_count": 14, "columns": ["id", "il", "ilce", "semt", "mahalle", "ad", "tur", "adres", "gunler", "kapali", "lat", "lon", "koordinat_kaynagi", "guncellenme"], "status": "Aktif"}]}, {"db_name": "resmi_egitim.sqlite", "path": "warehouse/product/resmi_egitim.sqlite", "size_mb": 20.26, "category": "Konut", "table_count": 3, "tables": [{"name": "okul", "row_count": 55115, "col_count": 19, "columns": ["kurum_kodu", "il_kodu", "ilce_kodu", "il", "ilce", "ad", "ad_norm", "tur", "host", "lat", "lon", "koordinat_kaynagi", "guncellenme", "derslik", "ogretmen", "ogrenci", "telefon", "adres", "istatistik_guncellenme"], "status": "Aktif"}, {"name": "lgs_taban", "row_count": 3154, "col_count": 20, "columns": ["tercih_kodu", "il_kodu", "ilce", "okul_adi", "okul_adi_norm", "okul_turu", "alan", "ogretim_sekli", "pansiyon", "dil", "kontenjan", "taban_ilk", "taban_nakil", "yil", "kurum_kodu", "ulusal_sira", "ulusal_yuzdelik", "il_sira", "tur_sira", "guncellenme"], "status": "Aktif"}, {"name": "kapsama", "row_count": 2, "col_count": 3, "columns": ["tablo", "satir", "guncellenme"], "status": "Aktif"}]}, {"db_name": "resmi_gazete.sqlite", "path": "warehouse/product/resmi_gazete.sqlite", "size_mb": 0.78, "category": "Ortak / Dinamik", "table_count": 4, "tables": [{"name": "karar", "row_count": 310, "col_count": 12, "columns": ["id", "tarih", "rg_sayi", "karar_no", "baslik", "kategori", "islem", "dosya", "metin", "metin_sha256", "ocr", "guncellenme"], "status": "Aktif"}, {"name": "taranan_gun", "row_count": 401, "col_count": 4, "columns": ["tarih", "madde", "eslesen", "guncellenme"], "status": "Atıl / Gölge Tablo"}, {"name": "kapsama", "row_count": 2, "col_count": 4, "columns": ["tablo", "satir", "guncellenme", "kaynak"], "status": "Aktif"}, {"name": "karar_yer", "row_count": 583, "col_count": 8, "columns": ["karar_id", "il", "ilce", "mahalle", "il_norm", "ilce_norm", "mahalle_norm", "kaynak"], "status": "Aktif"}]}, {"db_name": "tkgm_alim_satim.sqlite", "path": "warehouse/product/tkgm_alim_satim.sqlite", "size_mb": 546.62, "category": "Gayrimenkul / Arsa", "table_count": 2, "tables": [{"name": "tkgm_alim_satim_yogunlugu", "row_count": 6941129, "col_count": 7, "columns": ["analiz_tip", "yil", "parsel_id", "il_id", "enlem", "boylam", "sayi"], "status": "Aktif"}, {"name": "tkgm_analiz_kapsama", "row_count": 484, "col_count": 8, "columns": ["analiz_tip", "analiz_tip_ad", "il_id", "il_ad", "yil", "nokta_sayisi", "toplam_islem", "cekilme_tarihi"], "status": "Aktif"}]}, {"db_name": "tuik_bolge.sqlite", "path": "warehouse/product/tuik_bolge.sqlite", "size_mb": 40.21, "category": "Ortak / Dinamik", "table_count": 12, "tables": [{"name": "yapi_izin_il", "row_count": 13284, "col_count": 6, "columns": ["il", "il_norm", "belge", "yil", "ceyrek", "daire"], "status": "Aktif"}, {"name": "yapi_izin_ilce", "row_count": 31552, "col_count": 8, "columns": ["tuik_kodu", "il", "ilce", "il_norm", "ilce_norm", "belge", "yil", "daire"], "status": "Aktif"}, {"name": "nufus_ilce", "row_count": 18344, "col_count": 7, "columns": ["tuik_kodu", "il", "ilce", "il_norm", "ilce_norm", "yil", "nufus"], "status": "Aktif"}, {"name": "nufus_mahalle", "row_count": 32254, "col_count": 10, "columns": ["tuik_kodu", "il", "ilce", "belediye", "mahalle", "il_norm", "ilce_norm", "mahalle_norm", "yil", "nufus"], "status": "Aktif"}, {"name": "nufus_koy", "row_count": 18183, "col_count": 9, "columns": ["tuik_kodu", "il", "ilce", "koy", "il_norm", "ilce_norm", "koy_norm", "yil", "nufus"], "status": "Aktif"}, {"name": "konut_satis_ilce", "row_count": 146496, "col_count": 8, "columns": ["tuik_kodu", "il", "ilce", "il_norm", "ilce_norm", "yil", "ay", "satis"], "status": "Aktif"}, {"name": "goc_il", "row_count": 1377, "col_count": 8, "columns": ["donem", "il", "il_norm", "nufus", "aldigi", "verdigi", "net", "net_hiz_binde"], "status": "Aktif"}, {"name": "ses_ilce", "row_count": 1054, "col_count": 11, "columns": ["il", "ilce", "il_norm", "ilce_norm", "yil", "ses_skor", "ust", "ust_alti", "orta", "alt", "en_alt"], "status": "Aktif"}, {"name": "hanehalki_il", "row_count": 81, "col_count": 4, "columns": ["il", "il_norm", "hanehalki", "ortalama_buyukluk"], "status": "Aktif"}, {"name": "nufus_projeksiyon_il", "row_count": 81, "col_count": 5, "columns": ["il", "il_norm", "nufus_2023", "nufus_2030", "yillik_artis_binde"], "status": "Aktif"}, {"name": "kapsama", "row_count": 11, "col_count": 4, "columns": ["tablo", "satir", "guncellenme", "kaynak"], "status": "Aktif"}, {"name": "yapi_ruhsat_amac_ilce", "row_count": 140436, "col_count": 9, "columns": ["tuik_kodu", "il", "ilce", "il_norm", "ilce_norm", "amac_kodu", "amac", "yil", "yuzolcumu_m2"], "status": "Aktif"}]}, {"db_name": "universite.sqlite", "path": "warehouse/product/universite.sqlite", "size_mb": 3.0, "category": "Konut", "table_count": 7, "tables": [{"name": "universite", "row_count": 205, "col_count": 48, "columns": ["ad", "ad_norm", "tur", "il", "ol_orgun_e", "ol_orgun_k", "ol_orgun_t", "ol_ikinci_e", "ol_ikinci_k", "ol_ikinci_t", "ol_uzaktan_e", "ol_uzaktan_k", "ol_uzaktan_t", "ol_acik_e", "ol_acik_k", "ol_acik_t", "l_orgun_e", "l_orgun_k", "l_orgun_t", "l_ikinci_e", "l_ikinci_k", "l_ikinci_t", "l_uzaktan_e", "l_uzaktan_k", "l_uzaktan_t", "l_acik_e", "l_acik_k", "l_acik_t", "yl_orgun_e", "yl_orgun_k", "yl_orgun_t", "yl_ikinci_e", "yl_ikinci_k", "yl_ikinci_t", "yl_uzaktan_e", "yl_uzaktan_k", "yl_uzaktan_t", "dr_orgun_e", "dr_orgun_k", "dr_orgun_t", "toplam_e", "toplam_k", "toplam_t", "aof_toplam", "uzaktan_toplam", "kampus_toplam", "yil", "kaynak"], "status": "Aktif"}, {"name": "universite_ilce", "row_count": 858, "col_count": 46, "columns": ["universite", "il", "ilce", "ilce_norm", "ol_orgun_e", "ol_orgun_k", "ol_orgun_t", "ol_ikinci_e", "ol_ikinci_k", "ol_ikinci_t", "ol_uzaktan_e", "ol_uzaktan_k", "ol_uzaktan_t", "ol_acik_e", "ol_acik_k", "ol_acik_t", "l_orgun_e", "l_orgun_k", "l_orgun_t", "l_ikinci_e", "l_ikinci_k", "l_ikinci_t", "l_uzaktan_e", "l_uzaktan_k", "l_uzaktan_t", "l_acik_e", "l_acik_k", "l_acik_t", "yl_orgun_e", "yl_orgun_k", "yl_orgun_t", "yl_ikinci_e", "yl_ikinci_k", "yl_ikinci_t", "yl_uzaktan_e", "yl_uzaktan_k", "yl_uzaktan_t", "dr_orgun_e", "dr_orgun_k", "dr_orgun_t", "toplam_e", "toplam_k", "toplam_t", "aof_toplam", "uzaktan_toplam", "kampus_toplam"], "status": "Aktif"}, {"name": "birim", "row_count": 8035, "col_count": 7, "columns": ["universite", "birim", "birim_norm", "acilis", "tur", "birim_ili", "durum"], "status": "Aktif"}, {"name": "kapsama", "row_count": 5, "col_count": 4, "columns": ["tablo", "satir", "guncellenme", "kaynak"], "status": "Aktif"}, {"name": "kampus", "row_count": 963, "col_count": 16, "columns": ["poi_id", "ad", "universite", "il", "ilce", "lat", "lon", "alan_m2", "geometri", "eslesme", "ilce_ogrenci", "ilce_aof", "ilce_kampus_sayisi", "guncellenme", "bina_parcasi", "kapsayan_poi_id"], "status": "Aktif"}, {"name": "ilce_merkez", "row_count": 1082, "col_count": 6, "columns": ["il", "ilce", "il_norm", "ilce_norm", "lat", "lon"], "status": "Aktif"}, {"name": "urap", "row_count": 198, "col_count": 6, "columns": ["yil", "sira", "ad", "sehir", "toplam_puan", "universite_ad_norm"], "status": "Aktif"}]}, {"db_name": "uydu_onbellek.sqlite", "path": "warehouse/product/uydu_onbellek.sqlite", "size_mb": 0.01, "category": "Ortak / Dinamik", "table_count": 1, "tables": [{"name": "uydu_hucre", "row_count": 7, "col_count": 11, "columns": ["hucre", "donem", "sahne", "tarih", "bulut", "ndvi", "ndbi", "bitki_pay", "yapili_pay", "gecerli_oran", "hesaplanma"], "status": "Aktif"}]}, {"db_name": "yurtlar.sqlite", "path": "warehouse/product/yurtlar.sqlite", "size_mb": 1.27, "category": "Konut", "table_count": 3, "tables": [{"name": "yurt", "row_count": 2323, "col_count": 16, "columns": ["id", "kaynak", "il", "ilce", "ad", "ad_norm", "tip", "kapasite", "kapasite_kaynagi", "adres", "lat", "lon", "koordinat_kaynagi", "guncellenme", "kiz_kapasite", "erkek_kapasite"], "status": "Aktif"}, {"name": "kapsama", "row_count": 3, "col_count": 3, "columns": ["tablo", "satir", "guncellenme"], "status": "Aktif"}, {"name": "kykyurt_com", "row_count": 839, "col_count": 9, "columns": ["url", "ad", "ad_norm", "il", "ilce", "kapasite", "lat", "lon", "tip"], "status": "Atıl / Gölge Tablo"}]}, {"db_name": "erisim_denetim.sqlite", "path": "warehouse/restricted/erisim_denetim.sqlite", "size_mb": 0.01, "category": "Kısıtlı / PII", "table_count": 1, "tables": [{"name": "erisim_denetim", "row_count": 12, "col_count": 7, "columns": ["zaman", "kullanici_id", "uye_paketi", "sorgu_tipi", "veri_seti", "kapsam", "izin"], "status": "Aktif"}]}, {"db_name": "kisisel_veriler.sqlite", "path": "warehouse/restricted/kisisel_veriler.sqlite", "size_mb": 0.57, "category": "Kısıtlı / PII", "table_count": 3, "tables": [{"name": "kapsama", "row_count": 1, "col_count": 5, "columns": ["tablo", "satir", "sinif", "paket_sayisi", "islenme"], "status": "Aktif"}, {"name": "iletisim", "row_count": 1640, "col_count": 5, "columns": ["kaynak_tablo", "kayit_key", "alan", "deger_sha256", "deger"], "status": "Aktif"}, {"name": "danisman", "row_count": 1620, "col_count": 8, "columns": ["city_id", "il_adi", "danisman_id", "danisman_adi", "unvan", "ofis_adi", "telefon", "aktif_ilan_sayisi"], "status": "Aktif"}]}, {"db_name": "kisitli_istatistik.sqlite", "path": "warehouse/restricted/kisitli_istatistik.sqlite", "size_mb": 104.12, "category": "Kısıtlı / PII", "table_count": 3, "tables": [{"name": "kapsama", "row_count": 2, "col_count": 5, "columns": ["tablo", "satir", "sinif", "paket_sayisi", "islenme"], "status": "Aktif"}, {"name": "hemsehri_kutuk", "row_count": 185092, "col_count": 9, "columns": ["seviye", "city_id", "county_id", "district_id", "bolge_adi", "kutuk_ili", "kisi_sayisi", "guncellenme_tarihi", "mahalle_norm"], "status": "Aktif"}, {"name": "secim_sonuclari", "row_count": 299743, "col_count": 13, "columns": ["seviye", "city_id", "county_id", "district_id", "bolge_adi", "secim_kodu", "secim_adi", "sandik_sayisi", "kayitli_secmen", "kullanilan_oy", "gecerli_oy", "kazanan_parti", "mahalle_norm"], "status": "Aktif"}]}, {"db_name": "turkiye_cografi_varliklar.sqlite", "path": "collector/data/cografya/turkiye_cografi_varliklar.sqlite", "size_mb": 3.61, "category": "Gayrimenkul / Arsa", "table_count": 1, "tables": [{"name": "cografi_varliklar", "row_count": 19757, "col_count": 12, "columns": ["id", "geoname_id", "ad", "asciiname", "tur_kodu", "tur_aciklama", "kategori", "enlem", "boylam", "rakim_m", "il_plaka", "son_guncelleme"], "status": "Aktif"}]}, {"db_name": "eticaret_ve_lojistik.sqlite", "path": "collector/data/eticaret_ve_lojistik.sqlite", "size_mb": 0.05, "category": "İşyeri / Ticari", "table_count": 2, "tables": [{"name": "eticaret_ve_harcama_kalemleri", "row_count": 101, "col_count": 41, "columns": ["id", "seviye", "city_id", "county_id", "district_id", "bolge_adi", "il", "ilce", "mahalle", "e_ticaret_kullanici_sayisi", "e_ticaret_yogunluk", "online_pazaryeri_tl", "online_tatil_seyahat_tl", "online_yasal_bahis_tl", "online_elektronik_tl", "online_giyim_ayakkabi_tl", "ev_dekorasyon_tl", "online_eglence_kultur_tl", "aylik_gida_harcamasi", "aylik_barinma_kira_harcamasi", "aylik_ulasim_harcamasi", "aylik_restoran_yeme_icme", "aylik_giyim_harcamasi", "aylik_saglik_harcamasi", "aylik_egitim_harcamasi", "aylik_eglence_kultur", "aylik_alkol_tutun_sigara", "aylik_toplam_harcama", "toplam_tasarruf", "hanehalki_geliri", "guncellenme_tarihi", "guncel_2026_toplam_harcama_tl", "guncel_2026_online_pazaryeri_tl", "guncel_2026_kira_barinma_tl", "guncel_2026_gida_tl", "guncel_2026_alkol_tutun_tl", "guncel_2026_hanehalki_geliri_tl", "e_ticaret_harcama_endeksi_2026", "veri_donemi", "guncellenme_yili", "tahmin_ufku"], "status": "Aktif"}, {"name": "kargo_ve_teslimat_noktalari", "row_count": 16, "col_count": 18, "columns": ["id", "tip", "kod", "ad", "adres", "telefon", "il_kod", "il_ad", "ilce_kod", "ilce_ad", "mahalle_ad", "lat", "lon", "hafta_ici", "cumartesi", "pazar", "aktiflik", "guncellenme_tarihi"], "status": "Aktif"}]}, {"db_name": "parsel_imar_degisiklikleri.sqlite", "path": "collector/data/imar_ve_parseller/parsel_imar_degisiklikleri.sqlite", "size_mb": 0.12, "category": "Ortak / Dinamik", "table_count": 3, "tables": [{"name": "parsel_imar_kayitlari", "row_count": 20, "col_count": 37, "columns": ["id", "il", "ilce", "mahalle", "mahalle_id", "ada_no", "parsel_no", "alan_m2", "nitelik", "zemin_durumu", "pafta", "mevkii", "enlem", "boylam", "poligon_geojson", "imar_durumu", "plan_fonksiyon", "kaks_emsal", "taks", "gabari", "kat_adedi", "yapi_nizami", "on_bahce", "yan_bahce", "plan_adi", "plan_turu", "pin_tucbs_no", "onay_tarihi", "yururluk_tarihi", "plan_sureci", "dogal_sit", "arkeolojik_sit", "havaalani_mania", "milli_park", "hazine_durumu", "kaynak", "son_guncelleme"], "status": "Aktif"}, {"name": "bagimsiz_bolumler", "row_count": 27, "col_count": 11, "columns": ["id", "mahalle_id", "ada_no", "parsel_no", "bolum_no", "kat", "giris", "nitelik", "blok", "kaynak", "guncellenme"], "status": "Aktif"}, {"name": "imar_degisiklik_ve_askilar", "row_count": 0, "col_count": 13, "columns": ["id", "il", "ilce", "mahalle", "ada_no", "parsel_no", "degisiklik_turu", "plan_kodu", "aski_baslangic", "aski_bitis", "itiraz_durumu", "aciklama", "tespit_tarihi"], "status": "Boş (0 Satır)"}]}, {"db_name": "turkiye_makro_ve_mikro_istihbarat.sqlite", "path": "collector/data/turkiye_makro_ve_mikro_istihbarat.sqlite", "size_mb": 0.39, "category": "İşyeri / Ticari", "table_count": 6, "tables": [{"name": "etbis_81_il_e_ticaret", "row_count": 81, "col_count": 14, "columns": ["id", "plaka", "il_adi", "bolge", "yillik_e_ticaret_hacmi_milyar_tl", "kisi_basi_e_ticaret_harcamasi_tl", "e_ticaret_uyum_endeksi_skoru", "uyum_siralamasi", "tescilli_e_ticaret_isletme_sayisi", "genel_ticaret_icindeki_pay_yuzde", "alis_satis_karsilama_orani", "guncellenme_yili", "veri_donemi", "tahmin_ufku"], "status": "Aktif"}, {"name": "sege_973_ilce_gelismislik", "row_count": 969, "col_count": 12, "columns": ["id", "il_plaka", "il_adi", "ilce_adi", "sege_siralamasi", "sege_skoru", "gelismislik_kademesi", "kademe_tanimi", "sosyo_ekonomik_sinif", "veri_donemi", "guncellenme_yili", "tahmin_ufku"], "status": "Aktif"}, {"name": "kargo_ve_teslimat_noktalari", "row_count": 0, "col_count": 17, "columns": ["id", "tip", "kod", "ad", "adres", "telefon", "il_kod", "il_ad", "ilce_kod", "ilce_ad", "mahalle_ad", "lat", "lon", "hafta_ici", "cumartesi", "pazar", "aktiflik"], "status": "Boş (0 Satır)"}, {"name": "mahalle_tuketim_ve_harcama", "row_count": 0, "col_count": 30, "columns": ["id", "seviye", "city_id", "county_id", "district_id", "bolge_adi", "il", "ilce", "mahalle", "e_ticaret_kullanici_sayisi", "e_ticaret_yogunluk", "online_pazaryeri_tl", "online_tatil_seyahat_tl", "online_yasal_bahis_tl", "online_elektronik_tl", "online_giyim_ayakkabi_tl", "ev_dekorasyon_tl", "online_eglence_kultur_tl", "aylik_gida_harcamasi", "aylik_barinma_kira_harcamasi", "aylik_ulasim_harcamasi", "aylik_restoran_yeme_icme", "aylik_giyim_harcamasi", "aylik_saglik_harcamasi", "aylik_egitim_harcamasi", "aylik_eglence_kultur", "aylik_alkol_tutun_sigara", "aylik_toplam_harcama", "toplam_tasarruf", "hanehalki_geliri"], "status": "Boş (0 Satır)"}, {"name": "tuik_tutun_ve_sigara_istatistikleri", "row_count": 8, "col_count": 9, "columns": ["id", "bolge_adi", "erkek_gunluk_sigara_orani", "kadin_gunluk_sigara_orani", "toplam_sigara_orani", "tuketim_seviyesi", "aciklama", "veri_yili", "veri_donemi"], "status": "Aktif"}, {"name": "ciro_ve_ticari_potansiyel_endeksi", "row_count": 969, "col_count": 13, "columns": ["id", "seviye", "il", "ilce", "mahalle", "ciro_potansiyeli_skoru", "yeme_icme_kafe_skoru", "market_perakende_skoru", "e_ticaret_teslimat_skoru", "sosyo_ekonomik_derece", "degerlendirme_ozeti", "projeksiyon_donemi", "hesaplanma_yili"], "status": "Aktif"}]}];
+    let currentCategory = 'all';
+
+    function init() {
+      renderOverviewTbody();
+      renderTablesGrid();
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('bg-emerald-500', 'text-white');
+        el.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      document.getElementById('view-' + tabId).classList.remove('hidden');
+      const activeBtn = document.getElementById('tab-' + tabId);
+      activeBtn.classList.remove('bg-slate-800', 'text-slate-300');
+      activeBtn.classList.add('bg-emerald-500', 'text-white');
+    }
+
+    function renderOverviewTbody() {
+      const tbody = document.getElementById('overview-db-tbody');
+      tbody.innerHTML = '';
+      INVENTORY.forEach(db => {
+        let totalRows = db.tables.reduce((acc, t) => acc + (typeof t.row_count === 'number' ? t.row_count : 0), 0);
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/40 transition cursor-pointer';
+        tr.onclick = () => {
+          switchTab('explorer');
+          document.getElementById('search-input').value = db.db_name;
+          filterTables();
+        };
+        tr.innerHTML = `
+          <td class="px-6 py-3 font-semibold text-white">${db.db_name}</td>
+          <td class="px-6 py-3 font-sans"><span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-slate-300 border border-slate-700">${db.category}</span></td>
+          <td class="px-6 py-3 text-right text-emerald-400 font-bold">${db.size_mb} MB</td>
+          <td class="px-6 py-3 text-center text-slate-300">${db.table_count}</td>
+          <td class="px-6 py-3 text-right text-amber-300">${totalRows.toLocaleString('tr-TR')}</td>
+          <td class="px-6 py-3 font-sans"><span class="text-[11px] text-slate-400">Aktif Ambar</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderTablesGrid() {
+      const grid = document.getElementById('tables-grid');
+      grid.innerHTML = '';
+      
+      INVENTORY.forEach(db => {
+        db.tables.forEach(tbl => {
+          const card = document.createElement('div');
+          card.className = 'glass-card rounded-xl p-4 cursor-pointer transition hover:scale-[1.01] flex flex-col justify-between table-item';
+          card.dataset.db = db.db_name.toLowerCase();
+          card.dataset.category = db.category;
+          card.dataset.name = tbl.name.toLowerCase();
+          card.dataset.columns = tbl.columns.join(' ').toLowerCase();
+          card.onclick = () => openModal(db, tbl);
+
+          let statusClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+          if (tbl.status.includes('Boş')) statusClass = 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+          else if (tbl.status.includes('Atıl')) statusClass = 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+          else if (tbl.status.includes('Kısmi')) statusClass = 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20';
+
+          card.innerHTML = `
+            <div>
+              <div class="flex justify-between items-start mb-2">
+                <span class="text-[10px] font-mono text-slate-400 truncate max-w-[170px]" title="${db.db_name}">${db.db_name}</span>
+                <span class="px-2 py-0.5 text-[9px] font-bold border rounded ${statusClass}">${tbl.status}</span>
+              </div>
+              <h4 class="text-xs font-bold font-mono text-white mb-1">${tbl.name}</h4>
+              <div class="text-[11px] text-slate-400 flex items-center space-x-3 mb-3">
+                <span>Kayıt: <strong class="text-slate-200 font-mono">${typeof tbl.row_count === 'number' ? tbl.row_count.toLocaleString('tr-TR') : tbl.row_count}</strong></span>
+                <span>Sütun: <strong class="text-slate-200 font-mono">${tbl.col_count}</strong></span>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+              <span class="truncate max-w-[200px]">${tbl.columns.slice(0, 3).join(', ')}...</span>
+              <span class="text-emerald-400">Detay →</span>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      });
+    }
+
+    function filterTables() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      document.querySelectorAll('.table-item').forEach(el => {
+        const matchText = el.dataset.name.includes(q) || el.dataset.db.includes(q) || el.dataset.columns.includes(q);
+        const matchCat = (currentCategory === 'all' || el.dataset.category === currentCategory);
+        if (matchText && matchCat) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-filter').forEach(btn => {
+        if (btn.dataset.cat === cat) {
+          btn.classList.add('bg-emerald-600', 'text-white');
+          btn.classList.remove('bg-slate-800', 'text-slate-300');
+        } else {
+          btn.classList.remove('bg-emerald-600', 'text-white');
+          btn.classList.add('bg-slate-800', 'text-slate-300');
+        }
+      });
+      filterTables();
+    }
+
+    function openModal(db, tbl) {
+      document.getElementById('modal-table-name').textContent = tbl.name;
+      document.getElementById('modal-db-path').textContent = db.path;
+      document.getElementById('modal-row-count').textContent = typeof tbl.row_count === 'number' ? tbl.row_count.toLocaleString('tr-TR') : tbl.row_count;
+      document.getElementById('modal-col-count').textContent = tbl.col_count;
+      
+      const badge = document.getElementById('modal-table-badge');
+      badge.textContent = tbl.status;
+      badge.className = 'px-2 py-0.5 text-[10px] rounded font-bold uppercase border ' + 
+        (tbl.status.includes('Boş') ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 
+         tbl.status.includes('Atıl') ? 'bg-amber-500/10 text-amber-400 border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20');
+
+      const colList = document.getElementById('modal-columns-list');
+      colList.innerHTML = '';
+      tbl.columns.forEach(col => {
+        const div = document.createElement('div');
+        div.className = 'p-1.5 rounded bg-slate-900 border border-slate-800 flex items-center space-x-1.5 truncate';
+        div.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span><span class="truncate" title="${col}">${col}</span>`;
+        colList.appendChild(div);
+      });
+
+      document.getElementById('schema-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('schema-modal').classList.add('hidden');
+    }
+
+    window.onclick = function(e) {
+      const modal = document.getElementById('schema-modal');
+      if (e.target === modal) closeModal();
+    };
+
+    window.onload = init;
+  </script>
+</body>
+</html>

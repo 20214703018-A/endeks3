@@ -38,6 +38,37 @@
   },
   "sources": [
     {
+      "source_id": "owner_land_neighbourhood_index_2026_09",
+      "display_name": "Türkiye arsa ve tarla mahalle endeksi",
+      "provider": "Kullanıcıya ait istatistiksel model paketi",
+      "source_mode": "owner_generated_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "entities": ["price_summary", "price_trend", "price_distribution", "price_heatmap"],
+        "locator_contains": ["turkiye_arsa_tarla_tam_veriseti", "tum_turkiye_arsa_nihai_paket", "arsa_piyasa_istihbarati"]
+      },
+      "policy": {
+        "registry_status": "owner_rights_declared",
+        "license_status": "user_owned_verified",
+        "public_display_allowed": true,
+        "scoring_allowed": true,
+        "attribution_required": false
+      },
+      "notes": "Mahalle özeti, 80 aylık seri ve alan segmentleri ayrı varlıklar olarak korunur; projeksiyon satırları gözlemden ayrılır."
+    },
+    {
+      "source_id": "owner_turkiye_detailed_listings_2026_09",
+      "display_name": "Türkiye ayrıntılı gayrimenkul ilan gözlemleri",
+      "provider": "Kullanıcı tarafından derlenen çok kategorili ilan paketi",
+      "source_mode": "user_collected_offline_package",
+      "acquisition_owner": "user",
+      "match": {
+        "domains": ["listing_observation"],
+        "locator_contains": ["turkiye_tum_ilanlar_tam_veriseti", "tum_turkiye_nihai_paket", "turkiye_tum_ilanlar.sqlite"]
+      },
+      "notes": "CSV ve SQLite kopyaları ayrı ham oluşum olarak korunur; portal ve ilan kimliğiyle kanonikleştirilir."
+    },
+    {
       "source_id": "emlakjet_endeksa_market_collected",
       "display_name": "Toplanmış bölgesel piyasa ve fiyat serileri",
       "provider": "EmlakJet / Endeksa kaynaklı olduğu düşünülen paketler",
