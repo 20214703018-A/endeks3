@@ -637,6 +637,7 @@ def main():
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite veritabanı")
     parser.add_argument("--limit", type=int, default=None, help="Maksimum işlenecek sorgu sayısı (varsayılan: sınırsız)")
     parser.add_argument("--mahalle-limit", type=int, default=None, help="Shard başına işlenecek mahalle sayısı (varsayılan: tüm kentsel mahalleler)")
+    parser.add_argument("--max-seconds", type=int, default=14400, help="Maksimum çalışma süresi saniye (varsayılan: 14400 = 4 saat emniyet sınırı)")
     parser.add_argument("--no-deep", action="store_true", help="Yoğun ticari mahallelerde otonom derinleştirmeyi devre dışı bırakır")
     parser.add_argument("--force", action="store_true", help="Daha önce taranmış sorguları atlamadan yeniden tara")
     parser.add_argument("--all", action="store_true", help="Tüm 81 il sorgularını tek seferde çalıştır")
@@ -664,11 +665,15 @@ def main():
     success = 0
     start_time = time.time()
 
-    print(f"Otonom Madencilik Başlatıldı: Başlangıç Havuzu = {len(work_queue)} sorgu | Derinleştirme = {'AÇIK' if deep_enabled else 'KAPALI'}\n", flush=True)
+    print(f"Otonom Madencilik Başlatıldı: Başlangıç Havuzu = {len(work_queue)} sorgu | Derinleştirme = {'AÇIK' if deep_enabled else 'KAPALI'} | Emniyet Sınırı = {args.max_seconds/3600:.1f} saat\n", flush=True)
 
     while work_queue:
         if args.limit and processed >= args.limit:
             print(f"\n[Durduruldu] Belirtilen maksimum sorgu limitine ({args.limit}) ulaşıldı.", flush=True)
+            break
+
+        if time.time() - start_time >= args.max_seconds:
+            print(f"\n[⏰ 4 Saatlik Emniyet Sınırına Ulaşıldı ({args.max_seconds} sn)] Ambar verileri kaydedildi, GitHub Actions artifact yüklemesine geçiliyor.", flush=True)
             break
 
         q = work_queue.popleft()

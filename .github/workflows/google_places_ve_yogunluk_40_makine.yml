@@ -18,7 +18,7 @@ jobs:
   madencilik:
     name: Shard ${{ matrix.shard }}/40 Google Yoğunluk
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 270
     strategy:
       fail-fast: false
       matrix:
@@ -44,6 +44,7 @@ jobs:
           python collector/google_places_ve_yogunluk_toplayici.py \
             --shard ${{ matrix.shard }}/40 \
             --out shard_${{ matrix.shard }}.sqlite \
+            --max-seconds 14400 \
             $LIMIT_ARGS
 
       - name: Shard Çıktısını Yükle (Artifact)
