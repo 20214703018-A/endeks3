@@ -117,6 +117,14 @@ def init_db(db_path):
     )
     """)
     try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN ilce TEXT")
+    except Exception:
+        pass
+    try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN tam_adres TEXT")
+    except Exception:
+        pass
+    try:
         cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN puan REAL")
     except Exception:
         pass

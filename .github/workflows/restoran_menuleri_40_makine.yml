@@ -1,0 +1,81 @@
+name: Restoran & Kafe Menü, Fiyat ve Yaşam Döngüsü Madenciliği (40 Makine)
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Shard başına işlenecek mekan limiti (Boş = Sınırsız / Tüm Restoranlar ~966)"
+        required: false
+        default: ""
+  schedule:
+    - cron: "0 6 * * 4" # Her Perşembe sabaha karşı haftalık güncelleme
+
+jobs:
+  madencilik:
+    name: Shard ${{ matrix.shard }}/40 Menü & Fiyat
+    runs-on: ubuntu-latest
+    timeout-minutes: 270
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
+    steps:
+      - name: Depoyu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Shard Verilerini Madencile (4 Saat Emniyet Sınırı & 2022-2026 Zaman Serisi)
+        run: |
+          LIMIT_ARGS=""
+          if [ -n "${{ github.event.inputs.limit }}" ]; then
+            LIMIT_ARGS="--limit ${{ github.event.inputs.limit }}"
+          fi
+          python collector/restoran_menu_ve_fiyat_toplayici.py \
+            --shard ${{ matrix.shard }}/40 \
+            --out menu_shard_${{ matrix.shard }}.sqlite \
+            --workers 8 \
+            --max-seconds 14400 \
+            $LIMIT_ARGS
+
+      - name: Shard Çıktısını Yükle (Artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: menu_shard_${{ matrix.shard }}
+          path: menu_shard_${{ matrix.shard }}.sqlite
+          retention-days: 7
+
+  birlestir:
+    name: 🏆 Tüm Menü & Fiyat Shard'larını Ambar Veritabanında Birleştir (Lossless)
+    needs: madencilik
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Depoyu Çek
+        uses: actions/checkout@v4
+
+      - name: Python Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Tüm Shard'ları İndir
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Shard'ları Kayıpsız Olarak Birleştir
+        run: |
+          python collector/merge_restoran_menu_shards.py \
+            --shards "artifacts/**/menu_shard_*.sqlite" \
+            --out warehouse/product/restoran_ve_kafe_menuleri.sqlite
+
+      - name: Nihai Ambarı Yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: restoran_ve_kafe_menuleri_tam
+          path: warehouse/product/restoran_ve_kafe_menuleri.sqlite
+          retention-days: 30
