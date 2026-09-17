@@ -292,25 +292,26 @@ def run_collection(out_db, shard_id=None, total_shards=40, workers=4, limit=50):
                     res["platform"], res["depo_kodu"], res["depo_adi"], res["sehir"], res["ilce"],
                     res["mahalle"], res["tam_adres"], res["lat"], res["lon"], res["url"], res["kaynak"], res["guncellenme_tarihi"]
                 ))
+                conn.commit()
                 saved_ds += 1
-                time.sleep(random.uniform(0.5, 1.2))
+                print(f"  -> [{saved_ds}] Darkstore: {res['depo_adi']} | Şehir: {res['sehir']} | İlçe: {res['ilce']} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
+                time.sleep(random.uniform(0.2, 0.5))
 
-    conn.commit()
     conn.close()
 
     # OSM teslimat noktalarını da ekle
     osm_count = import_osm_delivery_depots(out_db)
-    print(f"\nİşlem tamamlandı. {saved_ds} Darkstore + {osm_count} OSM teslimat noktası '{out_db}' dosyasına yazıldı.")
+    print(f"\nİşlem tamamlandı. {saved_ds} Darkstore + {osm_count} OSM teslimat noktası '{out_db}' dosyasına yazıldı.", flush=True)
 
 def harvest_sample_restaurants(out_db, sample_limit=100, workers=3):
     init_db(out_db)
-    print(f"🍽️ [ÜYE RESTORANLAR] Yemeksepeti sitemap üzerinden {sample_limit} restoran çekiliyor...")
+    print(f"🍽️ [ÜYE RESTORANLAR] Yemeksepeti sitemap üzerinden {sample_limit} restoran çekiliyor...", flush=True)
     
     # 0.xml sitemap'ten linkleri al
     url = "https://www.yemeksepeti.com/adventure-map/adventure-map-restaurant-0.xml"
     content = get_url_content(url)
     if not content:
-        print("   ✗ Restoran sitemap açılamadı.")
+        print("   ✗ Restoran sitemap açılamadı.", flush=True)
         return 0
     all_urls = re.findall(r"<loc>(.+?)</loc>", content)
     target_urls = random.sample(all_urls, min(sample_limit, len(all_urls)))
@@ -336,12 +337,13 @@ def harvest_sample_restaurants(out_db, sample_limit=100, workers=3):
                     res["ilce"], res["tam_adres"], res["lat"], res["lon"], res["url"],
                     res["kaynak"], res["guncellenme_tarihi"]
                 ))
+                conn.commit()
                 saved += 1
-                time.sleep(random.uniform(0.4, 0.9))
+                print(f"  -> [{saved}/{sample_limit}] Restoran: {res['restoran_adi']} | {res['sehir']} | Puan: {res['puan']} ({res['degerlendirme_sayisi']} yorum) | Mutfak: {res['mutfaklar']}", flush=True)
+                time.sleep(random.uniform(0.2, 0.5))
                 
-    conn.commit()
     conn.close()
-    print(f"   ✓ {saved} üye restoran 'uye_restoranlar_ve_hacim' tablosuna ambarlandı.")
+    print(f"   ✓ {saved} üye restoran 'uye_restoranlar_ve_hacim' tablosuna ambarlandı.", flush=True)
     return saved
 
 def main():

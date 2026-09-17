@@ -345,5 +345,19 @@ def harvest_bddk(donem="2024-12"):
     print("✅ [BDDK FİNTÜRK] Tüm iller için finansal göstergeler başarıyla arşivlendi.")
 
 if __name__ == "__main__":
-    donem = sys.argv[1] if len(sys.argv) > 1 else "2024-12"
-    harvest_bddk(donem)
+    ALL_PERIODS = [
+        "2023-12", "2024-03", "2024-06", "2024-09", "2024-12",
+        "2025-03", "2025-06", "2025-09", "2025-12",
+        "2026-03", "2026-06"
+    ]
+    arg = sys.argv[1] if len(sys.argv) > 1 else "all"
+    if arg == "all":
+        print(f"🏦 [BDDK FİNTÜRK] 2023-2026 arası {len(ALL_PERIODS)} dönem 81 il için taranıyor...")
+        for p in ALL_PERIODS:
+            # API expects format e.g. 2025-3 or 2025-12 (without leading zero on month if single digit)
+            parts = p.split("-")
+            clean_p = f"{parts[0]}-{int(parts[1])}"
+            harvest_bddk(clean_p)
+            time.sleep(0.5)
+    else:
+        harvest_bddk(arg)

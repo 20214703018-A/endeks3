@@ -266,10 +266,33 @@ def ingest_izmir_pedestrian_sensors():
     except Exception as e:
         print(f"   ✗ İzmir sayım verisi hatası: {e}")
 
-def query_osm_pedestrian_corridors(city_name="Antalya"):
-    print(f"🚶 [OSM YAYA KORİDORLARI] {city_name} ticari yaya aksları ve kordonları çekiliyor...")
+OVERPASS_MIRRORS = [
+    "https://lz4.overpass-api.de/api/interpreter",
+    "https://z.overpass-api.de/api/interpreter",
+    "https://overpass-api.de/api/interpreter"
+]
+
+BUYUKSEHIRLER_30 = [
+    "İstanbul", "Ankara", "İzmir", "Bursa", "Antalya",
+    "Adana", "Konya", "Gaziantep", "Şanlıurfa", "Kocaeli",
+    "Mersin", "Diyarbakır", "Hatay", "Manisa", "Kayseri",
+    "Samsun", "Balıkesir", "Kahramanmaraş", "Van", "Aydın",
+    "Denizli", "Sakarya", "Tekirdağ", "Muğla", "Eskişehir",
+    "Mardin", "Malatya", "Trabzon", "Erzurum", "Ordu"
+]
+
+def query_osm_pedestrian_corridors(city_name, force=False):
+    conn = sqlite3.connect(DB_PATH)
+    cur = conn.cursor()
+    cnt_existing = cur.execute(f"SELECT COUNT(*) FROM yayalastirilmis_ticari_yollar WHERE il='{city_name}'").fetchone()[0]
+    conn.close()
+    if cnt_existing > 100 and not force:
+        print(f"🚶 [OSM YAYA KORİDORLARI] {city_name} zaten ambarda mevcut ({cnt_existing:,} kayıt), atlanıyor.", flush=True)
+        return cnt_existing
+
+    print(f"🚶 [OSM YAYA KORİDORLARI] {city_name} ticari yaya aksları ve kordonları çekiliyor...", flush=True)
     query = f"""
-    [out:json][timeout:35];
+    [out:json][timeout:25];
     area["name"="{city_name}"]->.searchArea;
     (
       way["highway"="pedestrian"](area.searchArea);
@@ -278,54 +301,58 @@ def query_osm_pedestrian_corridors(city_name="Antalya"):
     );
     out center tags;
     """
-    url = "https://overpass-api.de/api/interpreter"
     data = f"data={urllib.parse.quote(query)}".encode("utf-8")
-    req = urllib.request.Request(url, data=data, headers={"User-Agent": "GEOPROP-PedestrianEngine/1.0"})
     now_iso = datetime.datetime.now().isoformat()
     
-    try:
-        with urllib.request.urlopen(req, timeout=40) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            elements = data.get("elements", [])
-            
-        conn = sqlite3.connect(DB_PATH)
-        cur = conn.cursor()
-        
-        rows = []
-        for el in elements:
-            tags = el.get("tags", {})
-            name = tags.get("name")
-            if not name:
-                continue
-            hw = tags.get("highway", "pedestrian")
-            center = el.get("center", {})
-            lat = center.get("lat")
-            lon = center.get("lon")
-            if not lat or not lon:
-                continue
+    for mirror_url in OVERPASS_MIRRORS:
+        try:
+            req = urllib.request.Request(mirror_url, data=data, headers={"User-Agent": "GEOPROP-PedestrianEngine/1.0"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                res_data = json.loads(resp.read().decode("utf-8"))
+                elements = res_data.get("elements", [])
                 
-            durum = "YAYALAŞTIRILMIŞ" if hw in ("pedestrian", "footway") else "YAYA ÖNCELİKLİ (LIVING STREET)"
-            yol_turu = "Cadde" if "caddesi" in name.lower() or "cd" in name.lower() else ("Sokak" if "sokak" in name.lower() or "sk" in name.lower() else "Gezinti Yolu / Kordon")
-            geom_json = json.dumps({"type": "Point", "coordinates": [lon, lat]}, ensure_ascii=False)
+            conn = sqlite3.connect(DB_PATH)
+            cur = conn.cursor()
             
-            rows.append((
-                city_name, None, name, durum, yol_turu, None,
-                geom_json, lat, lon, "OpenStreetMap Overpass", now_iso
-            ))
+            rows = []
+            for el in elements:
+                tags = el.get("tags", {})
+                name = tags.get("name")
+                if not name:
+                    continue
+                hw = tags.get("highway", "pedestrian")
+                center = el.get("center", {})
+                lat = center.get("lat")
+                lon = center.get("lon")
+                if not lat or not lon:
+                    continue
+                    
+                durum = "YAYALAŞTIRILMIŞ" if hw in ("pedestrian", "footway") else "YAYA ÖNCELİKLİ (LIVING STREET)"
+                yol_turu = "Cadde" if "caddesi" in name.lower() or "cd" in name.lower() else ("Sokak" if "sokak" in name.lower() or "sk" in name.lower() else "Gezinti Yolu / Kordon")
+                geom_json = json.dumps({"type": "Point", "coordinates": [lon, lat]}, ensure_ascii=False)
+                
+                rows.append((
+                    city_name, None, name, durum, yol_turu, None,
+                    geom_json, lat, lon, "OpenStreetMap Overpass", now_iso
+                ))
+                
+            cur.executemany("""
+            INSERT INTO yayalastirilmis_ticari_yollar (
+                il, ilce, yol_adi, durum, yol_turu, uzunluk_metre, geometri_geojson,
+                lat, lon, kaynak, guncellenme_tarihi
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, rows)
             
-        cur.executemany("""
-        INSERT INTO yayalastirilmis_ticari_yollar (
-            il, ilce, yol_adi, durum, yol_turu, uzunluk_metre, geometri_geojson,
-            lat, lon, kaynak, guncellenme_tarihi
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, rows)
-        
-        conn.commit()
-        cnt = cur.execute(f"SELECT COUNT(*) FROM yayalastirilmis_ticari_yollar WHERE il='{city_name}'").fetchone()[0]
-        print(f"   ✓ {city_name} OSM ticari yaya yolları ambarlandı: {cnt:,} cadde/aks.")
-        conn.close()
-    except Exception as e:
-        print(f"   ✗ {city_name} Overpass hatası: {e}")
+            conn.commit()
+            cnt = cur.execute(f"SELECT COUNT(*) FROM yayalastirilmis_ticari_yollar WHERE il='{city_name}'").fetchone()[0]
+            print(f"   ✓ {city_name} OSM ticari yaya yolları ambarlandı: {cnt:,} cadde/aks.", flush=True)
+            conn.close()
+            return cnt
+        except Exception as e:
+            time.sleep(1.5)
+            continue
+    print(f"   ✗ {city_name} Overpass tüm aynalarda zaman aşımına uğradı.", flush=True)
+    return 0
 
 def ingest_ibb_rail_passengers_2024(sample_limit=20000):
     print("🚶 [METRO & İSTASYON TAHLİYE] İBB 2024 istasyon yaya tahliye hacimleri indiriliyor...")
@@ -407,13 +434,14 @@ def ingest_ibb_rail_passengers_2024(sample_limit=20000):
     except Exception as e:
         print(f"   ✗ İBB raylı sistem tahliye hatası: {e}")
 
-def run_all():
+def run_all(cities=BUYUKSEHIRLER_30):
     init_db(DB_PATH)
     ingest_ibb_pedestrian_geojson()
     ingest_izmir_pedestrian_sensors()
-    for city in ["Antalya", "İzmir", "Bursa", "Muğla"]:
+    print(f"\n🚶 30 Büyükşehir için yaya aksları ve kordon madenciliği başlatılıyor...")
+    for city in cities:
         query_osm_pedestrian_corridors(city)
-        time.sleep(1.0)
+        time.sleep(1.2)
     ingest_ibb_rail_passengers_2024(sample_limit=25000)
     
     conn = sqlite3.connect(DB_PATH)

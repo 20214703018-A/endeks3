@@ -279,110 +279,255 @@ def save_venue(conn, venue):
     conn.commit()
     return True
 
+BATI_DB = os.path.join(BASE_DIR, "warehouse/product/bati_ticari_istihbarat.sqlite")
+
+COMMERCIAL_CORRIDORS_81_PROVINCES = [
+    # 01 Adana
+    "Ziyapaşa Bulvarı Seyhan Adana", "M1 Adana AVM Seyhan Adana", "Optimum AVM Yüreğir Adana",
+    # 02 Adıyaman
+    "Gölbaşı Caddesi Merkez Adıyaman", "Sümer Meydanı Merkez Adıyaman",
+    # 03 Afyonkarahisar
+    "Afium Outlet AVM Merkez Afyonkarahisar", "Park Afyon AVM Merkez Afyonkarahisar", "Ambaryolu Caddesi Merkez Afyonkarahisar",
+    # 04 Ağrı
+    "Cumhuriyet Caddesi Merkez Ağrı", "Kağızman Caddesi Merkez Ağrı",
+    # 05 Amasya
+    "Mustafa Kemal Paşa Caddesi Merkez Amasya", "Amasya Park AVM Merkez Amasya",
+    # 06 Ankara
+    "Tunalı Hilmi Caddesi Çankaya Ankara", "Kızılay Yüksel Caddesi Çankaya Ankara", "Bahçelievler 7. Cadde Çankaya Ankara",
+    "Armada AVM Çankaya Ankara", "Panora AVM Çankaya Ankara", "Ankamall AVM Yenimahalle Ankara", "Çukurambar Muhsin Yazıcıoğlu Caddesi Çankaya Ankara",
+    # 07 Antalya
+    "TerraCity AVM Muratpaşa Antalya", "MarkAntalya AVM Muratpaşa Antalya", "5M Migros AVM Konyaaltı Antalya",
+    "Mall of Antalya Kepez Antalya", "Lara Caddesi Muratpaşa Antalya", "Konyaaltı Sahil Yaşam Parkı Antalya",
+    "Kaleiçi Çarşı Muratpaşa Antalya", "Kültür Kafe Caddesi Kepez Antalya", "Alanyum AVM Alanya Antalya", "The Land of Legends Serik Antalya",
+    # 08 Artvin
+    "İnönü Caddesi Merkez Artvin", "Hopa Sahil Caddesi Hopa Artvin",
+    # 09 Aydın
+    "Forum Aydın AVM Efeler Aydın", "Starbucks Kuşadası Marina Aydın", "Kuşadası Barlar Sokağı Aydın", "Didim Altınkum Sahil Aydın",
+    # 10 Balıkesir
+    "10 Burda AVM Altıeylül Balıkesir", "Milli Kuvvetler Caddesi Karesi Balıkesir", "Ayvalık Cunda Sahil Balıkesir", "Bandırma Liman AVM Balıkesir",
+    # 11 Bilecik
+    "Tevfikbey Caddesi Merkez Bilecik", "Bozüyük Sarar Outlet Bozüyük Bilecik",
+    # 12 Bingöl
+    "Genç Caddesi Merkez Bingöl", "Kalium AVM Merkez Bingöl",
+    # 13 Bitlis
+    "Tatvan Yaşam AVM Tatvan Bitlis", "Cumhuriyet Caddesi Merkez Bitlis",
+    # 14 Bolu
+    "14 Burda AVM Merkez Bolu", "Highway Outlet AVM Bolu", "İzzet Baysal Caddesi Merkez Bolu",
+    # 15 Burdur
+    "Gazi Caddesi Merkez Burdur", "Cumhuriyet Meydanı Merkez Burdur",
+    # 16 Bursa
+    "Sur Yapı Marka AVM Nilüfer Bursa", "Korupark AVM Osmangazi Bursa", "Zafer Plaza AVM Osmangazi Bursa",
+    "Downtown AVM Osmangazi Bursa", "Fatih Sultan Mehmet Bulvarı Nilüfer Bursa", "Özlüce Ahmet Taner Kışlalı Bulvarı Nilüfer Bursa", "Görükle Yerleşim Çarşı Nilüfer Bursa",
+    # 17 Çanakkale
+    "17 Burda AVM Merkez Çanakkale", "Kordon Boyu Çanakkale", "Saat Kulesi Meydanı Merkez Çanakkale",
+    # 18 Çankırı
+    "Yunus AVM Merkez Çankırı", "Atatürk Bulvarı Merkez Çankırı",
+    # 19 Çorum
+    "AHL Park AVM Merkez Çorum", "Gazi Caddesi Merkez Çorum",
+    # 20 Denizli
+    "Forum Çamlık AVM Pamukkale Denizli", "Sümerpark AVM Merkezefendi Denizli", "Çamlık Caddesi Pamukkale Denizli",
+    # 21 Diyarbakır
+    "Ceylan Karavil Park AVM Kayapınar Diyarbakır", "Forum Diyarbakır Yenişehir Diyarbakır", "Ofis Sanat Sokağı Yenişehir Diyarbakır", "Sur İçi Gazi Caddesi Sur Diyarbakır",
+    # 22 Edirne
+    "Erasta AVM Merkez Edirne", "Margi Outlet AVM Merkez Edirne", "Saraçlar Caddesi Merkez Edirne",
+    # 23 Elazığ
+    "Elysium AVM Merkez Elazığ", "Park Yirmiüç AVM Merkez Elazığ", "Gazi Caddesi Merkez Elazığ",
+    # 24 Erzincan
+    "Ermerkez AVM Merkez Erzincan", "Ordu Caddesi Merkez Erzincan",
+    # 25 Erzurum
+    "MNG AVM Yakutiye Erzurum", "Forum Erzurum Palandöken Erzurum", "Cumhuriyet Caddesi Yakutiye Erzurum",
+    # 26 Eskişehir
+    "Espark AVM Tepebaşı Eskişehir", "Vega Outlet Tepebaşı Eskişehir", "Doktorlar Caddesi Tepebaşı Eskişehir", "Adalar Porsuk Çayı Çevresi Odunpazarı Eskişehir",
+    # 27 Gaziantep
+    "Sanko Park AVM Şehitkamil Gaziantep", "Forum Gaziantep Şehitkamil Gaziantep", "Primemall AVM Şehitkamil Gaziantep", "Gazi Muhtar Paşa Bulvarı Şehitkamil Gaziantep",
+    # 28 Giresun
+    "G-City AVM Merkez Giresun", "Gazi Caddesi Merkez Giresun",
+    # 29 Gümüşhane
+    "Atatürk Caddesi Merkez Gümüşhane", "Zafer Meydanı Merkez Gümüşhane",
+    # 30 Hakkari
+    "Cumhuriyet Caddesi Merkez Hakkari", "Yüksekova Cengiz Topel Caddesi Hakkari",
+    # 31 Hatay
+    "Palladium AVM Defne Hatay", "Prime Mall İskenderun Hatay", "İskenderun Sahil Kordonu Hatay",
+    # 32 Isparta
+    "Iyaşpark AVM Merkez Isparta", "Meydan AVM Merkez Isparta", "Mimar Sinan Caddesi Merkez Isparta",
+    # 33 Mersin
+    "Forum Mersin AVM Yenişehir Mersin", "Sayapark AVM Yenişehir Mersin", "Mersin Marina Akdeniz Mersin", "Kushimoto Sokağı Yenişehir Mersin", "Tarsu AVM Tarsus Mersin",
+    # 34 İstanbul
+    "Zorlu Center Beşiktaş İstanbul", "İstinyePark AVM Sarıyer İstanbul", "Cevahir AVM Şişli İstanbul",
+    "Kanyon AVM Levent Beşiktaş İstanbul", "Vadistanbul AVM Sarıyer İstanbul", "Mall of İstanbul Başakşehir İstanbul",
+    "Akasya AVM Üsküdar İstanbul", "Emaar Square AVM Üsküdar İstanbul", "Metropol İstanbul Ataşehir",
+    "Viaport Asia Pendik İstanbul", "Bağdat Caddesi Kadıköy İstanbul", "Moda Sahil Kadıköy İstanbul",
+    "İstiklal Caddesi Beyoğlu İstanbul", "Abdi İpekçi Caddesi Nişantaşı Şişli İstanbul", "Bebek Sahil Beşiktaş İstanbul",
+    # 35 İzmir
+    "İstinyePark İzmir Balçova İzmir", "Hilltown AVM Karşıyaka İzmir", "Mavibahçe AVM Karşıyaka İzmir",
+    "Forum Bornova AVM İzmir", "Optimum AVM Gaziemir İzmir", "Kordon Boyu Alsancak Konak İzmir",
+    "Kıbrıs Şehitleri Caddesi Konak İzmir", "Bostanlı Balıkçılar Meydanı Karşıyaka İzmir", "Tarihi Kemeraltı Çarşısı Konak İzmir",
+    "Alaçatı Çarşı Çeşme İzmir", "Urla Sanat Sokağı Urla İzmir",
+    # 36 Kars
+    "Kazım Karabekir Paşa Caddesi Merkez Kars", "Faikbey Caddesi Merkez Kars",
+    # 37 Kastamonu
+    "Kastamall AVM Merkez Kastamonu", "Nasrullah Meydanı Merkez Kastamonu",
+    # 38 Kayseri
+    "Forum Kayseri Melikgazi Kayseri", "Kayseri Park AVM Melikgazi Kayseri", "Sivas Caddesi Kocasinan Kayseri", "Talas Meydan Kafe Koridoru Kayseri",
+    # 39 Kırklareli
+    "39 Burda AVM Lüleburgaz Kırklareli", "İstasyon Caddesi Lüleburgaz Kırklareli", "Cumhuriyet Caddesi Merkez Kırklareli",
+    # 40 Kırşehir
+    "Cacabey Meydanı Merkez Kırşehir", "Terme Caddesi Merkez Kırşehir",
+    # 41 Kocaeli
+    "Symbol AVM İzmit Kocaeli", "41 Burda AVM İzmit Kocaeli", "Gebze Center AVM Gebze Kocaeli", "Outlet Center İzmit Kocaeli", "Fethiye Caddesi İzmit Kocaeli",
+    # 42 Konya
+    "Kentplaza AVM Selçuklu Konya", "M1 Konya AVM Selçuklu Konya", "KuleSite AVM Selçuklu Konya", "Zafer Meydanı Yaya Caddesi Meram Konya", "Bosna Hersek Kafe Caddesi Selçuklu Konya",
+    # 43 Kütahya
+    "Sera Kütahya AVM Merkez Kütahya", "Sevgi Yolu Caddesi Merkez Kütahya",
+    # 44 Malatya
+    "MalatyaPark AVM Yeşilyurt Malatya", "İnönü Caddesi Battalgazi Malatya", "Kanalboyu Caddesi Yeşilyurt Malatya",
+    # 45 Manisa
+    "Magnesia AVM Şehzadeler Manisa", "45 Park AVM Yunusemre Manisa", "Mustafa Kemal Paşa Caddesi Şehzadeler Manisa",
+    # 46 Kahramanmaraş
+    "Piazza AVM Onikişubat Kahramanmaraş", "Trabzon Bulvarı Dulkadiroğlu Kahramanmaraş",
+    # 47 Mardin
+    "Mardian Mall AVM Artuklu Mardin", "1. Cadde Tarihi Mardin Çarşısı Artuklu Mardin", "Yenişehir Barış Caddesi Artuklu Mardin",
+    # 48 Muğla
+    "Yalıkavak Marina Bodrum Muğla", "Midpoint Bodrum Marina Muğla", "Bodrum Barlar Sokağı Muğla",
+    "Göcek Marina Fethiye Muğla", "Fethiye Paspatur Çarşısı Fethiye Muğla", "Marmaris Marina Muğla", "Rüya Park AVM Menteşe Muğla",
+    # 49 Muş
+    "İstasyon Caddesi Merkez Muş", "Cumhuriyet Caddesi Merkez Muş",
+    # 50 Nevşehir
+    "Forum Kapadokya AVM Merkez Nevşehir", "Göreme Çarşı Nevşehir", "Ürgüp Çarşı Nevşehir",
+    # 51 Niğde
+    "Niğde Park AVM Merkez Niğde", "Bor Caddesi Merkez Niğde",
+    # 52 Ordu
+    "Novada AVM Altınordu Ordu", "Süleyman Felek Caddesi Altınordu Ordu", "Teleferik Meydanı Altınordu Ordu",
+    # 53 Rize
+    "Şimal AVM Merkez Rize", "Atatürk Caddesi Merkez Rize",
+    # 54 Sakarya
+    "Agora AVM Serdivan Sakarya", "Serdivan AVM Serdivan Sakarya", "Cadde 54 Serdivan Sakarya", "Çark Caddesi Adapazarı Sakarya",
+    # 55 Samsun
+    "Piazza AVM Canik Samsun", "Samsun CityMall AVM Atakum Samsun", "Çiftlik Caddesi İlkadım Samsun", "Atakum Sahil Şeridi Atakum Samsun",
+    # 56 Siirt
+    "Güres Caddesi Merkez Siirt", "Andera Park AVM Merkez Siirt",
+    # 57 Sinop
+    "Sakarya Caddesi Merkez Sinop", "Sinop Liman Kordonu Merkez Sinop",
+    # 58 Sivas
+    "Primemall AVM Merkez Sivas", "İstasyon Caddesi Merkez Sivas", "Atatürk Caddesi Merkez Sivas",
+    # 59 Tekirdağ
+    "Tekira AVM Süleymanpaşa Tekirdağ", "Orion AVM Çorlu Tekirdağ", "Trend Arena AVM Çorlu Tekirdağ", "Hükümet Caddesi Süleymanpaşa Tekirdağ",
+    # 60 Tokat
+    "Novada AVM Merkez Tokat", "Gaziosmanpaşa Bulvarı Merkez Tokat",
+    # 61 Trabzon
+    "Forum Trabzon Ortahisar Trabzon", "Varlıbaş AVM Ortahisar Trabzon", "Uzun Sokak Ortahisar Trabzon", "Kunduracılar Caddesi Ortahisar Trabzon",
+    # 62 Tunceli
+    "Sanat Sokağı Moğultay Merkez Tunceli", "Cumhuriyet Caddesi Merkez Tunceli",
+    # 63 Şanlıurfa
+    "Piazza AVM Eyyübiye Şanlıurfa", "Urfa City AVM Haliliye Şanlıurfa", "Balıklıgöl Çarşısı Eyyübiye Şanlıurfa", "Sarayönü Caddesi Haliliye Şanlıurfa",
+    # 64 Uşak
+    "Festiva AVM Merkez Uşak", "İsmetpaşa Caddesi Merkez Uşak",
+    # 65 Van
+    "Van AVM İpekyolu Van", "Cumhuriyet Caddesi İpekyolu Van", "Maraş Caddesi İpekyolu Van",
+    # 66 Yozgat
+    "Novada AVM Merkez Yozgat", "Lise Caddesi Merkez Yozgat",
+    # 67 Zonguldak
+    "DemirPark AVM Merkez Zonguldak", "WestaLife AVM Merkez Zonguldak", "Gazipaşa Caddesi Merkez Zonguldak",
+    # 68 Aksaray
+    "Nora City AVM Merkez Aksaray", "Ebulfeyz Elçibey Caddesi Merkez Aksaray",
+    # 69 Bayburt
+    "Cumhuriyet Caddesi Merkez Bayburt", "Saat Kulesi Meydanı Merkez Bayburt",
+    # 70 Karaman
+    "Park Karaman AVM Merkez Karaman", "İsmet Paşa Caddesi Merkez Karaman",
+    # 71 Kırıkkale
+    "Podium AVM Yahşihan Kırıkkale", "Zafer Caddesi Merkez Kırıkkale",
+    # 72 Batman
+    "Batman Park AVM Merkez Batman", "Turgut Özal Bulvarı Merkez Batman",
+    # 73 Şırnak
+    "Cizre Park AVM Cizre Şırnak", "Sanat Sokağı Cizre Şırnak",
+    # 74 Bartın
+    "Hükümet Caddesi Merkez Bartın", "Amasra Çarşı Bartın",
+    # 75 Ardahan
+    "Kongre Caddesi Merkez Ardahan", "Kura Nehri Sahil Parkı Ardahan",
+    # 76 Iğdır
+    "Vali Yolu Caddesi Merkez Iğdır", "Cumhuriyet Caddesi Merkez Iğdır",
+    # 77 Yalova
+    "Özdilek AVM Çiftlikköy Yalova", "Star AVM Merkez Yalova", "Gazipaşa Sahil Caddesi Merkez Yalova",
+    # 78 Karabük
+    "Kares AVM Safranbolu Karabük", "Safranbolu Tarihi Çarşı Karabük",
+    # 79 Kilis
+    "Cumhuriyet Caddesi Merkez Kilis", "Nemika Caddesi Merkez Kilis",
+    # 80 Osmaniye
+    "Park 328 AVM Merkez Osmaniye", "Atatürk Caddesi Merkez Osmaniye",
+    # 81 Düzce
+    "Krempark AVM Merkez Düzce", "İstanbul Caddesi Merkez Düzce"
+]
+
 def get_commercial_corridors_by_shard(shard_id, total_shards=40):
-    """40 Shard için dengeli ticari sorgu havuzu oluşturur."""
-    all_corridors = [
-        # İstanbul - Anadolu
-        "Starbucks Moda Kadıköy İstanbul", "Espressolab Moda Kadıköy İstanbul", "Midpoint Caddebostan Kadıköy İstanbul",
-        "Big Chefs Moda Teras Kadıköy İstanbul", "Happy Moon's Fenerbahçe Kadıköy İstanbul", "Cookshop Bağdat Caddesi Kadıköy İstanbul",
-        "Günaydın Kebap Suadiye Kadıköy İstanbul", "Divan Brasserie Kalamış Kadıköy İstanbul", "Akasya AVM Üsküdar İstanbul",
-        "Emaar Square AVM Üsküdar İstanbul", "Mado Üsküdar Sahil İstanbul", "Starbucks Ataşehir Metropol İstanbul",
-        "Watergarden Ataşehir İstanbul", "Brandium AVM Ataşehir İstanbul", "Piazza AVM Maltepe İstanbul",
-        "Hilltown AVM Maltepe İstanbul", "Viaport Asia Pendik İstanbul", "Pendik Marina Çarşı İstanbul",
-        # İstanbul - Avrupa
-        "Zorlu Center Beşiktaş İstanbul", "Kanyon AVM Levent Beşiktaş İstanbul", "İstinyePark AVM Sarıyer İstanbul",
-        "Vadistanbul AVM Sarıyer İstanbul", "Cevahir AVM Şişli İstanbul", "Lucca Bebek Beşiktaş İstanbul",
-        "Mangerie Bebek Beşiktaş İstanbul", "Bebek Kahve Beşiktaş İstanbul", "Emirgan Sütiş Sarıyer İstanbul",
-        "House Cafe Ortaköy Beşiktaş İstanbul", "Midyeci Ahmet Beşiktaş Çarşı İstanbul", "Nusr-Et Steakhouse Etiler Beşiktaş İstanbul",
-        "Cookshop Nişantaşı Şişli İstanbul", "House Cafe Nişantaşı Şişli İstanbul", "Midpoint Beyoğlu İstiklal İstanbul",
-        "Hafız Mustafa Sirkeci Fatih İstanbul", "Pandeli Restoran Mısır Çarşısı Fatih İstanbul", "Karaköy Güllüoğlu Beyoğlu İstanbul",
-        "Mall of İstanbul Başakşehir İstanbul", "Marmara Forum Bakırköy İstanbul", "Capacity AVM Bakırköy İstanbul",
-        "Ataköy Marina Bakırköy İstanbul", "Aqua Florya AVM Bakırköy İstanbul", "Torium AVM Esenyurt İstanbul",
-        # İzmir
-        "Midpoint Alsancak Konak İzmir", "Mado Kordon Alsancak Konak İzmir", "Sevinç Pastanesi Alsancak Konak İzmir",
-        "Reyhan Pastanesi Alsancak Konak İzmir", "Kıbrıs Şehitleri Caddesi Konak İzmir", "İstinyePark İzmir Balçova İzmir",
-        "Hilltown AVM Karşıyaka İzmir", "Mavibahçe AVM Karşıyaka İzmir", "Optimum AVM Gaziemir İzmir",
-        "Bostanlı Balıkçılar Meydanı Karşıyaka İzmir", "Agora AVM Balçova İzmir", "Forum Bornova AVM İzmir",
-        "Kordon Boyu Konak İzmir", "Tarihi Kemeraltı Çarşısı Konak İzmir", "Alaçatı Çarşı Çeşme İzmir",
-        "Starbucks Alaçatı Çeşme İzmir", "Urla Sanat Sokağı İzmir", "Urla İskele Balıkçılar İzmir",
-        # Bursa
-        "Zafer Plaza AVM Osmangazi Bursa", "Korupark AVM Osmangazi Bursa", "Sur Yapı Marka AVM Nilüfer Bursa",
-        "Anatolium AVM Osmangazi Bursa", "Downtown AVM Osmangazi Bursa", "Fatih Sultan Mehmet Bulvarı Nilüfer Bursa",
-        "Özlüce Ahmet Taner Kışlalı Bulvarı Nilüfer Bursa", "Kebapçı İskender Osmangazi Bursa", "Tarihi Uludağ Kebapçısı Osmangazi Bursa",
-        # Antalya
-        "TerraCity AVM Muratpaşa Antalya", "Mall of Antalya Kepez Antalya", "MarkAntalya AVM Muratpaşa Antalya",
-        "5M Migros AVM Konyaaltı Antalya", "Agora AVM Kepez Antalya", "Lara Caddesi Muratpaşa Antalya",
-        "Konyaaltı Sahil Yaşam Parkı Antalya", "Kaleiçi Çarşı Muratpaşa Antalya", "7 Mehmet Muratpaşa Antalya",
-        "The Land of Legends Serik Antalya", "Alanyum AVM Alanya Antalya", "Side Antik Kenti Manavgat Antalya",
-        # Muğla & Aydın
-        "Midpoint Bodrum Marina Muğla", "Marina Yacht Club Bodrum Muğla", "Yalıkavak Marina Bodrum Muğla",
-        "Bodrum Barlar Sokağı Muğla", "Gümüşlük Sahil Balıkçıları Bodrum Muğla", "Göcek Marina Fethiye Muğla",
-        "Fethiye Paspatur Çarşısı Muğla", "Marmaris Marina Muğla", "Akyaka Azmak Nehri Ula Muğla",
-        "Starbucks Kuşadası Marina Aydın", "Kuşadası Barlar Sokağı Aydın", "Didim Altınkum Sahil Aydın",
-        # Kocaeli & Balıkesir & Tekirdağ
-        "Symbol AVM İzmit Kocaeli", "41 Burda AVM İzmit Kocaeli", "Outlet Center İzmit Kocaeli",
-        "Gebze Center AVM Kocaeli", "10 Burda AVM Altıeylül Balıkesir", "Ayvalık Cunda Sahil Balıkesir",
-        "Ayvalık Taksiyarhis Kilisesi Çevresi Balıkesir", "Tekira AVM Süleymanpaşa Tekirdağ",
-        # Antalya Genişletilmiş Çıpa Koridorlar
-        "Kültür Mahallesi Kafe Caddesi Kepez Antalya", "Şarampol Caddesi Yaya Yolu Muratpaşa Antalya",
-        "Işıklar Caddesi Muratpaşa Antalya", "Güllük Caddesi Muratpaşa Antalya",
-        "Akdeniz Üniversitesi Kampüs Çarşı Kepez Antalya", "Lara Balıkevi Muratpaşa Antalya",
-        "Big Chefs Lara Muratpaşa Antalya", "Shakespeare Coffee Bistro Konyaaltı Antalya",
-        # İzmir Genişletilmiş Çıpa Koridorlar
-        "Bornova Küçükpark Meydanı İzmir", "Gül Sokak Alsancak Konak İzmir",
-        "Bostanlı Cemal Gürsel Caddesi Karşıyaka İzmir", "Bayraklı Manavkuyu Kafe Koridoru İzmir",
-        "Karşıyaka Çarşı Yaya Yolu İzmir", "Asansör Restoran Konak İzmir",
-        # Bursa Genişletilmiş Çıpa Koridorlar
-        "Görükle Yerleşim Çarşı Nilüfer Bursa", "Heykel Atatürk Caddesi Osmangazi Bursa",
-        "Altıparmak Caddesi Osmangazi Bursa", "Starbucks FSM Bulvarı Nilüfer Bursa",
-        # Ankara Çıpa Koridorlar
-        "Tunalı Hilmi Caddesi Çankaya Ankara", "Kızılay Yüksel Caddesi Çankaya Ankara",
-        "Bahçelievler 7. Cadde Çankaya Ankara", "Çukurambar Muhsin Yazıcıoğlu Caddesi Çankaya Ankara",
-        "Armada AVM Çankaya Ankara", "Panora AVM Çankaya Ankara", "Ankamall AVM Yenimahalle Ankara",
-        # İstanbul Ekstra Çıpa Koridorlar
-        "Abdi İpekçi Caddesi Nişantaşı Şişli İstanbul", "Kadıköy Boğa Meydanı İstanbul",
-        "Karaköy Kemankeş Caddesi Beyoğlu İstanbul", "Sirkeci Hocapaşa Lezzet Sokağı Fatih İstanbul",
-        "Beşiktaş Köyiçi Çarşı İstanbul", "Bağdat Caddesi Şaşkınbakkal Kadıköy İstanbul"
-    ]
-    # Shard'a göre dilimle
+    """40 Shard için dengeli 81 il ticari sorgu havuzu oluşturur."""
+    all_corridors = COMMERCIAL_CORRIDORS_81_PROVINCES
     step = max(1, len(all_corridors) // total_shards)
     start = (shard_id - 1) * step
     end = start + step if shard_id < total_shards else len(all_corridors)
     return all_corridors[start:end]
 
+def sync_to_bati_warehouse(venue):
+    if not os.path.exists(BATI_DB) or not venue:
+        return
+    try:
+        conn = sqlite3.connect(BATI_DB)
+        cur = conn.cursor()
+        cur.execute("""
+        INSERT OR REPLACE INTO google_places_ticari_yogunluk (
+            google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
+            puan, yorum_sayisi, tam_adres, mahalle, ilce, il,
+            lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            venue["google_place_id"], venue["cid"], venue["isim"], venue["arama_terimi"],
+            venue["ana_kategori"], venue["tum_kategoriler"], venue["puan"], venue["yorum_sayisi"],
+            venue["tam_adres"], venue["mahalle"], venue["ilce"], venue["il"],
+            venue["lat"], venue["lon"], venue["telefon"], venue["calisma_saatleri"],
+            venue["maps_url"], venue["kaynak"], venue["guncellenme_tarihi"]
+        ))
+        conn.commit()
+        conn.close()
+    except Exception:
+        pass
+
 def main():
-    parser = argparse.ArgumentParser(description="GEOPROP Google Places & Ticari Yoğunluk Toplayıcı (40 Shard)")
+    parser = argparse.ArgumentParser(description="GEOPROP Google Places & Ticari Yoğunluk Toplayıcı (81 İl & 40 Shard)")
     parser.add_argument("--shard", type=str, help="Shard numarası (örn: 1/40)")
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite veritabanı")
     parser.add_argument("--limit", type=int, default=50, help="Maksimum sorgu")
+    parser.add_argument("--all", action="store_true", help="Tüm 81 il sorgularını tek seferde çalıştır")
     args = parser.parse_args()
 
     init_db(args.out)
 
-    if args.shard:
+    if args.all:
+        queries = COMMERCIAL_CORRIDORS_81_PROVINCES
+        print(f"81 İl Tam Kapsama Modu: {len(queries)} ticari koridor ve AVM işleniyor...")
+    elif args.shard:
         shard_id, total = map(int, args.shard.split("/"))
         queries = get_commercial_corridors_by_shard(shard_id, total)
         print(f"Shard {shard_id}/{total}: {len(queries)} ticari koridor sorgusu işleniyor...")
     else:
-        queries = get_commercial_corridors_by_shard(1, 1)[:args.limit]
+        queries = COMMERCIAL_CORRIDORS_81_PROVINCES[:args.limit]
         print(f"Varsayılan mod: {len(queries)} sorgu işleniyor...")
 
     conn = sqlite3.connect(args.out)
     success = 0
     for idx, q in enumerate(queries):
-        print(f"[{idx+1}/{len(queries)}] Sorgu: '{q}'...")
+        print(f"[{idx+1}/{len(queries)}] Sorgu: '{q}'...", flush=True)
         res = fetch_google_place(q)
         if res:
             save_venue(conn, res)
+            sync_to_bati_warehouse(res)
             success += 1
-            print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | Puan: {res['puan']} | Yorum: {res['yorum_sayisi']} | ({res['lat']}, {res['lon']})")
+            print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | Puan: {res['puan']} | Yorum: {res['yorum_sayisi']} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
         else:
-            print(f"  -> Sonuç alınamadı: {q}")
-        time.sleep(random.uniform(0.6, 1.4))
+            print(f"  -> Sonuç alınamadı: {q}", flush=True)
+        time.sleep(random.uniform(0.5, 1.0))
 
     conn.close()
-    print(f"\nİşlem tamamlandı. Toplam {len(queries)} sorgudan {success} mekan ambarlandı.")
-    print(f"Çıktı DB: {args.out}")
+    print(f"\nİşlem tamamlandı. Toplam {len(queries)} sorgudan {success} mekan ambarlandı.", flush=True)
+    print(f"Çıktı DB: {args.out}", flush=True)
 
 if __name__ == "__main__":
     main()
