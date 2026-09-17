@@ -239,7 +239,9 @@ def init_db(db_path):
         mekan_id TEXT PRIMARY KEY,
         google_place_id TEXT,
         mekan_adi TEXT NOT NULL,
+        sektor TEXT,
         ana_kategori TEXT,
+        alt_kategoriler TEXT,
         mutfaklar TEXT,
         fiyat_segmenti TEXT,
         tam_adres TEXT NOT NULL,
@@ -276,7 +278,7 @@ def init_db(db_path):
     )
     """)
     for col_def in [
-        ("google_place_id", "TEXT"), ("mutfaklar", "TEXT"), ("fiyat_segmenti", "TEXT"),
+        ("google_place_id", "TEXT"), ("sektor", "TEXT"), ("alt_kategoriler", "TEXT"), ("mutfaklar", "TEXT"), ("fiyat_segmenti", "TEXT"),
         ("telefon", "TEXT"), ("calisma_saatleri", "TEXT"), ("web_sitesi", "TEXT"), ("qr_menu_url", "TEXT"),
         ("yildiz_dagilimi", "TEXT"), ("min_sepet_tutari", "REAL"), ("teslimat_ucreti", "REAL"),
         ("teslimat_suresi", "TEXT"), ("odeme_yontemleri", "TEXT"), ("kampanyalar", "TEXT")
@@ -288,6 +290,8 @@ def init_db(db_path):
 
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_konum ON isletme_tarihsel_yasam_dongusu(il, ilce)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_durum ON isletme_tarihsel_yasam_dongusu(durum)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_sektor ON isletme_tarihsel_yasam_dongusu(sektor)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_kategori ON isletme_tarihsel_yasam_dongusu(ana_kategori)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_trend ON isletme_tarihsel_yasam_dongusu(musteri_trendi)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_puan ON isletme_tarihsel_yasam_dongusu(puan, degerlendirme_sayisi)")
 
@@ -298,7 +302,9 @@ def init_db(db_path):
         cid TEXT,
         isim TEXT NOT NULL,
         arama_terimi TEXT,
+        sektor TEXT,
         ana_kategori TEXT,
+        alt_kategoriler TEXT,
         tum_kategoriler TEXT,
         puan REAL,
         yorum_sayisi INTEGER,
@@ -318,7 +324,7 @@ def init_db(db_path):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
-    for col_def in [("degerlendirme_sayisi", "INTEGER"), ("yildiz_dagilimi", "TEXT"), ("web_sitesi", "TEXT")]:
+    for col_def in [("sektor", "TEXT"), ("alt_kategoriler", "TEXT"), ("degerlendirme_sayisi", "INTEGER"), ("yildiz_dagilimi", "TEXT"), ("web_sitesi", "TEXT")]:
         try:
             cur.execute(f"ALTER TABLE google_places_ticari_yogunluk ADD COLUMN {col_def[0]} {col_def[1]}")
         except Exception:
@@ -498,6 +504,270 @@ def extract_external_website(v14):
     find_urls(v14)
     return found_urls[0] if found_urls else None
 
+def parse_weekly_working_hours(v14):
+    if not v14:
+        return None
+    day_order = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"]
+    schedule = {}
+
+    def extract_hour_string(item):
+        if isinstance(item, str):
+            s = item.strip()
+            if re.search(r"\d{1,2}[:.]\d{2}", s) or "kapalı" in s.lower() or "24 saat" in s.lower():
+                return s
+        elif isinstance(item, list):
+            for sub in item:
+                res = extract_hour_string(sub)
+                if res:
+                    return res
+        return None
+
+    # Google Maps v14 içindeki potansiyel haftalık çalışma bloklarını tara
+    candidate_lists = []
+    if len(v14) > 203 and v14[203] and isinstance(v14[203], list) and len(v14[203]) > 0:
+        candidate_lists.append(v14[203][0])
+    if len(v14) > 34 and v14[34] and isinstance(v14[34], list):
+        candidate_lists.append(v14[34])
+
+    for it in v14:
+        if isinstance(it, list) and len(it) >= 7:
+            candidate_lists.append(it)
+
+    for cand in candidate_lists:
+        if isinstance(cand, list):
+            for d in cand:
+                if isinstance(d, list) and len(d) > 0 and isinstance(d[0], str):
+                    day_name = d[0].strip()
+                    days_by_len = sorted(day_order, key=len, reverse=True)
+                    for standard_d in days_by_len:
+                        if standard_d.lower() in day_name.lower():
+                            matched_day = standard_d
+                            break
+                    if matched_day:
+                        hours = extract_hour_string(d[1:])
+                        if not hours and len(d) > 4 and d[4] == 1:
+                            hours = "Kapalı"
+                        if hours:
+                            schedule[matched_day] = hours
+
+    if not schedule:
+        return None
+
+    # Pazartesi'den Pazar'a kadar 7 günü eksiksiz ve sıralı olarak garanti et
+    ordered_schedule = {}
+    for d in day_order:
+        ordered_schedule[d] = schedule.get(d, "Kapalı")
+
+    return json.dumps(ordered_schedule, ensure_ascii=False)
+
+def classify_commercial_venue(name, raw_categories=None, query=""):
+    """
+    Kapsamlı Sektörel ve Ticari Taksonomi Sınıflandırıcısı
+    Her sektör için detaylı ana kategori ve alt kategoriler üretir.
+    Dönen değer: (sektor, ana_kategori, alt_kategoriler_json)
+    """
+    cats_list = []
+    if raw_categories:
+        if isinstance(raw_categories, list):
+            cats_list = [c.strip() for c in raw_categories if c and isinstance(c, str)]
+        elif isinstance(raw_categories, str):
+            try:
+                j = json.loads(raw_categories)
+                if isinstance(j, list):
+                    cats_list = [c.strip() for c in j if c and isinstance(c, str)]
+                else:
+                    cats_list = [raw_categories.strip()]
+            except Exception:
+                cats_list = [raw_categories.strip()]
+
+    text = f"{name or ''} {' '.join(cats_list)} {query or ''}".lower()
+
+    # 1. Yeme-İçme & Gastronomi
+    if any(k in text for k in ["kebap", "ocakbaşı", "ciğer"]):
+        return "Yeme-İçme & Gastronomi", "Kebapçı & Ocakbaşı", json.dumps(["Kebap", "Dürüm", "Ocakbaşı", "Izgara", "Türk Mutfağı"], ensure_ascii=False)
+    if any(k in text for k in ["döner", "dönerci", "yaprak döner"]):
+        return "Yeme-İçme & Gastronomi", "Dönerci", json.dumps(["Et Döner", "Tavuk Döner", "İskender", "Dürüm"], ensure_ascii=False)
+    if any(k in text for k in ["pide", "lahmacun", "taş fırın"]):
+        return "Yeme-İçme & Gastronomi", "Pide & Lahmacun Salonu", json.dumps(["Kıymalı Pide", "Kaşarlı Pide", "Lahmacun", "Fırın"], ensure_ascii=False)
+    if any(k in text for k in ["çiğ köfte", "cigkofte"]):
+        return "Yeme-İçme & Gastronomi", "Çiğ Köfteci", json.dumps(["Etsiz Çiğ Köfte", "Dürüm", "Meze"], ensure_ascii=False)
+    if any(k in text for k in ["burger", "hamburger", "cheeseburger"]):
+        return "Yeme-İçme & Gastronomi", "Hamburgerci & Fast Food", json.dumps(["Burger", "Smash Burger", "Patates Kızartması", "Fast Food"], ensure_ascii=False)
+    if any(k in text for k in ["pizza", "pizzacı"]):
+        return "Yeme-İçme & Gastronomi", "Pizzacı", json.dumps(["İtalyan Pizza", "Dilim Pizza", "Makarna"], ensure_ascii=False)
+    if any(k in text for k in ["kokoreç", "midye", "sakatat", "işkembe"]):
+        return "Yeme-İçme & Gastronomi", "Kokoreççi & Sakatatçı", json.dumps(["Kokoreç", "Midye Tava", "İşkembe Çorbası", "Sokak Lezzeti"], ensure_ascii=False)
+    if any(k in text for k in ["tost", "sandviç", "kumru", "büfe"]):
+        return "Yeme-İçme & Gastronomi", "Tostçu & Büfe", json.dumps(["Tost", "Sandviç", "Kumru", "Büfe İçecek"], ensure_ascii=False)
+    if any(k in text for k in ["kahve", "coffee", "roastery", "starbucks", "espresso"]):
+        return "Yeme-İçme & Gastronomi", "Kahve Dükkanı (3. Nesil / Roastery)", json.dumps(["Filtre Kahve", "Espresso", "Cold Brew", "Roastery", "Tatlı"], ensure_ascii=False)
+    if any(k in text for k in ["kafe", "cafe", "çay bahçesi", "kıraathane", "çay ocağı"]):
+        return "Yeme-İçme & Gastronomi", "Kafe & Çay Ocağı", json.dumps(["Sıcak İçecek", "Çay", "Kahvaltı", "Atıştırmalık"], ensure_ascii=False)
+    if any(k in text for k in ["tatlı", "baklava", "künefe", "kadayıf"]):
+        return "Yeme-İçme & Gastronomi", "Tatlıcı & Baklavacı", json.dumps(["Gaziantep Baklavası", "Künefe", "Şerbetli Tatlılar"], ensure_ascii=False)
+    if any(k in text for k in ["pastane", "fırın", "unlu mamul", "börek", "simit"]):
+        return "Yeme-İçme & Gastronomi", "Pastane & Fırın & Börekçi", json.dumps(["Pasta", "Börek", "Simit", "Ekmek", "Kuru Pasta"], ensure_ascii=False)
+    if any(k in text for k in ["waffle", "dondurma", "krep"]):
+        return "Yeme-İçme & Gastronomi", "Waffle & Dondurmacı", json.dumps(["Waffle", "Maraş Dondurması", "Gelato", "Krep"], ensure_ascii=False)
+    if any(k in text for k in ["balık", "balıkçı", "deniz ürünü", "karides", "kalamar"]):
+        return "Yeme-İçme & Gastronomi", "Balık & Deniz Ürünleri Restoranı", json.dumps(["Mevsim Balıkları", "Deniz Mahsulleri", "Kalamar", "Meze"], ensure_ascii=False)
+    if any(k in text for k in ["meyhane", "rakı", "pub", "bar", "bira", "bistro", "şarap"]):
+        return "Yeme-İçme & Gastronomi", "Meyhane, Pub & Bar", json.dumps(["Soğuk Mezeler", "Fıçı Bira", "Şarap", "Canlı Müzik"], ensure_ascii=False)
+    if any(k in text for k in ["ev yemeği", "suluyemek", "lokanta", "tabldot"]):
+        return "Yeme-İçme & Gastronomi", "Geleneksel Ev Yemekleri & Lokanta", json.dumps(["Zeytinyağlılar", "Etli Yemekler", "Pilav", "Günün Menüsü"], ensure_ascii=False)
+    if any(k in text for k in ["çorba", "çorbacı"]):
+        return "Yeme-İçme & Gastronomi", "Çorbacı", json.dumps(["Mercimek", "Kelle Paça", "İşkembe", "Beyran"], ensure_ascii=False)
+    if any(k in text for k in ["steak", "steakhouse", "kasap ızgara", "antrikot"]):
+        return "Yeme-İçme & Gastronomi", "Steakhouse & Et Restoranı", json.dumps(["Dry Aged", "Antrikot", "T-Bone", "Burger"], ensure_ascii=False)
+    if any(k in text for k in ["sushi", "çin", "hint", "thai", "asya", "noodle"]):
+        return "Yeme-İçme & Gastronomi", "Uzakdoğu & Asya Mutfağı", json.dumps(["Sushi", "Noodle", "Çin Yemeği", "Ramen"], ensure_ascii=False)
+
+    # 2. Moda, Giyim & Ayakkabı
+    if any(k in text for k in ["spor giyim", "sportswear", "sneaker", "nike", "adidas", "puma", "decathlon", "under armour"]):
+        return "Moda & Giyim", "Spor Giyim & Sneaker Mağazası", json.dumps(["Spor Ayakkabı", "Eşofman", "Sneaker", "Outdoor"], ensure_ascii=False)
+    if any(k in text for k in ["lüks giyim", "couture", "vakko", "beymen", "gucci", "prada", "armani"]):
+        return "Moda & Giyim", "Lüks Giyim & Haute Couture", json.dumps(["Tasarım Kıyafet", "Lüks Çanta", "Takım Elbise", "Abiye"], ensure_ascii=False)
+    if any(k in text for k in ["ayakkabı", "kundura", "çizme", "bot", "terlik"]):
+        return "Moda & Giyim", "Ayakkabı Mağazası", json.dumps(["Deri Ayakkabı", "Klasik Ayakkabı", "Bot", "Topuklu Ayakkabı"], ensure_ascii=False)
+    if any(k in text for k in ["deri", "kürk", "derimod", "desa"]):
+        return "Moda & Giyim", "Deri & Saraciye", json.dumps(["Deri Ceket", "Deri Çanta", "Cüzdan", "Kemer"], ensure_ascii=False)
+    if any(k in text for k in ["gelinlik", "damatlık", "abiye", "nişanlık"]):
+        return "Moda & Giyim", "Gelinlik & Abiye Mağazası", json.dumps(["Gelinlik", "Damatlık", "Abiye Elbise", "Özel Dikim"], ensure_ascii=False)
+    if any(k in text for k in ["iç giyim", "çorap", "pijama", "fantazi giyim", "dagi", "penti"]):
+        return "Moda & Giyim", "İç Giyim & Çorap Mağazası", json.dumps(["İç Çamaşırı", "Pijama", "Çorap", "Mayo"], ensure_ascii=False)
+    if any(k in text for k in ["çanta", "bavul", "valiz", "samsonite"]):
+        return "Moda & Giyim", "Çanta & Bavul Mağazası", json.dumps(["Sırt Çantası", "Seyahat Valizi", "El Çantası"], ensure_ascii=False)
+    if any(k in text for k in ["giyim", "butik", "moda", "tekstil", "elbise", "kıyafet", "pantolon", "kaban"]):
+        return "Moda & Giyim", "Giyim & Moda Butiği", json.dumps(["Kadın Giyim", "Erkek Giyim", "Günlük Giyim", "Aksesuar"], ensure_ascii=False)
+
+    # 3. Kuyum, Mücevher & Aksesuar
+    if any(k in text for k in ["kuyumcu", "sarraf", "altın", "bilezik", "çeyrek"]):
+        return "Mücevherat & Aksesuar", "Kuyumcu & Sarraf", json.dumps(["Cumhuriyet Altını", "Bilezik", "Yatırımlık Altın", "Kolye"], ensure_ascii=False)
+    if any(k in text for k in ["pırlanta", "mücevher", "elmas", "zen pırlanta", "atasay", "altınbaş"]):
+        return "Mücevherat & Aksesuar", "Mücevherat & Pırlanta", json.dumps(["Tektaş Pırlanta", "Elmas", "Alyans", "Gerdanlık"], ensure_ascii=False)
+    if any(k in text for k in ["saat", "saatçi", "konyalı saat", "saat tamiri"]):
+        return "Mücevherat & Aksesuar", "Saat Satış & Servis", json.dumps(["Kol Saati", "Mekanik Saat", "Akıllı Saat", "Pil & Kordon"], ensure_ascii=False)
+    if any(k in text for k in ["optik", "gözlük", "atasun", "kontakt lens"]):
+        return "Sağlık & Medikal", "Optik & Gözlükçü Mağazası", json.dumps(["Güneş Gözlüğü", "Numaralı Gözlük", "Kontakt Lens"], ensure_ascii=False)
+    if any(k in text for k in ["bijuteri", "takı", "aksesuar", "küpe", "yüzük"]):
+        return "Mücevherat & Aksesuar", "Bijuteri & Takı Aksesuar", json.dumps(["Gümüş Takı", "Çelik Kolye", "Bijuteri", "Toka"], ensure_ascii=False)
+
+    # 4. Elektronik, Bilişim & İletişim
+    if any(k in text for k in ["telefon", "gsm", "vodafone", "turkcell", "türk telekom", "iphone", "ekran tamiri"]):
+        return "Elektronik & Bilişim", "Cep Telefonu & GSM Servisi", json.dumps(["Telefon Satış", "Ekran Değişimi", "Aksesuar", "Kılıf", "Hat İşlemleri"], ensure_ascii=False)
+    if any(k in text for k in ["bilgisayar", "laptop", "bilişim", "pc tamiri", "yazılım"]):
+        return "Elektronik & Bilişim", "Bilgisayar Satış & Teknik Servis", json.dumps(["Dizüstü Bilgisayar", "Format & Bakım", "Donanım Parçaları", "Yedek Parça"], ensure_ascii=False)
+    if any(k in text for k in ["beyaz eşya", "arçelik", "beko", "bosch", "vestel", "siemens"]):
+        return "Elektronik & Bilişim", "Beyaz Eşya & Küçük Ev Aletleri", json.dumps(["Buzdolabı", "Çamaşır Makinesi", "Bulaşık Makinesi", "Klima"], ensure_ascii=False)
+    if any(k in text for k in ["elektronik", "teknoloji", "mediamarkt", "teknosa", "vatan"]):
+        return "Elektronik & Bilişim", "Tüketici Elektroniği Mağazası", json.dumps(["Televizyon", "Ses Sistemleri", "Oyun Konsolu", "Küçük Ev Aletleri"], ensure_ascii=False)
+
+    # 5. Sağlık, Medikal & Kişisel Bakım
+    if any(k in text for k in ["eczane", "pharmacy"]):
+        return "Sağlık & Medikal", "Eczane", json.dumps(["Reçeteli İlaç", "Dermokozmetik", "Vitamin & Takviye", "Medikal Malzeme"], ensure_ascii=False)
+    if any(k in text for k in ["medikal", "tıbbi cihaz", "ortopedi", "hasta bezi"]):
+        return "Sağlık & Medikal", "Medikal & Tıbbi Cihaz Mağazası", json.dumps(["Ortopedik Ürünler", "Tekerlekli Sandalye", "Tansiyon Aleti"], ensure_ascii=False)
+    if any(k in text for k in ["diş", "dent", "diş hekimi", "ortodonti", "implant"]):
+        return "Sağlık & Medikal", "Diş Kliniği & Ağız Sağlığı", json.dumps(["İmplant", "Zirkonyum", "Diş Beyazlatma", "Kanal Tedavisi"], ensure_ascii=False)
+    if any(k in text for k in ["kuaför", "bayan kuaförü", "saç tasarım", "fön", "boya"]):
+        return "Kişisel Bakım & Güzellik", "Bayan Kuaförü & Saç Tasarım", json.dumps(["Saç Kesimi", "Boya & Röfle", "Fön", "Keratin Bakım"], ensure_ascii=False)
+    if any(k in text for k in ["berber", "erkek kuaförü", "sakal traşı", "barber"]):
+        return "Kişisel Bakım & Güzellik", "Erkek Berberi & Bakım", json.dumps(["Saç Kesimi", "Sakal Tıraşı", "Cilt Bakımı", "Ağda"], ensure_ascii=False)
+    if any(k in text for k in ["güzellik", "lazer", "epilasyon", "cilt bakımı", "estetik"]):
+        return "Kişisel Bakım & Güzellik", "Güzellik Merkezi & Lazer Epilasyon", json.dumps(["Buz Lazer", "Hydrafacial", "Bölgesel İncelme", "Kalıcı Makyaj"], ensure_ascii=False)
+    if any(k in text for k in ["tırnak", "nail", "protez tırnak", "ipek kirpik", "microblading"]):
+        return "Kişisel Bakım & Güzellik", "Tırnak & Kaş Stüdyosu", json.dumps(["Protez Tırnak", "Kalıcı Oje", "Manikür", "İpek Kirpik"], ensure_ascii=False)
+    if any(k in text for k in ["spa", "masaj", "hamam", "sauna"]):
+        return "Kişisel Bakım & Güzellik", "Masaj & Spa & Hamam", json.dumps(["Medikal Masaj", "Aromaterapi", "Türk Hamamı", "Kese Köpük"], ensure_ascii=False)
+    if any(k in text for k in ["dövme", "tattoo", "piercing"]):
+        return "Kişisel Bakım & Güzellik", "Dövme & Piercing Stüdyosu", json.dumps(["Kişiye Özel Dövme", "Cover-Up", "Titanyum Piercing"], ensure_ascii=False)
+
+    # 6. Zanaat, Tesisat, Hırdavat & Yapı
+    if any(k in text for k in ["elektrik", "elektrikçi", "aydınlatma", "avize"]):
+        return "Yapı, Zanaat & Tesisat", "Elektrikçi & Aydınlatma Hizmetleri", json.dumps(["Elektrik Arıza", "Tesisat Yenileme", "LED Aydınlatma", "Avize Montajı"], ensure_ascii=False)
+    if any(k in text for k in ["tesisat", "tesisatçı", "su tesisatı", "doğalgaz", "kombi"]):
+        return "Yapı, Zanaat & Tesisat", "Sıhhi Tesisat & Doğalgaz Servisi", json.dumps(["Su Kaçağı Tespiti", "Tıkanıklık Açma", "Kombi Bakımı", "Petek Temizliği"], ensure_ascii=False)
+    if any(k in text for k in ["çilingir", "anahtar", "oto anahtar"]):
+        return "Yapı, Zanaat & Tesisat", "Çilingir & Anahtarcı", json.dumps(["Kapı Açma", "Kilit Değişimi", "İmmobilizer Oto Anahtar", "Kasa Açma"], ensure_ascii=False)
+    if any(k in text for k in ["hırdavat", "nalbur", "civata", "vida", "alet"]):
+        return "Yapı, Zanaat & Tesisat", "Hırdavat & Nalburiye", json.dumps(["El Aletleri", "Elektrikli Aletler", "Boya Malzemeleri", "Tesisat Ekipmanları"], ensure_ascii=False)
+    if any(k in text for k in ["boya", "badana", "jotun", "filli boya", "marshall"]):
+        return "Yapı, Zanaat & Tesisat", "Boya & İzolasyon Malzemeleri", json.dumps(["İç Cephe Boyası", "Dış Cephe Boyası", "Vernik", "Yalıtım"], ensure_ascii=False)
+    if any(k in text for k in ["cam", "camcı", "ayna", "çerçeve", "pimapen"]):
+        return "Yapı, Zanaat & Tesisat", "Camcı & Çerçeve & Doğrama", json.dumps(["Isıcam", "Dekoratif Ayna", "Resim Çerçevesi", "Pvc Doğrama"], ensure_ascii=False)
+    if any(k in text for k in ["terzi", "kuru temizleme", "lostra", "ütü"]):
+        return "Hizmet & Zanaat", "Terzi & Kuru Temizleme & Lostra", json.dumps(["Paça Boyu", "Tadilât", "Takım Elbise Temizleme", "Ayakkabı Bakımı"], ensure_ascii=False)
+    if any(k in text for k in ["mobilya", "koltuk", "yatak", "baza", "istikbal", "bellona", "kelebek"]):
+        return "Ev Yaşam & Mobilya", "Mobilya & Dekorasyon Mağazası", json.dumps(["Koltuk Takımı", "Yatak Odası", "Yemek Odası", "Masa Sandalye"], ensure_ascii=False)
+    if any(k in text for k in ["halı", "kilim", "perde", "tül", "döşeme"]):
+        return "Ev Yaşam & Mobilya", "Halı, Perde & Mefruşat", json.dumps(["Özel Ölçü Perde", "Salon Halısı", "Stor Perde", "Döşemelik Kumaş"], ensure_ascii=False)
+    if any(k in text for k in ["züccaciye", "mutfak eşyası", "karaca", "paşabahçe", "porselen"]):
+        return "Ev Yaşam & Mobilya", "Züccaciye & Mutfak Eşyası", json.dumps(["Yemek Takımı", "Tencere Seti", "Cam Eşya", "Çatal Kaşık"], ensure_ascii=False)
+
+    # 7. Gıda & Market & Yerel Şarküteri
+    if any(k in text for k in ["süpermarket", "hipermarket", "migros", "carrefour"]):
+        return "Gıda & Perakende", "Süpermarket & Hipermarket", json.dumps(["Temel Gıda", "Temizlik Ürünleri", "Manav", "Kişisel Bakım"], ensure_ascii=False)
+    if any(k in text for k in ["bakkal", "market", "tekel", "büfe"]):
+        return "Gıda & Perakende", "Mahalle Bakkalı & Tekel Bayi", json.dumps(["Gazete", "Ekmek", "Atıştırmalık", "Meşrubat", "Tütün & İçecek"], ensure_ascii=False)
+    if any(k in text for k in ["şarküteri", "peynir", "zeytin", "gurme market"]):
+        return "Gıda & Perakende", "Gurme Şarküteri & Peynirci", json.dumps(["Yöresel Peynirler", "Zeytin Çeşitleri", "Sucuk & Pastırma", "Doğal Bal"], ensure_ascii=False)
+    if any(k in text for k in ["kasap", "et galerisi", "tavuk", "köfte"]):
+        return "Gıda & Perakende", "Kasap & Et Galerisi", json.dumps(["Dana Kıyma", "Kuzu Pirzola", "Kuşbaşı", "Tavuk Ürünleri"], ensure_ascii=False)
+    if any(k in text for k in ["manav", "sebze", "meyve", "organik pazar"]):
+        return "Gıda & Perakende", "Manav & Organik Meyve-Sebze", json.dumps(["Taze Meyve", "Yeşillik", "Sebze", "Köy Ürünleri"], ensure_ascii=False)
+    if any(k in text for k in ["aktar", "baharat", "şifalı bitki", "bitkisel yağ"]):
+        return "Gıda & Perakende", "Aktar & Baharatçı", json.dumps(["Doğal Baharatlar", "Bitki Çayları", "Doğal Yağlar", "Kuru Meyve"], ensure_ascii=False)
+    if any(k in text for k in ["kuruyemiş", "fındık", "fıstık", "leblebi", "çekirdek"]):
+        return "Gıda & Perakende", "Kuruyemişçi", json.dumps(["Kavrulmuş Kuruyemiş", "Antep Fıstığı", "Fındık", "Kuru Üzüm"], ensure_ascii=False)
+
+    # 8. Otomotiv & Taşımacılık
+    if any(k in text for k in ["oto tamir", "oto servis", "oto mekanik", "periyodik bakım"]):
+        return "Otomotiv & Servis", "Oto Tamir & Mekanik Servisi", json.dumps(["Motor Mekanik", "Fren Bakımı", "Yağ Değişimi", "Şanzıman Tamiri"], ensure_ascii=False)
+    if any(k in text for k in ["oto lastik", "lastikçi", "rot balans", "michelin", "bridgestone", "lassa"]):
+        return "Otomotiv & Servis", "Oto Lastik & Jant Servisi", json.dumps(["Kış Lastiği", "Yaz Lastiği", "Rot Balans", "Lastik Tamiri"], ensure_ascii=False)
+    if any(k in text for k in ["oto yıkama", "detailing", "pasta cila", "seramik kaplama"]):
+        return "Otomotiv & Servis", "Oto Yıkama & Detailing Merkezi", json.dumps(["İç-Dış Yıkama", "Boya Koruma", "Pasta Cila", "Koltuk Yıkama"], ensure_ascii=False)
+    if any(k in text for k in ["oto yedek parça", "yedek parça", "oto aksesuar"]):
+        return "Otomotiv & Servis", "Oto Yedek Parça & Aksesuar", json.dumps(["Fren Balatası", "Filtre Grubu", "Aydınlatma Parçaları", "Paspas & Kılıf"], ensure_ascii=False)
+    if any(k in text for k in ["rent a car", "araç kiralama", "oto kiralama"]):
+        return "Otomotiv & Servis", "Araç Kiralama (Rent a Car)", json.dumps(["Günlük Kiralama", "Filo Kiralama", "Havalimanı Transfer"], ensure_ascii=False)
+    if any(k in text for k in ["petrol", "benzin", "akaryakıt", "shell", "bp", "opet", "petrol ofisi"]):
+        return "Otomotiv & Servis", "Akaryakıt İstasyonu", json.dumps(["Benzin", "Motorin", "LPG", "İstasyon Marketi", "Oto Yıkama"], ensure_ascii=False)
+    if any(k in text for k in ["motosiklet", "motorcu", "kask", "scooter"]):
+        return "Otomotiv & Servis", "Motosiklet Satış & Servis", json.dumps(["Motosiklet Ekipmanları", "Kask", "Mont", "Mekanik Servis"], ensure_ascii=False)
+
+    # 9. Spor, Eğlence, Sanat & Hobi
+    if any(k in text for k in ["fitness", "gym", "spor salonu", "vücut geliştirme"]):
+        return "Spor & Hobi", "Fitness & Spor Salonu", json.dumps(["Kardiyo", "Ağırlık", "Kişisel Antrenör", "Grup Dersleri"], ensure_ascii=False)
+    if any(k in text for k in ["pilates", "yoga", "reformer"]):
+        return "Spor & Hobi", "Pilates & Yoga Stüdyosu", json.dumps(["Reformer Pilates", "Mat Pilates", "Hatha Yoga", "Meditasyon"], ensure_ascii=False)
+    if any(k in text for k in ["kitap", "kitabevi", "sahaf", "d&r"]):
+        return "Kültür & Sanat", "Kitabevi & Sahaf", json.dumps(["Edebiyat", "Akademik Kitaplar", "Nadir Eserler", "Çizgi Roman"], ensure_ascii=False)
+    if any(k in text for k in ["kırtasiye", "ofis", "fotokopi", "ozalit"]):
+        return "Kültür & Sanat", "Kırtasiye & Dijital Baskı", json.dumps(["Okul Kırtasiyesi", "Büro Malzemeleri", "Renkli Baskı", "Ciltleme"], ensure_ascii=False)
+    if any(k in text for k in ["çiçek", "çiçekçi", "botanik", "peyzaj"]):
+        return "Ev Yaşam & Doğa", "Çiçekçi & Botanik Atölyesi", json.dumps(["Canlı Çiçek", "Buket", "Saksı Çiçekleri", "Düğün Çelengi"], ensure_ascii=False)
+    if any(k in text for k in ["pet shop", "akvaryum", "kedi köpek maması"]):
+        return "Evcil Hayvan & Veteriner", "Pet Shop & Akvaryum", json.dumps(["Kuru Mama", "Yaş Mama", "Kedi Kumu", "Tasma & Oyuncak"], ensure_ascii=False)
+    if any(k in text for k in ["veteriner", "hayvan hastanesi", "vet"]):
+        return "Evcil Hayvan & Veteriner", "Veteriner Kliniği", json.dumps(["Aşı & Muayene", "Cerrahi Operasyon", "Laboratuvar", "Mikroçip"], ensure_ascii=False)
+
+    # 10. Konaklama, Gayrimenkul & Kurumsal
+    if any(k in text for k in ["otel", "hotel", "resort", "butik otel", "pansiyon"]):
+        return "Konaklama & Turizm", "Otel & Konaklama Tesisi", json.dumps(["Standart Oda", "Süit Oda", "Açık Büfe Kahvaltı", "Spa Hizmeti"], ensure_ascii=False)
+    if any(k in text for k in ["gayrimenkul", "emlak", "realty", "re/max", "turyap"]):
+        return "Gayrimenkul & Danışmanlık", "Gayrimenkul & Emlak Ofisi", json.dumps(["Konut Satış", "Kiralık Daire", "Ticari Gayrimenkul", "Arsa & Arazi"], ensure_ascii=False)
+    if any(k in text for k in ["banka", "atm", "döviz bürosu", "finans"]):
+        return "Finans & Bankacılık", "Banka & Döviz Bürosu", json.dumps(["Bireysel Bankacılık", "Döviz Alım-Satım", "Altın İşlemleri", "Kredi"], ensure_ascii=False)
+    if any(k in text for k in ["sürücü kursu", "ehliyet", "direksiyon"]):
+        return "Eğitim & Kurs", "Sürücü Kursu", json.dumps(["B Sınıfı Ehliyet", "A2 Motosiklet Ehliyeti", "Özel Direksiyon Dersi"], ensure_ascii=False)
+    if any(k in text for k in ["kurs", "etüt", "dil okulu", "anaokulu", "kreş"]):
+        return "Eğitim & Kurs", "Eğitim Kurumu & Kurs", json.dumps(["Yabancı Dil Kursu", "Sınava Hazırlık", "Okul Öncesi Eğitim"], ensure_ascii=False)
+
+    # Fallback / Google Kategorisini Koruma
+    primary_cat = cats_list[0] if cats_list else (raw_categories if isinstance(raw_categories, str) else "Ticari İşletme")
+    return "Ticari İşletme & Perakende", primary_cat, json.dumps(cats_list or [primary_cat], ensure_ascii=False)
+
 def extract_venue_from_v14(v14, search_query):
     if not v14 or len(v14) < 15:
         return None
@@ -512,8 +782,8 @@ def extract_venue_from_v14(v14, search_query):
         return None
 
     cats = v14[13] if len(v14) > 13 and v14[13] else []
-    ana_kategori = cats[0] if cats else None
-    tum_kategoriler = json.dumps(cats, ensure_ascii=False) if cats else None
+    sektor, ana_kategori, alt_kategoriler = classify_commercial_venue(name, cats, search_query)
+    tum_kategoriler = json.dumps(cats, ensure_ascii=False) if cats else alt_kategoriler
 
     rating, degerlendirme_sayisi, yorum_sayisi, yildiz_dagilimi = parse_ratings_and_reviews(v14)
     place_id = v14[78] if len(v14) > 78 and v14[78] else None
@@ -534,9 +804,7 @@ def extract_venue_from_v14(v14, search_query):
     if len(v14) > 178 and v14[178] and len(v14[178]) > 0 and len(v14[178][0]) > 0:
         telefon = v14[178][0][0]
 
-    calisma_saatleri = None
-    if len(v14) > 203 and v14[203] and len(v14[203]) > 0:
-        calisma_saatleri = json.dumps(v14[203][0], ensure_ascii=False)
+    calisma_saatleri = parse_weekly_working_hours(v14)
 
     maps_url = v14[42] if len(v14) > 42 and v14[42] else None
     website = extract_external_website(v14)
@@ -547,7 +815,9 @@ def extract_venue_from_v14(v14, search_query):
         "cid": str(cid) if cid else None,
         "isim": str(name),
         "arama_terimi": search_query,
-        "ana_kategori": str(ana_kategori) if ana_kategori else "Restoran & Kafe",
+        "sektor": sektor,
+        "ana_kategori": str(ana_kategori),
+        "alt_kategoriler": alt_kategoriler,
         "tum_kategoriler": tum_kategoriler,
         "puan": rating,
         "yorum_sayisi": yorum_sayisi,
@@ -794,85 +1064,82 @@ def match_cuisine_category(mutfaklar_str, mekan_adi=""):
         return "Ev Yemekleri"
     return "Genel"
 
-def generate_historical_time_series(urun, venue_data, now_iso):
+def generate_real_menu_rows(menu_items, venue_data, now_iso):
     rows = []
-    base_online_price = float(urun["fiyat"])
-    base_orijinal = float(urun.get("orijinal_fiyat") or base_online_price)
-    base_table_price = float(urun.get("masa_fiyati") or round(base_online_price * 0.82, 1))
-
+    now_date = now_iso[:10]
+    donem = "2026-H2"
     fiyat_seg = venue_data.get("fiyat_segmenti") or "₺₺"
     puan = venue_data.get("puan")
     deg_cnt = venue_data.get("degerlendirme_sayisi")
     rev_cnt = venue_data.get("yorum_sayisi")
 
-    for donem, meta in TUIK_LOKANTA_KATSAYILARI.items():
-        k = meta["katsayi"]
-        tarih = meta["tarih"]
-        
-        # 1. ONLINE SIPARIS (Yemeksepeti / Delivery Hero komisyonlu liste)
-        h_online = round(base_online_price * k, 1)
-        h_orig = round(base_orijinal * k, 1)
-        rows.append((
-            venue_data["mekan_id"],
-            venue_data["mekan_adi"],
-            donem,
-            tarih,
-            "ONLINE_SIPARIS",
-            urun.get("kaynak_platform", "Yemeksepeti Restoran Ekosistemi"),
-            urun["kategori"],
-            urun["urun_adi"],
-            urun.get("aciklama"),
-            h_online,
-            h_orig,
-            "TRY",
-            "Yemeksepeti / Delivery Hero online sipariş liste fiyatı (%15-25 platform komisyonu ve kurye payı dahil)",
-            fiyat_seg,
-            puan,
-            deg_cnt,
-            rev_cnt,
-            urun.get("stokta_var_mi", 1),
-            urun.get("gorsel_url"),
-            venue_data.get("url"),
-            venue_data["tam_adres"],
-            venue_data.get("mahalle"),
-            venue_data["ilce"],
-            venue_data["il"],
-            venue_data["lat"],
-            venue_data["lon"],
-            now_iso
-        ))
+    for urun in menu_items:
+        # 1. ONLINE SIPARIS (Yemeksepeti / Delivery platform canlı liste fiyatı)
+        if urun.get("fiyat"):
+            base_price = float(urun["fiyat"])
+            orig_price = float(urun.get("orijinal_fiyat") or base_price)
+            rows.append((
+                venue_data["mekan_id"],
+                venue_data["mekan_adi"],
+                donem,
+                now_date,
+                "ONLINE_SIPARIS",
+                urun.get("kaynak_platform", "Yemeksepeti Restoran Ekosistemi"),
+                urun.get("kategori", "Menü"),
+                urun["urun_adi"],
+                urun.get("aciklama"),
+                base_price,
+                orig_price,
+                "TRY",
+                "Canlı teslimat platformu liste fiyatı (%15-25 komisyon ve servis dahil)",
+                fiyat_seg,
+                puan,
+                deg_cnt,
+                rev_cnt,
+                urun.get("stokta_var_mi", 1),
+                urun.get("gorsel_url"),
+                venue_data.get("url"),
+                venue_data["tam_adres"],
+                venue_data.get("mahalle"),
+                venue_data["ilce"],
+                venue_data["il"],
+                venue_data["lat"],
+                venue_data["lon"],
+                now_iso
+            ))
 
-        # 2. YERINDE MASA (Dükkan İçi Masa / QR Menü komisyonsuz liste)
-        h_table = round(base_table_price * k, 1)
-        rows.append((
-            venue_data["mekan_id"],
-            venue_data["mekan_adi"],
-            donem,
-            tarih,
-            "YERINDE_MASA",
-            urun.get("masa_platformu", "Dükkan İçi Fiziki / Masa QR Menü"),
-            urun["kategori"],
-            urun["urun_adi"],
-            urun.get("aciklama"),
-            h_table,
-            h_table,
-            "TRY",
-            "Dükkan içi fiziki masa liste fiyatı (komisyonsuz doğrudan işletme satışı)",
-            fiyat_seg,
-            puan,
-            deg_cnt,
-            rev_cnt,
-            urun.get("stokta_var_mi", 1),
-            urun.get("gorsel_url"),
-            venue_data.get("url"),
-            venue_data["tam_adres"],
-            venue_data.get("mahalle"),
-            venue_data["ilce"],
-            venue_data["il"],
-            venue_data["lat"],
-            venue_data["lon"],
-            now_iso
-        ))
+        # 2. YERINDE MASA (Mekanın web sitesi veya QR Menüsünden çekilen masa fiyatı)
+        if urun.get("masa_fiyati"):
+            table_price = float(urun["masa_fiyati"])
+            rows.append((
+                venue_data["mekan_id"],
+                venue_data["mekan_adi"],
+                donem,
+                now_date,
+                "YERINDE_MASA",
+                urun.get("masa_platformu", "İşletme Web Sitesi / QR Menü"),
+                urun.get("kategori", "Menü"),
+                urun["urun_adi"],
+                urun.get("aciklama"),
+                table_price,
+                table_price,
+                "TRY",
+                "Dükkan içi fiziki masa / QR menü liste fiyatı (komisyonsuz doğrudan işletme satışı)",
+                fiyat_seg,
+                puan,
+                deg_cnt,
+                rev_cnt,
+                urun.get("stokta_var_mi", 1),
+                urun.get("gorsel_url"),
+                venue_data.get("qr_menu_url") or venue_data.get("web_sitesi"),
+                venue_data["tam_adres"],
+                venue_data.get("mahalle"),
+                venue_data["ilce"],
+                venue_data["il"],
+                venue_data["lat"],
+                venue_data["lon"],
+                now_iso
+            ))
 
     return rows
 
@@ -898,11 +1165,19 @@ def compute_lifecycle_and_traffic(venue_data, now_iso):
     else:
         trend = "STABIL"
 
+    sektor = venue_data.get("sektor")
+    ana_cat = venue_data.get("ana_kategori")
+    alt_cats = venue_data.get("alt_kategoriler")
+    if not sektor or not ana_cat:
+        sektor, ana_cat, alt_cats = classify_commercial_venue(venue_data.get("mekan_adi"), venue_data.get("mutfaklar"))
+
     return (
         venue_data["mekan_id"],
         venue_data.get("google_place_id"),
         venue_data["mekan_adi"],
-        venue_data.get("ana_kategori", "Restoran & Kafe"),
+        sektor,
+        ana_cat,
+        alt_cats,
         venue_data.get("mutfaklar"),
         venue_data.get("fiyat_segmenti", "₺₺"),
         venue_data["tam_adres"],
@@ -944,8 +1219,35 @@ def process_single_venue(v, out_db, force=False):
     url = v.get("url")
     web_url = v.get("web_sitesi")
 
+    # 1. Google Places Çapraz Eşleştirme (Eksik telefon, 7 günlük çalışma saati ve yıldız dağılımını tamamla)
+    if not v.get("google_place_id") or not v.get("calisma_saatleri"):
+        try:
+            q_str = f"{v['mekan_adi']} {v.get('ilce', '')} {v.get('il', '')}".strip()
+            gp_results = fetch_google_places(q_str)
+            if gp_results:
+                best_gp = gp_results[0]
+                v["google_place_id"] = best_gp["google_place_id"]
+                if not v.get("telefon") and best_gp.get("telefon"):
+                    v["telefon"] = best_gp["telefon"]
+                if not v.get("calisma_saatleri") and best_gp.get("calisma_saatleri"):
+                    v["calisma_saatleri"] = best_gp["calisma_saatleri"]
+                if not web_url and best_gp.get("web_sitesi"):
+                    web_url = best_gp["web_sitesi"]
+                    v["web_sitesi"] = web_url
+                if best_gp.get("yildiz_dagilimi"):
+                    v["yildiz_dagilimi"] = best_gp["yildiz_dagilimi"]
+                if best_gp.get("sektor"):
+                    v["sektor"] = best_gp["sektor"]
+                if best_gp.get("ana_kategori"):
+                    v["ana_kategori"] = best_gp["ana_kategori"]
+                if best_gp.get("alt_kategoriler"):
+                    v["alt_kategoriler"] = best_gp["alt_kategoriler"]
+        except Exception:
+            pass
+
     menu_items = []
 
+    # 2. Yemeksepeti / Canlı Teslimat Menüsü ve Derin Metrikler
     if url and "yemeksepeti.com" in url:
         html = get_html_content(url, timeout=8)
         if html:
@@ -954,6 +1256,7 @@ def process_single_venue(v, out_db, force=False):
             if ys_items:
                 menu_items.extend(ys_items)
 
+    # 3. İşletme Web Sitesi & QR Menü Canlı Masa Fiyatları
     if web_url:
         qr_items = extract_qr_or_website_menu(web_url, timeout=6)
         if qr_items:
@@ -969,48 +1272,27 @@ def process_single_venue(v, out_db, force=False):
                 if not matched:
                     menu_items.append(qi)
 
-    if not menu_items:
-        template_key = match_cuisine_category(v.get("mutfaklar", ""), v.get("mekan_adi", ""))
-        proto_items = MUTFAK_MENU_PROTOTIPLERI.get(template_key, MUTFAK_MENU_PROTOTIPLERI["Genel"])
-        fiyat_seg = v.get("fiyat_segmenti") or "₺₺"
-        multiplier = 0.85 if fiyat_seg == "₺" else (1.35 if fiyat_seg == "₺₺₺" else (1.75 if fiyat_seg == "₺₺₺₺" else 1.0))
-
-        for cat, name, desc, base_pr in proto_items:
-            final_pr = round(base_pr * multiplier, 1)
-            menu_items.append({
-                "kategori": cat,
-                "urun_adi": name,
-                "aciklama": desc,
-                "fiyat": final_pr,
-                "orijinal_fiyat": final_pr,
-                "stokta_var_mi": 1,
-                "gorsel_url": None,
-                "kaynak_platform": f"Sektörel {template_key} Menü Kataloğu"
-            })
-
-    price_rows = []
-    for item in menu_items:
-        p_rows = generate_historical_time_series(item, v, now_iso)
-        price_rows.extend(p_rows)
-
+    # %100 Ham ve Gerçek Menü Kalemleri (Sentetik/mock veri asla eklenmez)
+    price_rows = generate_real_menu_rows(menu_items, v, now_iso)
     lifecycle_row = compute_lifecycle_and_traffic(v, now_iso)
 
     conn = sqlite3.connect(out_db, timeout=20)
     cur = conn.cursor()
     try:
-        cur.executemany("""
-        INSERT OR IGNORE INTO mekan_menu_kalemleri_ve_fiyat_tarihcesi (
-            mekan_id, mekan_adi, donem, tarih, fiyat_turu, platform,
-            kategori, urun_adi, aciklama, fiyat, orijinal_fiyat, para_birimi,
-            komisyon_aciklamasi, fiyat_segmenti, puan, degerlendirme_sayisi, yorum_sayisi,
-            stokta_var_mi, gorsel_url, kaynak_url,
-            tam_adres, mahalle, ilce, il, lat, lon, guncellenme_tarihi
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, price_rows)
+        if price_rows:
+            cur.executemany("""
+            INSERT OR IGNORE INTO mekan_menu_kalemleri_ve_fiyat_tarihcesi (
+                mekan_id, mekan_adi, donem, tarih, fiyat_turu, platform,
+                kategori, urun_adi, aciklama, fiyat, orijinal_fiyat, para_birimi,
+                komisyon_aciklamasi, fiyat_segmenti, puan, degerlendirme_sayisi, yorum_sayisi,
+                stokta_var_mi, gorsel_url, kaynak_url,
+                tam_adres, mahalle, ilce, il, lat, lon, guncellenme_tarihi
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, price_rows)
 
         cur.execute("""
         INSERT OR REPLACE INTO isletme_tarihsel_yasam_dongusu (
-            mekan_id, google_place_id, mekan_adi, ana_kategori, mutfaklar, fiyat_segmenti,
+            mekan_id, google_place_id, mekan_adi, sektor, ana_kategori, alt_kategoriler, mutfaklar, fiyat_segmenti,
             tam_adres, mahalle, ilce, il, lat, lon,
             telefon, calisma_saatleri, web_sitesi, qr_menu_url,
             durum, ilk_tespit_tarihi, son_tespit_tarihi, faaliyet_suresi_ay,
@@ -1018,13 +1300,13 @@ def process_single_venue(v, out_db, force=False):
             min_sepet_tutari, teslimat_ucreti, teslimat_suresi, odeme_yontemleri, kampanyalar,
             yorum_hacmi_2022, yorum_hacmi_2023, yorum_hacmi_2024, yorum_hacmi_2025, yorum_hacmi_2026,
             musteri_trendi, kaynak, guncellenme_tarihi
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, lifecycle_row)
 
         cur.execute("""
         INSERT OR REPLACE INTO menu_tarama_gecmisi (mekan_id, url, durum, kalem_sayisi, tarih)
         VALUES (?, ?, 'BASARILI', ?, ?)
-        """, (mekan_id, url, len(menu_items), now_iso))
+        """, (mekan_id, url or v.get("web_sitesi"), len(menu_items), now_iso))
 
         conn.commit()
     finally:
@@ -1108,12 +1390,13 @@ def run_google_places_discovery(shard_id, num_shards, out_db, limit_queries=None
                 try:
                     cur.execute("""
                     INSERT OR REPLACE INTO google_places_ticari_yogunluk (
-                        google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
+                        google_place_id, cid, isim, arama_terimi, sektor, ana_kategori, alt_kategoriler, tum_kategoriler,
                         puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
                         lat, lon, telefon, calisma_saatleri, maps_url, web_sitesi, kaynak, guncellenme_tarihi
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, (
-                        p["google_place_id"], p["cid"], p["isim"], p["arama_terimi"], p["ana_kategori"], p["tum_kategoriler"],
+                        p["google_place_id"], p["cid"], p["isim"], p["arama_terimi"],
+                        p.get("sektor"), p["ana_kategori"], p.get("alt_kategoriler"), p["tum_kategoriler"],
                         p["puan"], p.get("yorum_sayisi"), p.get("degerlendirme_sayisi"), p.get("yildiz_dagilimi"),
                         p["tam_adres"], p["mahalle"], p["ilce"], p["il"],
                         p["lat"], p["lon"], p["telefon"], p["calisma_saatleri"], p["maps_url"], p.get("web_sitesi"),
@@ -1126,6 +1409,9 @@ def run_google_places_discovery(shard_id, num_shards, out_db, limit_queries=None
                     "mekan_id": f"gp_{p['google_place_id']}",
                     "google_place_id": p["google_place_id"],
                     "mekan_adi": p["isim"],
+                    "sektor": p.get("sektor"),
+                    "ana_kategori": p["ana_kategori"],
+                    "alt_kategoriler": p.get("alt_kategoriler"),
                     "mutfaklar": p["ana_kategori"],
                     "fiyat_segmenti": "₺₺",
                     "puan": p["puan"],
@@ -1142,26 +1428,18 @@ def run_google_places_discovery(shard_id, num_shards, out_db, limit_queries=None
                     "calisma_saatleri": p["calisma_saatleri"],
                     "web_sitesi": p.get("web_sitesi"),
                     "url": None,
-                    "ana_kategori": p["ana_kategori"] or "Restoran & Kafe",
                     "kaynak": "Google Places Canlı Keşif"
                 })
         time.sleep(random.uniform(0.3, 0.6))
 
     conn.commit()
     conn.close()
-    print(f"✨ [Google Places] {len(discovered_venues)} fiziksel mekan tespit edildi ve ambara işlendi.")
+    print(f"✨ [Google Places Keşif] {len(discovered_venues)} fiziksel işletme tespit edildi ve ambara işlendi.")
     return discovered_venues
 
 def load_target_venues(limit=None, shard_id=None, num_shards=None, out_db=None):
-    venues = []
     seen_ids = set()
-
-    if out_db:
-        gp_venues = run_google_places_discovery(shard_id, num_shards, out_db, limit_queries=25 if limit else None)
-        for gv in gp_venues:
-            if gv["mekan_id"] not in seen_ids:
-                seen_ids.add(gv["mekan_id"])
-                venues.append(gv)
+    base_venues = []
 
     known_cache = {}
     index_gz = os.path.join(os.path.dirname(__file__), "restoran_hedef_indeksi.json.gz")
@@ -1210,15 +1488,19 @@ def load_target_venues(limit=None, shard_id=None, num_shards=None, out_db=None):
                 full_addr = f"{clean_name}, Türkiye"
                 puan = 4.1
                 deg_cnt = 0
-                cuiz = "Restoran & Kafe"
+                cuiz = None
                 price_seg = "₺₺"
                 lat = 41.0082
                 lon = 28.9784
                 name = clean_name
 
-            venues.append({
+            sektor, ana_cat, alt_cats = classify_commercial_venue(name, cuiz)
+            base_venues.append({
                 "mekan_id": m_id,
                 "mekan_adi": name,
+                "sektor": sektor,
+                "ana_kategori": ana_cat,
+                "alt_kategoriler": alt_cats,
                 "mutfaklar": cuiz,
                 "fiyat_segmenti": price_seg,
                 "puan": puan,
@@ -1230,8 +1512,7 @@ def load_target_venues(limit=None, shard_id=None, num_shards=None, out_db=None):
                 "tam_adres": full_addr,
                 "lat": lat,
                 "lon": lon,
-                "url": u,
-                "ana_kategori": "Restoran"
+                "url": u
             })
     else:
         for item in known_cache.values():
@@ -1245,10 +1526,15 @@ def load_target_venues(limit=None, shard_id=None, num_shards=None, out_db=None):
             if m_id in seen_ids:
                 continue
             seen_ids.add(m_id)
-            venues.append({
+            cuiz = item.get("m")
+            sektor, ana_cat, alt_cats = classify_commercial_venue(name, cuiz)
+            base_venues.append({
                 "mekan_id": m_id,
                 "mekan_adi": name,
-                "mutfaklar": item.get("m"),
+                "sektor": sektor,
+                "ana_kategori": ana_cat,
+                "alt_kategoriler": alt_cats,
+                "mutfaklar": cuiz,
                 "fiyat_segmenti": item.get("f") or "₺₺",
                 "puan": item.get("p") or 4.1,
                 "degerlendirme_sayisi": item.get("d") or 0,
@@ -1259,18 +1545,31 @@ def load_target_venues(limit=None, shard_id=None, num_shards=None, out_db=None):
                 "tam_adres": item.get("a") or f"{item.get('i') or 'Merkez'}, {item.get('s') or ''}",
                 "lat": float(lat),
                 "lon": float(lon),
-                "url": item.get("u"),
-                "ana_kategori": "Restoran"
+                "url": item.get("u")
             })
 
+    # Shard'lama: Taban katalog 40 makinaya paylaştırılır
     if shard_id is not None and num_shards is not None and num_shards > 1:
-        venues.sort(key=lambda x: x["mekan_id"])
-        total_len = len(venues)
+        base_venues.sort(key=lambda x: x["mekan_id"])
+        total_len = len(base_venues)
         chunk_size = (total_len + num_shards - 1) // num_shards
         start_idx = (shard_id - 1) * chunk_size
         end_idx = min(start_idx + chunk_size, total_len)
-        venues = venues[start_idx:end_idx]
-        print(f"🧩 Shard {shard_id}/{num_shards}: Toplam {total_len} mekandan {len(venues)} tanesi seçildi [{start_idx}:{end_idx}].")
+        venues = base_venues[start_idx:end_idx]
+        print(f"🧩 Shard {shard_id}/{num_shards}: Taban katalogdan {total_len} mekandan {len(venues)} tanesi seçildi [{start_idx}:{end_idx}].")
+    else:
+        venues = base_venues
+
+    # Aktif Saha Keşfi: Bu shard'ın sorumlu olduğu ilçeler ve koridorlar taranır
+    if out_db:
+        gp_venues = run_google_places_discovery(shard_id, num_shards, out_db, limit_queries=25 if limit else None)
+        new_gp_count = 0
+        for gv in gp_venues:
+            if gv["mekan_id"] not in seen_ids:
+                seen_ids.add(gv["mekan_id"])
+                venues.insert(0, gv)
+                new_gp_count += 1
+        print(f"✨ [Aktif Saha Keşfi] {new_gp_count} yeni mekan öncelikli olarak tarama kuyruğuna eklendi.")
 
     if limit and limit > 0:
         venues = venues[:limit]
@@ -1337,14 +1636,14 @@ def main():
                     print(f"[{total_venues_done}/{len(venues)} - %{pct:.1f}] "
                           f"İşlenen Mekan: {total_venues_done} | "
                           f"Menü Kalemi: {total_menu_items} | "
-                          f"Tarihsel Fiyat Noktası: {total_price_points} (Geçen: {int(elapsed)}s)")
+                          f"Canlı Fiyat Noktası: {total_price_points} (Geçen: {int(elapsed)}s)")
             except Exception as e:
                 v = future_map[future]
                 print(f"❌ Hata ({v.get('mekan_adi')}): {e}")
 
     total_time = time.time() - start_time
     print(f"\n🎉 İşlem Tamamlandı! Süre: {total_time:.1f} saniye.")
-    print(f"📊 Özet: {total_venues_done} mekan | {total_menu_items} menü kalemi | {total_price_points} yarıyıllık fiyat noktası.")
+    print(f"📊 Özet: {total_venues_done} mekan | {total_menu_items} menü kalemi | {total_price_points} canlı fiyat kaydı.")
     print(f"💾 Hedef Ambar: {args.out}")
 
 if __name__ == "__main__":

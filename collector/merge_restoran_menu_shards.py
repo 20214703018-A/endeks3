@@ -80,7 +80,9 @@ def init_target_db(db_path):
         mekan_id TEXT PRIMARY KEY,
         google_place_id TEXT,
         mekan_adi TEXT NOT NULL,
+        sektor TEXT,
         ana_kategori TEXT,
+        alt_kategoriler TEXT,
         mutfaklar TEXT,
         fiyat_segmenti TEXT,
         tam_adres TEXT NOT NULL,
@@ -117,7 +119,7 @@ def init_target_db(db_path):
     )
     """)
     for col_def in [
-        ("google_place_id", "TEXT"), ("mutfaklar", "TEXT"), ("fiyat_segmenti", "TEXT"),
+        ("google_place_id", "TEXT"), ("sektor", "TEXT"), ("alt_kategoriler", "TEXT"), ("mutfaklar", "TEXT"), ("fiyat_segmenti", "TEXT"),
         ("telefon", "TEXT"), ("calisma_saatleri", "TEXT"), ("web_sitesi", "TEXT"), ("qr_menu_url", "TEXT"),
         ("yildiz_dagilimi", "TEXT"), ("min_sepet_tutari", "REAL"), ("teslimat_ucreti", "REAL"),
         ("teslimat_suresi", "TEXT"), ("odeme_yontemleri", "TEXT"), ("kampanyalar", "TEXT")
@@ -129,6 +131,8 @@ def init_target_db(db_path):
 
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_konum ON isletme_tarihsel_yasam_dongusu(il, ilce)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_durum ON isletme_tarihsel_yasam_dongusu(durum)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_sektor ON isletme_tarihsel_yasam_dongusu(sektor)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_kategori ON isletme_tarihsel_yasam_dongusu(ana_kategori)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_trend ON isletme_tarihsel_yasam_dongusu(musteri_trendi)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_puan ON isletme_tarihsel_yasam_dongusu(puan, degerlendirme_sayisi)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_gplace ON isletme_tarihsel_yasam_dongusu(google_place_id)")
@@ -141,7 +145,9 @@ def init_target_db(db_path):
         cid TEXT,
         isim TEXT NOT NULL,
         arama_terimi TEXT,
+        sektor TEXT,
         ana_kategori TEXT,
+        alt_kategoriler TEXT,
         tum_kategoriler TEXT,
         puan REAL,
         yorum_sayisi INTEGER,
@@ -161,12 +167,14 @@ def init_target_db(db_path):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
-    for col_def in [("degerlendirme_sayisi", "INTEGER"), ("yildiz_dagilimi", "TEXT"), ("web_sitesi", "TEXT")]:
+    for col_def in [("sektor", "TEXT"), ("alt_kategoriler", "TEXT"), ("degerlendirme_sayisi", "INTEGER"), ("yildiz_dagilimi", "TEXT"), ("web_sitesi", "TEXT")]:
         try:
             cur.execute(f"ALTER TABLE google_places_ticari_yogunluk ADD COLUMN {col_def[0]} {col_def[1]}")
         except Exception:
             pass
 
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_sektor ON google_places_ticari_yogunluk(sektor)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_kategori ON google_places_ticari_yogunluk(ana_kategori)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_ilce ON google_places_ticari_yogunluk(il, ilce)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_coords ON google_places_ticari_yogunluk(lat, lon)")
 
@@ -207,7 +215,9 @@ def init_target_db(db_path):
         y.mekan_id,
         y.google_place_id,
         y.mekan_adi,
+        y.sektor,
         y.ana_kategori,
+        y.alt_kategoriler,
         y.mutfaklar,
         y.fiyat_segmenti,
         y.puan,
@@ -220,6 +230,7 @@ def init_target_db(db_path):
         y.odeme_yontemleri,
         y.kampanyalar,
         y.telefon,
+        y.calisma_saatleri,
         y.web_sitesi,
         y.qr_menu_url,
         y.musteri_trendi,
@@ -297,6 +308,23 @@ def merge_shards(shard_files, target_db):
         try:
             cur.execute(f"ATTACH DATABASE ? AS shard_db", (shard_path,))
 
+            # Shard geriye dönük uyumluluk (eksik kolonları ekle)
+            try:
+                cols_yasam = [r[1] for r in cur.execute("PRAGMA shard_db.table_info(isletme_tarihsel_yasam_dongusu)").fetchall()]
+                for col in ["sektor", "alt_kategoriler"]:
+                    if col not in cols_yasam:
+                        cur.execute(f"ALTER TABLE shard_db.isletme_tarihsel_yasam_dongusu ADD COLUMN {col} TEXT")
+            except Exception:
+                pass
+
+            try:
+                cols_gp = [r[1] for r in cur.execute("PRAGMA shard_db.table_info(google_places_ticari_yogunluk)").fetchall()]
+                for col in ["sektor", "alt_kategoriler", "degerlendirme_sayisi", "yildiz_dagilimi", "web_sitesi"]:
+                    if col not in cols_gp:
+                        cur.execute(f"ALTER TABLE shard_db.google_places_ticari_yogunluk ADD COLUMN {col} TEXT")
+            except Exception:
+                pass
+
             # 1. Menü Kalemleri (Kayıpsız INSERT OR IGNORE)
             cur.execute("""
             INSERT OR IGNORE INTO main.mekan_menu_kalemleri_ve_fiyat_tarihcesi (
@@ -318,7 +346,7 @@ def merge_shards(shard_files, target_db):
             # 2. İşletme Yaşam Döngüsü ve Detaylı İstihbarat (INSERT OR REPLACE)
             cur.execute("""
             INSERT OR REPLACE INTO main.isletme_tarihsel_yasam_dongusu (
-                mekan_id, google_place_id, mekan_adi, ana_kategori, mutfaklar, fiyat_segmenti,
+                mekan_id, google_place_id, mekan_adi, sektor, ana_kategori, alt_kategoriler, mutfaklar, fiyat_segmenti,
                 tam_adres, mahalle, ilce, il, lat, lon,
                 telefon, calisma_saatleri, web_sitesi, qr_menu_url,
                 durum, ilk_tespit_tarihi, son_tespit_tarihi, faaliyet_suresi_ay,
@@ -328,7 +356,7 @@ def merge_shards(shard_files, target_db):
                 musteri_trendi, kaynak, guncellenme_tarihi
             )
             SELECT
-                mekan_id, google_place_id, mekan_adi, ana_kategori, mutfaklar, fiyat_segmenti,
+                mekan_id, google_place_id, mekan_adi, sektor, ana_kategori, alt_kategoriler, mutfaklar, fiyat_segmenti,
                 tam_adres, mahalle, ilce, il, lat, lon,
                 telefon, calisma_saatleri, web_sitesi, qr_menu_url,
                 durum, ilk_tespit_tarihi, son_tespit_tarihi, faaliyet_suresi_ay,
@@ -343,12 +371,12 @@ def merge_shards(shard_files, target_db):
             try:
                 cur.execute("""
                 INSERT OR REPLACE INTO main.google_places_ticari_yogunluk (
-                    google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
+                    google_place_id, cid, isim, arama_terimi, sektor, ana_kategori, alt_kategoriler, tum_kategoriler,
                     puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
                     lat, lon, telefon, calisma_saatleri, maps_url, web_sitesi, kaynak, guncellenme_tarihi
                 )
                 SELECT
-                    google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
+                    google_place_id, cid, isim, arama_terimi, sektor, ana_kategori, alt_kategoriler, tum_kategoriler,
                     puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
                     lat, lon, telefon, calisma_saatleri, maps_url, web_sitesi, kaynak, guncellenme_tarihi
                 FROM shard_db.google_places_ticari_yogunluk
