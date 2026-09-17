@@ -478,13 +478,50 @@ def get_all_commercial_corridor_queries():
             pass
     return queries
 
-def get_commercial_corridors_by_shard(shard_id, total_shards=40):
-    """40 Shard için dengeli 81 il ve tüm ilçeler ticari sorgu havuzu oluşturur."""
+MAHALLE_JSON = os.path.join(BASE_DIR, "collector/mahalle_koordinatlari.json")
+
+def get_mahalle_queries_by_shard(shard_id, total_shards=40, limit=100):
+    """Her shard için Türkiye'nin 32.000+ kentsel mahallesinden dengeli bir dilim seçer."""
+    if not os.path.exists(MAHALLE_JSON):
+        return []
+    try:
+        with open(MAHALLE_JSON, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        # Kentsel / ticari mahalleleri köy ve mezralardan ayır
+        urban_keys = [
+            k for k, v in data.items() 
+            if "Köyü" not in v.get("name", "") and "Mezra" not in v.get("name", "")
+        ]
+        step = max(1, len(urban_keys) // total_shards)
+        start = (shard_id - 1) * step
+        end = start + step if shard_id < total_shards else len(urban_keys)
+        shard_keys = urban_keys[start:end][:limit]
+        
+        queries = []
+        for k in shard_keys:
+            parts = k.split("_")
+            il = parts[0].capitalize()
+            ilce = parts[1].capitalize() if len(parts) > 1 else ""
+            mah = data[k].get("name", "").replace("Mahallesi", "").strip()
+            queries.append(f"{mah} Mahallesi {ilce} {il} dükkanlar")
+            queries.append(f"{mah} Mahallesi {ilce} {il} restoranlar")
+        return queries
+    except Exception:
+        return []
+
+def get_commercial_corridors_by_shard(shard_id, total_shards=40, mahalle_limit=80):
+    """40 Shard için dengeli 81 il, ilçe ve MAHALLE MAHALLE detaylı ticari sorgu havuzu oluşturur."""
     all_corridors = get_all_commercial_corridor_queries()
     step = max(1, len(all_corridors) // total_shards)
     start = (shard_id - 1) * step
     end = start + step if shard_id < total_shards else len(all_corridors)
-    return all_corridors[start:end]
+    corridor_slice = all_corridors[start:end]
+    
+    # Mahalle Mahalle detaylı aramaları ekle
+    mahalle_slice = get_mahalle_queries_by_shard(shard_id, total_shards, limit=mahalle_limit)
+    
+    combined = corridor_slice + mahalle_slice
+    return combined
 
 def sync_to_bati_warehouse(venue):
     if not os.path.exists(BATI_DB) or not venue:
