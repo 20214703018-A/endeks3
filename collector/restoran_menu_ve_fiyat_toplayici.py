@@ -628,8 +628,53 @@ def load_target_venues(limit=None, shard_id=None, num_shards=None):
     venues = []
     seen_ids = set()
 
-    # 1. Yemeksepeti Ambarı (38.663 Restoran)
-    if os.path.exists(YEMEK_DB):
+    # 0. Sıkıştırılmış Restoran Hedef İndeksi (GitHub Actions Runner Emniyeti - 38.663 Restoran)
+    index_gz = os.path.join(os.path.dirname(__file__), "restoran_hedef_indeksi.json.gz")
+    if os.path.exists(index_gz):
+        try:
+            import gzip
+            with gzip.open(index_gz, "rt", encoding="utf-8") as f:
+                raw_list = json.load(f)
+            for item in raw_list:
+                code = item.get("c")
+                name = item.get("n")
+                lat = item.get("la")
+                lon = item.get("lo")
+                if lat is None or lon is None or not name:
+                    continue
+                m_id = f"ys_{code}" if code else f"ys_latlon_{round(lat, 4)}_{round(lon, 4)}"
+                if m_id in seen_ids:
+                    continue
+                seen_ids.add(m_id)
+                city_name = item.get("s") or "Bilinmeyen İl"
+                ilce_name = item.get("i") or "Merkez"
+                full_addr = item.get("a") or f"{ilce_name}, {city_name}"
+                puan = item.get("p")
+                deg_cnt = item.get("d")
+
+                venues.append({
+                    "mekan_id": m_id,
+                    "mekan_adi": name,
+                    "mutfaklar": item.get("m"),
+                    "fiyat_segmenti": item.get("f") or "₺₺",
+                    "puan": puan or 4.1,
+                    "degerlendirme_sayisi": deg_cnt or 0,
+                    "yorum_sayisi": int(deg_cnt * 0.45) if deg_cnt else 0,
+                    "il": city_name,
+                    "ilce": ilce_name,
+                    "mahalle": None,
+                    "tam_adres": full_addr,
+                    "lat": float(lat),
+                    "lon": float(lon),
+                    "url": item.get("u"),
+                    "ana_kategori": "Restoran"
+                })
+            print(f"📦 Hedef İndeksinden {len(venues)} restoran başarıyla yüklendi.")
+        except Exception as e:
+            print(f"Hedef indeksi okuma hatası: {e}")
+
+    # 1. Yemeksepeti Ambarı (38.663 Restoran - Yerel Mod)
+    if len(venues) == 0 and os.path.exists(YEMEK_DB):
         conn = sqlite3.connect(YEMEK_DB)
         cur = conn.cursor()
         try:
