@@ -24,6 +24,7 @@ import argparse
 import sqlite3
 import urllib.request
 import urllib.parse
+import subprocess
 from datetime import datetime, timezone
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -405,16 +406,55 @@ def init_db(db_path):
 def get_html_content(url, timeout=10):
     if not url or not url.startswith("http"):
         return None
-    req = urllib.request.Request(url, headers={
-        "User-Agent": random.choice(USER_AGENTS),
-        "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-    })
+    ua = random.choice(USER_AGENTS)
+    headers = {
+        "User-Agent": ua,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Sec-Ch-Ua": '"Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+        "Sec-Ch-Ua-Mobile": "?0",
+        "Sec-Ch-Ua-Platform": '"Windows"',
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-User": "?1",
+        "Upgrade-Insecure-Requests": "1"
+    }
+    # 1. urllib ile hızlı bağlantı dene
     try:
+        req = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return resp.read().decode("utf-8", errors="ignore")
+            content = resp.read().decode("utf-8", errors="ignore")
+            if "Access to this page has been denied" not in content and "Attention Required" not in content and len(content) > 10000:
+                return content
     except Exception:
-        return None
+        pass
+
+    # 2. curl subprocess fallback (Linux ve GitHub Actions runner'larında TLS bot engelini aşar)
+    try:
+        cmd = [
+            "curl", "-sL", "--max-time", str(timeout),
+            "-H", f"User-Agent: {ua}",
+            "-H", f"Accept: {headers['Accept']}",
+            "-H", f"Accept-Language: {headers['Accept-Language']}",
+            "-H", 'Sec-Ch-Ua: "Chromium";v="124", "Google Chrome";v="124", "Not-A.Brand";v="99"',
+            "-H", "Sec-Ch-Ua-Mobile: ?0",
+            "-H", 'Sec-Ch-Ua-Platform: "Windows"',
+            "-H", "Sec-Fetch-Dest: document",
+            "-H", "Sec-Fetch-Mode: navigate",
+            "-H", "Upgrade-Insecure-Requests: 1",
+            "--compressed",
+            url
+        ]
+        res = subprocess.run(cmd, capture_output=True, timeout=timeout + 2)
+        if res.returncode == 0 and res.stdout:
+            content = res.stdout.decode("utf-8", errors="ignore")
+            if "Access to this page has been denied" not in content and len(content) > 3000:
+                return content
+    except Exception:
+        pass
+
+    return None
 
 def parse_google_maps_response(content):
     if not content:
@@ -1007,12 +1047,16 @@ def extract_yemeksepeti_metrics_and_menu(html):
     if camps:
         metrics["kampanyalar"] = ", ".join(set(camps[:3]))
 
+    # Kategori Haritası
     cats = {}
     for m in re.finditer(r'"RestaurantMenuCategory:(\d+)":(\{[^\}]+"title":"([^"]+)"[^\}]*\})', html):
         cid, title = m.group(1), m.group(3)
         cats[f"RestaurantMenuCategory:{cid}"] = title
 
     products = []
+    seen_names = set()
+
+    # 1. Yemeksepeti Restoran Menü Kalemleri (RestaurantProductData)
     for m in re.finditer(r'"RestaurantProductData:(\d+)":(\{.*?\}(?=,"Restaurant|\}\}\}))', html):
         raw = re.sub(r':undefined', ':null', m.group(2))
         try:
@@ -1031,18 +1075,84 @@ def extract_yemeksepeti_metrics_and_menu(html):
 
             if p_name and (orig_price or disc_price):
                 fiyat = float(disc_price or orig_price)
-                products.append({
-                    "kategori": cat_name,
-                    "urun_adi": p_name,
-                    "aciklama": p_desc,
-                    "fiyat": fiyat,
-                    "orijinal_fiyat": float(orig_price) if orig_price else fiyat,
-                    "stokta_var_mi": 0 if is_sold_out else 1,
-                    "gorsel_url": img_url,
-                    "kaynak_platform": "Yemeksepeti Apollo Cache"
-                })
+                norm_n = p_name.lower().strip()
+                if norm_n not in seen_names:
+                    seen_names.add(norm_n)
+                    products.append({
+                        "kategori": cat_name,
+                        "urun_adi": p_name,
+                        "aciklama": p_desc,
+                        "fiyat": fiyat,
+                        "orijinal_fiyat": float(orig_price) if orig_price else fiyat,
+                        "stokta_var_mi": 0 if is_sold_out else 1,
+                        "gorsel_url": img_url,
+                        "kaynak_platform": "Yemeksepeti Restoran Menüsü"
+                    })
         except Exception:
             continue
+
+    # 2. Yemeksepeti Mahalle / Market / Perakende Kalemleri (GroceryProductData)
+    for m in re.finditer(r'"GroceryProductData:\d+":(\{.*?\}(?=,"GroceryProductData|\}\}\}))', html):
+        raw = re.sub(r':undefined', ':null', m.group(1))
+        try:
+            j = json.loads(raw)
+            p_name = j.get("name") or j.get("title")
+            p_desc = j.get("description")
+            orig_price = j.get("originalPrice")
+            price = j.get("price")
+            is_available = j.get("isAvailable", True)
+            urls = j.get("urls") or []
+            img_url = urls[0] if urls else None
+
+            if p_name and (orig_price or price):
+                fiyat = float(price or orig_price)
+                norm_n = p_name.lower().strip()
+                if norm_n not in seen_names:
+                    seen_names.add(norm_n)
+                    products.append({
+                        "kategori": "Market & Mahalle Ürünü",
+                        "urun_adi": p_name,
+                        "aciklama": p_desc,
+                        "fiyat": fiyat,
+                        "orijinal_fiyat": float(orig_price) if orig_price else fiyat,
+                        "stokta_var_mi": 1 if is_available else 0,
+                        "gorsel_url": img_url,
+                        "kaynak_platform": "Yemeksepeti Mahalle / Perakende"
+                    })
+        except Exception:
+            continue
+
+    # 3. Schema.org JSON-LD Menü Kalemleri (Eğer Apollo state boşsa)
+    if not products:
+        try:
+            for ld_match in re.finditer(r'<script[^>]+type=[\"\x27]application/ld\+json[\"\x27][^>]*>(.*?)</script>', html, re.DOTALL):
+                try:
+                    ld_data = json.loads(ld_match.group(1))
+                    if isinstance(ld_data, dict) and "hasMenu" in ld_data:
+                        menu_obj = ld_data["hasMenu"]
+                        if isinstance(menu_obj, dict) and "hasMenuItem" in menu_obj:
+                            for mi in menu_obj["hasMenuItem"]:
+                                mi_name = mi.get("name")
+                                mi_offers = mi.get("offers", {})
+                                mi_price = mi_offers.get("price") if isinstance(mi_offers, dict) else None
+                                if mi_name and mi_price:
+                                    norm_n = mi_name.lower().strip()
+                                    if norm_n not in seen_names:
+                                        seen_names.add(norm_n)
+                                        products.append({
+                                            "kategori": "Menü",
+                                            "urun_adi": mi_name,
+                                            "aciklama": mi.get("description"),
+                                            "fiyat": float(mi_price),
+                                            "orijinal_fiyat": float(mi_price),
+                                            "stokta_var_mi": 1,
+                                            "gorsel_url": mi.get("image"),
+                                            "kaynak_platform": "Yemeksepeti Schema.org Menüsü"
+                                        })
+                except Exception:
+                    continue
+        except Exception:
+            pass
 
     return metrics, products
 
@@ -1219,7 +1329,34 @@ def process_single_venue(v, out_db, force=False):
     url = v.get("url")
     web_url = v.get("web_sitesi")
 
-    # 1. Google Places Çapraz Eşleştirme (Eksik telefon, 7 günlük çalışma saati ve yıldız dağılımını tamamla)
+    menu_items = []
+
+    # 1. Yemeksepeti / Canlı Teslimat Menüsü ve Derin Metrikler (Birinci Öncelik)
+    if url and ("yemeksepeti.com" in url or "restaurant" in url or "shop" in url):
+        html = get_html_content(url, timeout=10)
+        if html:
+            metrics, ys_items = extract_yemeksepeti_metrics_and_menu(html)
+            v.update(metrics)
+            if ys_items:
+                menu_items.extend(ys_items)
+
+    # 2. İşletme Web Sitesi & QR Menü Canlı Masa Fiyatları
+    if web_url:
+        qr_items = extract_qr_or_website_menu(web_url, timeout=6)
+        if qr_items:
+            v["qr_menu_url"] = web_url
+            for qi in qr_items:
+                matched = False
+                for mi in menu_items:
+                    if mi["urun_adi"].lower() == qi["urun_adi"].lower():
+                        mi["masa_fiyati"] = qi["fiyat"]
+                        mi["masa_platformu"] = "İşletme Web Sitesi / QR Menü"
+                        matched = True
+                        break
+                if not matched:
+                    menu_items.append(qi)
+
+    # 3. Google Places Çapraz Eşleştirme (Eksik telefon, 7 günlük çalışma saati ve yıldız dağılımını tamamla)
     if not v.get("google_place_id") or not v.get("calisma_saatleri"):
         try:
             q_str = f"{v['mekan_adi']} {v.get('ilce', '')} {v.get('il', '')}".strip()
@@ -1236,41 +1373,14 @@ def process_single_venue(v, out_db, force=False):
                     v["web_sitesi"] = web_url
                 if best_gp.get("yildiz_dagilimi"):
                     v["yildiz_dagilimi"] = best_gp["yildiz_dagilimi"]
-                if best_gp.get("sektor"):
+                if best_gp.get("sektor") and not v.get("sektor"):
                     v["sektor"] = best_gp["sektor"]
-                if best_gp.get("ana_kategori"):
+                if best_gp.get("ana_kategori") and not v.get("ana_kategori"):
                     v["ana_kategori"] = best_gp["ana_kategori"]
-                if best_gp.get("alt_kategoriler"):
+                if best_gp.get("alt_kategoriler") and not v.get("alt_kategoriler"):
                     v["alt_kategoriler"] = best_gp["alt_kategoriler"]
         except Exception:
             pass
-
-    menu_items = []
-
-    # 2. Yemeksepeti / Canlı Teslimat Menüsü ve Derin Metrikler
-    if url and "yemeksepeti.com" in url:
-        html = get_html_content(url, timeout=8)
-        if html:
-            metrics, ys_items = extract_yemeksepeti_metrics_and_menu(html)
-            v.update(metrics)
-            if ys_items:
-                menu_items.extend(ys_items)
-
-    # 3. İşletme Web Sitesi & QR Menü Canlı Masa Fiyatları
-    if web_url:
-        qr_items = extract_qr_or_website_menu(web_url, timeout=6)
-        if qr_items:
-            v["qr_menu_url"] = web_url
-            for qi in qr_items:
-                matched = False
-                for mi in menu_items:
-                    if mi["urun_adi"].lower() == qi["urun_adi"].lower():
-                        mi["masa_fiyati"] = qi["fiyat"]
-                        mi["masa_platformu"] = "İşletme Web Sitesi / QR Menü"
-                        matched = True
-                        break
-                if not matched:
-                    menu_items.append(qi)
 
     # %100 Ham ve Gerçek Menü Kalemleri (Sentetik/mock veri asla eklenmez)
     price_rows = generate_real_menu_rows(menu_items, v, now_iso)
@@ -1562,14 +1672,29 @@ def load_target_venues(limit=None, shard_id=None, num_shards=None, out_db=None):
 
     # Aktif Saha Keşfi: Bu shard'ın sorumlu olduğu ilçeler ve koridorlar taranır
     if out_db:
-        gp_venues = run_google_places_discovery(shard_id, num_shards, out_db, limit_queries=25 if limit else None)
+        name_url_map = {}
+        for k_item in known_cache.values():
+            n_clean = k_item.get("n", "").lower().strip()
+            if n_clean and k_item.get("u"):
+                name_url_map[n_clean] = k_item["u"]
+
+        gp_venues = run_google_places_discovery(shard_id, num_shards, out_db, limit_queries=min(limit, 10) if limit else None)
         new_gp_count = 0
         for gv in gp_venues:
             if gv["mekan_id"] not in seen_ids:
                 seen_ids.add(gv["mekan_id"])
-                venues.insert(0, gv)
+                g_clean = gv["mekan_adi"].lower().strip()
+                if g_clean in name_url_map:
+                    gv["url"] = name_url_map[g_clean]
+                if gv.get("url"):
+                    venues.insert(0, gv)
+                else:
+                    venues.append(gv)
                 new_gp_count += 1
-        print(f"✨ [Aktif Saha Keşfi] {new_gp_count} yeni mekan öncelikli olarak tarama kuyruğuna eklendi.")
+        print(f"✨ [Aktif Saha Keşfi] {new_gp_count} yeni mekan kuyruğa eklendi.")
+
+    # Menü URL'si olan restoranları en önde tut (limit verildiğinde menü kalemleri 0 kalmasın)
+    venues.sort(key=lambda x: 0 if x.get("url") else 1)
 
     if limit and limit > 0:
         venues = venues[:limit]
