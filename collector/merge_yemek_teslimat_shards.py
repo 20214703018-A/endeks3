@@ -44,6 +44,7 @@ def init_schema(conn):
         fiyat_segmenti TEXT,
         puan REAL,
         degerlendirme_sayisi INTEGER,
+        yorum_sayisi INTEGER,
         sehir TEXT,
         ilce TEXT,
         tam_adres TEXT,
@@ -54,6 +55,10 @@ def init_schema(conn):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
+    try:
+        cur.execute("ALTER TABLE uye_restoranlar_ve_hacim ADD COLUMN yorum_sayisi INTEGER")
+    except Exception:
+        pass
     cur.execute("CREATE INDEX IF NOT EXISTS idx_restoran_sehir ON uye_restoranlar_ve_hacim(sehir, ilce)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_restoran_coords ON uye_restoranlar_ve_hacim(lat, lon)")
 
@@ -63,6 +68,9 @@ def init_schema(conn):
         esnaf_kodu TEXT UNIQUE,
         esnaf_adi TEXT NOT NULL,
         tur TEXT,
+        puan REAL,
+        degerlendirme_sayisi INTEGER,
+        yorum_sayisi INTEGER,
         sehir TEXT,
         ilce TEXT,
         tam_adres TEXT,
@@ -73,6 +81,18 @@ def init_schema(conn):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
+    try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN puan REAL")
+    except Exception:
+        pass
+    try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN degerlendirme_sayisi INTEGER")
+    except Exception:
+        pass
+    try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN yorum_sayisi INTEGER")
+    except Exception:
+        pass
     cur.execute("CREATE INDEX IF NOT EXISTS idx_esnaf_sehir ON mahalle_esnaf_noktalari(sehir, ilce)")
     conn.commit()
 
@@ -98,24 +118,40 @@ def merge(shard_paths, out_db):
             # Restoran tablosunu birleştir
             has_rest = conn.execute("SELECT count(*) FROM shard.sqlite_master WHERE type='table' AND name='uye_restoranlar_ve_hacim'").fetchone()[0]
             if has_rest:
+                try:
+                    conn.execute("ALTER TABLE shard.uye_restoranlar_ve_hacim ADD COLUMN yorum_sayisi INTEGER")
+                except Exception:
+                    pass
                 conn.execute("""
                 INSERT OR REPLACE INTO uye_restoranlar_ve_hacim (
                     platform, restoran_kodu, restoran_adi, mutfaklar, fiyat_segmenti,
-                    puan, degerlendirme_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
+                    puan, degerlendirme_sayisi, yorum_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
                 ) SELECT 
                     platform, restoran_kodu, restoran_adi, mutfaklar, fiyat_segmenti,
-                    puan, degerlendirme_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
+                    puan, degerlendirme_sayisi, COALESCE(yorum_sayisi, degerlendirme_sayisi), sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
                 FROM shard.uye_restoranlar_ve_hacim
                 """)
 
             # Mahalle esnafı tablosunu birleştir
             has_esnaf = conn.execute("SELECT count(*) FROM shard.sqlite_master WHERE type='table' AND name='mahalle_esnaf_noktalari'").fetchone()[0]
             if has_esnaf:
+                try:
+                    conn.execute("ALTER TABLE shard.mahalle_esnaf_noktalari ADD COLUMN puan REAL")
+                except Exception:
+                    pass
+                try:
+                    conn.execute("ALTER TABLE shard.mahalle_esnaf_noktalari ADD COLUMN degerlendirme_sayisi INTEGER")
+                except Exception:
+                    pass
+                try:
+                    conn.execute("ALTER TABLE shard.mahalle_esnaf_noktalari ADD COLUMN yorum_sayisi INTEGER")
+                except Exception:
+                    pass
                 conn.execute("""
                 INSERT OR REPLACE INTO mahalle_esnaf_noktalari (
-                    esnaf_kodu, esnaf_adi, tur, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
+                    esnaf_kodu, esnaf_adi, tur, puan, degerlendirme_sayisi, yorum_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
                 ) SELECT 
-                    esnaf_kodu, esnaf_adi, tur, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
+                    esnaf_kodu, esnaf_adi, tur, puan, degerlendirme_sayisi, yorum_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
                 FROM shard.mahalle_esnaf_noktalari
                 """)
                 
@@ -125,6 +161,10 @@ def merge(shard_paths, out_db):
             print(f"✓ Birleştirildi: {os.path.basename(path)}")
         except Exception as e:
             print(f"[HATA] {path}: {e}")
+            try:
+                conn.execute("DETACH DATABASE shard")
+            except Exception:
+                pass
 
     conn.execute("ANALYZE")
     conn.commit()

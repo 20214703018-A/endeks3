@@ -55,6 +55,7 @@ def init_db(db_path):
         puan REAL,
         yorum_sayisi INTEGER,
         degerlendirme_sayisi INTEGER,
+        yildiz_dagilimi TEXT,
         tam_adres TEXT,
         mahalle TEXT,
         ilce TEXT,
@@ -70,6 +71,10 @@ def init_db(db_path):
     """)
     try:
         cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN degerlendirme_sayisi INTEGER")
+    except Exception:
+        pass
+    try:
+        cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN yildiz_dagilimi TEXT")
     except Exception:
         pass
     cur.execute("""
@@ -120,6 +125,105 @@ def parse_google_maps_response(content):
         except Exception:
             continue
     return None
+def parse_ratings_and_reviews(v14):
+    """
+    Google Maps Protobuf v14 ağacından puan, toplam değerlendirme/oy sayısı,
+    yazılı yorum sayısı ve 1-5 yıldız histogramını ayrıştırır.
+    """
+    rating = None
+    degerlendirme_sayisi = None
+    yorum_sayisi = None
+    yildiz_dagilimi = None
+
+    # 1. v14[4] Ana Puan Bloğu
+    if len(v14) > 4 and v14[4]:
+        f4 = v14[4]
+        if len(f4) > 7 and f4[7] is not None:
+            try:
+                rating = round(float(f4[7]), 1)
+            except Exception:
+                pass
+        if len(f4) > 8 and isinstance(f4[8], (int, float)):
+            val = int(f4[8])
+            if 0 <= val < 10_000_000:
+                degerlendirme_sayisi = val
+        
+        # Sadece metin içeren elemandan yorum sayısını al (URL olanları atla)
+        if len(f4) > 3 and f4[3] and isinstance(f4[3], list) and len(f4[3]) > 1:
+            raw_text = str(f4[3][1])
+            if not raw_text.startswith("http") and "/" not in raw_text:
+                digits = "".join(ch for ch in raw_text if ch.isdigit())
+                if digits and len(digits) <= 8:
+                    num = int(digits)
+                    if num < 10_000_000:
+                        yorum_sayisi = num
+                        if degerlendirme_sayisi is None:
+                            degerlendirme_sayisi = num
+
+    # 2. Yıldız Dağılımı (Histogram) ve Ayrıntılı Yazılı Yorum Taraması
+    def scan_for_histogram(obj):
+        nonlocal yildiz_dagilimi, yorum_sayisi, rating, degerlendirme_sayisi
+        if isinstance(obj, list):
+            if len(obj) >= 3 and isinstance(obj[0], (int, float)) and isinstance(obj[1], list) and len(obj[1]) == 5:
+                if all(isinstance(x, (int, float)) and 0 <= x < 10_000_000 for x in obj[1]):
+                    stars = [int(x) for x in obj[1]]
+                    sum_stars = sum(stars)
+                    total_reviews = int(obj[2]) if isinstance(obj[2], (int, float)) else sum_stars
+                    yildiz_dagilimi = json.dumps({
+                        "1_yildiz": stars[0],
+                        "2_yildiz": stars[1],
+                        "3_yildiz": stars[2],
+                        "4_yildiz": stars[3],
+                        "5_yildiz": stars[4]
+                    })
+                    yorum_sayisi = total_reviews
+                    if degerlendirme_sayisi is None or degerlendirme_sayisi < sum_stars:
+                        degerlendirme_sayisi = sum_stars
+                    if rating is None:
+                        rating = round(float(obj[0]), 1)
+                    return True
+            for it in obj:
+                if scan_for_histogram(it):
+                    return True
+        return False
+
+    scan_for_histogram(v14)
+
+    # 3. Eğer v14[4] içinde hâlâ bulunamadıysa güvenli fallback tarama
+    if degerlendirme_sayisi is None or yorum_sayisi is None:
+        def search_yorum(obj):
+            if isinstance(obj, str) and not obj.startswith("http") and "/" not in obj:
+                if "yorum" in obj.lower() or "review" in obj.lower() or "değerlendirme" in obj.lower():
+                    digits = "".join(ch for ch in obj if ch.isdigit())
+                    if digits and len(digits) <= 8:
+                        val = int(digits)
+                        if 0 <= val < 10_000_000:
+                            return val
+            elif isinstance(obj, list):
+                for it in obj:
+                    res = search_yorum(it)
+                    if res is not None:
+                        return res
+            return None
+        fallback_count = search_yorum(v14[4] if len(v14) > 4 and v14[4] else v14)
+        if fallback_count:
+            if degerlendirme_sayisi is None:
+                degerlendirme_sayisi = fallback_count
+            if yorum_sayisi is None:
+                yorum_sayisi = fallback_count
+
+    # 4. Kural 5 gereği cross-check & eksiksiz tamamlama
+    if degerlendirme_sayisi is None and yorum_sayisi is not None:
+        degerlendirme_sayisi = yorum_sayisi
+    elif yorum_sayisi is None and degerlendirme_sayisi is not None:
+        yorum_sayisi = degerlendirme_sayisi
+
+    if degerlendirme_sayisi is not None and (degerlendirme_sayisi > 10_000_000 or degerlendirme_sayisi < 0):
+        degerlendirme_sayisi = None
+    if yorum_sayisi is not None and (yorum_sayisi > 10_000_000 or yorum_sayisi < 0):
+        yorum_sayisi = None
+
+    return rating, degerlendirme_sayisi, yorum_sayisi, yildiz_dagilimi
 
 def extract_venue_from_v14(v14, search_query):
     if not v14 or len(v14) < 15:
@@ -142,31 +246,8 @@ def extract_venue_from_v14(v14, search_query):
     ana_kategori = cats[0] if cats else None
     tum_kategoriler = json.dumps(cats, ensure_ascii=False) if cats else None
     
-    # Puan ve Yorum Sayısı: v14[4]
-    rating = None
-    reviews = None
-    if len(v14) > 4 and v14[4]:
-        f4 = v14[4]
-        if len(f4) > 7 and f4[7] is not None:
-            try:
-                rating = float(f4[7])
-            except Exception:
-                pass
-        if len(f4) > 8 and isinstance(f4[8], (int, float)):
-            reviews = int(f4[8])
-        if reviews is None:
-            def search_yorum(obj):
-                if isinstance(obj, str) and ("yorum" in obj.lower() or "review" in obj.lower()):
-                    digits = "".join(ch for ch in obj if ch.isdigit())
-                    if digits:
-                        return int(digits)
-                elif isinstance(obj, list):
-                    for it in obj:
-                        res = search_yorum(it)
-                        if res is not None:
-                            return res
-                return None
-            reviews = search_yorum(f4)
+    # Puan, Değerlendirme (Oy) Sayısı, Yazılı Yorum Sayısı ve Yıldız Dağılımı
+    rating, degerlendirme_sayisi, yorum_sayisi, yildiz_dagilimi = parse_ratings_and_reviews(v14)
     
     # Kimlikler
     place_id = v14[78] if len(v14) > 78 and v14[78] else None
@@ -207,8 +288,9 @@ def extract_venue_from_v14(v14, search_query):
         "ana_kategori": str(ana_kategori) if ana_kategori else None,
         "tum_kategoriler": tum_kategoriler,
         "puan": rating,
-        "yorum_sayisi": reviews,
-        "degerlendirme_sayisi": reviews,
+        "yorum_sayisi": yorum_sayisi,
+        "degerlendirme_sayisi": degerlendirme_sayisi,
+        "yildiz_dagilimi": yildiz_dagilimi,
         "tam_adres": str(tam_adres) if tam_adres else None,
         "mahalle": str(mahalle) if mahalle else None,
         "ilce": str(ilce) if ilce else None,
@@ -341,9 +423,9 @@ def save_venue(conn, venue):
     cur.execute("""
     INSERT OR REPLACE INTO google_places_ticari_yogunluk (
         google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-        puan, yorum_sayisi, degerlendirme_sayisi, tam_adres, mahalle, ilce, il,
+        puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
         lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         venue["google_place_id"],
         venue["cid"],
@@ -354,6 +436,7 @@ def save_venue(conn, venue):
         venue["puan"],
         venue.get("yorum_sayisi"),
         venue.get("degerlendirme_sayisi") or venue.get("yorum_sayisi"),
+        venue.get("yildiz_dagilimi"),
         venue["tam_adres"],
         venue["mahalle"],
         venue["ilce"],
@@ -624,13 +707,14 @@ def sync_to_bati_warehouse(venue):
         cur.execute("""
         INSERT OR REPLACE INTO google_places_ticari_yogunluk (
             google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-            puan, yorum_sayisi, degerlendirme_sayisi, tam_adres, mahalle, ilce, il,
+            puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
             lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             venue["google_place_id"], venue["cid"], venue["isim"], venue["arama_terimi"],
             venue["ana_kategori"], venue["tum_kategoriler"], venue["puan"],
             venue.get("yorum_sayisi"), venue.get("degerlendirme_sayisi") or venue.get("yorum_sayisi"),
+            venue.get("yildiz_dagilimi"),
             venue["tam_adres"], venue["mahalle"], venue["ilce"], venue["il"],
             venue["lat"], venue["lon"], venue["telefon"], venue["calisma_saatleri"],
             venue["maps_url"], venue["kaynak"], venue["guncellenme_tarihi"]
@@ -663,26 +747,28 @@ def main():
         initial_queries = get_commercial_corridors_by_shard(shard_id, total, mahalle_limit=args.mahalle_limit)
         print(f"Shard {shard_id}/{total}: {len(initial_queries)} temel ticari & mahalle sorgusu yüklendi...")
     else:
-        initial_queries = COMMERCIAL_CORRIDORS_81_PROVINCES[:args.limit or 50]
-        print(f"Varsayılan mod: {len(initial_queries)} sorgu işleniyor...")
+        initial_queries = get_all_commercial_corridor_queries()
+        print(f"Varsayılan Mod: {len(initial_queries)} ticari aks sorgulanıyor...")
 
-    deep_enabled = not args.no_deep
+    if args.limit:
+        initial_queries = initial_queries[:args.limit]
+
     work_queue = deque(initial_queries)
     seen_queries = set(initial_queries)
 
-    processed = 0
-    success = 0
-    start_time = time.time()
+    print(f"Başlatıldı: Toplam {len(work_queue)} başlangıç sorgusu işlenecek.")
+    if not args.no_deep:
+        print("⚡ Otonom Derinleştirme AKTİF: Yoğun bulunan mahallelerde çarşı dükkanları otomatik derinleştirilecek.")
 
-    print(f"Otonom Madencilik Başlatıldı: Başlangıç Havuzu = {len(work_queue)} sorgu | Derinleştirme = {'AÇIK' if deep_enabled else 'KAPALI'} | Emniyet Sınırı = {args.max_seconds/3600:.1f} saat\n", flush=True)
+    success = 0
+    processed = 0
+    start_time = time.time()
+    deep_enabled = not args.no_deep
 
     while work_queue:
-        if args.limit and processed >= args.limit:
-            print(f"\n[Durduruldu] Belirtilen maksimum sorgu limitine ({args.limit}) ulaşıldı.", flush=True)
-            break
-
-        if time.time() - start_time >= args.max_seconds:
-            print(f"\n[⏰ 4 Saatlik Emniyet Sınırına Ulaşıldı ({args.max_seconds} sn)] Ambar verileri kaydedildi, GitHub Actions artifact yüklemesine geçiliyor.", flush=True)
+        if args.max_seconds and (time.time() - start_time) >= args.max_seconds:
+            print(f"\n⏰ [EMNİYET SINIRI] Maksimum çalışma süresine ({args.max_seconds} sn = {args.max_seconds/3600:.1f} saat) ulaşıldı!", flush=True)
+            print("Veritabanı güvenle kaydedilip kapatılıyor...", flush=True)
             break
 
         q = work_queue.popleft()
@@ -703,9 +789,17 @@ def main():
                 sync_to_bati_warehouse(res)
                 success += 1
                 puan_str = f"Puan: {res['puan']} ★" if res['puan'] is not None else "Puan: -"
-                deg_cnt = res.get('degerlendirme_sayisi') or res.get('yorum_sayisi')
-                degerlendirme_str = f"({deg_cnt:,} kişi değerlendirdi)" if deg_cnt is not None else "(0 değerlendirme)"
-                print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | {puan_str} {degerlendirme_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
+                deg_cnt = res.get('degerlendirme_sayisi')
+                yor_cnt = res.get('yorum_sayisi')
+                if deg_cnt is not None and yor_cnt is not None and deg_cnt != yor_cnt:
+                    metrics_str = f"({deg_cnt:,} kişi oy verdi, {yor_cnt:,} kişi yazılı yorum yaptı)"
+                elif deg_cnt is not None:
+                    metrics_str = f"({deg_cnt:,} kişi değerlendirdi/oy verdi)"
+                elif yor_cnt is not None:
+                    metrics_str = f"({yor_cnt:,} yazılı yorum)"
+                else:
+                    metrics_str = "(0 değerlendirme)"
+                print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | {puan_str} {metrics_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
 
             # OTONOM DERİNLEŞTİRME:
             # Eğer bir mahallenin 'dükkanlar' sorgusunda >= 3 işletme bulunduysa,

@@ -77,6 +77,7 @@ def init_db(db_path):
         fiyat_segmenti TEXT,
         puan REAL,
         degerlendirme_sayisi INTEGER,
+        yorum_sayisi INTEGER,
         sehir TEXT,
         ilce TEXT,
         tam_adres TEXT,
@@ -87,6 +88,10 @@ def init_db(db_path):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
+    try:
+        cur.execute("ALTER TABLE uye_restoranlar_ve_hacim ADD COLUMN yorum_sayisi INTEGER")
+    except Exception:
+        pass
     cur.execute("CREATE INDEX IF NOT EXISTS idx_restoran_sehir ON uye_restoranlar_ve_hacim(sehir, ilce)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_restoran_coords ON uye_restoranlar_ve_hacim(lat, lon)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_restoran_puan ON uye_restoranlar_ve_hacim(puan, degerlendirme_sayisi)")
@@ -98,6 +103,9 @@ def init_db(db_path):
         esnaf_kodu TEXT UNIQUE,
         esnaf_adi TEXT NOT NULL,
         tur TEXT,
+        puan REAL,
+        degerlendirme_sayisi INTEGER,
+        yorum_sayisi INTEGER,
         sehir TEXT,
         ilce TEXT,
         tam_adres TEXT,
@@ -108,6 +116,18 @@ def init_db(db_path):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
+    try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN puan REAL")
+    except Exception:
+        pass
+    try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN degerlendirme_sayisi INTEGER")
+    except Exception:
+        pass
+    try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN yorum_sayisi INTEGER")
+    except Exception:
+        pass
     cur.execute("CREATE INDEX IF NOT EXISTS idx_esnaf_sehir ON mahalle_esnaf_noktalari(sehir, ilce)")
 
     # 4. Checkpoint / Tarama Geçmişi
@@ -225,6 +245,7 @@ def parse_venue_page(url):
                 
                 rating_val = rating.get("ratingValue") if isinstance(rating, dict) else None
                 rating_cnt = rating.get("ratingCount") if isinstance(rating, dict) else None
+                review_cnt = rating.get("reviewCount") if isinstance(rating, dict) else None
                 
                 if lat is not None and lon is not None and name:
                     parts = url.rstrip("/").split("/")
@@ -242,6 +263,9 @@ def parse_venue_page(url):
                     platform = "YEMEKSEPETI_MAHALLE" if is_shop else "YEMEKSEPETI"
                     mutfaklar_str = json.dumps(cuisines, ensure_ascii=False) if cuisines else None
                     
+                    val_deg = int(rating_cnt) if rating_cnt is not None else None
+                    val_yor = int(review_cnt) if review_cnt is not None else val_deg
+
                     return {
                         "is_shop": is_shop,
                         "platform": platform,
@@ -250,7 +274,8 @@ def parse_venue_page(url):
                         "mutfaklar": mutfaklar_str,
                         "fiyat_segmenti": price,
                         "puan": float(rating_val) if rating_val is not None else None,
-                        "degerlendirme_sayisi": int(rating_cnt) if rating_cnt is not None else None,
+                        "degerlendirme_sayisi": val_deg,
+                        "yorum_sayisi": val_yor,
                         "sehir": city,
                         "ilce": ilce,
                         "tam_adres": street,
@@ -399,10 +424,12 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
                 if res["is_shop"]:
                     cur.execute("""
                     INSERT OR REPLACE INTO mahalle_esnaf_noktalari (
-                        esnaf_kodu, esnaf_adi, tur, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        esnaf_kodu, esnaf_adi, tur, puan, degerlendirme_sayisi, yorum_sayisi,
+                        sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """, (
                         res["kod"], res["isim"], res["mutfaklar"] or "Mahalle Esnafı",
+                        res["puan"], res["degerlendirme_sayisi"], res.get("yorum_sayisi"),
                         res["sehir"], res["ilce"], res["tam_adres"], res["lat"], res["lon"],
                         res["url"], res["kaynak"], res["guncellenme_tarihi"]
                     ))
@@ -410,17 +437,24 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
                 cur.execute("""
                 INSERT OR REPLACE INTO uye_restoranlar_ve_hacim (
                     platform, restoran_kodu, restoran_adi, mutfaklar, fiyat_segmenti,
-                    puan, degerlendirme_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    puan, degerlendirme_sayisi, yorum_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     res["platform"], res["kod"], res["isim"], res["mutfaklar"],
-                    res["fiyat_segmenti"], res["puan"], res["degerlendirme_sayisi"],
+                    res["fiyat_segmenti"], res["puan"], res["degerlendirme_sayisi"], res.get("yorum_sayisi"),
                     res["sehir"], res["ilce"], res["tam_adres"], res["lat"], res["lon"],
                     res["url"], res["kaynak"], res["guncellenme_tarihi"]
                 ))
                 saved += 1
                 puan_str = f"Puan: {res['puan']}" if res['puan'] is not None else "Puan: -"
-                yorum_str = f"({res['degerlendirme_sayisi']} yorum)" if res['degerlendirme_sayisi'] is not None else ""
+                deg_cnt = res.get('degerlendirme_sayisi')
+                yor_cnt = res.get('yorum_sayisi')
+                if deg_cnt is not None and yor_cnt is not None and deg_cnt != yor_cnt:
+                    yorum_str = f"({deg_cnt} oy, {yor_cnt} yorum)"
+                elif deg_cnt is not None:
+                    yorum_str = f"({deg_cnt} değerlendirme)"
+                else:
+                    yorum_str = ""
                 print(f"  -> [{saved}/{len(pending_urls)}] {res['platform']}: {res['isim']} | {res['sehir'] or '-'}/{res['ilce'] or '-'} | {puan_str} {yorum_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
                 
             cur.execute("""

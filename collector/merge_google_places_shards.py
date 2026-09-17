@@ -26,6 +26,7 @@ def init_schema(conn):
         puan REAL,
         yorum_sayisi INTEGER,
         degerlendirme_sayisi INTEGER,
+        yildiz_dagilimi TEXT,
         tam_adres TEXT,
         mahalle TEXT,
         ilce TEXT,
@@ -43,6 +44,10 @@ def init_schema(conn):
         cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN degerlendirme_sayisi INTEGER")
     except Exception:
         pass
+    try:
+        cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN yildiz_dagilimi TEXT")
+    except Exception:
+        pass
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_ilce ON google_places_ticari_yogunluk(il, ilce)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_coords ON google_places_ticari_yogunluk(lat, lon)")
     conn.commit()
@@ -58,14 +63,23 @@ def merge(shard_paths, out_db):
             continue
         try:
             conn.execute("ATTACH DATABASE ? AS shard", (path,))
+            try:
+                conn.execute("ALTER TABLE shard.google_places_ticari_yogunluk ADD COLUMN degerlendirme_sayisi INTEGER")
+            except Exception:
+                pass
+            try:
+                conn.execute("ALTER TABLE shard.google_places_ticari_yogunluk ADD COLUMN yildiz_dagilimi TEXT")
+            except Exception:
+                pass
+
             conn.execute("""
             INSERT OR REPLACE INTO google_places_ticari_yogunluk (
                 google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-                puan, yorum_sayisi, degerlendirme_sayisi, tam_adres, mahalle, ilce, il,
+                puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
                 lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
             ) SELECT 
                 google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-                puan, yorum_sayisi, COALESCE(yorum_sayisi, 0), tam_adres, mahalle, ilce, il,
+                puan, yorum_sayisi, COALESCE(degerlendirme_sayisi, yorum_sayisi), yildiz_dagilimi, tam_adres, mahalle, ilce, il,
                 lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
             FROM shard.google_places_ticari_yogunluk
             """)
@@ -75,6 +89,10 @@ def merge(shard_paths, out_db):
             print(f"✓ Birleştirildi: {os.path.basename(path)}")
         except Exception as e:
             print(f"[HATA] {path}: {e}")
+            try:
+                conn.execute("DETACH DATABASE shard")
+            except Exception:
+                pass
 
     conn.execute("ANALYZE")
     conn.commit()
