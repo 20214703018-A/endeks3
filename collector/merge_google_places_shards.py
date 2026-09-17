@@ -25,6 +25,7 @@ def init_schema(conn):
         tum_kategoriler TEXT,
         puan REAL,
         yorum_sayisi INTEGER,
+        degerlendirme_sayisi INTEGER,
         tam_adres TEXT,
         mahalle TEXT,
         ilce TEXT,
@@ -38,6 +39,10 @@ def init_schema(conn):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
+    try:
+        cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN degerlendirme_sayisi INTEGER")
+    except Exception:
+        pass
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_ilce ON google_places_ticari_yogunluk(il, ilce)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_coords ON google_places_ticari_yogunluk(lat, lon)")
     conn.commit()
@@ -56,11 +61,11 @@ def merge(shard_paths, out_db):
             conn.execute("""
             INSERT OR REPLACE INTO google_places_ticari_yogunluk (
                 google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-                puan, yorum_sayisi, tam_adres, mahalle, ilce, il,
+                puan, yorum_sayisi, degerlendirme_sayisi, tam_adres, mahalle, ilce, il,
                 lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
             ) SELECT 
                 google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-                puan, yorum_sayisi, tam_adres, mahalle, ilce, il,
+                puan, yorum_sayisi, COALESCE(yorum_sayisi, 0), tam_adres, mahalle, ilce, il,
                 lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
             FROM shard.google_places_ticari_yogunluk
             """)

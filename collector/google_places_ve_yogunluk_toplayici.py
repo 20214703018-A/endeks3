@@ -54,6 +54,7 @@ def init_db(db_path):
         tum_kategoriler TEXT,
         puan REAL,
         yorum_sayisi INTEGER,
+        degerlendirme_sayisi INTEGER,
         tam_adres TEXT,
         mahalle TEXT,
         ilce TEXT,
@@ -67,6 +68,10 @@ def init_db(db_path):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
+    try:
+        cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN degerlendirme_sayisi INTEGER")
+    except Exception:
+        pass
     cur.execute("""
     CREATE TABLE IF NOT EXISTS google_places_arama_gecmisi (
         arama_terimi TEXT PRIMARY KEY,
@@ -203,6 +208,7 @@ def extract_venue_from_v14(v14, search_query):
         "tum_kategoriler": tum_kategoriler,
         "puan": rating,
         "yorum_sayisi": reviews,
+        "degerlendirme_sayisi": reviews,
         "tam_adres": str(tam_adres) if tam_adres else None,
         "mahalle": str(mahalle) if mahalle else None,
         "ilce": str(ilce) if ilce else None,
@@ -311,6 +317,7 @@ def fetch_google_places(query):
                                         "tum_kategoriler": None,
                                         "puan": None,
                                         "yorum_sayisi": None,
+                                        "degerlendirme_sayisi": None,
                                         "tam_adres": str(title),
                                         "mahalle": None,
                                         "ilce": None,
@@ -334,9 +341,9 @@ def save_venue(conn, venue):
     cur.execute("""
     INSERT OR REPLACE INTO google_places_ticari_yogunluk (
         google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-        puan, yorum_sayisi, tam_adres, mahalle, ilce, il,
+        puan, yorum_sayisi, degerlendirme_sayisi, tam_adres, mahalle, ilce, il,
         lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         venue["google_place_id"],
         venue["cid"],
@@ -345,7 +352,8 @@ def save_venue(conn, venue):
         venue["ana_kategori"],
         venue["tum_kategoriler"],
         venue["puan"],
-        venue["yorum_sayisi"],
+        venue.get("yorum_sayisi"),
+        venue.get("degerlendirme_sayisi") or venue.get("yorum_sayisi"),
         venue["tam_adres"],
         venue["mahalle"],
         venue["ilce"],
@@ -616,12 +624,13 @@ def sync_to_bati_warehouse(venue):
         cur.execute("""
         INSERT OR REPLACE INTO google_places_ticari_yogunluk (
             google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-            puan, yorum_sayisi, tam_adres, mahalle, ilce, il,
+            puan, yorum_sayisi, degerlendirme_sayisi, tam_adres, mahalle, ilce, il,
             lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             venue["google_place_id"], venue["cid"], venue["isim"], venue["arama_terimi"],
-            venue["ana_kategori"], venue["tum_kategoriler"], venue["puan"], venue["yorum_sayisi"],
+            venue["ana_kategori"], venue["tum_kategoriler"], venue["puan"],
+            venue.get("yorum_sayisi"), venue.get("degerlendirme_sayisi") or venue.get("yorum_sayisi"),
             venue["tam_adres"], venue["mahalle"], venue["ilce"], venue["il"],
             venue["lat"], venue["lon"], venue["telefon"], venue["calisma_saatleri"],
             venue["maps_url"], venue["kaynak"], venue["guncellenme_tarihi"]
@@ -693,9 +702,10 @@ def main():
                 save_venue(conn, res)
                 sync_to_bati_warehouse(res)
                 success += 1
-                puan_str = f"Puan: {res['puan']}" if res['puan'] is not None else "Puan: -"
-                yorum_str = f"({res['yorum_sayisi']} yorum)" if res['yorum_sayisi'] is not None else ""
-                print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | {puan_str} {yorum_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
+                puan_str = f"Puan: {res['puan']} ★" if res['puan'] is not None else "Puan: -"
+                deg_cnt = res.get('degerlendirme_sayisi') or res.get('yorum_sayisi')
+                degerlendirme_str = f"({deg_cnt:,} kişi değerlendirdi)" if deg_cnt is not None else "(0 değerlendirme)"
+                print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | {puan_str} {degerlendirme_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
 
             # OTONOM DERİNLEŞTİRME:
             # Eğer bir mahallenin 'dükkanlar' sorgusunda >= 3 işletme bulunduysa,
