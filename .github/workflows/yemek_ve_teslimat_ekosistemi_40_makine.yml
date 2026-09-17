@@ -28,7 +28,8 @@ jobs:
           python collector/yemek_teslimat_ekosistemi_toplayici.py \
             --shard ${{ matrix.shard }}/40 \
             --out shard_${{ matrix.shard }}.sqlite \
-            --workers 3
+            --workers 3 \
+            --restaurants 100
 
       - name: Shard Çıktısını Yükle (Artifact)
         uses: actions/upload-artifact@v4

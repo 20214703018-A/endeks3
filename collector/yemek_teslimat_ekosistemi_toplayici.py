@@ -303,9 +303,9 @@ def run_collection(out_db, shard_id=None, total_shards=40, workers=4, limit=50):
     osm_count = import_osm_delivery_depots(out_db)
     print(f"\nİşlem tamamlandı. {saved_ds} Darkstore + {osm_count} OSM teslimat noktası '{out_db}' dosyasına yazıldı.", flush=True)
 
-def harvest_sample_restaurants(out_db, sample_limit=100, workers=3):
+def harvest_sample_restaurants(out_db, shard_id=None, total_shards=40, sample_limit=100, workers=3):
     init_db(out_db)
-    print(f"🍽️ [ÜYE RESTORANLAR] Yemeksepeti sitemap üzerinden {sample_limit} restoran çekiliyor...", flush=True)
+    print(f"🍽️ [ÜYE RESTORANLAR] Yemeksepeti sitemap taranıyor (Hedef: {sample_limit} restoran)...", flush=True)
     
     # 0.xml sitemap'ten linkleri al
     url = "https://www.yemeksepeti.com/adventure-map/adventure-map-restaurant-0.xml"
@@ -314,7 +314,16 @@ def harvest_sample_restaurants(out_db, sample_limit=100, workers=3):
         print("   ✗ Restoran sitemap açılamadı.", flush=True)
         return 0
     all_urls = re.findall(r"<loc>(.+?)</loc>", content)
-    target_urls = random.sample(all_urls, min(sample_limit, len(all_urls)))
+    
+    if shard_id:
+        step = max(1, len(all_urls) // total_shards)
+        start = (shard_id - 1) * step
+        end = start + step if shard_id < total_shards else len(all_urls)
+        shard_pool = all_urls[start:end]
+        target_urls = random.sample(shard_pool, min(sample_limit, len(shard_pool)))
+        print(f"Shard {shard_id}/{total_shards}: Havuzdaki {len(shard_pool)} linkten {len(target_urls)} restoran çekiliyor...", flush=True)
+    else:
+        target_urls = random.sample(all_urls, min(sample_limit, len(all_urls)))
     
     conn = sqlite3.connect(out_db)
     cur = conn.cursor()
@@ -352,12 +361,14 @@ def main():
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite yolu")
     parser.add_argument("--workers", type=int, default=4, help="Paralel worker")
     parser.add_argument("--limit", type=int, default=50, help="Lokal darkstore limit")
-    parser.add_argument("--restaurants", type=int, default=0, help="Çekilecek üye restoran sayısı")
+    parser.add_argument("--restaurants", type=int, default=100, help="Çekilecek üye restoran sayısı")
     args = parser.parse_args()
 
     if args.shard:
         shard_id, total = map(int, args.shard.split("/"))
         run_collection(args.out, shard_id=shard_id, total_shards=total, workers=args.workers)
+        if args.restaurants > 0:
+            harvest_sample_restaurants(args.out, shard_id=shard_id, total_shards=total, sample_limit=args.restaurants, workers=min(3, args.workers))
     else:
         run_collection(args.out, workers=args.workers, limit=args.limit)
         if args.restaurants > 0:

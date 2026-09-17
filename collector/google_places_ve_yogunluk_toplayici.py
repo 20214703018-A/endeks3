@@ -458,9 +458,29 @@ COMMERCIAL_CORRIDORS_81_PROVINCES = [
     "Krempark AVM Merkez Düzce", "İstanbul Caddesi Merkez Düzce"
 ]
 
+SINIR_DB = os.path.join(BASE_DIR, "warehouse/product/idari_sinirlar.sqlite")
+
+def get_all_commercial_corridor_queries():
+    """81 il ve 1.000+ ilçenin ticari çarşı, AVM ve restoran sorgularını derler."""
+    queries = list(COMMERCIAL_CORRIDORS_81_PROVINCES)
+    if os.path.exists(SINIR_DB):
+        try:
+            conn = sqlite3.connect(f"file:{SINIR_DB}?mode=ro", uri=True)
+            cur = conn.cursor()
+            cur.execute("SELECT DISTINCT il_adi, ad FROM sinir WHERE seviye = 'ilce' ORDER BY il_adi, ad")
+            for il, ilce in cur.fetchall():
+                if il and ilce:
+                    queries.append(f"{ilce} {il} AVM")
+                    queries.append(f"{ilce} {il} Çarşı")
+                    queries.append(f"{ilce} {il} Restoran")
+            conn.close()
+        except Exception:
+            pass
+    return queries
+
 def get_commercial_corridors_by_shard(shard_id, total_shards=40):
-    """40 Shard için dengeli 81 il ticari sorgu havuzu oluşturur."""
-    all_corridors = COMMERCIAL_CORRIDORS_81_PROVINCES
+    """40 Shard için dengeli 81 il ve tüm ilçeler ticari sorgu havuzu oluşturur."""
+    all_corridors = get_all_commercial_corridor_queries()
     step = max(1, len(all_corridors) // total_shards)
     start = (shard_id - 1) * step
     end = start + step if shard_id < total_shards else len(all_corridors)
