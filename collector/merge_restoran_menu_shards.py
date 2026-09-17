@@ -134,6 +134,25 @@ def init_target_db(db_path):
     )
     """)
 
+    # 4. Mekan Ardıl-Öncül Dönüşüm ve Devir Tarihçesi (Hangi Mekan Kapandı -> Yerine Ne Açıldı?)
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS isletme_ardil_oncul_donusum_tarihcesi (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        kategori TEXT NOT NULL,
+        onceki_isletme_adi TEXT NOT NULL,
+        yeni_isletme_adi TEXT NOT NULL,
+        degisim_tarihi TEXT NOT NULL,
+        donusum_tanimi TEXT NOT NULL,
+        lat REAL NOT NULL,
+        lon REAL NOT NULL,
+        kaynak TEXT NOT NULL,
+        guncellenme_tarihi TEXT NOT NULL,
+        UNIQUE(onceki_isletme_adi, yeni_isletme_adi, degisim_tarihi, lat, lon)
+    )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_donusum_coords ON isletme_ardil_oncul_donusum_tarihcesi(lat, lon)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_donusum_tarih ON isletme_ardil_oncul_donusum_tarihcesi(degisim_tarihi)")
+
     # Kapsamlı Görünüm
     cur.execute("""
     CREATE VIEW IF NOT EXISTS v_restoran_kapsamli_istihbarat AS
@@ -261,6 +280,21 @@ def merge_shards(shard_files, target_db):
             SELECT mekan_id, url, durum, kalem_sayisi, tarih
             FROM shard_db.menu_tarama_gecmisi
             """)
+
+            # 4. Mekan Ardıl-Öncül Dönüşüm Tarihçesi (INSERT OR IGNORE)
+            try:
+                cur.execute("""
+                INSERT OR IGNORE INTO main.isletme_ardil_oncul_donusum_tarihcesi (
+                    kategori, onceki_isletme_adi, yeni_isletme_adi, degisim_tarihi,
+                    donusum_tanimi, lat, lon, kaynak, guncellenme_tarihi
+                )
+                SELECT
+                    kategori, onceki_isletme_adi, yeni_isletme_adi, degisim_tarihi,
+                    donusum_tanimi, lat, lon, kaynak, guncellenme_tarihi
+                FROM shard_db.isletme_ardil_oncul_donusum_tarihcesi
+                """)
+            except Exception:
+                pass
 
             conn.commit()
             cur.execute("DETACH DATABASE shard_db")

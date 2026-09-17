@@ -255,7 +255,26 @@ def init_db(db_path):
     )
     """)
 
-    # 4. Kapsamlı İstihbarat Görünümü (Tüm Metrikleri Tek Noktada Sunan SQL VIEW)
+    # 4. Mekan Ardıl-Öncül Dönüşüm ve Devir Tarihçesi (Hangi Mekan Kapandı -> Yerine Ne Açıldı?)
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS isletme_ardil_oncul_donusum_tarihcesi (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        kategori TEXT NOT NULL,
+        onceki_isletme_adi TEXT NOT NULL,
+        yeni_isletme_adi TEXT NOT NULL,
+        degisim_tarihi TEXT NOT NULL,
+        donusum_tanimi TEXT NOT NULL,
+        lat REAL NOT NULL,
+        lon REAL NOT NULL,
+        kaynak TEXT NOT NULL,
+        guncellenme_tarihi TEXT NOT NULL,
+        UNIQUE(onceki_isletme_adi, yeni_isletme_adi, degisim_tarihi, lat, lon)
+    )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_donusum_coords ON isletme_ardil_oncul_donusum_tarihcesi(lat, lon)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_donusum_tarih ON isletme_ardil_oncul_donusum_tarihcesi(degisim_tarihi)")
+
+    # 5. Kapsamlı İstihbarat Görünümü (Tüm Metrikleri Tek Noktada Sunan SQL VIEW)
     cur.execute("""
     CREATE VIEW IF NOT EXISTS v_restoran_kapsamli_istihbarat AS
     SELECT 
