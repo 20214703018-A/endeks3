@@ -119,20 +119,21 @@ def extract_venue_from_v14(v14, search_query):
                 rating = float(f4[7])
             except Exception:
                 pass
-        if len(f4) > 8 and f4[8] is not None:
-            try:
-                reviews = int(f4[8])
-            except Exception:
-                pass
-        # Fallback: f4[3][1] örneğin '15.969 yorum'
-        if reviews is None and len(f4) > 3 and f4[3] and isinstance(f4[3], list) and len(f4[3]) > 1:
-            try:
-                s = str(f4[3][1])
-                digits = "".join(ch for ch in s if ch.isdigit())
-                if digits:
-                    reviews = int(digits)
-            except Exception:
-                pass
+        if len(f4) > 8 and isinstance(f4[8], (int, float)):
+            reviews = int(f4[8])
+        if reviews is None:
+            def search_yorum(obj):
+                if isinstance(obj, str) and ("yorum" in obj.lower() or "review" in obj.lower()):
+                    digits = "".join(ch for ch in obj if ch.isdigit())
+                    if digits:
+                        return int(digits)
+                elif isinstance(obj, list):
+                    for it in obj:
+                        res = search_yorum(it)
+                        if res is not None:
+                            return res
+                return None
+            reviews = search_yorum(f4)
     
     # Kimlikler
     place_id = v14[78] if len(v14) > 78 and v14[78] else None
@@ -187,7 +188,23 @@ def extract_venue_from_v14(v14, search_query):
         "guncellenme_tarihi": now_utc
     }
 
-def fetch_google_place(query):
+NON_COMMERCIAL_KEYWORDS = [
+    "sitesi", "apartmanı", "konutları", "evleri", "köyü", "mezarlığı", "camii", "tatil sitesi", "yerleşim yeri"
+]
+
+def is_valid_commercial_venue(name, category):
+    if not name:
+        return False
+    n_low = name.lower()
+    c_low = (category or "").lower()
+    # Eğer isminde site, konut, apartman geçiyorsa ve ticari kategori değilse ele
+    if any(kw in n_low for kw in NON_COMMERCIAL_KEYWORDS):
+        if not any(ck in c_low for ck in ["restoran", "kafe", "market", "otel", "dükkan", "mağaza", "fırın", "pastane", "avm", "lokanta"]):
+            return False
+    return True
+
+def fetch_google_places(query):
+    """Google Maps üzerinden tekil değil, sorguda dönen TÜM ticari işletmeleri liste halinde çeker."""
     encoded_q = urllib.parse.quote(query)
     url = f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}"
     headers = {
@@ -196,54 +213,59 @@ def fetch_google_place(query):
         "Accept": "*/*"
     }
     req = urllib.request.Request(url, headers=headers)
+    venues = []
     try:
         with urllib.request.urlopen(req, timeout=12) as resp:
             content = resp.read().decode("utf-8", errors="ignore")
             data = parse_google_maps_response(content)
             if not data:
-                return None
+                return []
             
-            # Durum 1: data[0][1] içinde doğrudan mekan
+            # Durum 1: data[0][1] içindeki TÜM mekanlar (Detaylı V14 formatı)
             if len(data) > 0 and len(data[0]) > 1 and data[0][1]:
-                item0 = data[0][1][0]
-                if isinstance(item0, list) and len(item0) > 14 and item0[14]:
-                    return extract_venue_from_v14(item0[14], query)
+                for item in data[0][1]:
+                    if isinstance(item, list) and len(item) > 14 and item[14]:
+                        v = extract_venue_from_v14(item[14], query)
+                        if v and is_valid_commercial_venue(v["isim"], v["ana_kategori"]):
+                            venues.append(v)
             
-            # Durum 2: data[37] tekil aday
-            if len(data) > 37 and data[37] and isinstance(data[37], list) and len(data[37]) > 2:
+            # Durum 2: data[37] aday listesi (Eğer durum 1 boşsa)
+            if not venues and len(data) > 37 and data[37] and isinstance(data[37], list) and len(data[37]) > 2:
                 d37 = data[37]
                 sub_list = d37[2]
-                if sub_list and len(sub_list) > 0 and len(sub_list[0]) > 4:
-                    cand = sub_list[0]
-                    coords = cand[3] if len(cand) > 3 else None
-                    cid = cand[2] if len(cand) > 2 else None
-                    title = cand[4] if len(cand) > 4 else None
-                    if coords and len(coords) >= 4 and coords[2] is not None and coords[3] is not None:
-                        now_utc = datetime.now(timezone.utc).isoformat()
-                        return {
-                            "google_place_id": f"CID_{cid}",
-                            "cid": str(cid),
-                            "isim": str(title or query),
-                            "arama_terimi": query,
-                            "ana_kategori": None,
-                            "tum_kategoriler": None,
-                            "puan": None,
-                            "yorum_sayisi": None,
-                            "tam_adres": str(title),
-                            "mahalle": None,
-                            "ilce": None,
-                            "il": None,
-                            "lat": float(coords[2]),
-                            "lon": float(coords[3]),
-                            "telefon": None,
-                            "calisma_saatleri": None,
-                            "maps_url": f"https://www.google.com/maps?cid={cid}" if cid else None,
-                            "kaynak": "Google Maps (Disambiguation)",
-                            "guncellenme_tarihi": now_utc
-                        }
+                if sub_list and isinstance(sub_list, list):
+                    for cand in sub_list:
+                        if cand and len(cand) > 4:
+                            coords = cand[3] if len(cand) > 3 else None
+                            cid = cand[2] if len(cand) > 2 else None
+                            title = cand[4] if len(cand) > 4 else None
+                            if coords and len(coords) >= 4 and coords[2] is not None and coords[3] is not None and title:
+                                if is_valid_commercial_venue(title, None):
+                                    now_utc = datetime.now(timezone.utc).isoformat()
+                                    venues.append({
+                                        "google_place_id": f"CID_{cid}",
+                                        "cid": str(cid),
+                                        "isim": str(title),
+                                        "arama_terimi": query,
+                                        "ana_kategori": "Ticari Mekan",
+                                        "tum_kategoriler": None,
+                                        "puan": None,
+                                        "yorum_sayisi": None,
+                                        "tam_adres": str(title),
+                                        "mahalle": None,
+                                        "ilce": None,
+                                        "il": None,
+                                        "lat": float(coords[2]),
+                                        "lon": float(coords[3]),
+                                        "telefon": None,
+                                        "calisma_saatleri": None,
+                                        "maps_url": f"https://www.google.com/maps?cid={cid}" if cid else None,
+                                        "kaynak": "Google Maps (Aday Listesi)",
+                                        "guncellenme_tarihi": now_utc
+                                    })
     except Exception as e:
         print(f"Hata ({query}): {e}", file=sys.stderr)
-    return None
+    return venues
 
 def save_venue(conn, venue):
     if not venue:
@@ -572,15 +594,18 @@ def main():
     success = 0
     for idx, q in enumerate(queries):
         print(f"[{idx+1}/{len(queries)}] Sorgu: '{q}'...", flush=True)
-        res = fetch_google_place(q)
-        if res:
-            save_venue(conn, res)
-            sync_to_bati_warehouse(res)
-            success += 1
-            print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | Puan: {res['puan']} | Yorum: {res['yorum_sayisi']} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
+        venues = fetch_google_places(q)
+        if venues:
+            for res in venues:
+                save_venue(conn, res)
+                sync_to_bati_warehouse(res)
+                success += 1
+                puan_str = f"Puan: {res['puan']}" if res['puan'] is not None else "Puan: -"
+                yorum_str = f"({res['yorum_sayisi']} yorum)" if res['yorum_sayisi'] is not None else ""
+                print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | {puan_str} {yorum_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
         else:
             print(f"  -> Sonuç alınamadı: {q}", flush=True)
-        time.sleep(random.uniform(0.5, 1.0))
+        time.sleep(random.uniform(0.4, 0.8))
 
     conn.close()
     print(f"\nİşlem tamamlandı. Toplam {len(queries)} sorgudan {success} mekan ambarlandı.", flush=True)
