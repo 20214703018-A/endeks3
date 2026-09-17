@@ -322,7 +322,27 @@ def get_commercial_corridors_by_shard(shard_id, total_shards=40):
         # Kocaeli & Balıkesir & Tekirdağ
         "Symbol AVM İzmit Kocaeli", "41 Burda AVM İzmit Kocaeli", "Outlet Center İzmit Kocaeli",
         "Gebze Center AVM Kocaeli", "10 Burda AVM Altıeylül Balıkesir", "Ayvalık Cunda Sahil Balıkesir",
-        "Ayvalık Taksiyarhis Kilisesi Çevresi Balıkesir", "Tekira AVM Süleymanpaşa Tekirdağ"
+        "Ayvalık Taksiyarhis Kilisesi Çevresi Balıkesir", "Tekira AVM Süleymanpaşa Tekirdağ",
+        # Antalya Genişletilmiş Çıpa Koridorlar
+        "Kültür Mahallesi Kafe Caddesi Kepez Antalya", "Şarampol Caddesi Yaya Yolu Muratpaşa Antalya",
+        "Işıklar Caddesi Muratpaşa Antalya", "Güllük Caddesi Muratpaşa Antalya",
+        "Akdeniz Üniversitesi Kampüs Çarşı Kepez Antalya", "Lara Balıkevi Muratpaşa Antalya",
+        "Big Chefs Lara Muratpaşa Antalya", "Shakespeare Coffee Bistro Konyaaltı Antalya",
+        # İzmir Genişletilmiş Çıpa Koridorlar
+        "Bornova Küçükpark Meydanı İzmir", "Gül Sokak Alsancak Konak İzmir",
+        "Bostanlı Cemal Gürsel Caddesi Karşıyaka İzmir", "Bayraklı Manavkuyu Kafe Koridoru İzmir",
+        "Karşıyaka Çarşı Yaya Yolu İzmir", "Asansör Restoran Konak İzmir",
+        # Bursa Genişletilmiş Çıpa Koridorlar
+        "Görükle Yerleşim Çarşı Nilüfer Bursa", "Heykel Atatürk Caddesi Osmangazi Bursa",
+        "Altıparmak Caddesi Osmangazi Bursa", "Starbucks FSM Bulvarı Nilüfer Bursa",
+        # Ankara Çıpa Koridorlar
+        "Tunalı Hilmi Caddesi Çankaya Ankara", "Kızılay Yüksel Caddesi Çankaya Ankara",
+        "Bahçelievler 7. Cadde Çankaya Ankara", "Çukurambar Muhsin Yazıcıoğlu Caddesi Çankaya Ankara",
+        "Armada AVM Çankaya Ankara", "Panora AVM Çankaya Ankara", "Ankamall AVM Yenimahalle Ankara",
+        # İstanbul Ekstra Çıpa Koridorlar
+        "Abdi İpekçi Caddesi Nişantaşı Şişli İstanbul", "Kadıköy Boğa Meydanı İstanbul",
+        "Karaköy Kemankeş Caddesi Beyoğlu İstanbul", "Sirkeci Hocapaşa Lezzet Sokağı Fatih İstanbul",
+        "Beşiktaş Köyiçi Çarşı İstanbul", "Bağdat Caddesi Şaşkınbakkal Kadıköy İstanbul"
     ]
     # Shard'a göre dilimle
     step = max(1, len(all_corridors) // total_shards)

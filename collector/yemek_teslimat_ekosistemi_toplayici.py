@@ -302,12 +302,55 @@ def run_collection(out_db, shard_id=None, total_shards=40, workers=4, limit=50):
     osm_count = import_osm_delivery_depots(out_db)
     print(f"\nİşlem tamamlandı. {saved_ds} Darkstore + {osm_count} OSM teslimat noktası '{out_db}' dosyasına yazıldı.")
 
+def harvest_sample_restaurants(out_db, sample_limit=100, workers=3):
+    init_db(out_db)
+    print(f"🍽️ [ÜYE RESTORANLAR] Yemeksepeti sitemap üzerinden {sample_limit} restoran çekiliyor...")
+    
+    # 0.xml sitemap'ten linkleri al
+    url = "https://www.yemeksepeti.com/adventure-map/adventure-map-restaurant-0.xml"
+    content = get_url_content(url)
+    if not content:
+        print("   ✗ Restoran sitemap açılamadı.")
+        return 0
+    all_urls = re.findall(r"<loc>(.+?)</loc>", content)
+    target_urls = random.sample(all_urls, min(sample_limit, len(all_urls)))
+    
+    conn = sqlite3.connect(out_db)
+    cur = conn.cursor()
+    saved = 0
+    
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {executor.submit(parse_restaurant_page, u): u for u in target_urls}
+        for f in as_completed(futures):
+            res = f.result()
+            if res:
+                cur.execute("""
+                INSERT OR REPLACE INTO uye_restoranlar_ve_hacim (
+                    platform, restoran_kodu, restoran_adi, mutfaklar, fiyat_segmenti,
+                    puan, degerlendirme_sayisi, sehir, ilce, tam_adres, lat, lon,
+                    url, kaynak, guncellenme_tarihi
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    res["platform"], res["restoran_kodu"], res["restoran_adi"], res["mutfaklar"],
+                    res["fiyat_segmenti"], res["puan"], res["degerlendirme_sayisi"], res["sehir"],
+                    res["ilce"], res["tam_adres"], res["lat"], res["lon"], res["url"],
+                    res["kaynak"], res["guncellenme_tarihi"]
+                ))
+                saved += 1
+                time.sleep(random.uniform(0.4, 0.9))
+                
+    conn.commit()
+    conn.close()
+    print(f"   ✓ {saved} üye restoran 'uye_restoranlar_ve_hacim' tablosuna ambarlandı.")
+    return saved
+
 def main():
     parser = argparse.ArgumentParser(description="GEOPROP Yemek & Hızlı Market Teslimat Ekosistemi Toplayıcı (40 Shard)")
     parser.add_argument("--shard", type=str, help="Shard no (örn: 1/40)")
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite yolu")
     parser.add_argument("--workers", type=int, default=4, help="Paralel worker")
-    parser.add_argument("--limit", type=int, default=50, help="Lokal limit")
+    parser.add_argument("--limit", type=int, default=50, help="Lokal darkstore limit")
+    parser.add_argument("--restaurants", type=int, default=0, help="Çekilecek üye restoran sayısı")
     args = parser.parse_args()
 
     if args.shard:
@@ -315,6 +358,8 @@ def main():
         run_collection(args.out, shard_id=shard_id, total_shards=total, workers=args.workers)
     else:
         run_collection(args.out, workers=args.workers, limit=args.limit)
+        if args.restaurants > 0:
+            harvest_sample_restaurants(args.out, sample_limit=args.restaurants, workers=min(3, args.workers))
 
 if __name__ == "__main__":
     main()
