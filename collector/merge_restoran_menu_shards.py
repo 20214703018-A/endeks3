@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GEOPROP - Restoran Menü, Değerlendirme ve Tarihsel Fiyat Shard Birleştirici (Lossless Zero-Data-Loss Merge Engine)
-40 paralel sanal makineden gelen menü, fiyat, değerlendirme ve yaşam döngüsü shard SQLite dosyalarını:
+GEOPROP - Restoran Menü, Değerlendirme, QR ve Google Places Shard Birleştirici (Lossless Zero-Data-Loss Merge Engine)
+40 paralel sanal makineden gelen menü, fiyat, değerlendirme, QR ve Google Places shard SQLite dosyalarını:
 1. Otomatik yedekleme (.bak) emniyetiyle,
 2. İşlemsel (transactional) bütünlükle,
 3. UNIQUE(mekan_id, urun_adi, donem, fiyat_turu) kuralı ile hiçbir geçmiş veriyi silmeden/kaybetmeden,
@@ -27,6 +27,7 @@ def init_target_db(db_path):
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
 
+    # 1. Menü Kalemleri ve Tarihsel Fiyat Serisi Tablosu
     cur.execute("""
     CREATE TABLE IF NOT EXISTS mekan_menu_kalemleri_ve_fiyat_tarihcesi (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,12 +61,7 @@ def init_target_db(db_path):
         UNIQUE(mekan_id, urun_adi, donem, fiyat_turu)
     )
     """)
-    for col_def in [
-        ("fiyat_segmenti", "TEXT"),
-        ("puan", "REAL"),
-        ("degerlendirme_sayisi", "INTEGER"),
-        ("yorum_sayisi", "INTEGER")
-    ]:
+    for col_def in [("fiyat_segmenti", "TEXT"), ("puan", "REAL"), ("degerlendirme_sayisi", "INTEGER"), ("yorum_sayisi", "INTEGER")]:
         try:
             cur.execute(f"ALTER TABLE mekan_menu_kalemleri_ve_fiyat_tarihcesi ADD COLUMN {col_def[0]} {col_def[1]}")
         except Exception:
@@ -78,9 +74,11 @@ def init_target_db(db_path):
     cur.execute("CREATE INDEX IF NOT EXISTS idx_menu_kategori ON mekan_menu_kalemleri_ve_fiyat_tarihcesi(kategori)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_menu_puan ON mekan_menu_kalemleri_ve_fiyat_tarihcesi(puan, degerlendirme_sayisi)")
 
+    # 2. İşletme Tarihsel Yaşam Döngüsü ve Detaylı İstihbarat Tablosu
     cur.execute("""
     CREATE TABLE IF NOT EXISTS isletme_tarihsel_yasam_dongusu (
         mekan_id TEXT PRIMARY KEY,
+        google_place_id TEXT,
         mekan_adi TEXT NOT NULL,
         ana_kategori TEXT,
         mutfaklar TEXT,
@@ -91,6 +89,10 @@ def init_target_db(db_path):
         il TEXT NOT NULL,
         lat REAL NOT NULL,
         lon REAL NOT NULL,
+        telefon TEXT,
+        calisma_saatleri TEXT,
+        web_sitesi TEXT,
+        qr_menu_url TEXT,
         durum TEXT NOT NULL,
         ilk_tespit_tarihi TEXT,
         son_tespit_tarihi TEXT,
@@ -99,6 +101,11 @@ def init_target_db(db_path):
         degerlendirme_sayisi INTEGER,
         yorum_sayisi INTEGER,
         yildiz_dagilimi TEXT,
+        min_sepet_tutari REAL,
+        teslimat_ucreti REAL,
+        teslimat_suresi TEXT,
+        odeme_yontemleri TEXT,
+        kampanyalar TEXT,
         yorum_hacmi_2022 INTEGER,
         yorum_hacmi_2023 INTEGER,
         yorum_hacmi_2024 INTEGER,
@@ -110,9 +117,10 @@ def init_target_db(db_path):
     )
     """)
     for col_def in [
-        ("mutfaklar", "TEXT"),
-        ("fiyat_segmenti", "TEXT"),
-        ("yildiz_dagilimi", "TEXT")
+        ("google_place_id", "TEXT"), ("mutfaklar", "TEXT"), ("fiyat_segmenti", "TEXT"),
+        ("telefon", "TEXT"), ("calisma_saatleri", "TEXT"), ("web_sitesi", "TEXT"), ("qr_menu_url", "TEXT"),
+        ("yildiz_dagilimi", "TEXT"), ("min_sepet_tutari", "REAL"), ("teslimat_ucreti", "REAL"),
+        ("teslimat_suresi", "TEXT"), ("odeme_yontemleri", "TEXT"), ("kampanyalar", "TEXT")
     ]:
         try:
             cur.execute(f"ALTER TABLE isletme_tarihsel_yasam_dongusu ADD COLUMN {col_def[0]} {col_def[1]}")
@@ -123,7 +131,46 @@ def init_target_db(db_path):
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_durum ON isletme_tarihsel_yasam_dongusu(durum)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_trend ON isletme_tarihsel_yasam_dongusu(musteri_trendi)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_puan ON isletme_tarihsel_yasam_dongusu(puan, degerlendirme_sayisi)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_yasam_gplace ON isletme_tarihsel_yasam_dongusu(google_place_id)")
 
+    # 3. Google Places Ham Ticari Yoğunluk Tablosu
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS google_places_ticari_yogunluk (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        google_place_id TEXT UNIQUE,
+        cid TEXT,
+        isim TEXT NOT NULL,
+        arama_terimi TEXT,
+        ana_kategori TEXT,
+        tum_kategoriler TEXT,
+        puan REAL,
+        yorum_sayisi INTEGER,
+        degerlendirme_sayisi INTEGER,
+        yildiz_dagilimi TEXT,
+        tam_adres TEXT,
+        mahalle TEXT,
+        ilce TEXT,
+        il TEXT,
+        lat REAL NOT NULL,
+        lon REAL NOT NULL,
+        telefon TEXT,
+        calisma_saatleri TEXT,
+        maps_url TEXT,
+        web_sitesi TEXT,
+        kaynak TEXT DEFAULT 'Google Maps',
+        guncellenme_tarihi TEXT NOT NULL
+    )
+    """)
+    for col_def in [("degerlendirme_sayisi", "INTEGER"), ("yildiz_dagilimi", "TEXT"), ("web_sitesi", "TEXT")]:
+        try:
+            cur.execute(f"ALTER TABLE google_places_ticari_yogunluk ADD COLUMN {col_def[0]} {col_def[1]}")
+        except Exception:
+            pass
+
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_ilce ON google_places_ticari_yogunluk(il, ilce)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_coords ON google_places_ticari_yogunluk(lat, lon)")
+
+    # 4. Tarama Geçmişi Tablosu
     cur.execute("""
     CREATE TABLE IF NOT EXISTS menu_tarama_gecmisi (
         mekan_id TEXT PRIMARY KEY,
@@ -134,7 +181,7 @@ def init_target_db(db_path):
     )
     """)
 
-    # 4. Mekan Ardıl-Öncül Dönüşüm ve Devir Tarihçesi (Hangi Mekan Kapandı -> Yerine Ne Açıldı?)
+    # 5. Mekan Ardıl-Öncül Dönüşüm ve Devir Tarihçesi
     cur.execute("""
     CREATE TABLE IF NOT EXISTS isletme_ardil_oncul_donusum_tarihcesi (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -153,11 +200,12 @@ def init_target_db(db_path):
     cur.execute("CREATE INDEX IF NOT EXISTS idx_donusum_coords ON isletme_ardil_oncul_donusum_tarihcesi(lat, lon)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_donusum_tarih ON isletme_ardil_oncul_donusum_tarihcesi(degisim_tarihi)")
 
-    # Kapsamlı Görünüm
+    # 6. Kapsamlı Görünüm
     cur.execute("""
     CREATE VIEW IF NOT EXISTS v_restoran_kapsamli_istihbarat AS
     SELECT 
         y.mekan_id,
+        y.google_place_id,
         y.mekan_adi,
         y.ana_kategori,
         y.mutfaklar,
@@ -166,6 +214,14 @@ def init_target_db(db_path):
         y.degerlendirme_sayisi,
         y.yorum_sayisi,
         y.yildiz_dagilimi,
+        y.min_sepet_tutari,
+        y.teslimat_ucreti,
+        y.teslimat_suresi,
+        y.odeme_yontemleri,
+        y.kampanyalar,
+        y.telefon,
+        y.web_sitesi,
+        y.qr_menu_url,
         y.musteri_trendi,
         y.durum,
         y.faaliyet_suresi_ay,
@@ -187,7 +243,6 @@ def init_target_db(db_path):
     conn.close()
 
 def backup_database(db_path):
-    """Mevcut veritabanının zaman damgalı .bak kopyasını alır."""
     if os.path.exists(db_path) and os.path.getsize(db_path) > 0:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         backup_path = f"{db_path}.{ts}.bak"
@@ -197,15 +252,21 @@ def backup_database(db_path):
     return None
 
 def get_counts(conn):
-    """Mevcut ambarın satır sayılarını döner."""
     cur = conn.cursor()
     m_cnt = cur.execute("SELECT count(*) FROM mekan_menu_kalemleri_ve_fiyat_tarihcesi").fetchone()[0]
     y_cnt = cur.execute("SELECT count(*) FROM isletme_tarihsel_yasam_dongusu").fetchone()[0]
+    try:
+        gp_cnt = cur.execute("SELECT count(*) FROM google_places_ticari_yogunluk").fetchone()[0]
+    except Exception:
+        gp_cnt = 0
+    try:
+        t_cnt = cur.execute("SELECT count(*) FROM isletme_ardil_oncul_donusum_tarihcesi").fetchone()[0]
+    except Exception:
+        t_cnt = 0
     g_cnt = cur.execute("SELECT count(*) FROM menu_tarama_gecmisi").fetchone()[0]
-    return m_cnt, y_cnt, g_cnt
+    return m_cnt, y_cnt, gp_cnt, t_cnt, g_cnt
 
 def merge_shards(shard_files, target_db):
-    """Shard dosyalarını güvenli ve kayıpsız olarak ana ambara ekler."""
     if not shard_files:
         print("⚠️ Birleştirilecek shard dosyası bulunamadı.")
         return False
@@ -219,8 +280,8 @@ def merge_shards(shard_files, target_db):
     conn = sqlite3.connect(target_db)
     cur = conn.cursor()
 
-    init_m_cnt, init_y_cnt, init_g_cnt = get_counts(conn)
-    print(f"📊 Başlangıç Durumu: {init_m_cnt} fiyat noktası | {init_y_cnt} işletme yaşam döngüsü.")
+    init_m_cnt, init_y_cnt, init_gp_cnt, init_t_cnt, init_g_cnt = get_counts(conn)
+    print(f"📊 Başlangıç Durumu: {init_m_cnt} fiyat noktası | {init_y_cnt} işletme | {init_gp_cnt} Google Places | {init_t_cnt} devir kaydı.")
 
     success_shards = 0
     failed_shards = 0
@@ -254,34 +315,55 @@ def merge_shards(shard_files, target_db):
             FROM shard_db.mekan_menu_kalemleri_ve_fiyat_tarihcesi
             """)
 
-            # 2. İşletme Yaşam Döngüsü (INSERT OR REPLACE)
+            # 2. İşletme Yaşam Döngüsü ve Detaylı İstihbarat (INSERT OR REPLACE)
             cur.execute("""
             INSERT OR REPLACE INTO main.isletme_tarihsel_yasam_dongusu (
-                mekan_id, mekan_adi, ana_kategori, mutfaklar, fiyat_segmenti,
-                tam_adres, mahalle, ilce, il, lat, lon, durum,
-                ilk_tespit_tarihi, son_tespit_tarihi, faaliyet_suresi_ay,
+                mekan_id, google_place_id, mekan_adi, ana_kategori, mutfaklar, fiyat_segmenti,
+                tam_adres, mahalle, ilce, il, lat, lon,
+                telefon, calisma_saatleri, web_sitesi, qr_menu_url,
+                durum, ilk_tespit_tarihi, son_tespit_tarihi, faaliyet_suresi_ay,
                 puan, degerlendirme_sayisi, yorum_sayisi, yildiz_dagilimi,
+                min_sepet_tutari, teslimat_ucreti, teslimat_suresi, odeme_yontemleri, kampanyalar,
                 yorum_hacmi_2022, yorum_hacmi_2023, yorum_hacmi_2024, yorum_hacmi_2025, yorum_hacmi_2026,
                 musteri_trendi, kaynak, guncellenme_tarihi
             )
             SELECT
-                mekan_id, mekan_adi, ana_kategori, mutfaklar, fiyat_segmenti,
-                tam_adres, mahalle, ilce, il, lat, lon, durum,
-                ilk_tespit_tarihi, son_tespit_tarihi, faaliyet_suresi_ay,
+                mekan_id, google_place_id, mekan_adi, ana_kategori, mutfaklar, fiyat_segmenti,
+                tam_adres, mahalle, ilce, il, lat, lon,
+                telefon, calisma_saatleri, web_sitesi, qr_menu_url,
+                durum, ilk_tespit_tarihi, son_tespit_tarihi, faaliyet_suresi_ay,
                 puan, degerlendirme_sayisi, yorum_sayisi, yildiz_dagilimi,
+                min_sepet_tutari, teslimat_ucreti, teslimat_suresi, odeme_yontemleri, kampanyalar,
                 yorum_hacmi_2022, yorum_hacmi_2023, yorum_hacmi_2024, yorum_hacmi_2025, yorum_hacmi_2026,
                 musteri_trendi, kaynak, guncellenme_tarihi
             FROM shard_db.isletme_tarihsel_yasam_dongusu
             """)
 
-            # 3. Tarama Geçmişi
+            # 3. Google Places Ham Tablosu (INSERT OR REPLACE)
+            try:
+                cur.execute("""
+                INSERT OR REPLACE INTO main.google_places_ticari_yogunluk (
+                    google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
+                    puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
+                    lat, lon, telefon, calisma_saatleri, maps_url, web_sitesi, kaynak, guncellenme_tarihi
+                )
+                SELECT
+                    google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
+                    puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
+                    lat, lon, telefon, calisma_saatleri, maps_url, web_sitesi, kaynak, guncellenme_tarihi
+                FROM shard_db.google_places_ticari_yogunluk
+                """)
+            except Exception:
+                pass
+
+            # 4. Tarama Geçmişi
             cur.execute("""
             INSERT OR REPLACE INTO main.menu_tarama_gecmisi (mekan_id, url, durum, kalem_sayisi, tarih)
             SELECT mekan_id, url, durum, kalem_sayisi, tarih
             FROM shard_db.menu_tarama_gecmisi
             """)
 
-            # 4. Mekan Ardıl-Öncül Dönüşüm Tarihçesi (INSERT OR IGNORE)
+            # 5. Mekan Ardıl-Öncül Dönüşüm Tarihçesi (INSERT OR IGNORE)
             try:
                 cur.execute("""
                 INSERT OR IGNORE INTO main.isletme_ardil_oncul_donusum_tarihcesi (
@@ -309,13 +391,14 @@ def merge_shards(shard_files, target_db):
             print(f"❌ HATA: {e}")
             failed_shards += 1
 
-    # Bütünlük ve Kayıpsızlık Denetimi
-    final_m_cnt, final_y_cnt, final_g_cnt = get_counts(conn)
+    final_m_cnt, final_y_cnt, final_gp_cnt, final_t_cnt, final_g_cnt = get_counts(conn)
     print("\n" + "=" * 65)
     print(f"📈 BİRLEŞTİRME SONUÇ RAPORU (Lossless Integrity Audit):")
     print(f"  • Başarılı Shard Sayısı: {success_shards} | Hatalı Shard: {failed_shards}")
     print(f"  • Menü & Fiyat Satırları: {init_m_cnt} -> {final_m_cnt} (+{final_m_cnt - init_m_cnt} yeni fiyat noktası)")
     print(f"  • İşletme Yaşam Döngüsü: {init_y_cnt} -> {final_y_cnt} (+{final_y_cnt - init_y_cnt} yeni işletme)")
+    print(f"  • Google Places Mekanları: {init_gp_cnt} -> {final_gp_cnt} (+{final_gp_cnt - init_gp_cnt} yeni mekan)")
+    print(f"  • Devir & Dönüşüm Kayıtları: {init_t_cnt} -> {final_t_cnt}")
     print(f"  • Tarama Kayıtları: {init_g_cnt} -> {final_g_cnt}")
     print("=" * 65)
 
@@ -327,39 +410,30 @@ def merge_shards(shard_files, target_db):
             print("✓ Yedek geri yüklendi.")
         return False
 
-    # Hızlı sorgulama için SQLite optimizasyonu
-    print("⚡ İndeks ve istatistikler optimize ediliyor (ANALYZE)...")
-    cur.execute("ANALYZE")
-    conn.commit()
-    conn.close()
+    try:
+        cur.execute("PRAGMA optimize")
+        cur.execute("VACUUM")
+        conn.commit()
+    except Exception:
+        pass
 
-    print("🎉 Birleştirme kayıpsız ve başarıyla tamamlandı!")
+    conn.close()
     return True
 
 def main():
-    parser = argparse.ArgumentParser(description="GEOPROP Restoran Menü ve Fiyat Shard Birleştirici")
-    parser.add_argument("--shards", nargs="+", help="Birleştirilecek shard SQLite dosyaları veya glob deseni")
-    parser.add_argument("--pattern", default=None, help="Shard arama glob deseni (Örn: 'shards/menu_shard_*.sqlite')")
-    parser.add_argument("--out", default=DEFAULT_TARGET_DB, help="Hedef ana veritabanı yolu")
+    parser = argparse.ArgumentParser(description="GEOPROP Restoran, Menü, QR ve Google Places Shard Birleştirici")
+    parser.add_argument("--shards", required=True, help="Shard sqlite dosyalarının glob deseni (örn: 'artifacts/**/menu_shard_*.sqlite')")
+    parser.add_argument("--out", default=DEFAULT_TARGET_DB, help="Hedef birleşik veritabanı yolu")
     args = parser.parse_args()
 
-    files = []
-    if args.shards:
-        for item in args.shards:
-            if "*" in item or "?" in item:
-                files.extend(glob.glob(item))
-            else:
-                files.append(item)
-    elif args.pattern:
-        files = glob.glob(args.pattern)
-    else:
-        files = glob.glob(os.path.join(BASE_DIR, "shards", "menu_shard_*.sqlite"))
-        if not files:
-            files = glob.glob("/tmp/menu_shard_*.sqlite")
+    files = sorted(glob.glob(args.shards, recursive=True))
+    if not files:
+        print(f"❌ '{args.shards}' deseniyle eşleşen shard bulunamadı!")
+        sys.exit(1)
 
-    files = sorted(list(set(files)))
-    success = merge_shards(files, args.out)
-    sys.exit(0 if success else 1)
+    ok = merge_shards(files, args.out)
+    if not ok:
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

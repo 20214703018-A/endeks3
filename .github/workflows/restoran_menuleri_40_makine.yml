@@ -1,4 +1,4 @@
-name: Restoran & Kafe Menü, Fiyat ve Yaşam Döngüsü Madenciliği (40 Makine)
+name: Restoran, Kafe, Menü, QR & Google Places Madenciliği (40 Makine - Tek Akış)
 
 on:
   workflow_dispatch:
