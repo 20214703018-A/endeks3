@@ -2,6 +2,15 @@ name: Google Places & Ticari Koridor Yoğunluk Madenciliği (40 Makine)
 
 on:
   workflow_dispatch:
+    inputs:
+      mahalle_limit:
+        description: "Shard başına mahalle limiti (Boş = Sınırsız / Tüm Kentsel Mahalleler)"
+        required: false
+        default: ""
+      sorgu_limiti:
+        description: "Shard başına maksimum sorgu sayısı (Boş = Sınırsız)"
+        required: false
+        default: ""
   schedule:
     - cron: "0 4 * * 2" # Her Salı sabaha karşı haftalık güncelleme
 
@@ -9,7 +18,7 @@ jobs:
   madencilik:
     name: Shard ${{ matrix.shard }}/40 Google Yoğunluk
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
@@ -23,11 +32,19 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Shard Verilerini Madencile
+      - name: Shard Verilerini Madencile (Otonom & Derinleştirilmiş)
         run: |
+          LIMIT_ARGS=""
+          if [ -n "${{ github.event.inputs.mahalle_limit }}" ]; then
+            LIMIT_ARGS="$LIMIT_ARGS --mahalle-limit ${{ github.event.inputs.mahalle_limit }}"
+          fi
+          if [ -n "${{ github.event.inputs.sorgu_limiti }}" ]; then
+            LIMIT_ARGS="$LIMIT_ARGS --limit ${{ github.event.inputs.sorgu_limiti }}"
+          fi
           python collector/google_places_ve_yogunluk_toplayici.py \
             --shard ${{ matrix.shard }}/40 \
-            --out shard_${{ matrix.shard }}.sqlite
+            --out shard_${{ matrix.shard }}.sqlite \
+            $LIMIT_ARGS
 
       - name: Shard Çıktısını Yükle (Artifact)
         uses: actions/upload-artifact@v4

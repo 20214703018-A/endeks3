@@ -25,6 +25,7 @@ import argparse
 import sqlite3
 import urllib.request
 import urllib.parse
+from collections import deque
 from datetime import datetime, timezone
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -66,10 +67,37 @@ def init_db(db_path):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS google_places_arama_gecmisi (
+        arama_terimi TEXT PRIMARY KEY,
+        bulunan_adet INTEGER,
+        son_tarama_tarihi TEXT
+    )
+    """)
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_ilce ON google_places_ticari_yogunluk(il, ilce)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_coords ON google_places_ticari_yogunluk(lat, lon)")
     conn.commit()
     conn.close()
+
+def is_query_done(conn, query):
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT 1 FROM google_places_arama_gecmisi WHERE arama_terimi = ?", (query,))
+        return cur.fetchone() is not None
+    except Exception:
+        return False
+
+def record_query(conn, query, count):
+    try:
+        cur = conn.cursor()
+        now_utc = datetime.now(timezone.utc).isoformat()
+        cur.execute("""
+        INSERT OR REPLACE INTO google_places_arama_gecmisi (arama_terimi, bulunan_adet, son_tarama_tarihi)
+        VALUES (?, ?, ?)
+        """, (query, count, now_utc))
+        conn.commit()
+    except Exception:
+        pass
 
 def parse_google_maps_response(content):
     for chunk in content.split('/*""*/'):
@@ -189,18 +217,50 @@ def extract_venue_from_v14(v14, search_query):
     }
 
 NON_COMMERCIAL_KEYWORDS = [
-    "sitesi", "apartmanı", "konutları", "evleri", "köyü", "mezarlığı", "camii", "tatil sitesi", "yerleşim yeri"
+    "sitesi", "apartmanı", "konutları", "evleri", "köyü", "mezarlığı", "camii", "tatil sitesi", "yerleşim yeri",
+    "muhtarlığı", "kaymakamlığı", "belediye başkanlığı", "hükümet konağı", "ilçe jandarma", "polis merkezi", "karakolu"
 ]
 
-def is_valid_commercial_venue(name, category):
+NON_COMMERCIAL_CATEGORIES = [
+    "yerleşim yeri", "ilçe", "il", "köy", "mahalle", "tatil sitesi", "konut kompleksi", "apartman", "cami", "mezarlık",
+    "belediye binası", "hükümet dairesi", "adliye", "karakol", "askeri üs"
+]
+
+def is_valid_commercial_venue(name, category=None, rating=None, reviews=None, is_candidate=False):
+    """Sadece gerçek ticari işletmeleri (dükkan, market, restoran, mağaza vb.) kabul eder.
+    İdari sınırlar, mahalle/köy merkezleri, yol segmanları ve konut sitelerini eler."""
     if not name:
         return False
-    n_low = name.lower()
-    c_low = (category or "").lower()
-    # Eğer isminde site, konut, apartman geçiyorsa ve ticari kategori değilse ele
+    name_clean = name.strip()
+    n_low = name_clean.lower()
+    c_low = (category or "").lower().strip()
+    
+    # 1. Google Maps idari fallback'i (örn. 'Malkara, Tekirdağ, Türkiye' veya 'Sındırgı/Balıkesir, Türkiye')
+    if name_clean.endswith(", Türkiye") or name_clean.endswith(", Turkey") or name_clean.endswith("/Türkiye"):
+        return False
+    if "/" in name_clean and (", Türkiye" in name_clean or ", Turkey" in name_clean or name_clean.count(",") >= 1):
+        return False
+    if n_low.endswith(" türkiye") or n_low.endswith(" turkey"):
+        return False
+        
+    # 2. Yol / Cadde Segmanı Filtresi (Cumhuriyet Cd., Kağızman Cd. vb.)
+    cadde_ekleri = [" cd.", " cad.", " sk.", " sok.", " bulv.", " bulvarı", " caddesi", " sokağı"]
+    if any(n_low.endswith(ce) for ce in cadde_ekleri) and (not category or category == "Ticari Mekan"):
+        return False
+        
+    # 3. İdari / Konut / Dini kategoriler
+    if any(ncc in c_low for ncc in NON_COMMERCIAL_CATEGORIES):
+        return False
+        
+    # 4. İsimde site, apartman, konut vb. geçiyorsa ve açık bir ticari kategori yoksa ele
     if any(kw in n_low for kw in NON_COMMERCIAL_KEYWORDS):
         if not any(ck in c_low for ck in ["restoran", "kafe", "market", "otel", "dükkan", "mağaza", "fırın", "pastane", "avm", "lokanta"]):
             return False
+            
+    # 5. Detaylı kayıtlarda (V14) kategori ve puan/yorum hiçbiri yoksa harita geometrisidir
+    if not is_candidate and not category and rating is None and reviews is None:
+        return False
+        
     return True
 
 def fetch_google_places(query):
@@ -226,7 +286,7 @@ def fetch_google_places(query):
                 for item in data[0][1]:
                     if isinstance(item, list) and len(item) > 14 and item[14]:
                         v = extract_venue_from_v14(item[14], query)
-                        if v and is_valid_commercial_venue(v["isim"], v["ana_kategori"]):
+                        if v and is_valid_commercial_venue(v["isim"], v["ana_kategori"], v.get("puan"), v.get("yorum_sayisi")):
                             venues.append(v)
             
             # Durum 2: data[37] aday listesi (Eğer durum 1 boşsa)
@@ -240,7 +300,7 @@ def fetch_google_places(query):
                             cid = cand[2] if len(cand) > 2 else None
                             title = cand[4] if len(cand) > 4 else None
                             if coords and len(coords) >= 4 and coords[2] is not None and coords[3] is not None and title:
-                                if is_valid_commercial_venue(title, None):
+                                if is_valid_commercial_venue(title, "Ticari Mekan", None, None, is_candidate=True):
                                     now_utc = datetime.now(timezone.utc).isoformat()
                                     venues.append({
                                         "google_place_id": f"CID_{cid}",
@@ -502,8 +562,8 @@ def get_all_commercial_corridor_queries():
 
 MAHALLE_JSON = os.path.join(BASE_DIR, "collector/mahalle_koordinatlari.json")
 
-def get_mahalle_queries_by_shard(shard_id, total_shards=40, limit=100):
-    """Her shard için Türkiye'nin 32.000+ kentsel mahallesinden dengeli bir dilim seçer."""
+def get_mahalle_queries_by_shard(shard_id, total_shards=40, limit=None):
+    """Her shard için Türkiye'nin 32.973 kentsel mahallesinden dengeli bir dilim seçer."""
     if not os.path.exists(MAHALLE_JSON):
         return []
     try:
@@ -517,7 +577,9 @@ def get_mahalle_queries_by_shard(shard_id, total_shards=40, limit=100):
         step = max(1, len(urban_keys) // total_shards)
         start = (shard_id - 1) * step
         end = start + step if shard_id < total_shards else len(urban_keys)
-        shard_keys = urban_keys[start:end][:limit]
+        shard_keys = urban_keys[start:end]
+        if limit and limit > 0:
+            shard_keys = shard_keys[:limit]
         
         queries = []
         for k in shard_keys:
@@ -531,7 +593,7 @@ def get_mahalle_queries_by_shard(shard_id, total_shards=40, limit=100):
     except Exception:
         return []
 
-def get_commercial_corridors_by_shard(shard_id, total_shards=40, mahalle_limit=80):
+def get_commercial_corridors_by_shard(shard_id, total_shards=40, mahalle_limit=None):
     """40 Shard için dengeli 81 il, ilçe ve MAHALLE MAHALLE detaylı ticari sorgu havuzu oluşturur."""
     all_corridors = get_all_commercial_corridor_queries()
     step = max(1, len(all_corridors) // total_shards)
@@ -539,7 +601,7 @@ def get_commercial_corridors_by_shard(shard_id, total_shards=40, mahalle_limit=8
     end = start + step if shard_id < total_shards else len(all_corridors)
     corridor_slice = all_corridors[start:end]
     
-    # Mahalle Mahalle detaylı aramaları ekle
+    # Mahalle Mahalle detaylı aramaları ekle (mahalle_limit None ise shard'daki TÜM kentsel mahalleleri alır)
     mahalle_slice = get_mahalle_queries_by_shard(shard_id, total_shards, limit=mahalle_limit)
     
     combined = corridor_slice + mahalle_slice
@@ -573,27 +635,53 @@ def main():
     parser = argparse.ArgumentParser(description="GEOPROP Google Places & Ticari Yoğunluk Toplayıcı (81 İl & 40 Shard)")
     parser.add_argument("--shard", type=str, help="Shard numarası (örn: 1/40)")
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite veritabanı")
-    parser.add_argument("--limit", type=int, default=50, help="Maksimum sorgu")
+    parser.add_argument("--limit", type=int, default=None, help="Maksimum işlenecek sorgu sayısı (varsayılan: sınırsız)")
+    parser.add_argument("--mahalle-limit", type=int, default=None, help="Shard başına işlenecek mahalle sayısı (varsayılan: tüm kentsel mahalleler)")
+    parser.add_argument("--no-deep", action="store_true", help="Yoğun ticari mahallelerde otonom derinleştirmeyi devre dışı bırakır")
+    parser.add_argument("--force", action="store_true", help="Daha önce taranmış sorguları atlamadan yeniden tara")
     parser.add_argument("--all", action="store_true", help="Tüm 81 il sorgularını tek seferde çalıştır")
     args = parser.parse_args()
 
     init_db(args.out)
+    conn = sqlite3.connect(args.out)
 
     if args.all:
-        queries = COMMERCIAL_CORRIDORS_81_PROVINCES
-        print(f"81 İl Tam Kapsama Modu: {len(queries)} ticari koridor ve AVM işleniyor...")
+        initial_queries = get_all_commercial_corridor_queries()
+        print(f"81 İl Tam Kapsama Modu: {len(initial_queries)} ticari koridor ve ilçe sorgulanıyor...")
     elif args.shard:
         shard_id, total = map(int, args.shard.split("/"))
-        queries = get_commercial_corridors_by_shard(shard_id, total)
-        print(f"Shard {shard_id}/{total}: {len(queries)} ticari koridor sorgusu işleniyor...")
+        initial_queries = get_commercial_corridors_by_shard(shard_id, total, mahalle_limit=args.mahalle_limit)
+        print(f"Shard {shard_id}/{total}: {len(initial_queries)} temel ticari & mahalle sorgusu yüklendi...")
     else:
-        queries = COMMERCIAL_CORRIDORS_81_PROVINCES[:args.limit]
-        print(f"Varsayılan mod: {len(queries)} sorgu işleniyor...")
+        initial_queries = COMMERCIAL_CORRIDORS_81_PROVINCES[:args.limit or 50]
+        print(f"Varsayılan mod: {len(initial_queries)} sorgu işleniyor...")
 
-    conn = sqlite3.connect(args.out)
+    deep_enabled = not args.no_deep
+    work_queue = deque(initial_queries)
+    seen_queries = set(initial_queries)
+
+    processed = 0
     success = 0
-    for idx, q in enumerate(queries):
-        print(f"[{idx+1}/{len(queries)}] Sorgu: '{q}'...", flush=True)
+    start_time = time.time()
+
+    print(f"Otonom Madencilik Başlatıldı: Başlangıç Havuzu = {len(work_queue)} sorgu | Derinleştirme = {'AÇIK' if deep_enabled else 'KAPALI'}\n", flush=True)
+
+    while work_queue:
+        if args.limit and processed >= args.limit:
+            print(f"\n[Durduruldu] Belirtilen maksimum sorgu limitine ({args.limit}) ulaşıldı.", flush=True)
+            break
+
+        q = work_queue.popleft()
+
+        # Önceden işlenmişse ve force yoksa hızlıca atla (otonom kaldığı yerden devam)
+        if not args.force and is_query_done(conn, q):
+            continue
+
+        processed += 1
+        elapsed = time.time() - start_time
+        rate = processed / elapsed if elapsed > 0 else 0
+        print(f"[{processed}] (Kuyrukta: {len(work_queue)} | Hız: {rate:.1f} sorgu/sn) Sorgu: '{q}'...", flush=True)
+
         venues = fetch_google_places(q)
         if venues:
             for res in venues:
@@ -603,12 +691,27 @@ def main():
                 puan_str = f"Puan: {res['puan']}" if res['puan'] is not None else "Puan: -"
                 yorum_str = f"({res['yorum_sayisi']} yorum)" if res['yorum_sayisi'] is not None else ""
                 print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | {puan_str} {yorum_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
+
+            # OTONOM DERİNLEŞTİRME:
+            # Eğer bir mahallenin 'dükkanlar' sorgusunda >= 3 işletme bulunduysa,
+            # o mahallenin ticari bir çarşısı olduğu kesindir.
+            # Otonom olarak kafeler, marketler ve mağazalar için derinleşme sorgularını kuyruğa ekle!
+            if deep_enabled and len(venues) >= 3 and " dükkanlar" in q:
+                base_prefix = q.replace(" dükkanlar", "").strip()
+                for sub_cat in ["kafeler", "marketler", "mağazalar"]:
+                    sub_q = f"{base_prefix} {sub_cat}"
+                    if sub_q not in seen_queries and not is_query_done(conn, sub_q):
+                        seen_queries.add(sub_q)
+                        work_queue.append(sub_q)
+                        print(f"  [⚡ Otonom Derinleştirme] Yoğun ticari aks tespit edildi -> Kuyruğa eklendi: '{sub_q}'", flush=True)
         else:
             print(f"  -> Sonuç alınamadı: {q}", flush=True)
+
+        record_query(conn, q, len(venues))
         time.sleep(random.uniform(0.4, 0.8))
 
     conn.close()
-    print(f"\nİşlem tamamlandı. Toplam {len(queries)} sorgudan {success} mekan ambarlandı.", flush=True)
+    print(f"\nİşlem tamamlandı. Toplam {processed} sorgudan {success} mekan ambarlandı.", flush=True)
     print(f"Çıktı DB: {args.out}", flush=True)
 
 if __name__ == "__main__":
