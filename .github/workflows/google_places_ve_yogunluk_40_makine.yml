@@ -11,6 +11,10 @@ on:
         description: "Shard başına maksimum sorgu sayısı (Boş = Sınırsız)"
         required: false
         default: ""
+      sokak_limiti:
+        description: "Shard başına sokak tohumu limiti (her sokak 5 sektör sorgusu üretir)"
+        required: false
+        default: ""
   schedule:
     - cron: "0 4 * * 2" # Her Salı sabaha karşı haftalık güncelleme
 
@@ -40,6 +44,9 @@ jobs:
           fi
           if [ -n "${{ github.event.inputs.sorgu_limiti }}" ]; then
             LIMIT_ARGS="$LIMIT_ARGS --limit ${{ github.event.inputs.sorgu_limiti }}"
+          fi
+          if [ -n "${{ github.event.inputs.sokak_limiti }}" ]; then
+            LIMIT_ARGS="$LIMIT_ARGS --sokak-limit ${{ github.event.inputs.sokak_limiti }}"
           fi
           python collector/google_places_ve_yogunluk_toplayici.py \
             --shard ${{ matrix.shard }}/40 \

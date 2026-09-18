@@ -1,0 +1,153 @@
+name: "GEOPROP Global Veri Madencisi (40x Paralel Matris)"
+
+on:
+  schedule:
+    # Günde iki kez çalıştır (Gece ve Öğlen)
+    - cron: '0 2,14 * * *'
+  workflow_dispatch:
+    inputs:
+      hedef_kapsam:
+        description: 'Çalıştırılacak modüller (Tümü, Finans, Mekan, Emlak)'
+        required: true
+        default: 'all'
+
+jobs:
+  # 1. Aşama: Tekil / Resmi Veri Çekimleri (TÜİK, ETBİS, SEGE, BDDK, TOBB)
+  official_and_macro_data:
+    name: "Resmi Veri ve Makro Ekonomik İstihbarat (Tekil Node)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v3
+
+      - name: Python Ortamını Kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Bağımlılıkları Yükle
+        run: pip install -r requirements.txt
+
+      - name: Resmi Makro İstihbarat Betiklerini Çalıştır
+        run: |
+          echo "BKM, BDDK, KAP ve TÜİK Gerçek Finansal Verileri Çekiliyor..."
+          python collector/bddk_finturk_toplayici.py
+          python collector/bkm_sektorel_kart_toplayici.py
+          python collector/kap_perakende_ciro_toplayici.py
+          python collector/tuik_bolge_toplayici.py
+          python collector/tuik_il_bazli_satis_istatistikleri.py
+          
+          echo "Sildiğimiz Sahte Verilerin GERÇEK Kaynakları Çalıştırılıyor..."
+          echo "Geçmişte yazılan ama tam çekilmeyen resmi veriler:"
+          python collector/etbis_ve_sege_resmi_veri_toplayici.py || true
+          python collector/tobb_ticaret_sicil_turnover_toplayici.py || true
+
+      - name: Artifact Olarak Kaydet
+        uses: actions/upload-artifact@v3
+        with:
+          name: macro-intelligence-db
+          path: warehouse/product/*.sqlite
+
+  # 2. Aşama: Ağır Madencilik (40 Sunuculu Matris)
+  heavy_data_mining_shards:
+    name: "Derin Madencilik Shard ${{ matrix.shard }}/40"
+    needs: official_and_macro_data
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v3
+
+      - name: Python Ortamını Kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Bağımlılıkları Yükle
+        run: pip install -r requirements.txt
+
+      - name: Kısmi Veritabanlarını İndir (Senkronizasyon)
+        uses: actions/download-artifact@v3
+        with:
+          name: macro-intelligence-db
+          path: warehouse/product/
+
+      - name: Google Places, Yoğunluk ve İşletme Gözlemi
+        run: python collector/google_places_ve_yogunluk_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
+
+      - name: Restoran Menü, Fiyat ve Gerçek Enflasyon Taraması
+        run: python collector/restoran_menu_ve_fiyat_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
+
+      - name: Yemeksepeti / Teslimat Ağı Kapasitesi
+        run: python collector/yemek_teslimat_ekosistemi_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
+
+      - name: Emlak İlanları ve Gerçek Devren İlan Yoğunluğu
+        run: python collector/ilan_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
+
+      - name: Kargo, Lojistik, Gel-Al PUDO ve Darkstore Ağı
+        # Trendyol API vb. çok yoğun olduğu için shard bazlı bölünmesi gerek
+        run: python collector/kargo_darkstore_teslimat_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
+
+      - name: Airbnb 81 İl ve Çok Vadeli Doluluk (Arbitraj) Taraması
+        run: python collector/airbnb_fiyat_ve_potansiyel_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
+
+      - name: Shard Çıktılarını Artifact Olarak Yükle
+        uses: actions/upload-artifact@v3
+        with:
+          name: shard-db-${{ matrix.shard }}
+          path: warehouse/product/*.sqlite
+
+  # 3. Aşama: Altyapı ve Hareketlilik (Cron)
+  infrastructure_and_mobility:
+    name: "Altyapı, Trafik ve Hareketlilik (Tekil Node)"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v3
+
+      - name: Python Ortamını Kur
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: İBB / İSPARK Canlı Trafik ve Geçişler
+        run: |
+          python collector/ibb_trafik_yogunluk_toplayici.py
+          python collector/arac_gps_ve_trafik_toplayici.py
+          python collector/ulasim_rotalari_ve_istasyon_toplayici.py
+          
+      - name: Mobility Çıktılarını Yükle
+        uses: actions/upload-artifact@v3
+        with:
+          name: mobility-db
+          path: warehouse/product/*.sqlite
+
+  # 4. Aşama: Veri Ambarı Birleştirme (Merge)
+  merge_and_commit:
+    name: "Bütün Shard'ları Birleştir ve Ana Ambara Aktar"
+    needs: [heavy_data_mining_shards, infrastructure_and_mobility]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v3
+
+      - name: Tüm Artifact'leri İndir
+        uses: actions/download-artifact@v3
+        with:
+          path: temp_dbs/
+
+      - name: Veritabanlarını Birleştir (Merge)
+        run: |
+          echo "40 Shard'dan gelen SQLite dosyaları tek bir master ambara birleştiriliyor..."
+          python geoprop/db_merger.py temp_dbs/ warehouse/product/
+
+      - name: Değişiklikleri Ana Repoya Commit Et (Data Dökümü)
+        run: |
+          git config --global user.name 'geoprop-bot'
+          git config --global user.email 'bot@geoprop.ai'
+          git add warehouse/product/*.sqlite
+          git commit -m "🤖 [Veri Madencisi] Günlük 40-Node Veri Sentezi Tamamlandı."
+          git push origin main

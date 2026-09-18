@@ -10,52 +10,36 @@ import glob
 import sqlite3
 import argparse
 
+try:
+    from collector.google_places_ve_yogunluk_toplayici import init_db
+except ImportError:
+    from google_places_ve_yogunluk_toplayici import init_db
+
 DEFAULT_OUT = "warehouse/product/google_places_ve_yogunluk.sqlite"
 
-def init_schema(conn):
-    cur = conn.cursor()
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS google_places_ticari_yogunluk (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        google_place_id TEXT UNIQUE,
-        cid TEXT,
-        isim TEXT NOT NULL,
-        arama_terimi TEXT,
-        ana_kategori TEXT,
-        tum_kategoriler TEXT,
-        puan REAL,
-        yorum_sayisi INTEGER,
-        degerlendirme_sayisi INTEGER,
-        yildiz_dagilimi TEXT,
-        tam_adres TEXT,
-        mahalle TEXT,
-        ilce TEXT,
-        il TEXT,
-        lat REAL NOT NULL,
-        lon REAL NOT NULL,
-        telefon TEXT,
-        calisma_saatleri TEXT,
-        maps_url TEXT,
-        kaynak TEXT DEFAULT 'Google Maps',
-        guncellenme_tarihi TEXT NOT NULL
+def table_exists(conn, schema, table):
+    return conn.execute(
+        f"SELECT 1 FROM {schema}.sqlite_master WHERE type='table' AND name=?", (table,)
+    ).fetchone() is not None
+
+
+def merge_common_columns(conn, table, mode="OR REPLACE"):
+    if not table_exists(conn, "shard", table):
+        return
+    target = [row[1] for row in conn.execute(f"PRAGMA main.table_info({table})") if row[1] != "id"]
+    source = {row[1] for row in conn.execute(f"PRAGMA shard.table_info({table})")}
+    common = [column for column in target if column in source]
+    if not common:
+        return
+    quoted = ", ".join(f'"{column}"' for column in common)
+    conn.execute(
+        f"INSERT {mode} INTO main.{table} ({quoted}) SELECT {quoted} FROM shard.{table}"
     )
-    """)
-    try:
-        cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN degerlendirme_sayisi INTEGER")
-    except Exception:
-        pass
-    try:
-        cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN yildiz_dagilimi TEXT")
-    except Exception:
-        pass
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_ilce ON google_places_ticari_yogunluk(il, ilce)")
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_coords ON google_places_ticari_yogunluk(lat, lon)")
-    conn.commit()
 
 def merge(shard_paths, out_db):
     os.makedirs(os.path.dirname(os.path.abspath(out_db)), exist_ok=True)
+    init_db(out_db)
     conn = sqlite3.connect(out_db)
-    init_schema(conn)
 
     merged = 0
     for path in shard_paths:
@@ -63,26 +47,9 @@ def merge(shard_paths, out_db):
             continue
         try:
             conn.execute("ATTACH DATABASE ? AS shard", (path,))
-            try:
-                conn.execute("ALTER TABLE shard.google_places_ticari_yogunluk ADD COLUMN degerlendirme_sayisi INTEGER")
-            except Exception:
-                pass
-            try:
-                conn.execute("ALTER TABLE shard.google_places_ticari_yogunluk ADD COLUMN yildiz_dagilimi TEXT")
-            except Exception:
-                pass
-
-            conn.execute("""
-            INSERT OR REPLACE INTO google_places_ticari_yogunluk (
-                google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-                puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
-                lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
-            ) SELECT 
-                google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
-                puan, yorum_sayisi, COALESCE(degerlendirme_sayisi, yorum_sayisi), yildiz_dagilimi, tam_adres, mahalle, ilce, il,
-                lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
-            FROM shard.google_places_ticari_yogunluk
-            """)
+            merge_common_columns(conn, "google_places_ticari_yogunluk")
+            merge_common_columns(conn, "google_places_gozlem", "OR IGNORE")
+            merge_common_columns(conn, "google_places_arama_gecmisi")
             conn.commit()
             conn.execute("DETACH DATABASE shard")
             merged += 1

@@ -25,9 +25,14 @@ import sqlite3
 import urllib.request
 import urllib.parse
 import subprocess
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+try:
+    from collector.toplayici_guvenligi import FetchResult, fetch_text
+except ImportError:  # dogrudan `python collector/...py` calistirmasi
+    from toplayici_guvenligi import FetchResult, fetch_text
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DEFAULT_DB = os.path.join(BASE_DIR, "warehouse/product/restoran_ve_kafe_menuleri.sqlite")
@@ -167,22 +172,10 @@ NON_COMMERCIAL_CATEGORIES = [
 ]
 
 def calculate_star_distribution(puan, deg_sayisi):
-    if not deg_sayisi or deg_sayisi <= 0:
-        return json.dumps({"1_yildiz": 0, "2_yildiz": 0, "3_yildiz": 0, "4_yildiz": 0, "5_yildiz": 0})
-    p = max(1.0, min(5.0, puan or 4.1))
-    w5 = max(0.05, min(0.85, (p - 2.5) / 2.5))
-    w4 = max(0.10, min(0.45, 0.40 - abs(p - 4.0) * 0.2))
-    rem = max(0.05, 1.0 - (w5 + w4))
-    w3 = rem * 0.50
-    w2 = rem * 0.30
-    w1 = rem * 0.20
-    total_w = w1 + w2 + w3 + w4 + w5
-    s1 = int(deg_sayisi * (w1 / total_w))
-    s2 = int(deg_sayisi * (w2 / total_w))
-    s3 = int(deg_sayisi * (w3 / total_w))
-    s4 = int(deg_sayisi * (w4 / total_w))
-    s5 = max(0, deg_sayisi - (s1 + s2 + s3 + s4))
-    return json.dumps({"1_yildiz": s1, "2_yildiz": s2, "3_yildiz": s3, "4_yildiz": s4, "5_yildiz": s5}, ensure_ascii=False)
+    # DİKKAT: Eski uydurma matematik algoritması GEOPROP kuralları gereği silinmiştir.
+    # Eğer Google API veya scraping üzerinden gerçek histogram kazınmamışsa, uydurma üretilemez.
+    # Şimdilik NULL/Empty dönülüyor. (İleride gerçek veri scraper eklendiğinde buradan doldurulacak).
+    return None
 
 def init_db(db_path):
     os.makedirs(os.path.dirname(os.path.abspath(db_path)), exist_ok=True)
@@ -340,9 +333,22 @@ def init_db(db_path):
         url TEXT,
         durum TEXT,
         kalem_sayisi INTEGER,
-        tarih TEXT
+        tarih TEXT,
+        http_status INTEGER,
+        deneme_sayisi INTEGER DEFAULT 0,
+        hata_kodu TEXT,
+        hata_detayi TEXT,
+        sonraki_deneme_tarihi TEXT
     )
     """)
+    for col_def in [
+        ("http_status", "INTEGER"), ("deneme_sayisi", "INTEGER DEFAULT 0"),
+        ("hata_kodu", "TEXT"), ("hata_detayi", "TEXT"), ("sonraki_deneme_tarihi", "TEXT")
+    ]:
+        try:
+            cur.execute(f"ALTER TABLE menu_tarama_gecmisi ADD COLUMN {col_def[0]} {col_def[1]}")
+        except sqlite3.OperationalError:
+            pass
 
     cur.execute("""
     CREATE TABLE IF NOT EXISTS isletme_ardil_oncul_donusum_tarihcesi (
@@ -403,9 +409,9 @@ def init_db(db_path):
     conn.commit()
     conn.close()
 
-def get_html_content(url, timeout=10):
+def fetch_html_content(url, timeout=10):
     if not url or not url.startswith("http"):
-        return None
+        return FetchResult(url or "", None, None, 0, "INVALID_URL", "URL http/https degil")
     ua = random.choice(USER_AGENTS)
     headers = {
         "User-Agent": ua,
@@ -420,15 +426,16 @@ def get_html_content(url, timeout=10):
         "Sec-Fetch-User": "?1",
         "Upgrade-Insecure-Requests": "1"
     }
-    # 1. urllib ile hızlı bağlantı dene
-    try:
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            content = resp.read().decode("utf-8", errors="ignore")
-            if "Access to this page has been denied" not in content and "Attention Required" not in content and len(content) > 10000:
-                return content
-    except Exception:
-        pass
+    result = fetch_text(
+        url,
+        headers=headers,
+        timeout=timeout,
+        attempts=3,
+        min_bytes=3000,
+        blocked_markers=("Access to this page has been denied", "Attention Required"),
+    )
+    if result.ok:
+        return result
 
     # 2. curl subprocess fallback (Linux ve GitHub Actions runner'larında TLS bot engelini aşar)
     try:
@@ -450,11 +457,15 @@ def get_html_content(url, timeout=10):
         if res.returncode == 0 and res.stdout:
             content = res.stdout.decode("utf-8", errors="ignore")
             if "Access to this page has been denied" not in content and len(content) > 3000:
-                return content
+                return FetchResult(url, content, 200, result.attempts + 1, None, None)
     except Exception:
         pass
+    return result
 
-    return None
+
+def get_html_content(url, timeout=10):
+    """Geriye donuk uyumlu metin yardimcisi; yeni kod fetch sonucunu kullanir."""
+    return fetch_html_content(url, timeout=timeout).body
 
 def parse_google_maps_response(content):
     if not content:
@@ -901,72 +912,75 @@ def is_valid_commercial_venue(name, category=None, rating=None, reviews=None, is
     return True
 
 def fetch_google_places(query):
-    encoded_q = urllib.parse.quote(query)
-    url = f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}"
-    headers = {
-        "User-Agent": random.choice(USER_AGENTS),
-        "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Accept": "*/*"
-    }
-    req = urllib.request.Request(url, headers=headers)
-    venues = []
+    # Tek kanonik ayrıştırıcı kullan; iki dosyada farklı Google yanıt indeksleri
+    # taşımak sessiz veri bozulmasına yol açıyordu.
     try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            content = resp.read().decode("utf-8", errors="ignore")
-            data = parse_google_maps_response(content)
-            if not data:
-                return []
+        from collector.google_places_ve_yogunluk_toplayici import fetch_google_places as canonical_fetch
+    except ImportError:
+        try:
+            from google_places_ve_yogunluk_toplayici import fetch_google_places as canonical_fetch
+        except ImportError:
+            canonical_fetch = None
+    if canonical_fetch is not None:
+        return canonical_fetch(query)
+    # Kanonik ayrıştırıcı yüklenemiyorsa belirsiz yerleşim adaylarını işletme
+    # olarak üretmek yerine açıkça boş dön. Çağıran tarama geçmişine bunu yazar.
+    return []
 
-            if len(data) > 0 and len(data[0]) > 1 and data[0][1]:
-                for item in data[0][1]:
-                    if isinstance(item, list) and len(item) > 14 and item[14]:
-                        v = extract_venue_from_v14(item[14], query)
-                        if v and is_valid_commercial_venue(v["isim"], v["ana_kategori"], v.get("puan"), v.get("yorum_sayisi")):
-                            venues.append(v)
+QR_MENU_DOMAINS = [
+    "adisyo.com", "masamenu.com", "masamenum.com", "finedinemenu.com", "garson.io",
+    "menum.io", "qrmenu.com", "qrmenu.com.tr", "menuburada.com", "menu.myqrcodemenu.com",
+    "dijital.menu", "menufiyat.com",
+]
 
-            if not venues and len(data) > 37 and data[37] and isinstance(data[37], list) and len(data[37]) > 2:
-                d37 = data[37]
-                sub_list = d37[2]
-                if sub_list and isinstance(sub_list, list):
-                    for cand in sub_list:
-                        if cand and len(cand) > 4:
-                            coords = cand[3] if len(cand) > 3 else None
-                            cid = cand[2] if len(cand) > 2 else None
-                            raw_title = cand[4] if len(cand) > 4 else None
-                            if coords and len(coords) >= 4 and coords[2] is not None and coords[3] is not None and raw_title:
-                                parts = raw_title.split(",")
-                                title = parts[0].strip()
-                                if is_valid_commercial_venue(title, "Ticari Mekan", None, None, is_candidate=True):
-                                    now_utc = datetime.now(timezone.utc).isoformat()
-                                    venues.append({
-                                        "google_place_id": f"CID_{cid}",
-                                        "cid": str(cid),
-                                        "isim": str(title),
-                                        "arama_terimi": query,
-                                        "ana_kategori": "Restoran & Kafe",
-                                        "tum_kategoriler": None,
-                                        "puan": None,
-                                        "yorum_sayisi": None,
-                                        "degerlendirme_sayisi": None,
-                                        "yildiz_dagilimi": None,
-                                        "tam_adres": str(raw_title),
-                                        "mahalle": None,
-                                        "ilce": None,
-                                        "il": None,
-                                        "lat": float(coords[2]),
-                                        "lon": float(coords[3]),
-                                        "telefon": None,
-                                        "calisma_saatleri": None,
-                                        "maps_url": f"https://www.google.com/maps?cid={cid}" if cid else None,
-                                        "web_sitesi": None,
-                                        "kaynak": "Google Maps (Aday Listesi)",
-                                        "guncellenme_tarihi": now_utc
-                                    })
-    except Exception:
-        pass
-    return venues
 
-QR_MENU_DOMAINS = ["adisyo.com", "masamenu.com", "masamenum.com", "finedinemenu.com", "garson.io", "menum.io", "qrmenu.com"]
+def _jsonld_menu_items(html):
+    products = []
+
+    def walk(node, category=None):
+        if isinstance(node, dict):
+            node_type = node.get("@type")
+            types = {str(t).lower() for t in (node_type if isinstance(node_type, list) else [node_type]) if t}
+            next_category = node.get("name") if "menusection" in types else category
+            if types.intersection({"menuitem", "product"}):
+                name = node.get("name")
+                offer = node.get("offers") or {}
+                if isinstance(offer, list):
+                    offer = next((item for item in offer if isinstance(item, dict)), {})
+                price = offer.get("price") if isinstance(offer, dict) else None
+                if price is None:
+                    price = node.get("price")
+                try:
+                    price_text = re.sub(r"[^0-9,.]", "", str(price))
+                    if "," in price_text:
+                        price_text = price_text.replace(".", "").replace(",", ".")
+                    parsed_price = float(price_text)
+                except (TypeError, ValueError):
+                    parsed_price = None
+                if name and parsed_price is not None and 0 < parsed_price <= 100_000:
+                    products.append({
+                        "kategori": next_category or "Masa Menüsü",
+                        "urun_adi": str(name).strip(),
+                        "aciklama": node.get("description") or "İşletme web sitesi / QR menü liste fiyatı",
+                        "fiyat": parsed_price,
+                        "orijinal_fiyat": parsed_price,
+                        "fiyat_turu": "YERINDE_MASA",
+                        "stokta_var_mi": 1,
+                        "gorsel_url": node.get("image") if isinstance(node.get("image"), str) else None,
+                        "kaynak_platform": "İşletme Web Sitesi / QR Menü",
+                    })
+            for value in node.values():
+                walk(value, next_category)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value, category)
+
+    for raw in re.findall(r'<script[^>]*type=["\']application/ld\+json["\'][^>]*>(.*?)</script>', html, re.I | re.S):
+        try:
+            walk(json.loads(raw))
+        except (TypeError, ValueError, json.JSONDecodeError):
+            continue
+    return products
 
 def extract_qr_or_website_menu(web_url, timeout=7):
     if not web_url or not web_url.startswith("http"):
@@ -977,9 +991,11 @@ def extract_qr_or_website_menu(web_url, timeout=7):
 
     products = []
     sub_menu_urls = []
-    for link in re.findall(r'href=[\"\']([^\"\']*(?:menu|fiyat|adisyo|masamenu|garson|yemek)[^\"\']*)[\"\']', html, re.IGNORECASE):
-        if any(qd in link for qd in QR_MENU_DOMAINS) or link.startswith("/"):
-            full_u = urllib.parse.urljoin(web_url, link)
+    root_host = urllib.parse.urlparse(web_url).netloc.casefold()
+    for link in re.findall(r'href=[\"\']([^\"\']*(?:menu|menü|fiyat|adisyo|masamenu|garson|yemek)[^\"\']*)[\"\']', html, re.IGNORECASE):
+        full_u = urllib.parse.urljoin(web_url, link)
+        link_host = urllib.parse.urlparse(full_u).netloc.casefold()
+        if link_host == root_host or any(qd in link_host for qd in QR_MENU_DOMAINS):
             sub_menu_urls.append(full_u)
 
     target_htmls = [html]
@@ -994,6 +1010,9 @@ def extract_qr_or_website_menu(web_url, timeout=7):
     )
 
     for h in target_htmls:
+        for product in _jsonld_menu_items(h):
+            if not any(p["urun_adi"].casefold() == product["urun_adi"].casefold() for p in products):
+                products.append(product)
         for m in price_pattern.finditer(h):
             name = m.group(1).strip()
             pr_str = m.group(2).replace(".", "").replace(",", ".")
@@ -1022,7 +1041,7 @@ def extract_yemeksepeti_metrics_and_menu(html):
         "min_sepet_tutari": None,
         "teslimat_ucreti": None,
         "teslimat_suresi": None,
-        "odeme_yontemleri": "Online Kredi/Banka Kartı, Kapıda Nakit, Sodexo, Multinet, Edenred",
+        "odeme_yontemleri": None,
         "kampanyalar": None
     }
     m_min = re.search(r'"minimumOrderAmount":\s*([0-9\.]+)', html)
@@ -1046,6 +1065,13 @@ def extract_yemeksepeti_metrics_and_menu(html):
     camps = re.findall(r'"campaignTitle":\s*"([^"]+)"', html) or re.findall(r'"promotionTitle":\s*"([^"]+)"', html)
     if camps:
         metrics["kampanyalar"] = ", ".join(set(camps[:3]))
+
+    payment_labels = []
+    for label in ("Online Kredi Kartı", "Kapıda Nakit", "Sodexo", "Multinet", "Ticket", "Edenred"):
+        if re.search(re.escape(label), html, re.I):
+            payment_labels.append(label)
+    if payment_labels:
+        metrics["odeme_yontemleri"] = ", ".join(payment_labels)
 
     # Kategori Haritası
     cats = {}
@@ -1156,6 +1182,50 @@ def extract_yemeksepeti_metrics_and_menu(html):
 
     return metrics, products
 
+
+def extract_yemeksepeti_venue_metadata(html):
+    """JSON-LD'den yalniz kaynagin acikca verdigi isletme/konum alanlarini al."""
+    if not html:
+        return {}
+    accepted = {"Restaurant", "FoodEstablishment", "LocalBusiness", "Store", "GroceryStore"}
+    nodes = []
+    for match in re.finditer(r'<script[^>]*type=["\x27]application/ld\+json["\x27][^>]*>(.*?)</script>', html, re.DOTALL):
+        try:
+            parsed = json.loads(match.group(1))
+        except Exception:
+            continue
+        if isinstance(parsed, list):
+            nodes.extend(x for x in parsed if isinstance(x, dict))
+        elif isinstance(parsed, dict):
+            nodes.append(parsed)
+            graph = parsed.get("@graph")
+            if isinstance(graph, list):
+                nodes.extend(x for x in graph if isinstance(x, dict))
+    for node in nodes:
+        node_types = node.get("@type")
+        node_types = set(node_types if isinstance(node_types, list) else [node_types])
+        if not node_types.intersection(accepted):
+            continue
+        address = node.get("address") if isinstance(node.get("address"), dict) else {}
+        geo = node.get("geo") if isinstance(node.get("geo"), dict) else {}
+        result = {
+            "mekan_adi": node.get("name"),
+            "tam_adres": address.get("streetAddress"),
+            "ilce": address.get("addressLocality"),
+            "il": address.get("addressRegion"),
+            "mahalle": address.get("addressSubregion"),
+            "lat": geo.get("latitude"),
+            "lon": geo.get("longitude"),
+            "telefon": node.get("telephone"),
+            "fiyat_segmenti": node.get("priceRange"),
+        }
+        rating = node.get("aggregateRating") if isinstance(node.get("aggregateRating"), dict) else {}
+        result["puan"] = rating.get("ratingValue")
+        result["degerlendirme_sayisi"] = rating.get("ratingCount")
+        result["yorum_sayisi"] = rating.get("reviewCount")
+        return {key: value for key, value in result.items() if value not in (None, "")}
+    return {}
+
 def match_cuisine_category(mutfaklar_str, mekan_adi=""):
     text = f"{mutfaklar_str or ''} {mekan_adi or ''}".lower()
     if any(k in text for k in ["kebap", "ocakbaşı", "lahmacun", "dürüm", "ciğer", "pide"]):
@@ -1254,26 +1324,10 @@ def generate_real_menu_rows(menu_items, venue_data, now_iso):
     return rows
 
 def compute_lifecycle_and_traffic(venue_data, now_iso):
-    puan = venue_data.get("puan") or 4.1
+    puan = venue_data.get("puan")
     deg_sayisi = venue_data.get("degerlendirme_sayisi") or 0
-    yor_sayisi = venue_data.get("yorum_sayisi") or int(deg_sayisi * 0.45)
-    star_dist_json = venue_data.get("yildiz_dagilimi") or calculate_star_distribution(puan, deg_sayisi)
-
-    if yor_sayisi > 0:
-        y2022 = int(yor_sayisi * 0.10)
-        y2023 = int(yor_sayisi * 0.15)
-        y2024 = int(yor_sayisi * 0.25)
-        y2025 = int(yor_sayisi * 0.30)
-        y2026 = max(0, yor_sayisi - (y2022 + y2023 + y2024 + y2025))
-    else:
-        y2022 = y2023 = y2024 = y2025 = y2026 = 0
-
-    if y2026 + y2025 > y2023 + y2022:
-        trend = "BUYUYEN"
-    elif y2026 == 0 and y2025 == 0 and yor_sayisi > 20:
-        trend = "DUSUS"
-    else:
-        trend = "STABIL"
+    yor_sayisi = venue_data.get("yorum_sayisi")
+    star_dist_json = venue_data.get("yildiz_dagilimi")
 
     sektor = venue_data.get("sektor")
     ana_cat = venue_data.get("ana_kategori")
@@ -1301,9 +1355,9 @@ def compute_lifecycle_and_traffic(venue_data, now_iso):
         venue_data.get("web_sitesi"),
         venue_data.get("qr_menu_url"),
         "AKTIF",
-        "2022-06-15",
-        "2026-09-15",
-        51,
+        now_iso[:10],
+        now_iso[:10],
+        0,
         puan,
         deg_sayisi,
         yor_sayisi,
@@ -1313,12 +1367,12 @@ def compute_lifecycle_and_traffic(venue_data, now_iso):
         venue_data.get("teslimat_suresi"),
         venue_data.get("odeme_yontemleri"),
         venue_data.get("kampanyalar"),
-        y2022,
-        y2023,
-        y2024,
-        y2025,
-        y2026,
-        trend,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
         venue_data.get("kaynak", "Yemeksepeti & Google Places Çapraz Doğrulama"),
         now_iso
     )
@@ -1330,11 +1384,16 @@ def process_single_venue(v, out_db, force=False):
     web_url = v.get("web_sitesi")
 
     menu_items = []
+    fetch_result = None
 
     # 1. Yemeksepeti / Canlı Teslimat Menüsü ve Derin Metrikler (Birinci Öncelik)
     if url and ("yemeksepeti.com" in url or "restaurant" in url or "shop" in url):
-        html = get_html_content(url, timeout=10)
+        fetch_result = fetch_html_content(url, timeout=10)
+        html = fetch_result.body
         if html:
+            for key, value in extract_yemeksepeti_venue_metadata(html).items():
+                if v.get(key) in (None, "", "Bilinmeyen İl", "Türkiye Geneli", "Merkez"):
+                    v[key] = value
             metrics, ys_items = extract_yemeksepeti_metrics_and_menu(html)
             v.update(metrics)
             if ys_items:
@@ -1383,8 +1442,21 @@ def process_single_venue(v, out_db, force=False):
             pass
 
     # %100 Ham ve Gerçek Menü Kalemleri (Sentetik/mock veri asla eklenmez)
-    price_rows = generate_real_menu_rows(menu_items, v, now_iso)
-    lifecycle_row = compute_lifecycle_and_traffic(v, now_iso)
+    required_location = ("tam_adres", "ilce", "il", "lat", "lon")
+    has_location = all(v.get(key) not in (None, "") for key in required_location)
+    price_rows = generate_real_menu_rows(menu_items, v, now_iso) if has_location else []
+    lifecycle_row = compute_lifecycle_and_traffic(v, now_iso) if has_location else None
+
+    if menu_items and has_location:
+        scan_status, error_code, error_detail = "BASARILI", None, None
+    elif menu_items:
+        scan_status, error_code, error_detail = "GECERSIZ_KONUM", "MISSING_LOCATION", ",".join(k for k in required_location if not v.get(k))
+    elif fetch_result and not fetch_result.ok:
+        scan_status, error_code, error_detail = "YENIDEN_DENE", fetch_result.error_code, fetch_result.error_detail
+    elif url or web_url:
+        scan_status, error_code, error_detail = "MENU_BULUNAMADI", "EMPTY_MENU", "Sayfa erisildi ancak gercek menu kalemi ayrisamadi"
+    else:
+        scan_status, error_code, error_detail = "MENU_KAYNAGI_YOK", "NO_MENU_SOURCE", "Isletme icin menu URL'si yok"
 
     conn = sqlite3.connect(out_db, timeout=20)
     cur = conn.cursor()
@@ -1400,7 +1472,8 @@ def process_single_venue(v, out_db, force=False):
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, price_rows)
 
-        cur.execute("""
+        if lifecycle_row is not None:
+            cur.execute("""
         INSERT OR REPLACE INTO isletme_tarihsel_yasam_dongusu (
             mekan_id, google_place_id, mekan_adi, sektor, ana_kategori, alt_kategoriler, mutfaklar, fiyat_segmenti,
             tam_adres, mahalle, ilce, il, lat, lon,
@@ -1411,12 +1484,20 @@ def process_single_venue(v, out_db, force=False):
             yorum_hacmi_2022, yorum_hacmi_2023, yorum_hacmi_2024, yorum_hacmi_2025, yorum_hacmi_2026,
             musteri_trendi, kaynak, guncellenme_tarihi
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, lifecycle_row)
+            """, lifecycle_row)
 
         cur.execute("""
-        INSERT OR REPLACE INTO menu_tarama_gecmisi (mekan_id, url, durum, kalem_sayisi, tarih)
-        VALUES (?, ?, 'BASARILI', ?, ?)
-        """, (mekan_id, url or v.get("web_sitesi"), len(menu_items), now_iso))
+        INSERT OR REPLACE INTO menu_tarama_gecmisi (
+            mekan_id, url, durum, kalem_sayisi, tarih, http_status, deneme_sayisi,
+            hata_kodu, hata_detayi, sonraki_deneme_tarihi
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            mekan_id, url or v.get("web_sitesi"), scan_status, len(menu_items), now_iso,
+            fetch_result.status if fetch_result else None,
+            fetch_result.attempts if fetch_result else 0,
+            error_code, error_detail,
+            (datetime.now(timezone.utc) + timedelta(hours=6)).isoformat() if scan_status == "YENIDEN_DENE" else None,
+        ))
 
         conn.commit()
     finally:
@@ -1582,26 +1663,26 @@ def load_target_venues(limit=None, shard_id=None, num_shards=None, out_db=None):
 
             k = known_cache.get(code)
             if k:
-                city_name = k.get("s") or "Bilinmeyen İl"
-                ilce_name = k.get("i") or "Merkez"
-                full_addr = k.get("a") or f"{ilce_name}, {city_name}"
-                puan = k.get("p") or 4.1
+                city_name = k.get("s")
+                ilce_name = k.get("i")
+                full_addr = k.get("a")
+                puan = k.get("p")
                 deg_cnt = k.get("d") or 0
                 cuiz = k.get("m")
-                price_seg = k.get("f") or "₺₺"
-                lat = float(k.get("la") or 41.0)
-                lon = float(k.get("lo") or 29.0)
+                price_seg = k.get("f")
+                lat = float(k["la"]) if k.get("la") is not None else None
+                lon = float(k["lo"]) if k.get("lo") is not None else None
                 name = k.get("n") or clean_name
             else:
-                city_name = "Türkiye Geneli"
-                ilce_name = "Merkez"
-                full_addr = f"{clean_name}, Türkiye"
-                puan = 4.1
+                city_name = None
+                ilce_name = None
+                full_addr = None
+                puan = None
                 deg_cnt = 0
                 cuiz = None
-                price_seg = "₺₺"
-                lat = 41.0082
-                lon = 28.9784
+                price_seg = None
+                lat = None
+                lon = None
                 name = clean_name
 
             sektor, ana_cat, alt_cats = classify_commercial_venue(name, cuiz)
@@ -1615,7 +1696,7 @@ def load_target_venues(limit=None, shard_id=None, num_shards=None, out_db=None):
                 "fiyat_segmenti": price_seg,
                 "puan": puan,
                 "degerlendirme_sayisi": deg_cnt,
-                "yorum_sayisi": int(deg_cnt * 0.45) if deg_cnt else 0,
+                "yorum_sayisi": None,
                 "il": city_name,
                 "ilce": ilce_name,
                 "mahalle": None,
@@ -1645,14 +1726,14 @@ def load_target_venues(limit=None, shard_id=None, num_shards=None, out_db=None):
                 "ana_kategori": ana_cat,
                 "alt_kategoriler": alt_cats,
                 "mutfaklar": cuiz,
-                "fiyat_segmenti": item.get("f") or "₺₺",
-                "puan": item.get("p") or 4.1,
+                "fiyat_segmenti": item.get("f"),
+                "puan": item.get("p"),
                 "degerlendirme_sayisi": item.get("d") or 0,
-                "yorum_sayisi": int((item.get("d") or 0) * 0.45),
-                "il": item.get("s") or "Bilinmeyen İl",
-                "ilce": item.get("i") or "Merkez",
+                "yorum_sayisi": None,
+                "il": item.get("s"),
+                "ilce": item.get("i"),
                 "mahalle": None,
-                "tam_adres": item.get("a") or f"{item.get('i') or 'Merkez'}, {item.get('s') or ''}",
+                "tam_adres": item.get("a"),
                 "lat": float(lat),
                 "lon": float(lon),
                 "url": item.get("u")
@@ -1724,7 +1805,11 @@ def main():
 
     if not args.force and os.path.exists(args.out):
         conn = sqlite3.connect(args.out)
-        completed_ids = set(r[0] for r in conn.execute("SELECT mekan_id FROM menu_tarama_gecmisi WHERE durum='BASARILI'").fetchall())
+        completed_ids = set(
+            r[0] for r in conn.execute(
+                "SELECT mekan_id FROM menu_tarama_gecmisi WHERE durum='BASARILI' AND kalem_sayisi>0"
+            ).fetchall()
+        )
         conn.close()
         prev_len = len(venues)
         venues = [v for v in venues if v["mekan_id"] not in completed_ids]

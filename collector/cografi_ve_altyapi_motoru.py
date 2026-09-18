@@ -238,7 +238,7 @@ class CografiVeAltyapiMotoru:
 
         # Ağ hatasında varsayılan düzlük modeli
         if not elevations or len(elevations) != 9:
-            elevations = [100.0] * 9
+            elevations = None  # GEOPROP Kuralı: Fallback (100.0) yasaktır, gerçek rakım yoksa NULL bırakılır.
 
         # 3x3 Grid Matrisi:
         # z00 (KD), z01 (K),  z02 (KB)
@@ -506,7 +506,7 @@ class CografiVeAltyapiMotoru:
             pass
 
         if not elevations or len(elevations) != 9:
-            elevations = [100.0] * 9
+            elevations = None  # GEOPROP Kuralı: Fallback (100.0) yasaktır, gerçek rakım yoksa NULL bırakılır.
 
         z00, z01, z02 = elevations[0], elevations[1], elevations[2]
         z10, z11, z12 = elevations[3], elevations[4], elevations[5]

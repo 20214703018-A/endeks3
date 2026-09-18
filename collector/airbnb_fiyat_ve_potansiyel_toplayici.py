@@ -51,6 +51,9 @@ class AirbnbIlani:
     fiyat_1_hafta_tl: Optional[float] = None
     fiyat_1_ay_tl: Optional[float] = None
     fiyat_3_ay_tl: Optional[float] = None
+    fiyat_6_ay_tl: Optional[float] = None
+    fiyat_1_yil_tl: Optional[float] = None
+    takvim_musaitlik_orani: float = 1.0
     puan: Optional[float] = None
     yorum_sayisi: int = 0
     enlem: float = 0.0
@@ -667,6 +670,8 @@ def birlestir_tum_sonuclari(data_dir: str = DATA_DIR):
 
 def main():
     parser = argparse.ArgumentParser(description="Doğrudan Python Airbnb Pazar & Çoklu Vade Potansiyel Toplayıcı")
+    parser.add_argument("--shard", type=int, default=1)
+    parser.add_argument("--num-shards", type=int, default=1)
     parser.add_argument("--bolge", type=str, help="Arama yapılacak tek bölge/şehir adı")
     parser.add_argument("--iller", "--bolgeler", dest="iller", type=str, help="Virgülle ayrılmış il/bölge listesi (örn: 'Bodrum, Marmaris' veya 'adana,adiyaman')")
     parser.add_argument("--cikis-ek", type=str, help="Çıktı dosyası grup eki (örn: 'grup_1')")

@@ -179,50 +179,8 @@ def run_collector():
             """, (y, sektor, toplam_islem, round(toplam_tutar, 2), pay, datetime.now(timezone.utc).isoformat()))
     conn.commit()
 
-    # Bati db içindeki boş tabloya da son dönemi senkronize et
-    if BATI_DB.exists():
-        try:
-            b_conn = sqlite3.connect(BATI_DB)
-            b_conn.execute("""
-            CREATE TABLE IF NOT EXISTS bkm_sektorel_kart_harcama (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                il TEXT NOT NULL,
-                donem TEXT NOT NULL,
-                aylik_toplam_harcama_milyon_tl REAL,
-                market_avm_payi REAL,
-                yeme_icme_restoran_payi REAL,
-                giyim_aksesuar_payi REAL,
-                elektronik_esya_payi REAL,
-                yillik_reel_artis_yuzde REAL,
-                guncellenme TEXT,
-                UNIQUE(il, donem)
-            );
-            """)
-            # 2024-06 dönemi için sektör paylarını hesapla
-            cur.execute("""
-                SELECT sektor_adi, toplam_tutar_milyon_tl 
-                FROM bkm_aylik_sektorel_harcama 
-                WHERE donem = '2024-06'
-            """)
-            s_map = {r[0]: r[1] for r in cur.fetchall()}
-            toplam_h = sum(s_map.values()) or 1.0
-            market_p = round((s_map.get("MARKET VE ALIŞVERİŞ MERKEZLERİ", 0) / toplam_h) * 100, 1)
-            yemek_p = round((s_map.get("YEMEK", 0) / toplam_h) * 100, 1)
-            giyim_p = round((s_map.get("GİYİM VE AKSESUAR", 0) / toplam_h) * 100, 1)
-            elk_p = round((s_map.get("ELEKTRİK-ELEKTRONİK EŞYA, BİLGİSAYAR", 0) / toplam_h) * 100, 1)
-
-            for il in ["İstanbul", "İzmir", "Bursa", "Antalya", "Kocaeli", "Muğla", "Tekirdağ", "Balıkesir", "Aydın"]:
-                b_conn.execute("""
-                INSERT OR REPLACE INTO bkm_sektorel_kart_harcama
-                (il, donem, aylik_toplam_harcama_milyon_tl, market_avm_payi, yeme_icme_restoran_payi,
-                 giyim_aksesuar_payi, elektronik_esya_payi, yillik_reel_artis_yuzde, guncellenme)
-                VALUES (?, '2024-06', ?, ?, ?, ?, ?, 18.4, ?)
-                """, (il, round(toplam_h, 2), market_p, yemek_p, giyim_p, elk_p, datetime.now(timezone.utc).isoformat()))
-            b_conn.commit()
-            b_conn.close()
-            print("✓ Bati ticari ambarındaki bkm_sektorel_kart_harcama tablosu güncellendi.")
-        except Exception as e:
-            print(f"[!] Bati DB sync hatası: {e}")
+    # DİKKAT: BKM verilerinin Batı DB illerine sahte katsayılarla dağıtılması kodu, GEOPROP kuralları gereği silinmiştir.
+    # İl bazlı harcama dağılımı BDDK Fintürk (gerçek oranlar) üzerinden yapılacaktır.
 
     conn.close()
     print("=" * 60)

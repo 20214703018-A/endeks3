@@ -14,6 +14,7 @@ import sys
 import os
 import re
 import json
+import hashlib
 import time
 import random
 import argparse
@@ -21,6 +22,11 @@ import sqlite3
 import urllib.request
 from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+try:
+    from collector.toplayici_guvenligi import fetch_text
+except ImportError:
+    from toplayici_guvenligi import fetch_text
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DEFAULT_DB = os.path.join(BASE_DIR, "warehouse/product/yemek_ve_market_teslimat_ekosistemi.sqlite")
@@ -77,6 +83,9 @@ def init_db(db_path):
         fiyat_segmenti TEXT,
         puan REAL,
         degerlendirme_sayisi INTEGER,
+        minimum_sepet_tutari REAL,
+        gonderim_ucreti REAL,
+        kategori TEXT,
         yorum_sayisi INTEGER,
         sehir TEXT,
         ilce TEXT,
@@ -105,6 +114,9 @@ def init_db(db_path):
         tur TEXT,
         puan REAL,
         degerlendirme_sayisi INTEGER,
+        minimum_sepet_tutari REAL,
+        gonderim_ucreti REAL,
+        kategori TEXT,
         yorum_sayisi INTEGER,
         sehir TEXT,
         ilce TEXT,
@@ -133,6 +145,18 @@ def init_db(db_path):
     except Exception:
         pass
     try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN minimum_sepet_tutari REAL")
+    except Exception:
+        pass
+    try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN gonderim_ucreti REAL")
+    except Exception:
+        pass
+    try:
+        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN kategori TEXT")
+    except Exception:
+        pass
+    try:
         cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN yorum_sayisi INTEGER")
     except Exception:
         pass
@@ -144,7 +168,31 @@ def init_db(db_path):
         url TEXT PRIMARY KEY,
         kod TEXT,
         tur TEXT,
-        guncellenme_tarihi TEXT
+        guncellenme_tarihi TEXT,
+        durum TEXT,
+        http_status INTEGER,
+        deneme_sayisi INTEGER DEFAULT 0,
+        hata_kodu TEXT,
+        hata_detayi TEXT
+    )
+    """)
+    for col_def in [
+        ("durum", "TEXT"), ("http_status", "INTEGER"), ("deneme_sayisi", "INTEGER DEFAULT 0"),
+        ("hata_kodu", "TEXT"), ("hata_detayi", "TEXT")
+    ]:
+        try:
+            cur.execute(f"ALTER TABLE yemeksepeti_tarama_gecmisi ADD COLUMN {col_def[0]} {col_def[1]}")
+        except sqlite3.OperationalError:
+            pass
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS yemeksepeti_isletme_gozlem (
+        observation_id TEXT PRIMARY KEY,
+        restoran_kodu TEXT NOT NULL,
+        observed_at TEXT NOT NULL,
+        payload_json TEXT NOT NULL,
+        payload_sha256 TEXT NOT NULL,
+        kaynak_url TEXT NOT NULL,
+        UNIQUE(restoran_kodu, observed_at)
     )
     """)
 
@@ -152,16 +200,22 @@ def init_db(db_path):
     conn.close()
 
 def get_url_content(url, timeout=12):
-    req = urllib.request.Request(url, headers={
+    result = fetch_text(url, headers={
         "User-Agent": random.choice(USER_AGENTS),
         "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
         "Accept": "*/*"
-    })
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return resp.read().decode("utf-8", errors="ignore")
-    except Exception:
-        return None
+    }, timeout=timeout, attempts=3, min_bytes=1,
+       blocked_markers=("Access to this page has been denied", "Attention Required"))
+    return result.body
+
+
+def fetch_venue_page(url, timeout=15):
+    return fetch_text(url, headers={
+        "User-Agent": random.choice(USER_AGENTS),
+        "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    }, timeout=timeout, attempts=3, min_bytes=3000,
+       blocked_markers=("Access to this page has been denied", "Attention Required"))
 
 def fetch_darkstore_urls():
     url = "https://www.yemeksepeti.com/adventure-map/adventure-map-darkstore-0.xml"
@@ -228,8 +282,8 @@ def parse_darkstore_page(url):
             continue
     return None
 
-def parse_venue_page(url):
-    html = get_url_content(url)
+def parse_venue_page(url, html=None):
+    html = html if html is not None else get_url_content(url)
     if not html:
         return None
     
@@ -274,9 +328,34 @@ def parse_venue_page(url):
                     val_deg = int(rating_cnt) if rating_cnt is not None else None
                     val_yor = int(review_cnt) if review_cnt is not None else val_deg
 
+                    
+                    # GEOPROP - Kategorizasyon, Min Sepet ve Teslimat Regex Enjeksiyonu
+                    min_sepet = None
+                    gonderim = None
+                    kategori_kat = "Restoran"
+                    try:
+                        sep_match = re.search(r'Minimum Sepet Tutarı.*?(\d+)[.,]?\d*\s*TL', html, re.IGNORECASE)
+                        if sep_match: min_sepet = float(sep_match.group(1))
+                        
+                        gon_match = re.search(r'Gönderim Ücreti.*?(\d+)[.,]?\d*\s*TL', html, re.IGNORECASE)
+                        if gon_match: gonderim = float(gon_match.group(1))
+                        elif 'Ücretsiz Gönderim' in html: gonderim = 0.0
+                        
+                        url_lower = url.lower()
+                        if 'market' in url_lower or 'grocery' in html.lower(): kategori_kat = "Market"
+                        elif 'petshop' in url_lower: kategori_kat = "Petshop"
+                        elif 'su' in url_lower and 'damacana' in html.lower(): kategori_kat = "Su"
+                        elif 'manav' in url_lower: kategori_kat = "Manav"
+                        elif 'kasap' in url_lower: kategori_kat = "Kasap"
+                    except:
+                        pass
+
                     return {
                         "is_shop": is_shop,
                         "platform": platform,
+                        "kategori": kategori_kat,
+                        "minimum_sepet_tutari": min_sepet,
+                        "gonderim_ucreti": gonderim,
                         "kod": code,
                         "isim": name,
                         "mutfaklar": mutfaklar_str,
@@ -296,6 +375,11 @@ def parse_venue_page(url):
         except Exception:
             continue
     return None
+
+
+def fetch_and_parse_venue_page(url):
+    result = fetch_venue_page(url)
+    return parse_venue_page(url, result.body), result
 
 def import_osm_delivery_depots(db_path):
     if not os.path.exists(OSM_DB):
@@ -405,7 +489,7 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
     cur = conn.cursor()
     
     # Önceden tarananları kontrol et (Checkpoint)
-    cur.execute("SELECT url FROM yemeksepeti_tarama_gecmisi")
+    cur.execute("SELECT url FROM yemeksepeti_tarama_gecmisi WHERE durum='BASARILI'")
     done_urls = set(r[0] for r in cur.fetchall())
     pending_urls = [u for u in target_urls if u not in done_urls]
     
@@ -417,7 +501,7 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
     batch_count = 0
     
     with ThreadPoolExecutor(max_workers=workers) as executor:
-        futures = {executor.submit(parse_venue_page, u): u for u in pending_urls}
+        futures = {executor.submit(fetch_and_parse_venue_page, u): u for u in pending_urls}
         for f in as_completed(futures):
             # 4 Saatlik Emniyet Zamanlayıcısı Kontrolü
             if time.time() - start_time >= max_seconds:
@@ -425,7 +509,7 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
                 break
                 
             u = futures[f]
-            res = f.result()
+            res, fetch_result = f.result()
             now_utc = datetime.now(timezone.utc).isoformat()
             
             if res:
@@ -454,6 +538,16 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
                     res["url"], res["kaynak"], res["guncellenme_tarihi"]
                 ))
                 saved += 1
+                payload = json.dumps(res, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+                payload_hash = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+                observation_id = hashlib.sha256(
+                    f"yemeksepeti|{res['kod']}|{res['guncellenme_tarihi']}|{payload_hash}".encode("utf-8")
+                ).hexdigest()
+                cur.execute("""
+                INSERT OR IGNORE INTO yemeksepeti_isletme_gozlem
+                    (observation_id, restoran_kodu, observed_at, payload_json, payload_sha256, kaynak_url)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """, (observation_id, res["kod"], res["guncellenme_tarihi"], payload, payload_hash, u))
                 puan_str = f"Puan: {res['puan']}" if res['puan'] is not None else "Puan: -"
                 deg_cnt = res.get('degerlendirme_sayisi')
                 yor_cnt = res.get('yorum_sayisi')
@@ -466,9 +560,16 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
                 print(f"  -> [{saved}/{len(pending_urls)}] {res['platform']}: {res['isim']} | {res['sehir'] or '-'}/{res['ilce'] or '-'} | {puan_str} {yorum_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
                 
             cur.execute("""
-            INSERT OR REPLACE INTO yemeksepeti_tarama_gecmisi (url, kod, tur, guncellenme_tarihi)
-            VALUES (?, ?, ?, ?)
-            """, (u, res["kod"] if res else None, res["platform"] if res else "NOT_FOUND", now_utc))
+            INSERT OR REPLACE INTO yemeksepeti_tarama_gecmisi
+                (url, kod, tur, guncellenme_tarihi, durum, http_status, deneme_sayisi, hata_kodu, hata_detayi)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                u, res["kod"] if res else None, res["platform"] if res else None, now_utc,
+                "BASARILI" if res else ("YENIDEN_DENE" if not fetch_result.ok else "AYRISTIRILAMADI"),
+                fetch_result.status, fetch_result.attempts,
+                None if res else (fetch_result.error_code or "PARSE_EMPTY"),
+                None if res else (fetch_result.error_detail or "Isletme JSON-LD verisi bulunamadi"),
+            ))
             
             batch_count += 1
             if batch_count % 50 == 0:

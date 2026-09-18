@@ -10,96 +10,36 @@ import glob
 import sqlite3
 import argparse
 
+try:
+    from collector.yemek_teslimat_ekosistemi_toplayici import init_db
+except ImportError:
+    from yemek_teslimat_ekosistemi_toplayici import init_db
+
 DEFAULT_OUT = "warehouse/product/yemek_ve_market_teslimat_ekosistemi.sqlite"
 
-def init_schema(conn):
-    cur = conn.cursor()
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS teslimat_depolari_darkstore (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        platform TEXT NOT NULL,
-        depo_kodu TEXT UNIQUE,
-        depo_adi TEXT NOT NULL,
-        sehir TEXT,
-        ilce TEXT,
-        mahalle TEXT,
-        tam_adres TEXT,
-        lat REAL NOT NULL,
-        lon REAL NOT NULL,
-        url TEXT,
-        kaynak TEXT DEFAULT 'Resmî Platform Sitemap & JSON-LD',
-        guncellenme_tarihi TEXT NOT NULL
-    )
-    """)
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_darkstore_sehir ON teslimat_depolari_darkstore(sehir, ilce)")
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_darkstore_coords ON teslimat_depolari_darkstore(lat, lon)")
+def table_exists(conn, schema, table):
+    return conn.execute(
+        f"SELECT 1 FROM {schema}.sqlite_master WHERE type='table' AND name=?", (table,)
+    ).fetchone() is not None
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS uye_restoranlar_ve_hacim (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        platform TEXT NOT NULL,
-        restoran_kodu TEXT UNIQUE,
-        restoran_adi TEXT NOT NULL,
-        mutfaklar TEXT,
-        fiyat_segmenti TEXT,
-        puan REAL,
-        degerlendirme_sayisi INTEGER,
-        yorum_sayisi INTEGER,
-        sehir TEXT,
-        ilce TEXT,
-        tam_adres TEXT,
-        lat REAL NOT NULL,
-        lon REAL NOT NULL,
-        url TEXT,
-        kaynak TEXT DEFAULT 'Yemeksepeti Restoran Ekosistemi',
-        guncellenme_tarihi TEXT NOT NULL
-    )
-    """)
-    try:
-        cur.execute("ALTER TABLE uye_restoranlar_ve_hacim ADD COLUMN yorum_sayisi INTEGER")
-    except Exception:
-        pass
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_restoran_sehir ON uye_restoranlar_ve_hacim(sehir, ilce)")
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_restoran_coords ON uye_restoranlar_ve_hacim(lat, lon)")
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS mahalle_esnaf_noktalari (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        esnaf_kodu TEXT UNIQUE,
-        esnaf_adi TEXT NOT NULL,
-        tur TEXT,
-        puan REAL,
-        degerlendirme_sayisi INTEGER,
-        yorum_sayisi INTEGER,
-        sehir TEXT,
-        ilce TEXT,
-        tam_adres TEXT,
-        lat REAL NOT NULL,
-        lon REAL NOT NULL,
-        url TEXT,
-        kaynak TEXT DEFAULT 'Yemeksepeti Mahalle',
-        guncellenme_tarihi TEXT NOT NULL
+def merge_common_columns(conn, table, mode="OR REPLACE"):
+    if not table_exists(conn, "shard", table):
+        return
+    target = [row[1] for row in conn.execute(f"PRAGMA main.table_info({table})") if row[1] != "id"]
+    source = {row[1] for row in conn.execute(f"PRAGMA shard.table_info({table})")}
+    common = [column for column in target if column in source]
+    if not common:
+        return
+    quoted = ", ".join(f'"{column}"' for column in common)
+    conn.execute(
+        f"INSERT {mode} INTO main.{table} ({quoted}) SELECT {quoted} FROM shard.{table}"
     )
-    """)
-    try:
-        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN puan REAL")
-    except Exception:
-        pass
-    try:
-        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN degerlendirme_sayisi INTEGER")
-    except Exception:
-        pass
-    try:
-        cur.execute("ALTER TABLE mahalle_esnaf_noktalari ADD COLUMN yorum_sayisi INTEGER")
-    except Exception:
-        pass
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_esnaf_sehir ON mahalle_esnaf_noktalari(sehir, ilce)")
-    conn.commit()
 
 def merge(shard_paths, out_db):
     os.makedirs(os.path.dirname(os.path.abspath(out_db)), exist_ok=True)
+    init_db(out_db)
     conn = sqlite3.connect(out_db)
-    init_schema(conn)
 
     merged = 0
     for path in shard_paths:
@@ -107,53 +47,11 @@ def merge(shard_paths, out_db):
             continue
         try:
             conn.execute("ATTACH DATABASE ? AS shard", (path,))
-            conn.execute("""
-            INSERT OR REPLACE INTO teslimat_depolari_darkstore (
-                platform, depo_kodu, depo_adi, sehir, ilce, mahalle, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
-            ) SELECT 
-                platform, depo_kodu, depo_adi, sehir, ilce, mahalle, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
-            FROM shard.teslimat_depolari_darkstore
-            """)
-            
-            # Restoran tablosunu birleştir
-            has_rest = conn.execute("SELECT count(*) FROM shard.sqlite_master WHERE type='table' AND name='uye_restoranlar_ve_hacim'").fetchone()[0]
-            if has_rest:
-                try:
-                    conn.execute("ALTER TABLE shard.uye_restoranlar_ve_hacim ADD COLUMN yorum_sayisi INTEGER")
-                except Exception:
-                    pass
-                conn.execute("""
-                INSERT OR REPLACE INTO uye_restoranlar_ve_hacim (
-                    platform, restoran_kodu, restoran_adi, mutfaklar, fiyat_segmenti,
-                    puan, degerlendirme_sayisi, yorum_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
-                ) SELECT 
-                    platform, restoran_kodu, restoran_adi, mutfaklar, fiyat_segmenti,
-                    puan, degerlendirme_sayisi, COALESCE(yorum_sayisi, degerlendirme_sayisi), sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
-                FROM shard.uye_restoranlar_ve_hacim
-                """)
-
-            # Mahalle esnafı tablosunu birleştir
-            has_esnaf = conn.execute("SELECT count(*) FROM shard.sqlite_master WHERE type='table' AND name='mahalle_esnaf_noktalari'").fetchone()[0]
-            if has_esnaf:
-                try:
-                    conn.execute("ALTER TABLE shard.mahalle_esnaf_noktalari ADD COLUMN puan REAL")
-                except Exception:
-                    pass
-                try:
-                    conn.execute("ALTER TABLE shard.mahalle_esnaf_noktalari ADD COLUMN degerlendirme_sayisi INTEGER")
-                except Exception:
-                    pass
-                try:
-                    conn.execute("ALTER TABLE shard.mahalle_esnaf_noktalari ADD COLUMN yorum_sayisi INTEGER")
-                except Exception:
-                    pass
-                conn.execute("""
-                INSERT OR REPLACE INTO mahalle_esnaf_noktalari (
-                    esnaf_kodu, esnaf_adi, tur, puan, degerlendirme_sayisi, yorum_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
-                ) SELECT 
-                    esnaf_kodu, esnaf_adi, tur, puan, degerlendirme_sayisi, yorum_sayisi, sehir, ilce, tam_adres, lat, lon, url, kaynak, guncellenme_tarihi
-                FROM shard.mahalle_esnaf_noktalari
-                """)
+            merge_common_columns(conn, "teslimat_depolari_darkstore")
+            merge_common_columns(conn, "uye_restoranlar_ve_hacim")
+            merge_common_columns(conn, "mahalle_esnaf_noktalari")
+            merge_common_columns(conn, "yemeksepeti_isletme_gozlem", "OR IGNORE")
+            merge_common_columns(conn, "yemeksepeti_tarama_gecmisi")
                 
             conn.commit()
             conn.execute("DETACH DATABASE shard")

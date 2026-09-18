@@ -18,7 +18,9 @@ bilgilerini toplayıp warehouse/product/google_places_ve_yogunluk.sqlite ambarı
 
 import sys
 import os
+import re
 import json
+import hashlib
 import time
 import random
 import argparse
@@ -27,6 +29,11 @@ import urllib.request
 import urllib.parse
 from collections import deque
 from datetime import datetime, timezone
+
+try:
+    from collector.ticari_taksonomi import classify
+except ImportError:
+    from ticari_taksonomi import classify
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DEFAULT_DB = os.path.join(BASE_DIR, "warehouse/product/google_places_ve_yogunluk.sqlite")
@@ -50,7 +57,9 @@ def init_db(db_path):
         cid TEXT,
         isim TEXT NOT NULL,
         arama_terimi TEXT,
+        sektor TEXT,
         ana_kategori TEXT,
+        alt_kategoriler TEXT,
         tum_kategoriler TEXT,
         puan REAL,
         yorum_sayisi INTEGER,
@@ -66,24 +75,57 @@ def init_db(db_path):
         calisma_saatleri TEXT,
         maps_url TEXT,
         kaynak TEXT DEFAULT 'Google Maps',
+        saatlik_yogunluk_json TEXT,
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
-    try:
-        cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN degerlendirme_sayisi INTEGER")
-    except Exception:
-        pass
-    try:
-        cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN yildiz_dagilimi TEXT")
-    except Exception:
-        pass
+    for col_def in [("sektor", "TEXT"), ("alt_kategoriler", "TEXT"), ("degerlendirme_sayisi", "INTEGER"), ("yildiz_dagilimi", "TEXT")]:
+        try:
+            cur.execute(f"ALTER TABLE google_places_ticari_yogunluk ADD COLUMN {col_def[0]} {col_def[1]}")
+        except sqlite3.OperationalError:
+            pass
     cur.execute("""
     CREATE TABLE IF NOT EXISTS google_places_arama_gecmisi (
         arama_terimi TEXT PRIMARY KEY,
         bulunan_adet INTEGER,
-        son_tarama_tarihi TEXT
+        son_tarama_tarihi TEXT,
+        durum TEXT,
+        hata_kodu TEXT,
+        hata_detayi TEXT
     )
     """)
+    for col_def in [("durum", "TEXT"), ("hata_kodu", "TEXT"), ("hata_detayi", "TEXT")]:
+        try:
+            cur.execute(f"ALTER TABLE google_places_arama_gecmisi ADD COLUMN {col_def[0]} {col_def[1]}")
+        except sqlite3.OperationalError:
+            pass
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS google_places_gozlem (
+        observation_id TEXT PRIMARY KEY,
+        google_place_id TEXT NOT NULL,
+        observed_at TEXT NOT NULL,
+        arama_terimi TEXT,
+        isim TEXT NOT NULL,
+        ana_kategori TEXT,
+        tum_kategoriler TEXT,
+        puan REAL,
+        yorum_sayisi INTEGER,
+        degerlendirme_sayisi INTEGER,
+        tam_adres TEXT,
+        mahalle TEXT,
+        ilce TEXT,
+        il TEXT,
+        lat REAL NOT NULL,
+        lon REAL NOT NULL,
+        telefon TEXT,
+        calisma_saatleri TEXT,
+        maps_url TEXT,
+        kaynak TEXT NOT NULL,
+        payload_sha256 TEXT NOT NULL,
+        UNIQUE(google_place_id, observed_at)
+    )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_gp_gozlem_place_tarih ON google_places_gozlem(google_place_id, observed_at)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_ilce ON google_places_ticari_yogunluk(il, ilce)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_coords ON google_places_ticari_yogunluk(lat, lon)")
     conn.commit()
@@ -92,19 +134,25 @@ def init_db(db_path):
 def is_query_done(conn, query):
     try:
         cur = conn.cursor()
-        cur.execute("SELECT 1 FROM google_places_arama_gecmisi WHERE arama_terimi = ?", (query,))
+        cur.execute(
+            "SELECT 1 FROM google_places_arama_gecmisi "
+            "WHERE arama_terimi=? AND durum='BASARILI' AND bulunan_adet>0 "
+            "AND julianday('now')-julianday(son_tarama_tarihi)<6.5",
+            (query,),
+        )
         return cur.fetchone() is not None
     except Exception:
         return False
 
-def record_query(conn, query, count):
+def record_query(conn, query, count, status=None, error_code=None, error_detail=None):
     try:
         cur = conn.cursor()
         now_utc = datetime.now(timezone.utc).isoformat()
         cur.execute("""
-        INSERT OR REPLACE INTO google_places_arama_gecmisi (arama_terimi, bulunan_adet, son_tarama_tarihi)
-        VALUES (?, ?, ?)
-        """, (query, count, now_utc))
+        INSERT OR REPLACE INTO google_places_arama_gecmisi
+            (arama_terimi, bulunan_adet, son_tarama_tarihi, durum, hata_kodu, hata_detayi)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """, (query, count, now_utc, status or ("BASARILI" if count > 0 else "BOS_SONUC"), error_code, error_detail))
         conn.commit()
     except Exception:
         pass
@@ -304,6 +352,33 @@ def extract_venue_from_v14(v14, search_query):
         "guncellenme_tarihi": now_utc
     }
 
+
+def iter_v14_records(root):
+    """Yanıt içindeki konumu değişebilen ayrıntılı işletme kayıtlarını bulur.
+
+    Google'ın iç dizilerinde sabit bir üst indeks varsaymak yerine, yalnızca ad ve
+    geçerli WGS84 koordinat taşıyan v14 düğümlerini kabul eder. Bu, yerleşim adı
+    gibi data[37] adaylarının işletme diye yazılmasını önler.
+    """
+    stack = [root]
+    seen = set()
+    while stack:
+        node = stack.pop()
+        if not isinstance(node, list):
+            continue
+        node_id = id(node)
+        if node_id in seen:
+            continue
+        seen.add(node_id)
+        if len(node) >= 15 and isinstance(node[11], str) and node[11].strip():
+            coords = node[9] if len(node) > 9 else None
+            if isinstance(coords, list) and len(coords) >= 4:
+                lat, lon = coords[2], coords[3]
+                if isinstance(lat, (int, float)) and isinstance(lon, (int, float)):
+                    if 35.0 <= float(lat) <= 43.0 and 25.0 <= float(lon) <= 46.0:
+                        yield node
+        stack.extend(item for item in node if isinstance(item, list))
+
 NON_COMMERCIAL_KEYWORDS = [
     "sitesi", "apartmanı", "konutları", "evleri", "köyü", "mezarlığı", "camii", "tatil sitesi", "yerleşim yeri",
     "muhtarlığı", "kaymakamlığı", "belediye başkanlığı", "hükümet konağı", "ilçe jandarma", "polis merkezi", "karakolu"
@@ -351,6 +426,7 @@ def is_valid_commercial_venue(name, category=None, rating=None, reviews=None, is
         
     return True
 
+
 def fetch_google_places(query):
     """Google Maps üzerinden tekil değil, sorguda dönen TÜM ticari işletmeleri liste halinde çeker."""
     encoded_q = urllib.parse.quote(query)
@@ -369,69 +445,75 @@ def fetch_google_places(query):
             if not data:
                 return []
             
-            # Durum 1: data[0][1] içindeki TÜM mekanlar (Detaylı V14 formatı)
-            if len(data) > 0 and len(data[0]) > 1 and data[0][1]:
-                for item in data[0][1]:
-                    if isinstance(item, list) and len(item) > 14 and item[14]:
-                        v = extract_venue_from_v14(item[14], query)
-                        if v and is_valid_commercial_venue(v["isim"], v["ana_kategori"], v.get("puan"), v.get("yorum_sayisi")):
-                            venues.append(v)
+            found_ids = set()
+            for v14 in iter_v14_records(data):
+                v = extract_venue_from_v14(v14, query)
+                if not v or not is_valid_commercial_venue(
+                    v["isim"], v["ana_kategori"], v.get("puan"), v.get("yorum_sayisi")
+                ):
+                    continue
+                identity = v.get("google_place_id") or (v["isim"], v["lat"], v["lon"])
+                if identity not in found_ids:
+                    found_ids.add(identity)
+                    venues.append(v)
             
-            # Durum 2: data[37] aday listesi (Eğer durum 1 boşsa)
-            if not venues and len(data) > 37 and data[37] and isinstance(data[37], list) and len(data[37]) > 2:
-                d37 = data[37]
-                sub_list = d37[2]
-                if sub_list and isinstance(sub_list, list):
-                    for cand in sub_list:
-                        if cand and len(cand) > 4:
-                            coords = cand[3] if len(cand) > 3 else None
-                            cid = cand[2] if len(cand) > 2 else None
-                            title = cand[4] if len(cand) > 4 else None
-                            if coords and len(coords) >= 4 and coords[2] is not None and coords[3] is not None and title:
-                                if is_valid_commercial_venue(title, "Ticari Mekan", None, None, is_candidate=True):
-                                    now_utc = datetime.now(timezone.utc).isoformat()
-                                    venues.append({
-                                        "google_place_id": f"CID_{cid}",
-                                        "cid": str(cid),
-                                        "isim": str(title),
-                                        "arama_terimi": query,
-                                        "ana_kategori": "Ticari Mekan",
-                                        "tum_kategoriler": None,
-                                        "puan": None,
-                                        "yorum_sayisi": None,
-                                        "degerlendirme_sayisi": None,
-                                        "tam_adres": str(title),
-                                        "mahalle": None,
-                                        "ilce": None,
-                                        "il": None,
-                                        "lat": float(coords[2]),
-                                        "lon": float(coords[3]),
-                                        "telefon": None,
-                                        "calisma_saatleri": None,
-                                        "maps_url": f"https://www.google.com/maps?cid={cid}" if cid else None,
-                                        "kaynak": "Google Maps (Aday Listesi)",
-                                        "guncellenme_tarihi": now_utc
-                                    })
+            # data[37] yalniz belirsiz aday/yerlesim sonucudur. Isletme kategorisi ve
+            # ayrintili V14 kaniti olmadan ticari kayit olarak kabul edilmez.
     except Exception as e:
         print(f"Hata ({query}): {e}", file=sys.stderr)
     return venues
 
 def save_venue(conn, venue):
+
+    # KURAL: Koordinatsız işletme kaydedilmez
+    if not venue.get("lat") or not venue.get("lon"):
+        return
+
     if not venue:
         return False
     cur = conn.cursor()
+    sector, canonical_category, subcategories = classify(
+        venue.get("isim"), venue.get("ana_kategori"), venue.get("tum_kategoriler")
+    )
+    venue["sektor"] = venue.get("sektor") or sector
+    venue["alt_kategoriler"] = venue.get("alt_kategoriler") or subcategories
+    if not venue.get("ana_kategori") or venue.get("ana_kategori") == "Ticari Mekan":
+        venue["ana_kategori"] = canonical_category
+    observed_at = venue["guncellenme_tarihi"]
+    payload = json.dumps(venue, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    payload_hash = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    observation_id = hashlib.sha256(
+        f"google_places|{venue['google_place_id']}|{observed_at}|{payload_hash}".encode("utf-8")
+    ).hexdigest()
+    cur.execute("""
+    INSERT OR IGNORE INTO google_places_gozlem (
+        observation_id, google_place_id, observed_at, arama_terimi, isim,
+        ana_kategori, tum_kategoriler, puan, yorum_sayisi, degerlendirme_sayisi,
+        tam_adres, mahalle, ilce, il, lat, lon, telefon, calisma_saatleri,
+        maps_url, kaynak, payload_sha256
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        observation_id, venue["google_place_id"], observed_at, venue.get("arama_terimi"), venue["isim"],
+        venue.get("ana_kategori"), venue.get("tum_kategoriler"), venue.get("puan"),
+        venue.get("yorum_sayisi"), venue.get("degerlendirme_sayisi") or venue.get("yorum_sayisi"),
+        venue.get("tam_adres"), venue.get("mahalle"), venue.get("ilce"), venue.get("il"),
+        venue["lat"], venue["lon"], venue.get("telefon"), venue.get("calisma_saatleri"),
+        venue.get("maps_url"), venue.get("kaynak") or "Google Places", payload_hash,
+    ))
     cur.execute("""
     INSERT OR REPLACE INTO google_places_ticari_yogunluk (
-        google_place_id, cid, isim, arama_terimi, ana_kategori, tum_kategoriler,
+        google_place_id, cid, isim, arama_terimi, sektor, ana_kategori, alt_kategoriler, tum_kategoriler,
         puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
         lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         venue["google_place_id"],
         venue["cid"],
         venue["isim"],
         venue["arama_terimi"],
+        venue.get("sektor"),
         venue["ana_kategori"],
+        venue.get("alt_kategoriler"),
         venue["tum_kategoriler"],
         venue["puan"],
         venue.get("yorum_sayisi"),
@@ -684,7 +766,64 @@ def get_mahalle_queries_by_shard(shard_id, total_shards=40, limit=None):
     except Exception:
         return []
 
-def get_commercial_corridors_by_shard(shard_id, total_shards=40, mahalle_limit=None):
+
+def _street_from_address(address):
+    text = str(address or "")
+    for pattern in (
+        r"([^,;/]+?\s+(?:Caddesi|Cadde|Cd\.?))(?=\s|,|;|/|$)",
+        r"([^,;/]+?\s+(?:Sokak|Sokağı|Sk\.?))(?=\s|,|;|/|$)",
+        r"([^,;/]+?\s+(?:Bulvarı|Bulvar|Blv\.?))(?=\s|,|;|/|$)",
+    ):
+        match = re.search(pattern, text, re.I)
+        if match:
+            return re.sub(r"\s+", " ", match.group(1)).strip(" ,;/")
+    return None
+
+
+def get_street_queries_by_shard(shard_id, total_shards=40, limit=None):
+    """Yerel ambarlardaki acik adreslerden kararlı sokak tarama tohumlari üret."""
+    sources = [
+        (os.path.join(BASE_DIR, "warehouse/product/yemek_ve_market_teslimat_ekosistemi.sqlite"),
+         "SELECT tam_adres,sehir,ilce,NULL FROM uye_restoranlar_ve_hacim WHERE tam_adres IS NOT NULL"),
+        (os.path.join(BASE_DIR, "warehouse/product/google_places_ve_yogunluk.sqlite"),
+         "SELECT tam_adres,il,ilce,mahalle FROM google_places_ticari_yogunluk WHERE tam_adres IS NOT NULL"),
+        (os.path.join(BASE_DIR, "warehouse/product/zincir_markalar_ve_finans.sqlite"),
+         "SELECT adres_acik,il,ilce,mahalle FROM poi_zincir_ve_finans WHERE adres_acik IS NOT NULL"),
+    ]
+    seeds = set()
+    for db_path, sql in sources:
+        if not os.path.exists(db_path):
+            continue
+        try:
+            conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            for address, il, ilce, mahalle in conn.execute(sql):
+                street = _street_from_address(address)
+                if street and il:
+                    seeds.add((str(il), str(ilce or ""), str(mahalle or ""), street))
+            conn.close()
+        except Exception:
+            continue
+    selected = []
+    for seed in sorted(seeds):
+        digest = int(hashlib.sha256("|".join(seed).encode("utf-8")).hexdigest()[:12], 16)
+        if digest % total_shards == shard_id - 1:
+            selected.append(seed)
+    if limit and limit > 0:
+        selected = selected[:limit]
+    category_groups = (
+        "restoran kafe pastane",
+        "market bakkal manav kuruyemiş kasap",
+        "giyim elektronik mağazaları",
+        "sağlık güzellik işletmeleri",
+        "yapı tesisat otomotiv işletmeleri",
+    )
+    return [
+        f"{street} {mahalle} {ilce} {il} {group}".replace("  ", " ").strip()
+        for il, ilce, mahalle, street in selected
+        for group in category_groups
+    ]
+
+def get_commercial_corridors_by_shard(shard_id, total_shards=40, mahalle_limit=None, street_limit=None):
     """40 Shard için dengeli 81 il, ilçe ve MAHALLE MAHALLE detaylı ticari sorgu havuzu oluşturur."""
     all_corridors = get_all_commercial_corridor_queries()
     step = max(1, len(all_corridors) // total_shards)
@@ -694,8 +833,9 @@ def get_commercial_corridors_by_shard(shard_id, total_shards=40, mahalle_limit=N
     
     # Mahalle Mahalle detaylı aramaları ekle (mahalle_limit None ise shard'daki TÜM kentsel mahalleleri alır)
     mahalle_slice = get_mahalle_queries_by_shard(shard_id, total_shards, limit=mahalle_limit)
+    street_slice = get_street_queries_by_shard(shard_id, total_shards, limit=street_limit)
     
-    combined = corridor_slice + mahalle_slice
+    combined = corridor_slice + mahalle_slice + street_slice
     return combined
 
 def sync_to_bati_warehouse(venue):
@@ -730,6 +870,7 @@ def main():
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite veritabanı")
     parser.add_argument("--limit", type=int, default=None, help="Maksimum işlenecek sorgu sayısı (varsayılan: sınırsız)")
     parser.add_argument("--mahalle-limit", type=int, default=None, help="Shard başına işlenecek mahalle sayısı (varsayılan: tüm kentsel mahalleler)")
+    parser.add_argument("--sokak-limit", type=int, default=None, help="Shard basina adres ambarindan alinacak sokak tohumu sayisi")
     parser.add_argument("--max-seconds", type=int, default=14400, help="Maksimum çalışma süresi saniye (varsayılan: 14400 = 4 saat emniyet sınırı)")
     parser.add_argument("--no-deep", action="store_true", help="Yoğun ticari mahallelerde otonom derinleştirmeyi devre dışı bırakır")
     parser.add_argument("--force", action="store_true", help="Daha önce taranmış sorguları atlamadan yeniden tara")
@@ -744,7 +885,9 @@ def main():
         print(f"81 İl Tam Kapsama Modu: {len(initial_queries)} ticari koridor ve ilçe sorgulanıyor...")
     elif args.shard:
         shard_id, total = map(int, args.shard.split("/"))
-        initial_queries = get_commercial_corridors_by_shard(shard_id, total, mahalle_limit=args.mahalle_limit)
+        initial_queries = get_commercial_corridors_by_shard(
+            shard_id, total, mahalle_limit=args.mahalle_limit, street_limit=args.sokak_limit
+        )
         print(f"Shard {shard_id}/{total}: {len(initial_queries)} temel ticari & mahalle sorgusu yüklendi...")
     else:
         initial_queries = get_all_commercial_corridor_queries()
@@ -807,7 +950,11 @@ def main():
             # Otonom olarak kafeler, marketler ve mağazalar için derinleşme sorgularını kuyruğa ekle!
             if deep_enabled and len(venues) >= 3 and " dükkanlar" in q:
                 base_prefix = q.replace(" dükkanlar", "").strip()
-                for sub_cat in ["kafeler", "marketler", "mağazalar"]:
+                for sub_cat in [
+                    "restoranlar", "kafeler", "pastaneler fırınlar", "marketler bakkallar",
+                    "manavlar kuruyemişçiler kasaplar", "giyim mağazaları", "elektronikçiler",
+                    "sağlık medikal", "kuaför güzellik", "yapı tesisat", "otomotiv servisleri",
+                ]:
                     sub_q = f"{base_prefix} {sub_cat}"
                     if sub_q not in seen_queries and not is_query_done(conn, sub_q):
                         seen_queries.add(sub_q)
