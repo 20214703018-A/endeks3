@@ -562,7 +562,7 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
             cur.execute("""
             INSERT OR REPLACE INTO yemeksepeti_tarama_gecmisi
                 (url, kod, tur, guncellenme_tarihi, durum, http_status, deneme_sayisi, hata_kodu, hata_detayi)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 u, res["kod"] if res else None, res["platform"] if res else None, now_utc,
                 "BASARILI" if res else ("YENIDEN_DENE" if not fetch_result.ok else "AYRISTIRILAMADI"),
