@@ -219,6 +219,7 @@ def get_venues_from_tree(node, results):
                     website = node['1205891'][7][0]
                     
                 import json
+                if not isinstance(mekan_id, str): mekan_id = name
                 results.append({
                     "id": mekan_id or name,
                     "name": name,
@@ -278,7 +279,7 @@ def parse_venue_and_save(venue, il, ilce, mahalle, conn):
         fiyat_count = 0
         img_count = 0
         
-        photo_urls = re.findall(r'(https://lh5\.googleusercontent\.com/p/[a-zA-Z0-9_-]+)', val_str)
+        photo_urls = re.findall(r'(https://lh[0-9]\.googleusercontent\.com/(?:p|gps-cs-s)/[a-zA-Z0-9_=\-/]+)', val_str)
         
         menu_items = re.findall(r'\["([^"]{3,40})","([^"]*?)",null,null,null,"([0-9]+(?:,[0-9]{2})?)\s*(?:TL|₺|TRY)"', val_str)
         
@@ -306,8 +307,35 @@ def parse_venue_and_save(venue, il, ilce, mahalle, conn):
             """, (mekan_id, mekan_adi, p_url, "GoogleMaps", now, il, ilce, mahalle))
             img_count += 1
             
-        conn.commit()
         
+        if fiyat_count == 0:
+            try:
+                import urllib.request, urllib.parse
+                from bs4 import BeautifulSoup
+                g_query = f"{mekan_adi} {ilce} {il} menü fiyat"
+                g_url = f"https://www.google.com/search?q={urllib.parse.quote(g_query)}&hl=tr"
+                req = urllib.request.Request(g_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'})
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    g_html = resp.read().decode('utf-8', errors='ignore')
+                    soup = BeautifulSoup(g_html, "html.parser")
+                    text = soup.get_text(separator=' ')
+                    g_prices = re.findall(r'([A-Za-zÇŞĞÜÖİçşğüöı\s]{4,30})\s*(\d+(?:,\d{2})?)\s*(?:TL|₺)', text)
+                    
+                    for name, price_str in set(g_prices):
+                        if len(name.strip()) < 3: continue
+                        try:
+                            price = float(price_str.replace(',', '.'))
+                            cur.execute("""
+                                INSERT OR IGNORE INTO mekan_menu_kalemleri_ve_fiyat_tarihcesi 
+                                (mekan_id, mekan_adi, donem, tarih, fiyat_turu, platform, kategori, urun_adi, fiyat, ilce, il, mahalle, guncellenme_tarihi)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            """, (mekan_id, mekan_adi, donem, now, "Google_Arama_Snippet", "GoogleSearch", "Menü", name.strip(), price, ilce, il, mahalle, now))
+                            fiyat_count += 1
+                        except: pass
+            except: pass
+        
+        conn.commit()
+
         if fiyat_count > 0 or img_count > 0:
             print(f"  ✅ {mekan_adi}: {fiyat_count} Google Menü öğesi, {img_count} Fotoğraf")
         else:
