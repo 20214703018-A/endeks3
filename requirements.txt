@@ -11,3 +11,5 @@ pymupdf>=1.24        # Resmî Gazete karar PDF → görüntü (OCR için; ayrıc
 rasterio>=1.4        # Sentinel-2 pencere okuma (uydu değişimi)
 boto3>=1.34          # Copernicus Data Space S3 oturumu
 numpy>=1.26
+pandas>=2.0.0
+openpyxl>=3.0.0
