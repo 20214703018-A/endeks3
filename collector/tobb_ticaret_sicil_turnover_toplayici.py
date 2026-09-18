@@ -105,7 +105,7 @@ def main():
         headers = {'User-Agent': 'Mozilla/5.0'}
         # ... Kazıma kodları (Sistemde CAPTCHA çözücü/oturum yönetimi gerektirir)
         print("  -> Web kazıyıcı (Selenium/Playwright) bağımlılığı gerekiyor. Manuel CSV yöntemi bekleniyor.")
-")
+
     
     conn.close()
     print("✅ İşlem tamamlandı. Saf ve gerçek sicil verileri eklendi.")

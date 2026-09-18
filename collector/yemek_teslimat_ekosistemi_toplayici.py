@@ -582,6 +582,7 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
 
 def main():
     parser = argparse.ArgumentParser(description="GEOPROP Yemek & Hızlı Market Teslimat Ekosistemi Toplayıcı (40 Shard)")
+    parser.add_argument("--num-shards", type=int, default=1, help="Total shards")
     parser.add_argument("--shard", type=str, help="Shard no (örn: 1/40)")
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite yolu")
     parser.add_argument("--workers", type=int, default=8, help="Paralel worker sayısı (varsayılan: 8)")

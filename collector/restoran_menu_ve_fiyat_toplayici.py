@@ -1786,6 +1786,7 @@ def main():
     parser = argparse.ArgumentParser(description="GEOPROP Restoran, Kafe, Menü, QR & Google Places Madenciliği (2022-2026 Tek Akış)")
     parser.add_argument("--out", default=DEFAULT_DB, help="Çıktı SQLite veritabanı yolu")
     parser.add_argument("--limit", type=int, default=None, help="Maksimum işlenecek mekan sayısı (test için)")
+    parser.add_argument("--num-shards", type=int, default=1, help="Total shards")
     parser.add_argument("--shard", type=str, default=None, help="Paralel shard formatı: X/Y (Örn: 1/40)")
     parser.add_argument("--workers", type=int, default=8, help="Paralel çalışan thread sayısı")
     parser.add_argument("--max-seconds", type=int, default=14400, help="Azami çalışma süresi (saniye, varsayılan 4 saat = 14400s)")

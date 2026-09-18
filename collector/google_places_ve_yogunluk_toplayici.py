@@ -866,6 +866,7 @@ def sync_to_bati_warehouse(venue):
 
 def main():
     parser = argparse.ArgumentParser(description="GEOPROP Google Places & Ticari Yoğunluk Toplayıcı (81 İl & 40 Shard)")
+    parser.add_argument("--num-shards", type=int, default=1, help="Total shards")
     parser.add_argument("--shard", type=str, help="Shard numarası (örn: 1/40)")
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite veritabanı")
     parser.add_argument("--limit", type=int, default=None, help="Maksimum işlenecek sorgu sayısı (varsayılan: sınırsız)")
