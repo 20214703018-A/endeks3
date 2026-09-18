@@ -21,9 +21,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Python Ortamını Kur
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
           
       - name: Bağımlılıkları Yükle
         run: pip install -r requirements.txt
@@ -47,6 +48,8 @@ jobs:
         with:
           name: macro-intelligence-db
           path: warehouse/product/*.sqlite
+          overwrite: true
+          retention-days: 1
 
   # 2. Aşama: Ağır Madencilik (40 Sunuculu Matris)
   heavy_data_mining_shards:
@@ -62,9 +65,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Python Ortamını Kur
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
           
       - name: Bağımlılıkları Yükle
         run: pip install -r requirements.txt
@@ -76,7 +80,7 @@ jobs:
           path: warehouse/product/
 
       - name: Google Places, Yoğunluk ve İşletme Gözlemi
-        run: python collector/google_places_ve_yogunluk_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
+        run: mkdir -p warehouse/product && python collector/google_places_ve_yogunluk_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
 
       - name: Restoran Menü, Fiyat ve Gerçek Enflasyon Taraması
         run: python collector/restoran_menu_ve_fiyat_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
@@ -99,6 +103,8 @@ jobs:
         with:
           name: shard-db-${{ matrix.shard }}
           path: warehouse/product/*.sqlite
+          overwrite: true
+          retention-days: 1
 
   # 3. Aşama: Altyapı ve Hareketlilik (Cron)
   infrastructure_and_mobility:
@@ -109,13 +115,15 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Python Ortamını Kur
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: İBB / İSPARK Canlı Trafik ve Geçişler
         run: |
-          mkdir -p warehouse/product          python collector/ibb_trafik_yogunluk_toplayici.py
+          mkdir -p warehouse/product
+          python collector/ibb_trafik_yogunluk_toplayici.py
           python collector/arac_gps_ve_trafik_toplayici.py
           python collector/ulasim_rotalari_ve_istasyon_toplayici.py
           
@@ -124,6 +132,8 @@ jobs:
         with:
           name: mobility-db
           path: warehouse/product/*.sqlite
+          overwrite: true
+          retention-days: 1
 
   # 4. Aşama: Veri Ambarı Birleştirme (Merge)
   merge_and_commit:
