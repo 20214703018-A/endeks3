@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "GEOPROP Menü Toplayıcı",
+  "version": "1.0",
+  "description": "Google üzerinden menüleri otomatik çeker",
+  "permissions": ["tabs", "storage"],
+  "host_permissions": [
+    "*://www.google.com/*",
+    "http://127.0.0.1:5000/*",
+    "http://localhost:5000/*"
+  ],
+  "action": {
+    "default_title": "Taramayı Başlat"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.google.com/search*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
