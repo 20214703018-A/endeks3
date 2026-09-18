@@ -517,10 +517,18 @@ def parse_pb_venue_dict(v, query, now_utc):
 
     extract_props(v)
 
+    reviews_count = 0
     try:
-        r = v["1205891"][78][1][1][0][6]
-        if isinstance(r, (int, float)) and 1.0 <= float(r) <= 5.0:
-            rating = round(float(r), 1)
+        f78 = v["1205891"][78]
+        sub = f78[0][1][0]
+        if len(sub) > 5 and isinstance(sub[5], int):
+            reviews_count = sub[5]
+        if len(sub) > 6 and isinstance(sub[6], (int, float)):
+            rating = round(float(sub[6]), 1)
+        elif len(f78) > 1 and len(f78[1]) > 1 and len(f78[1][1]) > 0:
+            sub1 = f78[1][1][0]
+            if len(sub1) > 6 and isinstance(sub1[6], (int, float)):
+                rating = round(float(sub1[6]), 1)
     except Exception:
         pass
 
@@ -543,8 +551,8 @@ def parse_pb_venue_dict(v, query, now_utc):
         "alt_kategoriler": json.dumps(categories[1:], ensure_ascii=False) if len(categories) > 1 else None,
         "tum_kategoriler": json.dumps(categories, ensure_ascii=False) if categories else None,
         "puan": rating,
-        "yorum_sayisi": 10 if rating else 0,
-        "degerlendirme_sayisi": 10 if rating else 0,
+        "yorum_sayisi": reviews_count,
+        "degerlendirme_sayisi": reviews_count,
         "yildiz_dagilimi": None,
         "tam_adres": f"{query.replace('restoranlar', '').replace('dükkanlar', '').strip()}",
         "mahalle": parts[0] if len(parts) > 0 else None,
