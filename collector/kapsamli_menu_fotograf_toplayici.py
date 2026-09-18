@@ -118,10 +118,21 @@ def get_mahalleler_by_shard(shard_id, num_shards):
     return all_mahalle[start:end]
 
 def fetch_google_pb(query):
-    """Google Haritalar PB endpoint'ine istek atar"""
-    encoded_q = urllib.parse.quote_plus(query)
-    # Google Maps URL to properly trigger rich PB structure
-    url = f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}"
+    import urllib.parse, urllib.request
+    encoded_q = urllib.parse.quote(query)
+    pb_param = (
+        "!4m12!1m3!1d150000!2d35.0!3d39.0"
+        "!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1"
+        "!7i20!8i20!10b1!12m8!1m1!18b1!2m3!5m1!6e2!20e3!10b1!16b1"
+        "!19m4!2m3!1i360!2i120!4i8"
+        "!20m57!2m2!1i203!2i100!3m2!2i4!5b1!6m6!1m2!1i86!2i86!1m2!1i408!2i240"
+        "!7m42!1m3!1e1!2b0!3e3!1m3!1e2!2b1!3e2!1m3!1e2!2b0!3e3!1m3!1e8!2b0!3e3"
+        "!1m3!1e10!2b0!3e3!1m3!1e10!2b1!3e2!1m3!1e9!2b1!3e2!1m3!1e10!2b0!3e3"
+        "!1m3!1e10!2b1!3e2!1m3!1e10!2b0!3e4!2b1!4b1!9b0"
+        "!22m3!1s!7e81!15b1!24m2!2b1!4b1!26m4!1e12!1e13!1e3!1e1!30m1!2b1!36b1"
+        "!43b1!52b1!47m0!49m7!3b1!6m2!1b1!2b1!7m2!1e3!2b1!50m4!2e3!3m2!1b1!3b1"
+    )
+    url = f"https://www.google.com/search?tbm=map&hl=tr&gl=tr&q={encoded_q}&pb={pb_param}"
     
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -137,6 +148,7 @@ def fetch_google_pb(query):
     except Exception as e:
         print(f"  ❌ PB Fetch hatası: {e}")
         return ""
+
 
 def extract_website_prices(url, mekan_id, mekan_adi, il, ilce, mahalle, conn):
     """Mekanın web sitesine gidip menü, fiyat ve görselleri arar"""
@@ -186,52 +198,68 @@ def extract_website_prices(url, mekan_id, mekan_adi, il, ilce, mahalle, conn):
     except Exception as e:
         pass # Timeout veya hata durumunda sessizce geç
 
+def get_venues_from_tree(node, results):
+    if isinstance(node, dict):
+        if '1205891' in node:
+            try:
+                name = node['1205891'][3][0][0]
+                website = None
+                mekan_id = None
+                
+                # Check for place id
+                try: mekan_id = node['1205891'][78][0]
+                except: pass
+                
+                if not mekan_id and '525001528' in node:
+                    try: mekan_id = node['525001528'][2]
+                    except: pass
+                    
+                # Check for website
+                if '1205891' in node and len(node['1205891']) > 7 and node['1205891'][7] and len(node['1205891'][7]) > 0:
+                    website = node['1205891'][7][0]
+                    
+                import json
+                results.append({
+                    "id": mekan_id or name,
+                    "name": name,
+                    "website": website,
+                    "raw_dump": json.dumps(node)
+                })
+            except Exception as e:
+                pass
+        for v in node.values():
+            get_venues_from_tree(v, results)
+    elif isinstance(node, list):
+        for it in node:
+            get_venues_from_tree(it, results)
+
 def parse_pb_response(html):
+    import json
     venues = []
     
-    # tch=1 endpoint için
-    import re, json
-    matches = re.finditer(r'/\*""\*/\s*(?:\[|\{)', html)
-    starts = [m.start() for m in matches]
-    
-    for i in range(len(starts)):
-        start_idx = starts[i] + 7
-        end_idx = starts[i+1] if i+1 < len(starts) else len(html)
-        chunk = html[start_idx:end_idx].strip()
-        if chunk.endswith(','): chunk = chunk[:-1]
-        
-        try:
-            data = json.loads(chunk)
-            if isinstance(data, dict) and "d" in data:
-                d_str = data["d"]
-                if d_str.startswith(")]}'"):
-                    d_str = d_str[4:].strip()
-                inner_data = json.loads(d_str)
-                d_dumps = json.dumps(inner_data)
-                
-                blocks = re.findall(r'\["(0x[^"]+)","([^"]+)",null,null,null,null,null,null,null,null,null,null,null,null,\["([^"]+)"', d_dumps)
-                
-                if not blocks:
-                    blocks = re.findall(r'\["(0x[^"]+)","([^"]+)"', d_dumps)
-                
-                for b in blocks:
-                    vid = b[0]
-                    vname = b[1]
-                    if len(vid) > 20 and vname and not vname.startswith("http"):
-                        website = ""
-                        wb_match = re.search(r'http[s]?://[^"]+', d_dumps)
-                        if wb_match: website = wb_match.group(0)
-                        
-                        venues.append({
-                            "id": vid,
-                            "name": vname,
-                            "website": website,
-                            "raw_dump": d_dumps
-                        })
-                
-                if venues: break
-        except Exception as e:
-            pass
+    clean = html.strip()
+    data = None
+    if clean.startswith(")]}'"):
+        try: data = json.loads(clean[5:].strip())
+        except: pass
+            
+    if not data:
+        for chunk in html.split('/*""*/'):
+            chunk = chunk.strip()
+            if not chunk: continue
+            try:
+                j = json.loads(chunk)
+                if "d" in j:
+                    d_str = j["d"]
+                    if d_str.startswith(")]}'\n") or d_str.startswith(")]}'"):
+                        d_str = d_str[5:]
+                    data = json.loads(d_str)
+                    break
+            except Exception:
+                continue
+            
+    if data:
+        get_venues_from_tree(data, venues)
             
     return venues
 
@@ -288,7 +316,6 @@ def parse_venue_and_save(venue, il, ilce, mahalle, conn):
 
     except Exception as e:
         pass
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--shard", type=str, default="1/40")
