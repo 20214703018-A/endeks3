@@ -30,7 +30,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
-DB_PATH = DATA_DIR / "ilanlar.db"
+DB_PATH = BASE_DIR.parent / "warehouse" / "product" / "emlak_ilanlari.sqlite"
 GUIDE_PATH = DATA_DIR / "turkiye_il_ilce_rehberi.json"
 if not GUIDE_PATH.exists():
     GUIDE_PATH = BASE_DIR / "turkiye_il_ilce_rehberi.json"
@@ -504,7 +504,7 @@ def export_to_csv(conn, target_dir):
 
 def main():
     parser = argparse.ArgumentParser(description="GEOPROP AI - Hibrit İlan Toplayıcı")
-    parser.add_argument("--iller", type=str, default="34", help="Hedef il plaka/ID (örn: 34,6,35 veya 'hepsi')")
+    parser.add_argument("--iller", type=str, default=None, help="Hedef il plaka/ID (örn: 34,6,35 veya 'hepsi')")
     parser.add_argument("--kategori", type=str, default="hepsi", help="Kategori: konut, arsa, isyeri veya 'hepsi'")
     parser.add_argument("--max-sayfa", type=int, default=30, help="İlçe başına maksimum sayfa derinliği (varsayılan: 30)")
     parser.add_argument("--hiz", type=float, default=0.4, help="İstekler arası temel bekleme (saniye)")
@@ -516,6 +516,7 @@ def main():
     args = parser.parse_args()
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     conn = init_db(DB_PATH)
     session = StealthSession(base_delay=args.hiz)
 
@@ -529,10 +530,19 @@ def main():
     centroids = load_centroids()
     log(f"🗺️  Mahalle Koordinat Veritabanı Yüklendi: {len(centroids):,} Mahalle/Köy Aktif", "INFO")
 
-    if args.iller.lower() == "hepsi":
-        target_cities = list(guide.keys())
+    all_province_codes = sorted(list(guide.keys()))
+    
+    if args.iller is not None:
+        if args.iller.lower() == "hepsi":
+            target_cities = all_province_codes
+        else:
+            target_cities = [x.strip() for x in args.iller.split(",") if x.strip() in guide]
     else:
-        target_cities = [x.strip() for x in args.iller.split(",") if x.strip() in guide]
+        if args.num_shards and args.shard:
+            target_cities = [c for i, c in enumerate(all_province_codes) if i % args.num_shards == (args.shard - 1)]
+            log(f"🧩 Shard Modu: {args.shard}/{args.num_shards} -> Seçilen İller: {target_cities}", "INFO")
+        else:
+            target_cities = ["34"] # fallback to 34 if nothing provided
 
     if args.kategori.lower() == "hepsi":
         target_categories = ["arsa", "konut", "isyeri"]

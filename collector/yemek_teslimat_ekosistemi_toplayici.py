@@ -582,7 +582,7 @@ def harvest_restaurants_and_shops(out_db, shard_id=None, total_shards=40, limit=
 
 def main():
     parser = argparse.ArgumentParser(description="GEOPROP Yemek & Hızlı Market Teslimat Ekosistemi Toplayıcı (40 Shard)")
-    parser.add_argument("--num-shards", type=int, default=1, help="Total shards")
+    parser.add_argument("--num-shards", type=int, default=40, help="Total shards")
     parser.add_argument("--shard", type=str, help="Shard no (örn: 1/40)")
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite yolu")
     parser.add_argument("--workers", type=int, default=8, help="Paralel worker sayısı (varsayılan: 8)")
@@ -595,8 +595,14 @@ def main():
 
     shard_id, total = None, 40
     if args.shard:
-        shard_id = int(args.shard)
-    total = int(args.num_shards)
+        if "/" in args.shard:
+            shard_id = int(args.shard.split("/")[0])
+            total = int(args.shard.split("/")[1])
+        else:
+            shard_id = int(args.shard)
+            total = int(args.num_shards)
+    else:
+        total = int(args.num_shards)
 
     # 1. Darkstore depoları ve OSM noktaları
     if not args.no_darkstore:

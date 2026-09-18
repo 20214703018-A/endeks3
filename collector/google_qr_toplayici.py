@@ -17,7 +17,7 @@ import urllib.error
 import sqlite3
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-PLACES_DB = os.path.join(BASE_DIR, "warehouse/product/fiziksel_ticari_isletmeler.sqlite")
+PLACES_DB = os.path.join(BASE_DIR, "warehouse/product/google_places_ve_yogunluk.sqlite")
 MENU_DB = os.path.join(BASE_DIR, "warehouse/product/restoran_ve_kafe_menuleri.sqlite")
 
 def init_db():
@@ -36,6 +36,22 @@ def init_db():
         urun_adi TEXT NOT NULL,
         aciklama TEXT,
         fiyat REAL NOT NULL,
+        orijinal_fiyat REAL,
+        para_birimi TEXT DEFAULT 'TRY',
+        komisyon_aciklamasi TEXT,
+        fiyat_segmenti TEXT,
+        puan REAL,
+        degerlendirme_sayisi INTEGER,
+        yorum_sayisi INTEGER,
+        stokta_var_mi INTEGER DEFAULT 1,
+        gorsel_url TEXT,
+        kaynak_url TEXT,
+        tam_adres TEXT NOT NULL,
+        mahalle TEXT,
+        ilce TEXT NOT NULL,
+        il TEXT NOT NULL,
+        lat REAL NOT NULL,
+        lon REAL NOT NULL,
         guncellenme_tarihi TEXT NOT NULL,
         UNIQUE(mekan_id, urun_adi, donem, fiyat_turu)
     )""")
@@ -51,9 +67,9 @@ def get_websites_from_db(shard_id, num_shards):
         conn = sqlite3.connect(PLACES_DB)
         cur = conn.cursor()
         cur.execute("""
-            SELECT google_place_id, mekan_adi, web_sitesi 
-            FROM isletme_tarihsel_yasam_dongusu 
-            WHERE web_sitesi IS NOT NULL AND web_sitesi != ''
+            SELECT google_place_id, isim, maps_url, tam_adres, ilce, il, lat, lon
+            FROM google_places_ticari_yogunluk 
+            WHERE maps_url IS NOT NULL AND maps_url != ''
             ORDER BY google_place_id
         """)
         rows = cur.fetchall()
@@ -78,7 +94,7 @@ def fetch_html(url):
     except:
         return ""
 
-def extract_qrmenu_com_tr(html, mekan_id, mekan_adi, conn):
+def extract_qrmenu_com_tr(html, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, conn):
     """qrmenu.com.tr sağlayıcısı için genel bir HTML regex veya JSON ayıklayıcı"""
     # Basit bir Regex örneği (gerçekte sağlayıcının state'ine bakılır)
     items = re.findall(r'<div class="product-name">([^<]+)</div>.*?<div class="product-price">([0-9.,]+)', html, re.DOTALL)
@@ -95,26 +111,26 @@ def extract_qrmenu_com_tr(html, mekan_id, mekan_adi, conn):
         except:
             pass
 
-    return save_items(items, mekan_id, mekan_adi, "QRMenu.com.tr", conn)
+    return save_items(items, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, "QRMenu.com.tr", conn)
 
-def extract_adisyo(url, mekan_id, mekan_adi, conn):
+def extract_adisyo(url, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, conn):
     """Adisyo, QR menüleri genellikle API'den çeker."""
     # Adisyo URL'si örn: adisyo.com/menu/mekan-adi
     html = fetch_html(url)
     items = re.findall(r'"productName"\s*:\s*"([^"]+)".*?"price"\s*:\s*([0-9.]+)', html)
-    return save_items(items, mekan_id, mekan_adi, "Adisyo", conn)
+    return save_items(items, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, "Adisyo", conn)
 
-def extract_generic_prices(html, mekan_id, mekan_adi, conn):
+def extract_generic_prices(html, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, conn):
     """Bilinmeyen sitelerden Regex ile zorla fiyat kazıma."""
     # <title> veya H1, H2, class="price" arar
     items = []
     # Çok basit bir heuristic: (Ürün Adı) ... (Fiyat) TL
-    matches = re.findall(r'>\s*([A-Za-zÇŞĞÜÖİçşğüöı\s]{3,30})\s*<.*?([0-9]+[,.][0-9]{2})\s*(?:TL|₺)', html, re.IGNORECASE)
+    matches = re.findall(r'>\s*([A-Za-zÇŞĞÜÖİçşğüöı\s]{3,30})\s*<.*?([0-9]+[,.][0-9]{2})\s*(?:TL|₺)', html, re.IGNORECASE | re.DOTALL)
     for m in matches:
         items.append((m[0].strip(), m[1]))
-    return save_items(items, mekan_id, mekan_adi, "Generic Web", conn)
+    return save_items(items, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, "Generic Web", conn)
 
-def save_items(items, mekan_id, mekan_adi, platform, conn):
+def save_items(items, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, platform, conn):
     if not items:
         return 0
         
@@ -130,9 +146,9 @@ def save_items(items, mekan_id, mekan_adi, platform, conn):
             
             cur.execute("""
                 INSERT OR IGNORE INTO mekan_menu_kalemleri_ve_fiyat_tarihcesi 
-                (mekan_id, mekan_adi, donem, tarih, fiyat_turu, platform, kategori, urun_adi, aciklama, fiyat, guncellenme_tarihi)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (mekan_id, mekan_adi, donem, now, "Fiziksel_QR", platform, "Menü", name, "", price, now))
+                (mekan_id, mekan_adi, donem, tarih, fiyat_turu, platform, kategori, urun_adi, aciklama, fiyat, tam_adres, ilce, il, lat, lon, guncellenme_tarihi)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (mekan_id, mekan_adi, donem, now, "Fiziksel_QR", platform, "Menü", name, "", price, tam_adres, ilce, il, lat, lon, now))
             count += 1
         except:
             pass
@@ -141,7 +157,7 @@ def save_items(items, mekan_id, mekan_adi, platform, conn):
     return count
 
 def process_venue(venue, conn):
-    mekan_id, mekan_adi, url = venue
+    mekan_id, mekan_adi, url, tam_adres, ilce, il, lat, lon = venue
     
     if not url.startswith('http'):
         url = 'http://' + url
@@ -154,12 +170,12 @@ def process_venue(venue, conn):
 
     extracted_count = 0
     if "qrmenu.com" in url.lower() or "qr" in html.lower()[:2000]:
-        extracted_count = extract_qrmenu_com_tr(html, mekan_id, mekan_adi, conn)
+        extracted_count = extract_qrmenu_com_tr(html, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, conn)
     elif "adisyo.com" in url.lower():
-        extracted_count = extract_adisyo(url, mekan_id, mekan_adi, conn)
+        extracted_count = extract_adisyo(url, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, conn)
     else:
         # Genel site kazıma
-        extracted_count = extract_generic_prices(html, mekan_id, mekan_adi, conn)
+        extracted_count = extract_generic_prices(html, mekan_id, mekan_adi, tam_adres, ilce, il, lat, lon, conn)
 
     if extracted_count > 0:
         print(f"  ✅ Başarılı: {extracted_count} adet ürün/fiyat çıkartıldı!")
@@ -168,12 +184,21 @@ def process_venue(venue, conn):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--shard", type=int, default=1)
+    parser.add_argument("--shard", type=str, default="1")
     parser.add_argument("--num-shards", type=int, default=1)
     args = parser.parse_args()
+    
+    shard_str = str(args.shard)
+    if '/' in shard_str:
+        s_part, n_part = shard_str.split('/')
+        shard_id = int(s_part)
+        num_shards = int(n_part)
+    else:
+        shard_id = int(shard_str)
+        num_shards = args.num_shards
 
     conn = init_db()
-    venues = get_websites_from_db(args.shard, args.num_shards)
+    venues = get_websites_from_db(shard_id, num_shards)
     
     print(f"🚀 [QR VE WEB MENÜ MOTORU] Makine {args.shard}/{args.num_shards}: {len(venues)} adet web sitesi tarayacak.")
     

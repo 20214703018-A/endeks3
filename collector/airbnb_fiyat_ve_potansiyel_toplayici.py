@@ -20,6 +20,7 @@ import re
 import time
 import urllib.parse
 import urllib.request
+import sqlite3
 from datetime import datetime, timedelta
 from dataclasses import asdict, dataclass, field
 from typing import Dict, List, Optional, Tuple
@@ -667,6 +668,34 @@ def birlestir_tum_sonuclari(data_dir: str = DATA_DIR):
             print(f"[✔] Master Airbnb Pazar Özeti yazıldı: {master_summary_path}")
     print("=" * 70)
 
+def init_airbnb_db():
+    db_path = os.path.join("warehouse", "product", "airbnb_fiyat_ve_potansiyel.sqlite")
+    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS airbnb_ilanlar (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ilan_id TEXT UNIQUE,
+            baslik TEXT,
+            bolge TEXT,
+            il TEXT,
+            fiyat_gecelik REAL,
+            fiyat_haftalik REAL,
+            fiyat_aylik REAL,
+            oda_tipi TEXT,
+            yatak_sayisi INTEGER,
+            puan REAL,
+            yorum_sayisi INTEGER,
+            lat REAL,
+            lon REAL,
+            url TEXT,
+            guncellenme_tarihi TEXT
+        )
+    """)
+    conn.commit()
+    return conn
+
 
 def main():
     parser = argparse.ArgumentParser(description="Doğrudan Python Airbnb Pazar & Çoklu Vade Potansiyel Toplayıcı")
@@ -708,17 +737,16 @@ def main():
     else:
         # GEOPROP Sharding Logic (Tüm Türkiye 81 İl)
         import json
-        with open("collector/turkiye_il_ilce_rehberi.json", "r", encoding="utf-8") as f:
+        import os
+        rehber_path = os.path.join(os.path.dirname(__file__), 'turkiye_il_ilce_rehberi.json')
+        with open(rehber_path, "r", encoding="utf-8") as f:
             rehber = json.load(f)
         
         # Sadece İl İsimlerini (Örn: "İstanbul, Türkiye") olarak çıkaralım
         all_cities = sorted([f"{v['city_name']}, Türkiye" for k, v in rehber.items()])
         
         if args.num_shards and args.num_shards > 1 and args.shard:
-            import math
-            step = math.ceil(len(all_cities) / args.num_shards)
-            start = (args.shard - 1) * step
-            target_cities = all_cities[start:start+step]
+            target_cities = [c for i, c in enumerate(all_cities) if i % args.num_shards == (args.shard - 1)]
             print(f"[SHARD {args.shard}/{args.num_shards}] Kendisine atanan iller: {target_cities}")
         else:
             target_cities = all_cities
@@ -768,6 +796,25 @@ def main():
 
     print(f"\n[Yasal Uyarı / 7464]: {analiz.yasal_7464_risk_durumu}")
     print("=" * 65)
+
+    if ilanlar:
+        conn = init_airbnb_db()
+        cursor = conn.cursor()
+        now_str = datetime.now().isoformat()
+        for ilan in ilanlar:
+            il = bolge_adi # Fallback or use regex later if needed
+            cursor.execute("""
+                INSERT OR REPLACE INTO airbnb_ilanlar 
+                (ilan_id, baslik, bolge, il, fiyat_gecelik, fiyat_haftalik, fiyat_aylik, oda_tipi, yatak_sayisi, puan, yorum_sayisi, lat, lon, url, guncellenme_tarihi)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                ilan.id, ilan.baslik, bolge_adi, il, 
+                ilan.gecelik_fiyat_tl, ilan.fiyat_1_hafta_tl, ilan.fiyat_1_ay_tl,
+                ilan.oda_tipi, 0, ilan.puan, ilan.yorum_sayisi, 
+                ilan.enlem, ilan.boylam, ilan.url, now_str
+            ))
+        conn.commit()
+        conn.close()
 
     if (args.export or args.cikis_ek) and ilanlar:
         dosya_adi = f"airbnb_{args.cikis_ek}" if args.cikis_ek else re.sub(r"[^\w\-_]", "_", bolge_adi.lower())

@@ -1786,8 +1786,8 @@ def main():
     parser = argparse.ArgumentParser(description="GEOPROP Restoran, Kafe, Menü, QR & Google Places Madenciliği (2022-2026 Tek Akış)")
     parser.add_argument("--out", default=DEFAULT_DB, help="Çıktı SQLite veritabanı yolu")
     parser.add_argument("--limit", type=int, default=None, help="Maksimum işlenecek mekan sayısı (test için)")
-    parser.add_argument("--num-shards", type=int, default=1, help="Total shards")
-    parser.add_argument("--shard", type=str, default=None, help="Paralel shard formatı: X/Y (Örn: 1/40)")
+    parser.add_argument("--num-shards", type=int, default=40, help="Total shards")
+    parser.add_argument("--shard", type=str, default=None, help="Paralel shard formatı: X/Y (Örn: 1/40) veya tam sayı")
     parser.add_argument("--workers", type=int, default=8, help="Paralel çalışan thread sayısı")
     parser.add_argument("--max-seconds", type=int, default=14400, help="Azami çalışma süresi (saniye, varsayılan 4 saat = 14400s)")
     parser.add_argument("--force", action="store_true", help="Daha önce tarananları da yeniden tara")
@@ -1797,9 +1797,12 @@ def main():
     init_db(args.out)
 
     shard_id, num_shards = None, None
-    if args.shard and "/" in args.shard:
-        parts = args.shard.split("/")
-        shard_id, num_shards = int(parts[0]), int(parts[1])
+    if args.shard:
+        if "/" in args.shard:
+            parts = args.shard.split("/")
+            shard_id, num_shards = int(parts[0]), int(parts[1])
+        else:
+            shard_id, num_shards = int(args.shard), int(args.num_shards)
 
     venues = load_target_venues(limit=args.limit, shard_id=shard_id, num_shards=num_shards, out_db=args.out)
     print(f"🚀 Toplam {len(venues)} mekan taranmak üzere sıraya alındı.")

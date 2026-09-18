@@ -77,20 +77,30 @@ def insert_locations(conn, locations):
     conn.commit()
     return written
 
-def fetch_trendyol_gelal():
+def fetch_trendyol_gelal(shard_id=1, num_shards=1):
     import urllib.request
     import json
+    import math
     locations = []
-    print("[+] Trendyol Gel-Al ve Lockers noktaları taranıyor...")
+    print(f"[+] Trendyol Gel-Al ve Lockers noktaları taranıyor... (Shard {shard_id}/{num_shards})")
     
-    # 30 Büyükşehir için örnek merkez koordinatları (Bounding box taraması simülasyonu)
-    # API: https://public-mdc.trendyol.com/discovery-web-pudo-service/api/pudos/map
-    # Gerçek sistemde bu koordinatlar 81 il için grid_iterator'dan gelecek
-    cities = [
-        {"name": "Istanbul", "lat": 41.0082, "lon": 28.9784},
-        {"name": "Ankara", "lat": 39.9334, "lon": 32.8597},
-        {"name": "Izmir", "lat": 38.4237, "lon": 27.1428}
-    ]
+    rehber_path = REPO_ROOT / "collector" / "turkiye_il_ilce_rehberi.json"
+    cities = []
+    if rehber_path.exists():
+        with open(rehber_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            for k, v in data.items():
+                cities.append({"name": v["city_name"], "lat": v.get("lat", 39.0), "lon": v.get("lon", 35.0)})
+    else:
+        print("[-] turkiye_il_ilce_rehberi.json bulunamadı.")
+        return []
+        
+    cities = sorted(cities, key=lambda x: x["name"])
+    if num_shards > 1:
+        step = math.ceil(len(cities) / num_shards)
+        start = (shard_id - 1) * step
+        end = start + step
+        cities = cities[start:end]
     
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36',
@@ -127,23 +137,29 @@ def fetch_trendyol_gelal():
     return locations
 
 def fetch_amazon_lockers():
-    # Amazon TR teslimat dolapları API'si veya harita kazıması
-    print("[+] Amazon Lockers taranıyor... (API Entegrasyonu Eklenecek)")
+    # TODO: API Entegrasyonu Eklenecek
+    print("⚠️ UYARI: Amazon Lockers henüz entegre edilmedi, atlanıyor.")
     return []
 
 def fetch_ptt_kargomat():
-    # PTT kargomat lokasyonları (Önceki betikten alınabilir)
-    print("[+] PTT Kargomatlar taranıyor... (API Entegrasyonu Eklenecek)")
+    # TODO: API Entegrasyonu Eklenecek
+    print("⚠️ UYARI: PTT Kargomatlar henüz entegre edilmedi, atlanıyor.")
     return []
 
 def main():
-    print("🚀 GEOPROP Lojistik, Teslimat ve Dark Store Veri Aktarımı Başlıyor...")
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--shard", type=int, default=1)
+    parser.add_argument("--num-shards", type=int, default=1)
+    args = parser.parse_args()
+
+    print(f"🚀 GEOPROP Lojistik, Teslimat ve Dark Store Veri Aktarımı Başlıyor... (Makine: {args.shard}/{args.num_shards})")
     os.makedirs(OUT_DB.parent, exist_ok=True)
     conn = sqlite3.connect(OUT_DB)
     init_db(conn)
     
     # 1. Trendyol Noktaları
-    ty_locs = fetch_trendyol_gelal()
+    ty_locs = fetch_trendyol_gelal(args.shard, args.num_shards)
     w1 = insert_locations(conn, ty_locs)
     
     # 2. Amazon Lockers

@@ -273,9 +273,9 @@ class EticaretVeLojistikToplayici:
 
         for item in iller:
             il_kod = item.get("Kod")
-            il_ad = item.get("Ad", "").strip().upper()
+            il_ad = item.get("Ad", "").strip().replace("i", "İ").replace("ı", "I").upper()
 
-            if il_filtre and il_ad not in [i.strip().upper() for i in il_filtre]:
+            if il_filtre and il_ad not in [i.strip().replace("i", "İ").replace("ı", "I").upper() for i in il_filtre]:
                 continue
 
             sube_sayisi, kargomat_sayisi = self.fetch_ptt_lojistik_il(il_kod, il_ad)
@@ -385,7 +385,7 @@ class EticaretVeLojistikToplayici:
             city_id = int(city_id_str)
             city_name = city_info.get("city_name", "")
 
-            if il_filtre and city_name.strip().lower() not in [i.strip().lower() for i in il_filtre]:
+            if il_filtre and city_name.strip().replace("İ", "i").replace("I", "ı").lower() not in [i.strip().replace("İ", "i").replace("I", "ı").lower() for i in il_filtre]:
                 continue
 
             # 1. İl Seviyesi
@@ -512,6 +512,8 @@ class EticaretVeLojistikToplayici:
 
 def main():
     parser = argparse.ArgumentParser(description="E-Ticaret, Kargo ve Hızlı Teslimat Veri Toplayıcısı")
+    parser.add_argument("--num-shards", type=int, default=40, help="Total shards")
+    parser.add_argument("--shard", type=str, help="Shard no (örn: 1/40)")
     parser.add_argument("--kargo-yalnizca", action="store_true", help="Yalnızca PTT şube ve Kargomat noktalarını toplar")
     parser.add_argument("--eticaret-yalnizca", action="store_true", help="Yalnızca e-ticaret harcama verilerini toplar")
     parser.add_argument("--iller", nargs="+", help="Yalnızca belirli illeri çek (Örn: --iller Istanbul Ankara Izmir)")

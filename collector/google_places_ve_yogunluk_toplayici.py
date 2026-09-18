@@ -879,7 +879,7 @@ def sync_to_bati_warehouse(venue):
 
 def main():
     parser = argparse.ArgumentParser(description="GEOPROP Google Places & Ticari Yoğunluk Toplayıcı (81 İl & 40 Shard)")
-    parser.add_argument("--num-shards", type=int, default=1, help="Total shards")
+    parser.add_argument("--num-shards", type=int, default=40, help="Total shards")
     parser.add_argument("--shard", type=str, help="Shard numarası (örn: 1/40)")
     parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite veritabanı")
     parser.add_argument("--limit", type=int, default=None, help="Maksimum işlenecek sorgu sayısı (varsayılan: sınırsız)")
@@ -898,8 +898,12 @@ def main():
         initial_queries = get_all_commercial_corridor_queries()
         print(f"81 İl Tam Kapsama Modu: {len(initial_queries)} ticari koridor ve ilçe sorgulanıyor...")
     elif args.shard:
-        shard_id = int(args.shard)
-        total = int(args.num_shards)
+        if "/" in args.shard:
+            shard_id = int(args.shard.split("/")[0])
+            total = int(args.shard.split("/")[1])
+        else:
+            shard_id = int(args.shard)
+            total = int(args.num_shards)
         initial_queries = get_commercial_corridors_by_shard(
             shard_id, total, mahalle_limit=args.mahalle_limit, street_limit=args.sokak_limit
         )
