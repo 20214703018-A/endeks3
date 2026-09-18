@@ -13,48 +13,8 @@ on:
 
 jobs:
   # 1. Aşama: Tekil / Resmi Veri Çekimleri (TÜİK, ETBİS, SEGE, BDDK, TOBB)
-  official_and_macro_data:
-    name: "Resmi Veri ve Makro Ekonomik İstihbarat (Tekil Node)"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Repoyu Klonla
-        uses: actions/checkout@v4
-
-      - name: Python Ortamını Kur
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-          
-      - name: Bağımlılıkları Yükle
-        run: pip install -r requirements.txt
-
-      - name: Resmi Makro İstihbarat Betiklerini Çalıştır
-        run: |
-          echo "BKM, BDDK, KAP ve TÜİK Gerçek Finansal Verileri Çekiliyor..."
-          python collector/bddk_finturk_toplayici.py
-          python collector/bkm_sektorel_kart_toplayici.py
-          python collector/kap_perakende_ciro_toplayici.py
-          python collector/tuik_bolge_toplayici.py
-          python collector/tuik_il_bazli_satis_istatistikleri.py
-          
-          echo "Sildiğimiz Sahte Verilerin GERÇEK Kaynakları Çalıştırılıyor..."
-          echo "Geçmişte yazılan ama tam çekilmeyen resmi veriler:"
-          python collector/etbis_ve_sege_resmi_veri_toplayici.py || true
-          python collector/tobb_ticaret_sicil_turnover_toplayici.py || true
-
-      - name: Artifact Olarak Kaydet
-        uses: actions/upload-artifact@v4
-        with:
-          name: macro-intelligence-db
-          path: warehouse/product/*.sqlite
-          overwrite: true
-          retention-days: 1
-
-  # 2. Aşama: Ağır Madencilik (40 Sunuculu Matris)
   heavy_data_mining_shards:
     name: "Derin Madencilik Shard ${{ matrix.shard }}/40"
-    needs: official_and_macro_data
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -73,11 +33,7 @@ jobs:
       - name: Bağımlılıkları Yükle
         run: pip install -r requirements.txt
 
-      - name: Kısmi Veritabanlarını İndir (Senkronizasyon)
-        uses: actions/download-artifact@v4
-        with:
-          name: macro-intelligence-db
-          path: warehouse/product/
+
 
       - name: Google Places, Yoğunluk ve İşletme Gözlemi
         run: mkdir -p warehouse/product && python collector/google_places_ve_yogunluk_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
