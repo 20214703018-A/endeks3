@@ -2,20 +2,17 @@
 # -*- coding: utf-8 -*-
 """
 GEOPROP - Google Arama (Knowledge Panel) Menü Toplayıcı
-Google Web Search üzerinden bilgi panosunu hedefler.
 Özellikler:
-- Belirtilen 10 şehri hedefler (Antalya, İstanbul, Ankara, Bursa, Konya, Eskişehir, Muğla, İzmir, Mersin, Aydın).
-- Nüfusu 30.000'den küçük olan kırsal/düşük nüfuslu ilçeleri atlar.
-- Playwright ile lokalde (headless=False) çalışıp CAPTCHA'ya yakalanmadan menü ve görsel çeker.
+- Hedef iller: Antalya, İstanbul, Ankara, Bursa, Konya, Eskişehir, Muğla, İzmir, Mersin, Aydın.
+- Nüfusu 30.000'den küçük ilçeleri ve 5.000'den küçük mahalleleri EKLER/ATLAR.
+- Lokal (headless=False) çalışıp CAPTCHA'ya yakalanmadan menü ve görsel çeker.
 """
 
 import sys
 import os
 import re
 import time
-import json
 import sqlite3
-import argparse
 import urllib.parse
 from playwright.sync_api import sync_playwright
 
@@ -23,6 +20,15 @@ DB_MENU = "warehouse/product/restoran_ve_kafe_menuleri.sqlite"
 DB_STATS = "warehouse/product/bolge_istatistik.sqlite"
 TARGET_CITIES = ['Antalya', 'İstanbul', 'Ankara', 'Bursa', 'Konya', 'Eskişehir', 'Muğla', 'İzmir', 'Mersin', 'Aydın']
 MIN_COUNTY_POP = 30000
+MIN_NEIGHBORHOOD_POP = 5000
+
+def normalize_tr(text):
+    if not text: return ""
+    text = text.lower()
+    text = text.replace('ı', 'i').replace('i̇', 'i').replace('ğ', 'g')
+    text = text.replace('ü', 'u').replace('ş', 's').replace('ö', 'o').replace('ç', 'c')
+    text = re.sub(r'[^a-z0-9]', '', text)
+    return text
 
 def init_db():
     os.makedirs(os.path.dirname(DB_MENU), exist_ok=True)
@@ -65,14 +71,72 @@ def init_db():
     conn.commit()
     return conn
 
-def get_target_venues():
-    # TEST AMAÇLI BİLİNEN MEKANLAR (Kullanıcı İsteği)
-    return [
+def get_valid_locations():
+    valid_counties = set()
+    valid_neighborhoods = set()
+    
+    if os.path.exists(DB_STATS):
+        conn = sqlite3.connect(DB_STATS)
+        cur = conn.cursor()
+        
+        # İlçeler (Nüfus >= 30,000)
+        cur.execute(f"""
+            SELECT b.ad, a.bolge_adi
+            FROM demografi a 
+            JOIN ref_il b ON a.city_id = b.city_id 
+            WHERE a.seviye = 'ilce' 
+              AND b.ad IN ({','.join(['?']*len(TARGET_CITIES))})
+              AND a.nufus_toplam >= ?
+        """, (*TARGET_CITIES, MIN_COUNTY_POP))
+        for row in cur.fetchall():
+            ilce_ad = row[1].split(' - ')[-1].strip()
+            valid_counties.add((normalize_tr(row[0]), normalize_tr(ilce_ad)))
+            
+        # Mahalleler (Nüfus >= 5,000)
+        cur.execute(f"""
+            SELECT b.ad, a.mahalle_norm
+            FROM demografi a 
+            JOIN ref_il b ON a.city_id = b.city_id 
+            WHERE a.seviye = 'mahalle' 
+              AND b.ad IN ({','.join(['?']*len(TARGET_CITIES))})
+              AND a.nufus_toplam >= ?
+        """, (*TARGET_CITIES, MIN_NEIGHBORHOOD_POP))
+        for row in cur.fetchall():
+            valid_neighborhoods.add((normalize_tr(row[0]), row[1]))
+            
+        conn.close()
+        print(f"Bölge İstatistikleri: {len(valid_counties)} geçerli ilçe, {len(valid_neighborhoods)} geçerli mahalle yüklendi.")
+    return valid_counties, valid_neighborhoods
+
+def get_target_venues(valid_counties, valid_neighborhoods):
+    # GELECEKTE: google_places_ticari_yogunluk tablosundan okunacak.
+    # ŞU AN: Kullanıcının "test et" komutu üzerine bilinen mekanlar.
+    test_venues = [
         {"adi": "Lara Aspava", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Şirinyalı", "id": "TEST_001"},
         {"adi": "Marje Mantı", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Fener", "id": "TEST_002"},
         {"adi": "Aşşk Kahve", "ilce": "Beşiktaş", "il": "İstanbul", "mahalle": "Kuruçeşme", "id": "TEST_003"},
-        {"adi": "Espressolab", "ilce": "Şişli", "il": "İstanbul", "mahalle": "Teşvikiye", "id": "TEST_004"}
+        {"adi": "Kırsal Kafe", "ilce": "İbradı", "il": "Antalya", "mahalle": "Ormana", "id": "TEST_004"} # Bu elenmeli! (İlçe nüfusu < 30k)
     ]
+    
+    filtered_venues = []
+    for v in test_venues:
+        il_norm = normalize_tr(v['il'])
+        ilce_norm = normalize_tr(v['ilce'])
+        mahalle_norm = normalize_tr(v['mahalle'])
+        
+        # İlçe Kontrolü
+        if valid_counties and (il_norm, ilce_norm) not in valid_counties:
+            print(f"🛑 ELENDİ: {v['adi']} (İlçe: {v['ilce']} nüfusu {MIN_COUNTY_POP} altında veya bulunamadı)")
+            continue
+            
+        # Mahalle Kontrolü
+        if valid_neighborhoods and (il_norm, mahalle_norm) not in valid_neighborhoods:
+            print(f"🛑 ELENDİ: {v['adi']} (Mahalle: {v['mahalle']} nüfusu {MIN_NEIGHBORHOOD_POP} altında veya bulunamadı)")
+            continue
+            
+        filtered_venues.append(v)
+        
+    return filtered_venues
 
 def scrape_knowledge_panel(page, mekan_id, mekan_adi, ilce, il, mahalle, conn):
     query = f"{mekan_adi} {ilce} {il} menü"
@@ -94,7 +158,7 @@ def scrape_knowledge_panel(page, mekan_id, mekan_adi, ilce, il, mahalle, conn):
     cur = conn.cursor()
     
     if "CAPTCHA" in page.title() or "Robot" in page.title() or "sıra dışı" in page.content().lower():
-        print("  ❌ CAPTCHA tespit edildi. (Lokal IP'nizde bir süre sonra düzelecektir)")
+        print("  ❌ CAPTCHA tespit edildi. Lütfen IP değiştirin veya bekleyin.")
         time.sleep(5)
         return
     
@@ -145,16 +209,17 @@ def scrape_knowledge_panel(page, mekan_id, mekan_adi, ilce, il, mahalle, conn):
     print(f"  ✅ {mekan_adi}: {gorsel_sayisi} Görsel, {fiyat_sayisi} Yapısal Fiyat Kaydedildi.")
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--shard", type=str, default="1/1")
-    args = parser.parse_args()
-    
     conn = init_db()
-    venues = get_target_venues()
+    valid_counties, valid_neighborhoods = get_valid_locations()
+    venues = get_target_venues(valid_counties, valid_neighborhoods)
     
+    if not venues:
+        print("Kriterlere uygun (Nüfus vb.) mekan bulunamadı!")
+        return
+        
+    print(f"\n🚀 Playwright başlatılıyor... Hedef {len(venues)} mekan.")
     with sync_playwright() as p:
-        # LOKAL TEST İÇİN HEADLESS=FALSE (Ekranda görünür Chrome)
-        browser = p.chromium.launch(headless=False) 
+        browser = p.chromium.launch(headless=False)
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
             locale="tr-TR"
