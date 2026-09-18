@@ -427,7 +427,20 @@ def is_valid_commercial_venue(name, category=None, rating=None, reviews=None, is
     return True
 
 
-def fetch_google_places(query):
+def clean_query_for_google(query):
+    # Google Maps tbm=map&tch=1 API'si OSB veya Mahallesi gibi resmi kelimelerde sınır poligonu döndürüp
+    # mekanları gizleyebiliyor. Bu yüzden sorguyu sadeleştiriyoruz.
+    q = query.replace(" Osb ", " ")
+    q = q.replace(" OSB ", " ")
+    q = q.replace(" Organize Sanayi Bölgesi ", " ")
+    q = q.replace(" Mahallesi ", " ")
+    q = q.replace(" Mah. ", " ")
+    q = q.replace(" Köyü ", " ")
+    # Boşlukları temizle
+    q = " ".join(q.split())
+    return q
+
+def fetch_google_places(clean_query_for_google(query)):
     """Google Maps üzerinden tekil değil, sorguda dönen TÜM ticari işletmeleri liste halinde çeker."""
     encoded_q = urllib.parse.quote(query)
     url = f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}"
