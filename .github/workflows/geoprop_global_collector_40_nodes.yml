@@ -115,7 +115,7 @@ jobs:
 
       - name: İBB / İSPARK Canlı Trafik ve Geçişler
         run: |
-          python collector/ibb_trafik_yogunluk_toplayici.py
+          mkdir -p warehouse/product          python collector/ibb_trafik_yogunluk_toplayici.py
           python collector/arac_gps_ve_trafik_toplayici.py
           python collector/ulasim_rotalari_ve_istasyon_toplayici.py
           
