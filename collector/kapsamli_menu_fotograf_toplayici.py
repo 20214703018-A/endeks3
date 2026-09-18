@@ -29,6 +29,7 @@ TARGET_CITIES = [
 CATEGORIES = ["Restoran", "Kafe", "Gece Kulübü"]
 
 def init_db():
+    os.makedirs(os.path.dirname(MENU_DB), exist_ok=True)
     conn = sqlite3.connect(MENU_DB)
     cur = conn.cursor()
     # Fiyat kalemleri tablosu
