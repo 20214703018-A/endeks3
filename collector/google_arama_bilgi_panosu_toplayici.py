@@ -109,32 +109,50 @@ def get_valid_locations():
     return valid_counties, valid_neighborhoods
 
 def get_target_venues(valid_counties, valid_neighborhoods):
-    # GELECEKTE: google_places_ticari_yogunluk tablosundan okunacak.
-    # ŞU AN: Kullanıcının "test et" komutu üzerine bilinen mekanlar.
-    test_venues = [
-        {"adi": "Lara Aspava", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Şirinyalı", "id": "TEST_001"},
-        {"adi": "Marje Mantı", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Fener", "id": "TEST_002"},
-        {"adi": "Aşşk Kahve", "ilce": "Beşiktaş", "il": "İstanbul", "mahalle": "Kuruçeşme", "id": "TEST_003"},
-        {"adi": "Kırsal Kafe", "ilce": "İbradı", "il": "Antalya", "mahalle": "Ormana", "id": "TEST_004"} # Bu elenmeli! (İlçe nüfusu < 30k)
-    ]
+    places_db = "warehouse/product/google_places_ve_yogunluk.sqlite"
+    if not os.path.exists(places_db):
+        print(f"Mekan veritabanı bulunamadı: {places_db}")
+        return []
+        
+    conn = sqlite3.connect(places_db)
+    cur = conn.cursor()
+    
+    # 1. Bütün Restoran ve Kafeleri Çek
+    cur.execute(f"""
+        SELECT google_place_id, isim, ilce, il, mahalle, yorum_sayisi
+        FROM google_places_ticari_yogunluk
+        WHERE il IN ({','.join(['?']*len(TARGET_CITIES))})
+          AND yorum_sayisi >= 50
+          AND (
+              ana_kategori LIKE '%Restoran%' OR 
+              ana_kategori LIKE '%Kafe%' OR 
+              ana_kategori LIKE '%Lokanta%' OR 
+              ana_kategori LIKE '%Pastane%' OR 
+              ana_kategori LIKE '%Kahve%'
+          )
+        ORDER BY yorum_sayisi DESC
+    """, (*TARGET_CITIES,))
+    all_venues = cur.fetchall()
+    conn.close()
     
     filtered_venues = []
-    for v in test_venues:
-        il_norm = normalize_tr(v['il'])
-        ilce_norm = normalize_tr(v['ilce'])
-        mahalle_norm = normalize_tr(v['mahalle'])
+    for v in all_venues:
+        mekan_id, adi, ilce, il, mahalle, yorum = v
+        il_norm = normalize_tr(il)
+        ilce_norm = normalize_tr(ilce)
+        mahalle_norm = normalize_tr(mahalle)
         
         # İlçe Kontrolü
         if valid_counties and (il_norm, ilce_norm) not in valid_counties:
-            print(f"🛑 ELENDİ: {v['adi']} (İlçe: {v['ilce']} nüfusu {MIN_COUNTY_POP} altında veya bulunamadı)")
             continue
             
         # Mahalle Kontrolü
-        if valid_neighborhoods and (il_norm, mahalle_norm) not in valid_neighborhoods:
-            print(f"🛑 ELENDİ: {v['adi']} (Mahalle: {v['mahalle']} nüfusu {MIN_NEIGHBORHOOD_POP} altında veya bulunamadı)")
+        if mahalle_norm and valid_neighborhoods and (il_norm, mahalle_norm) not in valid_neighborhoods:
             continue
             
-        filtered_venues.append(v)
+        filtered_venues.append({
+            "id": mekan_id, "adi": adi, "ilce": ilce, "il": il, "mahalle": mahalle
+        })
         
     return filtered_venues
 
@@ -157,10 +175,16 @@ def scrape_knowledge_panel(page, mekan_id, mekan_adi, ilce, il, mahalle, conn):
     donem = time.strftime('%Y-%m')
     cur = conn.cursor()
     
-    if "CAPTCHA" in page.title() or "Robot" in page.title() or "sıra dışı" in page.content().lower():
-        print("  ❌ CAPTCHA tespit edildi. Lütfen IP değiştirin veya bekleyin.")
-        time.sleep(5)
-        return
+if "CAPTCHA" in page.title() or "Robot" in page.title() or "sıra dışı" in page.content().lower():
+        print("  ❌ CAPTCHA EKRANI GELDİ! Lütfen açılan tarayıcı penceresinde 'Ben Robot Değilim' kutusunu işaretleyin. 30 saniye bekleniyor...")
+        for _ in range(30):
+            time.sleep(1)
+            if "CAPTCHA" not in page.title() and "Robot" not in page.title():
+                print("  ✅ CAPTCHA ÇÖZÜLDÜ! Devam ediliyor...")
+                break
+        else:
+            print("  ⚠️ CAPTCHA çözülemedi, mekan atlanıyor.")
+            return
     
     gorsel_sayisi = 0
     imgs = page.query_selector_all("g-scrolling-carousel img")
