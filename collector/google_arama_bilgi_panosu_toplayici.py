@@ -4,8 +4,9 @@
 GEOPROP - Google Arama (Knowledge Panel) Menü Toplayıcı
 Özellikler:
 - Hedef iller: Antalya, İstanbul, Ankara, Bursa, Konya, Eskişehir, Muğla, İzmir, Mersin, Aydın.
-- Nüfusu 30.000'den küçük ilçeleri ve 5.000'den küçük mahalleleri EKLER/ATLAR.
-- Lokal (headless=False) çalışıp CAPTCHA'ya yakalanmadan menü ve görsel çeker.
+- Nüfusu 30.000'den küçük ilçeleri ve 5.000'den küçük mahalleleri ATLAR.
+- PROD MOD: Veritabanındaki gerçek restoranları (Yorum >= 50) çeker.
+- Manuel CAPTCHA bekleme süresi içerir.
 """
 
 import sys
@@ -79,7 +80,6 @@ def get_valid_locations():
         conn = sqlite3.connect(DB_STATS)
         cur = conn.cursor()
         
-        # İlçeler (Nüfus >= 30,000)
         cur.execute(f"""
             SELECT b.ad, a.bolge_adi
             FROM demografi a 
@@ -92,7 +92,6 @@ def get_valid_locations():
             ilce_ad = row[1].split(' - ')[-1].strip()
             valid_counties.add((normalize_tr(row[0]), normalize_tr(ilce_ad)))
             
-        # Mahalleler (Nüfus >= 5,000)
         cur.execute(f"""
             SELECT b.ad, a.mahalle_norm
             FROM demografi a 
@@ -117,7 +116,6 @@ def get_target_venues(valid_counties, valid_neighborhoods):
     conn = sqlite3.connect(places_db)
     cur = conn.cursor()
     
-    # 1. Bütün Restoran ve Kafeleri Çek
     cur.execute(f"""
         SELECT google_place_id, isim, ilce, il, mahalle, yorum_sayisi
         FROM google_places_ticari_yogunluk
@@ -142,11 +140,9 @@ def get_target_venues(valid_counties, valid_neighborhoods):
         ilce_norm = normalize_tr(ilce)
         mahalle_norm = normalize_tr(mahalle)
         
-        # İlçe Kontrolü
         if valid_counties and (il_norm, ilce_norm) not in valid_counties:
             continue
             
-        # Mahalle Kontrolü
         if mahalle_norm and valid_neighborhoods and (il_norm, mahalle_norm) not in valid_neighborhoods:
             continue
             
@@ -175,7 +171,7 @@ def scrape_knowledge_panel(page, mekan_id, mekan_adi, ilce, il, mahalle, conn):
     donem = time.strftime('%Y-%m')
     cur = conn.cursor()
     
-if "CAPTCHA" in page.title() or "Robot" in page.title() or "sıra dışı" in page.content().lower():
+    if "CAPTCHA" in page.title() or "Robot" in page.title() or "sıra dışı" in page.content().lower():
         print("  ❌ CAPTCHA EKRANI GELDİ! Lütfen açılan tarayıcı penceresinde 'Ben Robot Değilim' kutusunu işaretleyin. 30 saniye bekleniyor...")
         for _ in range(30):
             time.sleep(1)
@@ -185,7 +181,7 @@ if "CAPTCHA" in page.title() or "Robot" in page.title() or "sıra dışı" in pa
         else:
             print("  ⚠️ CAPTCHA çözülemedi, mekan atlanıyor.")
             return
-    
+            
     gorsel_sayisi = 0
     imgs = page.query_selector_all("g-scrolling-carousel img")
     for img in imgs:
