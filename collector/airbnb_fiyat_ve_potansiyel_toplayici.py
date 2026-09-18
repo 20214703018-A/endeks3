@@ -699,12 +699,36 @@ def main():
     elif args.lat is not None and args.lon is not None:
         bolge_adi = f"Koordinat_{args.lat:.4f}_{args.lon:.4f}"
         ilanlar = toplayici.sorgula_koordinat(args.lat, args.lon, args.yaricap)
-    else:
-        bolge_adi = args.bolge or "Bodrum, Muğla"
+    elif args.bolge:
+        bolge_adi = args.bolge
         if args.tek_tarih:
             ilanlar = toplayici.sorgula_bolge(bolge_adi)
         else:
             ilanlar = toplayici.sorgula_bolge_vadeli(bolge_adi, limit_per_vade=args.limit)
+    else:
+        # GEOPROP Sharding Logic (Tüm Türkiye 81 İl)
+        import json
+        with open("collector/turkiye_il_ilce_rehberi.json", "r", encoding="utf-8") as f:
+            rehber = json.load(f)
+        
+        # Sadece İl İsimlerini (Örn: "İstanbul, Türkiye") olarak çıkaralım
+        all_cities = sorted([f"{v['city_name']}, Türkiye" for k, v in rehber.items()])
+        
+        if args.num_shards and args.num_shards > 1 and args.shard:
+            import math
+            step = math.ceil(len(all_cities) / args.num_shards)
+            start = (args.shard - 1) * step
+            target_cities = all_cities[start:start+step]
+            print(f"[SHARD {args.shard}/{args.num_shards}] Kendisine atanan iller: {target_cities}")
+        else:
+            target_cities = all_cities
+
+        if not target_cities:
+            print("Bu shard'a il düşmedi, çıkılıyor.")
+            return
+
+        bolge_adi = f"Turkiye_Geneli_Shard_{args.shard}"
+        ilanlar = toplayici.sorgula_coklu_bolge(target_cities, limit_per_bolge=args.limit, vadeli=not args.tek_tarih)
 
     analiz = toplayici.potansiyel_analizi_yap(
         ilanlar,
