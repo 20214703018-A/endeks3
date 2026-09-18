@@ -92,10 +92,12 @@ def get_mahalleler_by_shard(shard_id, num_shards):
         try:
             placeholders = ",".join("?" * len(TARGET_CITIES))
             cur.execute(f"""
-                SELECT m.il_adi, m.ilce_adi, m.mahalle_adi 
-                FROM ref_mahalle m
-                WHERE m.il_adi IN ({placeholders})
-                ORDER BY m.il_adi, m.ilce_adi, m.mahalle_adi
+                SELECT r_il.ad, r_ilce.ad, r_mahalle.ad 
+                FROM ref_mahalle r_mahalle
+                JOIN ref_ilce r_ilce ON r_mahalle.county_id = r_ilce.county_id
+                JOIN ref_il r_il ON r_ilce.city_id = r_il.city_id
+                WHERE r_il.ad IN ({placeholders})
+                ORDER BY r_il.ad, r_ilce.ad, r_mahalle.ad
             """, TARGET_CITIES)
             rows = cur.fetchall()
             all_mahalle = [f"{r[2]} {r[1]} {r[0]}" for r in rows]
@@ -118,7 +120,8 @@ def get_mahalleler_by_shard(shard_id, num_shards):
 def fetch_google_pb(query):
     """Google Haritalar PB endpoint'ine istek atar"""
     encoded_q = urllib.parse.quote_plus(query)
-    url = f"https://www.google.com/search?tbm=map&authuser=0&hl=tr&gl=tr&pb=!4m12!1m3!1d15000!2d29.0!3d41.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m2!3d41.0!4d29.0!5m1!5f0.814310060936357!6m1!1e1!q={encoded_q}!10b1!12m3!1m2!18b1!20b0!13m0!16b1"
+    # Google Maps URL to properly trigger rich PB structure
+    url = f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}"
     
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -183,35 +186,63 @@ def extract_website_prices(url, mekan_id, mekan_adi, il, ilce, mahalle, conn):
     except Exception as e:
         pass # Timeout veya hata durumunda sessizce geç
 
-def parse_venue_and_save(venue_data, il, ilce, mahalle, conn):
-    """PB Dict'ten mekan verilerini, menüleri ve menü fotoğraflarını ayıklar"""
-    try:
-        # Venue temel verileri
-        mekan_id = None
-        mekan_adi = None
-        website = None
+def parse_pb_response(html):
+    venues = []
+    
+    # tch=1 endpoint için
+    import re, json
+    matches = re.finditer(r'/\*""\*/\s*(?:\[|\{)', html)
+    starts = [m.start() for m in matches]
+    
+    for i in range(len(starts)):
+        start_idx = starts[i] + 7
+        end_idx = starts[i+1] if i+1 < len(starts) else len(html)
+        chunk = html[start_idx:end_idx].strip()
+        if chunk.endswith(','): chunk = chunk[:-1]
         
-        # Dictionary taraması
-        for key, val in venue_data.items():
-            if isinstance(val, list) and len(val) > 10:
-                if len(val) > 78 and val[78]:
-                    mekan_id = val[78][0] if isinstance(val[78], list) and len(val[78]) > 0 else None
-                if len(val) > 3 and val[3] and isinstance(val[3], list):
-                    mekan_adi = val[3][0] if len(val[3]) > 0 else None
-                if len(val) > 7 and val[7] and isinstance(val[7], list):
-                    website = val[7][0] if len(val[7]) > 0 else None
+        try:
+            data = json.loads(chunk)
+            if isinstance(data, dict) and "d" in data:
+                d_str = data["d"]
+                if d_str.startswith(")]}'"):
+                    d_str = d_str[4:].strip()
+                inner_data = json.loads(d_str)
+                d_dumps = json.dumps(inner_data)
                 
-                # Resimler dizini genelde [52] veya civarında olur. Google Maps photo parsing
-                # (Çok karmaşık yapıları basitleştirmek için regex tabanlı bir url çıkarımı yapalım)
-                val_str = json.dumps(val)
-                photo_urls = re.findall(r'(https://lh5\.googleusercontent\.com/p/[a-zA-Z0-9_-]+)', val_str)
+                blocks = re.findall(r'\["(0x[^"]+)","([^"]+)",null,null,null,null,null,null,null,null,null,null,null,null,\["([^"]+)"', d_dumps)
                 
-                # Fiyat / Menü metinleri (Google genellikle JSON içinde "TL", "₺" ile saklar)
-                menu_items = re.findall(r'\["([^"]{3,40})","([^"]*?)",null,null,null,"([0-9]+(?:,[0-9]{2})?)\s*(?:TL|₺)"', val_str)
-
-        if not mekan_id or not mekan_adi:
-            return
+                if not blocks:
+                    blocks = re.findall(r'\["(0x[^"]+)","([^"]+)"', d_dumps)
+                
+                for b in blocks:
+                    vid = b[0]
+                    vname = b[1]
+                    if len(vid) > 20 and vname and not vname.startswith("http"):
+                        website = ""
+                        wb_match = re.search(r'http[s]?://[^"]+', d_dumps)
+                        if wb_match: website = wb_match.group(0)
+                        
+                        venues.append({
+                            "id": vid,
+                            "name": vname,
+                            "website": website,
+                            "raw_dump": d_dumps
+                        })
+                
+                if venues: break
+        except Exception as e:
+            pass
             
+    return venues
+
+def parse_venue_and_save(venue, il, ilce, mahalle, conn):
+    try:
+        import time, re
+        mekan_id = venue["id"]
+        mekan_adi = venue["name"]
+        website = venue["website"]
+        val_str = venue["raw_dump"]
+        
         cur = conn.cursor()
         now = time.strftime("%Y-%m-%dT%H:%M:%S")
         donem = time.strftime("%Y-%m")
@@ -219,7 +250,14 @@ def parse_venue_and_save(venue_data, il, ilce, mahalle, conn):
         fiyat_count = 0
         img_count = 0
         
-        # Google Üzerindeki Menü Kalemlerini Kaydet
+        photo_urls = re.findall(r'(https://lh5\.googleusercontent\.com/p/[a-zA-Z0-9_-]+)', val_str)
+        
+        menu_items = re.findall(r'\["([^"]{3,40})","([^"]*?)",null,null,null,"([0-9]+(?:,[0-9]{2})?)\s*(?:TL|₺|TRY)"', val_str)
+        
+        if not menu_items:
+            menu_items_alt = re.findall(r'\["([^"]{3,40})",null,null,null,null,"([0-9]+(?:,[0-9]{2})?)\s*(?:TL|₺|TRY)"', val_str)
+            menu_items = [(m[0], "", m[1]) for m in menu_items_alt]
+            
         for item_name, item_desc, item_price in menu_items:
             try:
                 price = float(item_price.replace(',', '.'))
@@ -232,64 +270,24 @@ def parse_venue_and_save(venue_data, il, ilce, mahalle, conn):
             except:
                 pass
 
-        # Fotoğrafları Kaydet (Google'dan gelenler)
-        for p_url in set(photo_urls[:5]): # Sadece ilk 5 (en alakalı) fotoğrafı alıyoruz
+        for p_url in set(photo_urls[:5]):
             cur.execute("""
                 INSERT OR IGNORE INTO mekan_menu_gorselleri
                 (mekan_id, mekan_adi, gorsel_url, kaynak, tarama_tarihi, il, ilce, mahalle)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, (mekan_id, mekan_adi, p_url, "GoogleMaps", now, il, ilce, mahalle))
             img_count += 1
-
+            
         conn.commit()
         
         if fiyat_count > 0 or img_count > 0:
             print(f"  ✅ {mekan_adi}: {fiyat_count} Google Menü öğesi, {img_count} Fotoğraf")
         else:
-            # Google'da bulamadık, web sitesine gidelim!
-            if website:
+            if website and "google" not in website.lower():
                 extract_website_prices(website, mekan_id, mekan_adi, il, ilce, mahalle, conn)
 
     except Exception as e:
         pass
-
-def parse_pb_response(html):
-    """PB response içindeki array bloklarını bulur ve ayıklar"""
-    venues = []
-    matches = re.finditer(r'/\*""\*/\s*(?:\[|\{)', html)
-    starts = [m.start() for m in matches]
-    
-    for i in range(len(starts)):
-        start_idx = starts[i] + 7
-        end_idx = starts[i+1] if i+1 < len(starts) else len(html)
-        chunk = html[start_idx:end_idx].strip()
-        
-        if chunk.endswith(','): chunk = chunk[:-1]
-        
-        try:
-            data = json.loads(chunk)
-            # D data node check
-            if isinstance(data, list) and len(data) > 0 and data[0] == "d":
-                if len(data) > 2 and isinstance(data[2], list) and len(data[2]) > 1:
-                    # Deep dictionary objects inside array
-                    for item in data[2]:
-                        if isinstance(item, list) and len(item) > 1 and isinstance(item[1], dict):
-                            venues.append(item[1])
-        except:
-            pass
-            
-    # Eğer doğrudan `)]}'` formatında JSON array ise
-    if html.startswith(")]}'"):
-        try:
-            clean_json = html[4:].strip()
-            data = json.loads(clean_json)
-            for item in data:
-                if isinstance(item, list) and len(item) > 1 and isinstance(item[1], dict):
-                    venues.append(item[1])
-        except:
-            pass
-            
-    return venues
 
 def main():
     parser = argparse.ArgumentParser()
