@@ -171,16 +171,24 @@ def scrape_knowledge_panel(page, mekan_id, mekan_adi, ilce, il, mahalle, conn):
     donem = time.strftime('%Y-%m')
     cur = conn.cursor()
     
-    if "CAPTCHA" in page.title() or "Robot" in page.title() or "sıra dışı" in page.content().lower():
-        print("  ❌ CAPTCHA EKRANI GELDİ! Lütfen açılan tarayıcı penceresinde 'Ben Robot Değilim' kutusunu işaretleyin. 30 saniye bekleniyor...")
-        for _ in range(30):
+if "CAPTCHA" in page.title() or "Robot" in page.title() or "sıra dışı" in page.content().lower():
+        print("  ❌ CAPTCHA EKRANI GELDİ! Lütfen açık olan Chrome sekmesinde kutuyu işaretleyin. 60 saniye bekleniyor...")
+        for _ in range(60):
             time.sleep(1)
             if "CAPTCHA" not in page.title() and "Robot" not in page.title():
-                print("  ✅ CAPTCHA ÇÖZÜLDÜ! Devam ediliyor...")
+                print("  ✅ CAPTCHA ÇÖZÜLDÜ! Sayfanın yüklenmesi bekleniyor...")
+                page.wait_for_load_state("networkidle", timeout=10000)
+                page.wait_for_timeout(3000)
                 break
         else:
             print("  ⚠️ CAPTCHA çözülemedi, mekan atlanıyor.")
             return
+            
+    # Görsellerin yüklenmesini garantiye al
+    try:
+        page.wait_for_selector("g-scrolling-carousel img, div[data-attrid='kc:/local:menu'] img", timeout=5000)
+    except:
+        pass
             
     gorsel_sayisi = 0
     imgs = page.query_selector_all("g-scrolling-carousel img")
@@ -237,20 +245,24 @@ def main():
         print("Kriterlere uygun (Nüfus vb.) mekan bulunamadı!")
         return
         
-    print(f"\n🚀 Playwright başlatılıyor... Hedef {len(venues)} mekan.")
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        context = browser.new_context(
-            user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
-            locale="tr-TR"
-        )
-        page = context.new_page()
-        
-        for v in venues:
-            scrape_knowledge_panel(page, v['id'], v['adi'], v['ilce'], v['il'], v['mahalle'], conn)
-            time.sleep(3)
+print(f"
+🚀 Senin GÜNLÜK Chrome tarayıcına bağlanılıyor (Port 9222)... Hedef {len(venues)} mekan.")
+    try:
+        with sync_playwright() as p:
+            # Kendi tarayıcına bağlanıyoruz!
+            browser = p.chromium.connect_over_cdp("http://localhost:9222")
+            context = browser.contexts[0]
+            page = context.new_page()
             
-        browser.close()
+            for v in venues:
+                scrape_knowledge_panel(page, v['id'], v['adi'], v['ilce'], v['il'], v['mahalle'], conn)
+                time.sleep(3)
+                
+            page.close()
+    except Exception as e:
+        print("❌ BAĞLANTI HATASI! Lütfen Chrome'u tamamen kapatıp terminalden şu komutla açın:")
+        print("   /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222")
+        print(f"Detay: {e}")
 
 if __name__ == "__main__":
     main()
