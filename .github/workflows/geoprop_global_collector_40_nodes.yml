@@ -120,6 +120,9 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
+      - name: Bağımlılıkları Yükle
+        run: pip install -r requirements.txt
+
       - name: İBB / İSPARK Canlı Trafik ve Geçişler
         run: |
           mkdir -p warehouse/product
