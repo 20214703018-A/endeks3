@@ -595,7 +595,8 @@ def main():
 
     shard_id, total = None, 40
     if args.shard:
-        shard_id, total = map(int, args.shard.split("/"))
+        shard_id = int(args.shard)
+    total = int(args.num_shards)
 
     # 1. Darkstore depoları ve OSM noktaları
     if not args.no_darkstore:

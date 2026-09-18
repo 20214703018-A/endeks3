@@ -885,7 +885,8 @@ def main():
         initial_queries = get_all_commercial_corridor_queries()
         print(f"81 İl Tam Kapsama Modu: {len(initial_queries)} ticari koridor ve ilçe sorgulanıyor...")
     elif args.shard:
-        shard_id, total = map(int, args.shard.split("/"))
+        shard_id = int(args.shard)
+    total = int(args.num_shards)
         initial_queries = get_commercial_corridors_by_shard(
             shard_id, total, mahalle_limit=args.mahalle_limit, street_limit=args.sokak_limit
         )
