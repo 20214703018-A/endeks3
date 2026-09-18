@@ -38,11 +38,8 @@ jobs:
       - name: Google Places, Yoğunluk ve İşletme Gözlemi
         run: mkdir -p warehouse/product && python collector/google_places_ve_yogunluk_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
 
-      - name: Restoran Menü, Fiyat ve Gerçek Enflasyon Taraması
-        run: python collector/restoran_menu_ve_fiyat_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
-
-      - name: Yemeksepeti / Teslimat Ağı Kapasitesi
-        run: python collector/yemek_teslimat_ekosistemi_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
+      - name: Restoran Menü, Fiyat ve Google Places (QR Dahil) Taraması
+        run: python collector/google_qr_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
 
       - name: Emlak İlanları ve Gerçek Devren İlan Yoğunluğu
         run: python collector/ilan_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true

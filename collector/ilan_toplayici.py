@@ -511,6 +511,8 @@ def main():
     parser.add_argument("--arsa-detay", dest="arsa_detay", action="store_true", default=True, help="Arsalarda detay sayfasına girerek Ada/Parsel/İmar topla (Varsayılan: Açık)")
     parser.add_argument("--arsa-detaysiz", dest="arsa_detay", action="store_false", help="Arsalarda detay sayfasına girmeden hızlı liste modunda topla")
     parser.add_argument("--sadece-il", action="store_true", help="İlçe kırmadan doğrudan il geneli tara")
+    parser.add_argument("--shard", type=int, default=None, help="GitHub Actions shard id")
+    parser.add_argument("--num-shards", type=int, default=None, help="GitHub Actions total shards")
     args = parser.parse_args()
 
     DATA_DIR.mkdir(parents=True, exist_ok=True)

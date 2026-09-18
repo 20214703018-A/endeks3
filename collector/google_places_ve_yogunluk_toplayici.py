@@ -440,7 +440,7 @@ def clean_query_for_google(query):
     q = " ".join(q.split())
     return q
 
-def fetch_google_places(clean_query_for_google(query)):
+def fetch_google_places(query):
     """Google Maps üzerinden tekil değil, sorguda dönen TÜM ticari işletmeleri liste halinde çeker."""
     encoded_q = urllib.parse.quote(query)
     url = f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}"
