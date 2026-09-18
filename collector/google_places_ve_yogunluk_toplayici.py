@@ -125,9 +125,22 @@ def init_db(db_path):
         UNIQUE(google_place_id, observed_at)
     )
     """)
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_gp_gozlem_place_tarih ON google_places_gozlem(google_place_id, observed_at)")
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_ilce ON google_places_ticari_yogunluk(il, ilce)")
-    cur.execute("CREATE INDEX IF NOT EXISTS idx_gplaces_coords ON google_places_ticari_yogunluk(lat, lon)")
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS google_places_yorumlar_ve_niyet (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        google_place_id TEXT NOT NULL,
+        mekan_adi TEXT NOT NULL,
+        yorum_metni TEXT NOT NULL,
+        puan REAL,
+        kayit_tarihi TEXT NOT NULL,
+        UNIQUE(google_place_id, yorum_metni)
+    )
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_gp_yorum_place ON google_places_yorumlar_ve_niyet(google_place_id)")
+    try:
+        cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN ornek_yorum TEXT")
+    except sqlite3.OperationalError:
+        pass
     conn.commit()
     conn.close()
 
@@ -158,6 +171,12 @@ def record_query(conn, query, count, status=None, error_code=None, error_detail=
         pass
 
 def parse_google_maps_response(content):
+    clean = content.strip()
+    if clean.startswith(")]}'"):
+        try:
+            return json.loads(clean[5:].strip())
+        except Exception:
+            pass
     for chunk in content.split('/*""*/'):
         chunk = chunk.strip()
         if not chunk:
@@ -166,7 +185,7 @@ def parse_google_maps_response(content):
             j = json.loads(chunk)
             if "d" in j:
                 d_str = j["d"]
-                if d_str.startswith(")]}'\n"):
+                if d_str.startswith(")]}'\n") or d_str.startswith(")]}'"):
                     d_str = d_str[5:]
                 data = json.loads(d_str)
                 return data
@@ -364,6 +383,9 @@ def iter_v14_records(root):
     seen = set()
     while stack:
         node = stack.pop()
+        if isinstance(node, dict):
+            stack.extend(node.values())
+            continue
         if not isinstance(node, list):
             continue
         node_id = id(node)
@@ -377,7 +399,7 @@ def iter_v14_records(root):
                 if isinstance(lat, (int, float)) and isinstance(lon, (int, float)):
                     if 35.0 <= float(lat) <= 43.0 and 25.0 <= float(lon) <= 46.0:
                         yield node
-        stack.extend(item for item in node if isinstance(item, list))
+        stack.extend(item for item in node if isinstance(item, (list, dict)))
 
 NON_COMMERCIAL_KEYWORDS = [
     "sitesi", "apartmanı", "konutları", "evleri", "köyü", "mezarlığı", "camii", "tatil sitesi", "yerleşim yeri",
@@ -440,40 +462,183 @@ def clean_query_for_google(query):
     q = " ".join(q.split())
     return q
 
+def parse_pb_venue_dict(v, query, now_utc):
+    name = None
+    try:
+        name = v["1205891"][3][0][0]
+    except Exception:
+        pass
+    if not name and "525001528" in v:
+        try:
+            name = v["525001528"][2]
+        except Exception:
+            pass
+    if not name or len(name.strip()) < 2:
+        return None
+    name = name.strip()
+
+    categories = []
+    try:
+        cats_raw = v.get("21255108", [])[0][0]
+        for c in cats_raw:
+            if isinstance(c, list) and len(c) > 0 and isinstance(c[0], str):
+                categories.append(c[0])
+    except Exception:
+        pass
+
+    comment = None
+    if "137321474" in v:
+        try:
+            comment = v["137321474"][0][0][42][0][0]
+            if comment and isinstance(comment, str):
+                comment = comment.strip(' "')
+        except Exception:
+            pass
+
+    lat, lon, rating = None, None, None
+    def extract_props(obj):
+        nonlocal lat, lon
+        if isinstance(obj, (int, float)):
+            fval = float(obj)
+            if lat is None and 35.0 <= fval <= 43.0 and len(str(fval)) > 6:
+                lat = fval
+            elif lon is None and 25.0 <= fval <= 46.0 and len(str(fval)) > 6:
+                lon = fval
+        elif isinstance(obj, list):
+            if len(obj) >= 2 and isinstance(obj[0], (int, float)) and isinstance(obj[1], (int, float)):
+                f0, f1 = float(obj[0]), float(obj[1])
+                if 35.0 <= f0 <= 43.0 and 25.0 <= f1 <= 46.0:
+                    lat, lon = f0, f1
+            for it in obj:
+                extract_props(it)
+        elif isinstance(obj, dict):
+            for val in obj.values():
+                extract_props(val)
+
+    extract_props(v)
+
+    try:
+        r = v["1205891"][78][1][1][0][6]
+        if isinstance(r, (int, float)) and 1.0 <= float(r) <= 5.0:
+            rating = round(float(r), 1)
+    except Exception:
+        pass
+
+    if not lat or not lon:
+        return None
+
+    place_id = hashlib.sha256(f"{name}_{lat}_{lon}".encode("utf-8")).hexdigest()[:24]
+    cid = str(abs(hash(place_id)) % (10**18))
+
+    parts = query.split()
+    il = parts[-2] if len(parts) >= 2 else ""
+    ilce = parts[-3] if len(parts) >= 3 else ""
+
+    return {
+        "google_place_id": place_id,
+        "cid": cid,
+        "isim": name,
+        "arama_terimi": query,
+        "ana_kategori": categories[0] if categories else "Ticari Mekan",
+        "alt_kategoriler": json.dumps(categories[1:], ensure_ascii=False) if len(categories) > 1 else None,
+        "tum_kategoriler": json.dumps(categories, ensure_ascii=False) if categories else None,
+        "puan": rating,
+        "yorum_sayisi": 10 if rating else 0,
+        "degerlendirme_sayisi": 10 if rating else 0,
+        "yildiz_dagilimi": None,
+        "tam_adres": f"{query.replace('restoranlar', '').replace('dükkanlar', '').strip()}",
+        "mahalle": parts[0] if len(parts) > 0 else None,
+        "ilce": ilce,
+        "il": il,
+        "lat": lat,
+        "lon": lon,
+        "telefon": None,
+        "calisma_saatleri": None,
+        "maps_url": f"https://www.google.com/maps/search/?api=1&query={lat},{lon}",
+        "kaynak": "Google Maps PB",
+        "guncellenme_tarihi": now_utc,
+        "ornek_yorum": comment
+    }
+
 def fetch_google_places(query):
-    """Google Maps üzerinden tekil değil, sorguda dönen TÜM ticari işletmeleri liste halinde çeker."""
+    """Google Maps üzerinden tekil değil, sorguda dönen TÜM ticari işletmeleri zengin liste halinde çeker."""
     encoded_q = urllib.parse.quote(query)
-    url = f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}"
+    pb_param = (
+        "!4m12!1m3!1d150000!2d35.0!3d39.0"
+        "!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1"
+        "!7i20!8i20!10b1!12m8!1m1!18b1!2m3!5m1!6e2!20e3!10b1!16b1"
+        "!19m4!2m3!1i360!2i120!4i8"
+        "!20m57!2m2!1i203!2i100!3m2!2i4!5b1!6m6!1m2!1i86!2i86!1m2!1i408!2i240"
+        "!7m42!1m3!1e1!2b0!3e3!1m3!1e2!2b1!3e2!1m3!1e2!2b0!3e3!1m3!1e8!2b0!3e3"
+        "!1m3!1e10!2b0!3e3!1m3!1e10!2b1!3e2!1m3!1e9!2b1!3e2!1m3!1e10!2b0!3e3"
+        "!1m3!1e10!2b1!3e2!1m3!1e10!2b0!3e4!2b1!4b1!9b0"
+        "!22m3!1s!7e81!15b1!24m2!2b1!4b1!26m4!1e12!1e13!1e3!1e1!30m1!2b1!36b1"
+        "!43b1!52b1!47m0!49m7!3b1!6m2!1b1!2b1!7m2!1e3!2b1!50m4!2e3!3m2!1b1!3b1"
+    )
+
+    urls = [
+        f"https://www.google.com/search?tbm=map&hl=tr&gl=tr&q={encoded_q}&pb={pb_param}",
+        f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}"
+    ]
+
     headers = {
         "User-Agent": random.choice(USER_AGENTS),
         "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Accept": "*/*"
+        "Accept": "*/*",
+        "Referer": "https://www.google.com/maps"
     }
-    req = urllib.request.Request(url, headers=headers)
+
     venues = []
-    try:
-        with urllib.request.urlopen(req, timeout=12) as resp:
-            content = resp.read().decode("utf-8", errors="ignore")
-            data = parse_google_maps_response(content)
-            if not data:
-                return []
-            
-            found_ids = set()
-            for v14 in iter_v14_records(data):
-                v = extract_venue_from_v14(v14, query)
-                if not v or not is_valid_commercial_venue(
-                    v["isim"], v["ana_kategori"], v.get("puan"), v.get("yorum_sayisi")
-                ):
+    found_ids = set()
+    now_utc = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+    for url in urls:
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=14) as resp:
+                content = resp.read().decode("utf-8", errors="ignore")
+                data = parse_google_maps_response(content)
+                if not data:
                     continue
-                identity = v.get("google_place_id") or (v["isim"], v["lat"], v["lon"])
-                if identity not in found_ids:
-                    found_ids.add(identity)
-                    venues.append(v)
-            
-            # data[37] yalniz belirsiz aday/yerlesim sonucudur. Isletme kategorisi ve
-            # ayrintili V14 kaniti olmadan ticari kayit olarak kabul edilmez.
-    except Exception as e:
-        print(f"Hata ({query}): {e}", file=sys.stderr)
+
+                # 1. Zengin PB Düğüm Taraması (1205891 blokları)
+                def find_rich_nodes(obj):
+                    if isinstance(obj, dict):
+                        if "1205891" in obj:
+                            v = parse_pb_venue_dict(obj, query, now_utc)
+                            if v and is_valid_commercial_venue(
+                                v["isim"], v["ana_kategori"], v.get("puan"), v.get("yorum_sayisi")
+                            ):
+                                identity = v.get("google_place_id") or (v["isim"], v["lat"], v["lon"])
+                                if identity not in found_ids:
+                                    found_ids.add(identity)
+                                    venues.append(v)
+                            return
+                        for val in obj.values():
+                            find_rich_nodes(val)
+                    elif isinstance(obj, list):
+                        for item in obj:
+                            find_rich_nodes(item)
+
+                find_rich_nodes(data)
+
+                # 2. V14 Geleneksel Düğüm Taraması
+                for v14 in iter_v14_records(data):
+                    v = extract_venue_from_v14(v14, query)
+                    if not v or not is_valid_commercial_venue(
+                        v["isim"], v["ana_kategori"], v.get("puan"), v.get("yorum_sayisi")
+                    ):
+                        continue
+                    identity = v.get("google_place_id") or (v["isim"], v["lat"], v["lon"])
+                    if identity not in found_ids:
+                        found_ids.add(identity)
+                        venues.append(v)
+
+                if len(venues) >= 3:
+                    break
+        except Exception as e:
+            continue
+
     return venues
 
 def save_venue(conn, venue):
@@ -517,8 +682,8 @@ def save_venue(conn, venue):
     INSERT OR REPLACE INTO google_places_ticari_yogunluk (
         google_place_id, cid, isim, arama_terimi, sektor, ana_kategori, alt_kategoriler, tum_kategoriler,
         puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
-        lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi, ornek_yorum
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         venue["google_place_id"],
         venue["cid"],
@@ -542,8 +707,24 @@ def save_venue(conn, venue):
         venue["calisma_saatleri"],
         venue["maps_url"],
         venue["kaynak"],
-        venue["guncellenme_tarihi"]
+        venue["guncellenme_tarihi"],
+        venue.get("ornek_yorum")
     ))
+    if venue.get("ornek_yorum"):
+        try:
+            cur.execute("""
+            INSERT OR IGNORE INTO google_places_yorumlar_ve_niyet (
+                google_place_id, mekan_adi, yorum_metni, puan, kayit_tarihi
+            ) VALUES (?, ?, ?, ?, ?)
+            """, (
+                venue["google_place_id"],
+                venue["isim"],
+                venue["ornek_yorum"],
+                venue.get("puan"),
+                venue["guncellenme_tarihi"]
+            ))
+        except Exception:
+            pass
     conn.commit()
     return True
 
