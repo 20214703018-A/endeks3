@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Repoyu Klonla
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Python Ortamını Kur
         uses: actions/setup-python@v4
@@ -43,7 +43,7 @@ jobs:
           python collector/tobb_ticaret_sicil_turnover_toplayici.py || true
 
       - name: Artifact Olarak Kaydet
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macro-intelligence-db
           path: warehouse/product/*.sqlite
@@ -59,7 +59,7 @@ jobs:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
     steps:
       - name: Repoyu Klonla
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Python Ortamını Kur
         uses: actions/setup-python@v4
@@ -70,7 +70,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Kısmi Veritabanlarını İndir (Senkronizasyon)
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: macro-intelligence-db
           path: warehouse/product/
@@ -95,7 +95,7 @@ jobs:
         run: python collector/airbnb_fiyat_ve_potansiyel_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
 
       - name: Shard Çıktılarını Artifact Olarak Yükle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: shard-db-${{ matrix.shard }}
           path: warehouse/product/*.sqlite
@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Repoyu Klonla
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Python Ortamını Kur
         uses: actions/setup-python@v4
@@ -120,7 +120,7 @@ jobs:
           python collector/ulasim_rotalari_ve_istasyon_toplayici.py
           
       - name: Mobility Çıktılarını Yükle
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mobility-db
           path: warehouse/product/*.sqlite
@@ -132,10 +132,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Repoyu Klonla
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Tüm Artifact'leri İndir
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: temp_dbs/
 
