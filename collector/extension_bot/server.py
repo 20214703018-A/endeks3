@@ -5,8 +5,8 @@ import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
 
-DB_MENU = "../../warehouse/product/restoran_ve_kafe_menuleri.sqlite"
-DB_PLACES = "../../warehouse/product/google_places_ve_yogunluk.sqlite"
+DB_MENU = "warehouse/product/restoran_ve_kafe_menuleri.sqlite"
+DB_PLACES = "warehouse/product/google_places_ve_yogunluk.sqlite"
 TARGET_CITIES = ['Antalya', 'İstanbul', 'Ankara', 'Bursa', 'Konya', 'Eskişehir', 'Muğla', 'İzmir', 'Mersin', 'Aydın']
 
 venues = []
