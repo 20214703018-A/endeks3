@@ -1,38 +1,36 @@
 let isRunning = false;
 let currentTabId = null;
 
-chrome.action.onClicked.addListener((tab) => {
-    isRunning = !isRunning;
-    if (isRunning) {
-        console.log("Bot başlatıldı!");
-        fetchNextAndNavigate();
-    } else {
-        console.log("Bot durduruldu!");
-    }
-});
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === "done_and_next" && isRunning) {
-        setTimeout(fetchNextAndNavigate, 2000); // 2 saniye bekle, ban yememek için
+    if (request.action === "start") {
+        isRunning = true;
+        chrome.runtime.sendMessage({ log: "Sunucuya bağlanılıyor..." });
+        fetchNextAndNavigate();
+    } else if (request.action === "stop") {
+        isRunning = false;
+    } else if (request.action === "done_and_next" && isRunning) {
+        chrome.runtime.sendMessage({ log: "Sıradaki mekana geçiliyor..." });
+        setTimeout(fetchNextAndNavigate, 2000);
     }
     return true;
 });
 
 async function fetchNextAndNavigate() {
+    if (!isRunning) return;
     try {
         let res = await fetch("http://127.0.0.1:5000/next");
         let data = await res.json();
         
         if (data.status === "done") {
             isRunning = false;
-            console.log("Tüm mekanlar bitti!");
+            chrome.runtime.sendMessage({ log: "Tüm mekanlar bitti!" });
             return;
         }
 
+        chrome.runtime.sendMessage({ log: "Taraniyor: " + data.query });
         let query = encodeURIComponent(data.query);
         let url = `https://www.google.com/search?q=${query}&hl=tr&geoprop_bot=1`;
         
-        // Veriyi content script'e aktarabilmek için storage'a yazalım
         await chrome.storage.local.set({ currentVenue: data });
 
         if (currentTabId) {
@@ -43,7 +41,7 @@ async function fetchNextAndNavigate() {
             });
         }
     } catch (e) {
-        console.error("Sunucuya bağlanılamadı. Lütfen python sunucusunun açık olduğundan emin olun.", e);
         isRunning = false;
+        chrome.runtime.sendMessage({ log: "HATA: Sunucuya bağlanılamadı (server.py açık mı?)" });
     }
 }
