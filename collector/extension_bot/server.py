@@ -150,9 +150,9 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 def run():
     load_venues()
-    server_address = ('127.0.0.1', 5000)
+    server_address = ('127.0.0.1', 5050)
     httpd = HTTPServer(server_address, RequestHandler)
-    print("🚀 GEOPROP Extension Server çalışıyor: http://127.0.0.1:5000")
+    print("🚀 GEOPROP Extension Server çalışıyor: http://127.0.0.1:5050")
     print("Lütfen Chrome uzantısına tıklayarak taramayı başlatın.")
     httpd.serve_forever()
 

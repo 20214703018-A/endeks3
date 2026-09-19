@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 async function fetchNextAndNavigate() {
     if (!isRunning) return;
     try {
-        let res = await fetch("http://127.0.0.1:5000/next");
+        let res = await fetch("http://127.0.0.1:5050/next");
         let data = await res.json();
         
         if (data.status === "done") {
