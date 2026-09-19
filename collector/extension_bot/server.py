@@ -29,7 +29,7 @@ def load_venues():
         SELECT google_place_id, isim, ilce, il, mahalle
         FROM google_places_ticari_yogunluk
         WHERE il IN ({','.join(['?']*len(TARGET_CITIES))})
-          AND yorum_sayisi >= 50
+          
           AND (ana_kategori LIKE '%Restoran%' OR ana_kategori LIKE '%Kafe%')
         ORDER BY yorum_sayisi DESC
     """, (*TARGET_CITIES,))
