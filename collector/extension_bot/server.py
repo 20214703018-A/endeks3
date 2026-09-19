@@ -16,7 +16,7 @@ def load_venues():
     global venues
     print("Mekanlar yükleniyor...")
     if not os.path.exists(DB_PLACES):
-        # Fallback test verisi
+        print("Uyarı: DB bulunamadı, test mekanları yükleniyor...")
         venues = [
             {"id": "T1", "adi": "Lara Aspava", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Şirinyalı"},
             {"id": "T2", "adi": "Marje Mantı", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Fener"}
@@ -29,7 +29,6 @@ def load_venues():
         SELECT google_place_id, isim, ilce, il, mahalle
         FROM google_places_ticari_yogunluk
         WHERE il IN ({','.join(['?']*len(TARGET_CITIES))})
-          
           AND (ana_kategori LIKE '%Restoran%' OR ana_kategori LIKE '%Kafe%')
         ORDER BY yorum_sayisi DESC
     """, (*TARGET_CITIES,))
@@ -107,6 +106,13 @@ def save_data(data):
         
     conn.commit()
     conn.close()
+    
+    # YERELE YEDEKLEME
+    backup_file = "collector/data/menuler_acik_kayit.jsonl"
+    os.makedirs(os.path.dirname(backup_file), exist_ok=True)
+    with open(backup_file, "a", encoding="utf-8") as bf:
+        bf.write(json.dumps(data, ensure_ascii=False) + "\n")
+        
     print(f"✅ {data['adi']} -> {g_say} Görsel, {f_say} Fiyat Kaydedildi.")
 
 class RequestHandler(BaseHTTPRequestHandler):
