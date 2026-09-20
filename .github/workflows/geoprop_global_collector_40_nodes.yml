@@ -16,7 +16,7 @@ on:
       google_max_saniye:
         description: 'Google Places adımı için azami süre (saniye)'
         required: false
-        default: '12000'
+        default: '16200'
       airbnb_max_saniye:
         description: 'Airbnb ilçe endeksi adımı için azami süre (saniye)'
         required: false
@@ -34,7 +34,7 @@ jobs:
   heavy_data_mining_shards:
     name: "Derin Madencilik Shard ${{ matrix.shard }}/40"
     runs-on: ubuntu-latest
-    # GitHub'ın sert sınırı 6 saat. Adımlar kendi emniyet sürelerinde (Google 3s20d + Airbnb 40d)
+    # GitHub'ın sert sınırı 6 saat. Adımlar kendi emniyet sürelerinde (Google 4s30d + Airbnb 40d)
     # DB'yi kapatıp çıkar; bu değer yalnızca takılma durumunda artifact'in kaybolmasını önler.
     timeout-minutes: 330
     strategy:
@@ -68,7 +68,7 @@ jobs:
           python collector/google_places_ve_yogunluk_toplayici.py \
             --shard ${{ matrix.shard }} --num-shards 40 \
             --gecmis-db warehouse/master/google_places_ve_yogunluk.sqlite \
-            --max-seconds "${{ github.event.inputs.google_max_saniye || '12000' }}"
+            --max-seconds "${{ github.event.inputs.google_max_saniye || '16200' }}"
 
       - name: Restoran Menü, Fiyat ve Google Places (QR Dahil) Taraması
         run: python collector/google_qr_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
