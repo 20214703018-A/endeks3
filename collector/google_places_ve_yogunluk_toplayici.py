@@ -1354,18 +1354,13 @@ def main():
                 save_venue(conn, res)
                 sync_to_bati_warehouse(res)
                 success += 1
-                puan_str = f"Puan: {res['puan']} ★" if res['puan'] is not None else "Puan: -"
-                deg_cnt = res.get('degerlendirme_sayisi')
-                yor_cnt = res.get('yorum_sayisi')
-                if deg_cnt is not None and yor_cnt is not None and deg_cnt != yor_cnt:
-                    metrics_str = f"({deg_cnt:,} kişi oy verdi, {yor_cnt:,} kişi yazılı yorum yaptı)"
-                elif deg_cnt is not None:
-                    metrics_str = f"({deg_cnt:,} kişi değerlendirdi/oy verdi)"
-                elif yor_cnt is not None:
-                    metrics_str = f"({yor_cnt:,} yazılı yorum)"
-                else:
-                    metrics_str = "(0 değerlendirme)"
-                print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | {puan_str} {metrics_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
+            # Log gürültüsünü düşük tut: işletme başına satır yerine sorgu başına tek özet satırı.
+            # (GitHub Actions canlı log görüntüleyicisi büyük adımları kesiyor; 4.5 saatlik koşuda
+            # shard başına ~40 MB log oluşuyordu.)
+            ornek = ", ".join(f"{v['isim'][:28]} ({v['ana_kategori']})" for v in venues[:3])
+            puanli = sum(1 for v in venues if v.get("puan") is not None)
+            yorum_toplam = sum((v.get("yorum_sayisi") or 0) for v in venues)
+            print(f"  -> {len(venues)} işletme | puanlı {puanli} | toplam yorum {yorum_toplam:,} | örn: {ornek}", flush=True)
 
             # OTONOM DERİNLEŞTİRME (katmana göre): 'dükkanlar' sorgusunda yeterli işletme
             # bulunan mahallede alt kategori sorguları kuyruğa eklenir; kırsal katman derinleşmez.
