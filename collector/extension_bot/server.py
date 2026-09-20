@@ -25,10 +25,18 @@ def load_venues():
         
     conn = sqlite3.connect(DB_PLACES)
     cur = conn.cursor()
-    cur.execute(f"""
-        SELECT google_place_id, isim, ilce, il, mahalle
+cur.execute(f"""
+        SELECT google_place_id, isim, ilce, il, mahalle, tam_adres, lat, lon
         FROM google_places_ticari_yogunluk
         WHERE il IN ({','.join(['?']*len(TARGET_CITIES))})
+          AND (ana_kategori LIKE '%Restoran%' OR ana_kategori LIKE '%Kafe%')
+        ORDER BY yorum_sayisi DESC
+    """, (*TARGET_CITIES,))
+    for row in cur.fetchall():
+        venues.append({
+            "id": row[0], "adi": row[1], "ilce": row[2], "il": row[3], "mahalle": row[4],
+            "tam_adres": row[5] or "", "lat": row[6] or 0.0, "lon": row[7] or 0.0
+        })
           AND (ana_kategori LIKE '%Restoran%' OR ana_kategori LIKE '%Kafe%')
         ORDER BY yorum_sayisi DESC
     """, (*TARGET_CITIES,))
@@ -96,11 +104,11 @@ def save_data(data):
     f_say = 0
     for fiyat in data.get("fiyatlar", []):
         try:
-            cur.execute("""
+cur.execute("""
                 INSERT INTO mekan_menu_kalemleri_ve_fiyat_tarihcesi 
-                (mekan_id, mekan_adi, donem, tarih, fiyat_turu, platform, kategori, urun_adi, fiyat, ilce, il, mahalle, guncellenme_tarihi)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (data['id'], data['adi'], donem, now, "BilgiPanosu", fiyat['platform'], "Menü", fiyat['urun'], fiyat['fiyat'], data['ilce'], data['il'], data['mahalle'], now))
+                (mekan_id, mekan_adi, donem, tarih, fiyat_turu, platform, kategori, urun_adi, fiyat, ilce, il, mahalle, guncellenme_tarihi, tam_adres, lat, lon)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (data['id'], data['adi'], donem, now, "BilgiPanosu", fiyat['platform'], "Menü", fiyat['urun'], fiyat['fiyat'], data['ilce'], data['il'], data['mahalle'], now, data.get('tam_adres', ''), data.get('lat', 0.0), data.get('lon', 0.0)))
             f_say += 1
         except: pass
         
