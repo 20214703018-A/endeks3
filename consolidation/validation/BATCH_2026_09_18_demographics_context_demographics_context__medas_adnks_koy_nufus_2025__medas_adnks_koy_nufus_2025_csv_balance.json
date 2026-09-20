@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__medas_adnks_koy_nufus_2025__medas_adnks_koy_nufus_2025_csv",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__medas_adnks_koy_nufus_2025__medas_adnks_koy_nufus_2025_csv",
+ "target": "stg_medas_adnks_koy_nufus_2025",
+ "file_id": "FILE_00005400",
+ "input_count": 18188,
+ "successfully_loaded": 18188,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "raw_line_count": 18189,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_medas_adnks_koy_nufus_2025/part-BATCH_2026_09_18_demographics_context_demographics_context__medas_adnks_koy_nufus_2025__medas_adnks_koy_nufus_2025_csv.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

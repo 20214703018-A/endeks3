@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__yemek_ve_market_teslimat_ekosistemi__yemeksepeti_isletme_gozlem_2",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__yemek_ve_market_teslimat_ekosistemi__yemeksepeti_isletme_gozlem_2",
+ "target": "stg_yemek_ve_market_teslimat_ekosistemi__yemeksepeti_isletme_gozlem",
+ "file_id": "FILE_00016944",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_yemek_ve_market_teslimat_ekosistemi__yemeksepeti_isletme_gozlem/part-BATCH_2026_09_18_poi_business_poi_business__yemek_ve_market_teslimat_ekosistemi__yemeksepeti_isletme_gozlem_2.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

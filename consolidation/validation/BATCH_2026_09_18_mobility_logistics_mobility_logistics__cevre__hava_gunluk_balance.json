@@ -1,0 +1,16 @@
+{
+ "source_id": "mobility_logistics__cevre__hava_gunluk",
+ "batch_id": "BATCH_2026_09_18_mobility_logistics_mobility_logistics__cevre__hava_gunluk",
+ "target": "stg_cevre__hava_gunluk",
+ "file_id": "FILE_00005035",
+ "input_count": 122733,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/mobility_logistics/stg_cevre__hava_gunluk/part-BATCH_2026_09_18_mobility_logistics_mobility_logistics__cevre__hava_gunluk.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

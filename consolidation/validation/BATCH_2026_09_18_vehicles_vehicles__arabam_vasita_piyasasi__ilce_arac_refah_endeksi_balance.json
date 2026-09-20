@@ -1,0 +1,17 @@
+{
+ "source_id": "vehicles__arabam_vasita_piyasasi__ilce_arac_refah_endeksi",
+ "batch_id": "BATCH_2026_09_18_vehicles_vehicles__arabam_vasita_piyasasi__ilce_arac_refah_endeksi",
+ "target": "stg_arabam_vasita_piyasasi__ilce_arac_refah_endeksi",
+ "file_id": "FILE_00008559",
+ "input_count": 6,
+ "successfully_loaded": 6,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/vehicles/stg_arabam_vasita_piyasasi__ilce_arac_refah_endeksi/part-BATCH_2026_09_18_vehicles_vehicles__arabam_vasita_piyasasi__ilce_arac_refah_endeksi.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

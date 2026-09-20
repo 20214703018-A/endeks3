@@ -1,0 +1,19 @@
+{
+ "source_id": "P_05_price_brea_04_bolge_04_bursa_yalova",
+ "batch_id": "BATCH_2026_09_18_price_series_P_05_price_brea_04_bolge_04_bursa_yalova",
+ "target": "stg_price_breakdown",
+ "file_id": "FILE_00000263",
+ "input_count": 5678,
+ "successfully_loaded": 5678,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 5679,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_breakdown/part-BATCH_2026_09_18_price_series_P_05_price_brea_04_bolge_04_bursa_yalova.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,18 @@
+{
+ "source_id": "poi_business__restoran_ve_kafe_menuleri__mekan_menu_kalemleri_ve_fiyat__3",
+ "batch_id": "BATCH_2026_09_19_poi_business_poi_business__restoran_ve_kafe_menuleri__mekan_menu_kalemleri_ve_fiyat__3",
+ "target": "stg_restoran_ve_kafe_menuleri__mekan_menu_kalemleri_ve_fiyat_tarihcesi",
+ "file_id": "FILE_00019729",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 28,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table EMPTY_SOURCE_TABLE (0 satır; dosya yazılmadı)",
+ "readback_ok": true,
+ "output": null,
+ "seconds": 0.1,
+ "mode": "apply"
+}

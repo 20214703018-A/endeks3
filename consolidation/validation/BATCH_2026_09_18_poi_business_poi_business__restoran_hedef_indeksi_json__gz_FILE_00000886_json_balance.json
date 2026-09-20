@@ -1,0 +1,17 @@
+{
+ "source_id": "poi_business__restoran_hedef_indeksi_json__gz_FILE_00000886_json",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__restoran_hedef_indeksi_json__gz_FILE_00000886_json",
+ "target": "stg_restoran_hedef_indeksi_json",
+ "file_id": "FILE_00000886",
+ "input_count": 38663,
+ "successfully_loaded": 38663,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 5181751,
+ "note": "json_records under=None",
+ "seconds": 1.1,
+ "mode": "apply"
+}

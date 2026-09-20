@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__streets__streets",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__streets__streets",
+ "target": "stg_streets",
+ "file_id": "FILE_00016201",
+ "input_count": 31,
+ "successfully_loaded": 31,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_streets/part-BATCH_2026_09_18_reference_geography_reference_geography__streets__streets.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

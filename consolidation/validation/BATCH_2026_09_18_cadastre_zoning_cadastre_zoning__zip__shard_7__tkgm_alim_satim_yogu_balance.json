@@ -1,0 +1,18 @@
+{
+ "source_id": "cadastre_zoning__zip__shard_7__tkgm_alim_satim_yogu",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__zip__shard_7__tkgm_alim_satim_yogu",
+ "target": "stg_shard_7__tkgm_alim_satim_yogunlugu",
+ "file_id": "FILE_00000817",
+ "input_count": 287663,
+ "successfully_loaded": 287663,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 7,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "review_flags": {},
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_shard_7__tkgm_alim_satim_yogunlugu/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__zip__shard_7__tkgm_alim_satim_yogu.parquet",
+ "seconds": 2.8,
+ "mode": "apply"
+}

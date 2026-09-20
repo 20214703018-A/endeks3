@@ -1,0 +1,23 @@
+{
+ "source_id": "listings__zip__piyasa_verileri__demografi_3",
+ "batch_id": "BATCH_2026_09_20_listings_listings__zip__piyasa_verileri__demografi_3",
+ "target": "stg_piyasa_verileri__demografi",
+ "file_id": "FILE_00000181",
+ "input_count": 31,
+ "successfully_loaded": 31,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 42,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_piyasa_verileri__demografi/part-BATCH_2026_09_20_listings_listings__zip__piyasa_verileri__demografi_3.parquet",
+ "review_flags": {
+  "C03": 31,
+  "NESTED_ZIP_MEMBER": 31,
+  "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)": 31
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

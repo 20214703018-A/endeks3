@@ -1,0 +1,22 @@
+{
+ "source_id": "P_ej_emlakjet-trend-arsa_1",
+ "batch_id": "BATCH_2026_09_18_price_series_P_ej_emlakjet-trend-arsa_1",
+ "target": "stg_ej_trend",
+ "file_id": "FILE_00000172",
+ "input_count": 6480,
+ "successfully_loaded": 6480,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 24,
+ "raw_line_count": 6481,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_ej_trend/part-BATCH_2026_09_18_price_series_P_ej_emlakjet-trend-arsa_1.parquet",
+ "review_flags": {
+  "SOURCE_MARKED_PROJECTION": 972,
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 972
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

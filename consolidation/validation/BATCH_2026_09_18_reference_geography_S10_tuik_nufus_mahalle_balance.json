@@ -1,0 +1,20 @@
+{
+ "source_id": "S10_tuik_nufus_mahalle",
+ "batch_id": "BATCH_2026_09_18_reference_geography_S10_tuik_nufus_mahalle",
+ "target": "stg_tuik_nufus_mahalle",
+ "file_id": "FILE_00005070",
+ "input_count": 32254,
+ "successfully_loaded": 32254,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "geometry_types": [],
+ "review_flags": {
+  "OFFICIAL_TOTALS_VERIFIED_2023_2024": 32254,
+  "PROMOTED_FROM_QUARANTINE_FOLDER_DEC_2026_09_18": 32254
+ },
+ "estimated_bytes": 3155993,
+ "note": "sqlite",
+ "seconds": 1.2,
+ "mode": "apply"
+}

@@ -1,0 +1,16 @@
+{
+ "source_id": "poi_business__11_insaat_ve_proje_sirketleri__11_insaat_ve_proje_sirketleri_",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__11_insaat_ve_proje_sirketleri__11_insaat_ve_proje_sirketleri_",
+ "target": "stg_11_insaat_ve_proje_sirketleri",
+ "file_id": "FILE_00000227",
+ "input_count": 1451,
+ "successfully_loaded": 1451,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "raw_line_count": 1452,
+ "engine": "duckdb",
+ "note": "csv",
+ "seconds": 0.0,
+ "mode": "dry-run"
+}

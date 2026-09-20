@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__arsa_emsalleri__metadata_2",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__arsa_emsalleri__metadata_2",
+ "target": "stg_arsa_emsalleri__metadata",
+ "file_id": "FILE_00012679",
+ "input_count": 4,
+ "successfully_loaded": 4,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_arsa_emsalleri__metadata/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__arsa_emsalleri__metadata_2.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

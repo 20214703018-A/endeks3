@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__kisitli_istatistik__kapsama",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__kisitli_istatistik__kapsama",
+ "target": "stg_kisitli_istatistik__kapsama",
+ "file_id": "FILE_00005420",
+ "input_count": 2,
+ "successfully_loaded": 2,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_kisitli_istatistik__kapsama/part-BATCH_2026_09_18_demographics_context_demographics_context__kisitli_istatistik__kapsama.parquet zaten var (append-only)",
+ "seconds": 0.2,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "poi_business__izbb_semt_pazar_yerleri__Sheet1",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__izbb_semt_pazar_yerleri__Sheet1",
+ "target": "stg_izbb_semt_pazar_yerleri__Sheet1",
+ "file_id": "FILE_00005084",
+ "input_count": 186,
+ "successfully_loaded": 186,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 20262,
+ "note": "xlsx",
+ "seconds": 0.1,
+ "mode": "apply"
+}

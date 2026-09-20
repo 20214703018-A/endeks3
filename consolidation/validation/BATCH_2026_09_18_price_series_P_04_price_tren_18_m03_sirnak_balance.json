@@ -1,0 +1,21 @@
+{
+ "source_id": "P_04_price_tren_18_m03_sirnak",
+ "batch_id": "BATCH_2026_09_18_price_series_P_04_price_tren_18_m03_sirnak",
+ "target": "stg_price_trend_monthly",
+ "file_id": "FILE_00000464",
+ "input_count": 4560,
+ "successfully_loaded": 4560,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 4561,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_trend_monthly/part-BATCH_2026_09_18_price_series_P_04_price_tren_18_m03_sirnak.parquet",
+ "review_flags": {
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 684
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__page__page_tsx",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__page__page_tsx",
+ "target": "stg_page",
+ "file_id": "FILE_00017237",
+ "input_count": 4,
+ "successfully_loaded": 4,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": 7,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_page/part-BATCH_2026_09_18_unclassified_unclassified__page__page_tsx.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

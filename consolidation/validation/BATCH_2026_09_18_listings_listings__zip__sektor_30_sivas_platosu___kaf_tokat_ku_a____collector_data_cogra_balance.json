@@ -1,0 +1,16 @@
+{
+ "source_id": "listings__zip__sektor_30_sivas_platosu___kaf_tokat_ku_a____collector_data_cogra",
+ "batch_id": "BATCH_2026_09_18_listings_listings__zip__sektor_30_sivas_platosu___kaf_tokat_ku_a____collector_data_cogra",
+ "target": "stg_sektor_30_sivas_platosu___kaf_tokat_ku_a__",
+ "file_id": "FILE_00000121",
+ "input_count": 21785,
+ "successfully_loaded": 21785,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_sektor_30_sivas_platosu___kaf_tokat_ku_a__/part-BATCH_2026_09_18_listings_listings__zip__sektor_30_sivas_platosu___kaf_tokat_ku_a____collector_data_cogra.parquet zaten var (append-only)",
+ "seconds": 3.4,
+ "mode": "apply"
+}

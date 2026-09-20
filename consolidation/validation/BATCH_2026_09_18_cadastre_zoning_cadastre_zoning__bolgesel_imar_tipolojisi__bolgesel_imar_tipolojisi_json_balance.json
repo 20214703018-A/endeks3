@@ -1,0 +1,17 @@
+{
+ "source_id": "cadastre_zoning__bolgesel_imar_tipolojisi__bolgesel_imar_tipolojisi_json",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__bolgesel_imar_tipolojisi__bolgesel_imar_tipolojisi_json",
+ "target": "stg_bolgesel_imar_tipolojisi",
+ "file_id": "FILE_00000919",
+ "input_count": 61,
+ "successfully_loaded": 61,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 21,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 21458,
+ "note": "json_records under=None",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "reference_geography__veri_envanteri__veri_envanteri_json_2",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__veri_envanteri__veri_envanteri_json_2",
+ "target": "stg_veri_envanteri",
+ "file_id": "FILE_00009764",
+ "input_count": 1061,
+ "successfully_loaded": 1061,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 196466,
+ "note": "json_records under=json",
+ "seconds": 0.0,
+ "mode": "apply"
+}

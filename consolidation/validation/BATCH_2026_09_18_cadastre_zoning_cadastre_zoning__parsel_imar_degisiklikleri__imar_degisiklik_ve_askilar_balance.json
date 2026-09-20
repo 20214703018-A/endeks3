@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__parsel_imar_degisiklikleri__imar_degisiklik_ve_askilar",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__parsel_imar_degisiklikleri__imar_degisiklik_ve_askilar",
+ "target": "stg_parsel_imar_degisiklikleri__imar_degisiklik_ve_askilar",
+ "file_id": "FILE_00000969",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/cadastre_zoning/stg_parsel_imar_degisiklikleri__imar_degisiklik_ve_askilar/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__parsel_imar_degisiklikleri__imar_degisiklik_ve_askilar.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

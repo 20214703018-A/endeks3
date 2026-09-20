@@ -1,0 +1,32 @@
+{
+ "family": "operational_metadata",
+ "standard_version": "1.0.0",
+ "sources": [
+  {
+   "kind": "duckdb_table",
+   "table": "source_governance",
+   "acquisition_class": "derived",
+   "distribution_class": "internal",
+   "transformation_id": "T00_RAW_COPY_V1",
+   "review_flags": [
+    "PREVIOUS_AUTOMATION_GOLD_REGISTRY"
+   ],
+   "source_id": "gold_source_governance",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/gold/gold.duckdb",
+   "target": "stg_gold_source_governance"
+  },
+  {
+   "kind": "duckdb_table",
+   "table": "source_provenance",
+   "acquisition_class": "derived",
+   "distribution_class": "internal",
+   "transformation_id": "T00_RAW_COPY_V1",
+   "review_flags": [
+    "PREVIOUS_AUTOMATION_GOLD_REGISTRY"
+   ],
+   "source_id": "gold_source_provenance",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/gold/gold.duckdb",
+   "target": "stg_gold_source_provenance"
+  }
+ ]
+}

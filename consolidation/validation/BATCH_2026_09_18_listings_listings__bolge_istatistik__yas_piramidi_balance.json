@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__bolge_istatistik__yas_piramidi",
+ "batch_id": "BATCH_2026_09_18_listings_listings__bolge_istatistik__yas_piramidi",
+ "target": "stg_bolge_istatistik__yas_piramidi",
+ "file_id": "FILE_00005033",
+ "input_count": 446,
+ "successfully_loaded": 446,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 53,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_bolge_istatistik__yas_piramidi/part-BATCH_2026_09_18_listings_listings__bolge_istatistik__yas_piramidi.parquet zaten var (append-only)",
+ "seconds": 0.5,
+ "mode": "apply"
+}

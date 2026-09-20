@@ -1,0 +1,17 @@
+{
+ "source_id": "education__universite__birim",
+ "batch_id": "BATCH_2026_09_18_education_education__universite__birim",
+ "target": "stg_universite__birim",
+ "file_id": "FILE_00005060",
+ "input_count": 8035,
+ "successfully_loaded": 8035,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 7,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/education/stg_universite__birim/part-BATCH_2026_09_18_education_education__universite__birim.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

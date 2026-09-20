@@ -1,0 +1,16 @@
+{
+ "source_id": "poi_business__turkiye_satilik_isyeri_ilanlari__turkiye_satilik_isyeri_ilanlar",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_satilik_isyeri_ilanlari__turkiye_satilik_isyeri_ilanlar",
+ "target": "stg_turkiye_satilik_isyeri_ilanlari",
+ "file_id": "FILE_00000778",
+ "input_count": 6374,
+ "successfully_loaded": 6374,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 17,
+ "raw_line_count": 6375,
+ "engine": "duckdb",
+ "note": "csv",
+ "seconds": 0.1,
+ "mode": "dry-run"
+}

@@ -1,0 +1,16 @@
+{
+ "source_id": "P_pdb_collector_fiyat_trend",
+ "batch_id": "BATCH_2026_09_18_price_series_P_pdb_collector_fiyat_trend",
+ "target": "stg_price_trend_monthly",
+ "file_id": "FILE_00000927",
+ "input_count": 800,
+ "successfully_loaded": 800,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "seconds": 0.0,
+ "mode": "dry-run"
+}

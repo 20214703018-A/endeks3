@@ -1,0 +1,17 @@
+{
+ "family": "price_series",
+ "standard_version": "1.0.0",
+ "sources": [
+  {
+   "source_id": "price_series__menuler_acik_kayit__menuler_acik_kayit_jsonl",
+   "kind": "jsonl",
+   "path": "/Users/acar/Desktop/GEOPROP/collector/data/menuler_acik_kayit.jsonl",
+   "target": "stg_menuler_acik_kayit",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [],
+   "family": "price_series"
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+{
+ "run_id": "RUN_2026_09_19_003",
+ "source_files_deleted": 0,
+ "source_files_modified": 0,
+ "source_files_missing_after_scan": 0,
+ "rows_silently_dropped": 0,
+ "features_silently_dropped": 0,
+ "columns_silently_removed": 0,
+ "unaccounted_records": 0,
+ "note": "Phase 1 salt-okunur; hiçbir kayıt yazılmadı/silinmedi. Parse hataları parse_errors tablosunda ham satırla korunur.",
+ "verify": {
+  "checked": 19942,
+  "changed": 0,
+  "missing": 0,
+  "new_files": 0
+ },
+ "changed_files": [],
+ "missing_files": [],
+ "new_files_in_source": []
+}

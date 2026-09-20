@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__resmi_gazete__taranan_gun",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__resmi_gazete__taranan_gun",
+ "target": "stg_resmi_gazete__taranan_gun",
+ "file_id": "FILE_00005053",
+ "input_count": 401,
+ "successfully_loaded": 401,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_resmi_gazete__taranan_gun/part-BATCH_2026_09_18_poi_business_poi_business__resmi_gazete__taranan_gun.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

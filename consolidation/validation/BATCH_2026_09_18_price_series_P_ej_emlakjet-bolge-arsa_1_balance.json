@@ -1,0 +1,19 @@
+{
+ "source_id": "P_ej_emlakjet-bolge-arsa_1",
+ "batch_id": "BATCH_2026_09_18_price_series_P_ej_emlakjet-bolge-arsa_1",
+ "target": "stg_ej_region_index",
+ "file_id": "FILE_00000159",
+ "input_count": 982,
+ "successfully_loaded": 982,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 31,
+ "raw_line_count": 983,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_ej_region_index/part-BATCH_2026_09_18_price_series_P_ej_emlakjet-bolge-arsa_1.parquet",
+ "review_flags": {},
+ "seconds": 0.4,
+ "mode": "apply"
+}

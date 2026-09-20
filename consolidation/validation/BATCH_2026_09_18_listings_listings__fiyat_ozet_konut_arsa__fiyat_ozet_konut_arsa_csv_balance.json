@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__fiyat_ozet_konut_arsa__fiyat_ozet_konut_arsa_csv",
+ "batch_id": "BATCH_2026_09_18_listings_listings__fiyat_ozet_konut_arsa__fiyat_ozet_konut_arsa_csv",
+ "target": "stg_fiyat_ozet_konut_arsa",
+ "file_id": "FILE_00000960",
+ "input_count": 14,
+ "successfully_loaded": 14,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 18,
+ "raw_line_count": 15,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_fiyat_ozet_konut_arsa/part-BATCH_2026_09_18_listings_listings__fiyat_ozet_konut_arsa__fiyat_ozet_konut_arsa_csv.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

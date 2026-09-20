@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__FHDR_Uncensored_Q4_T4_Colab_Kaggle__FHDR_Uncensored_Q4_T4_Colab_Ka",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__FHDR_Uncensored_Q4_T4_Colab_Kaggle__FHDR_Uncensored_Q4_T4_Colab_Ka",
+ "target": "stg_FHDR_Uncensored_Q4_T4_Colab_Kaggle",
+ "file_id": "FILE_00016384",
+ "input_count": 20,
+ "successfully_loaded": 20,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 5333,
+ "note": "json_records under=cells",
+ "seconds": 0.0,
+ "mode": "apply"
+}

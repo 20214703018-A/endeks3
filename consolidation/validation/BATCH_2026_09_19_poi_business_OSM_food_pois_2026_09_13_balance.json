@@ -1,0 +1,23 @@
+{
+ "source_id": "OSM_food_pois_2026_09_13",
+ "batch_id": "BATCH_2026_09_19_poi_business_OSM_food_pois_2026_09_13",
+ "target": "stg_osm_food_poi",
+ "file_id": "FILE_00020198",
+ "input_count": 77322,
+ "successfully_loaded": 77322,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 577,
+ "geometry_types": [
+  "LineString",
+  "MultiPolygon",
+  "Point"
+ ],
+ "review_flags": {
+  "OSM_ODBL_ATTRIBUTION_REQUIRED": 77322
+ },
+ "estimated_bytes": 448457492,
+ "note": "geojsonseq (RFC 7464, RS stripped)",
+ "seconds": 126.8,
+ "mode": "apply"
+}

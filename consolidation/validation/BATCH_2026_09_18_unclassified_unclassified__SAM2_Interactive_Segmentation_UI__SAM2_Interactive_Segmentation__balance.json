@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__SAM2_Interactive_Segmentation_UI__SAM2_Interactive_Segmentation_",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__SAM2_Interactive_Segmentation_UI__SAM2_Interactive_Segmentation_",
+ "target": "stg_SAM2_Interactive_Segmentation_UI",
+ "file_id": "FILE_00016531",
+ "input_count": 7,
+ "successfully_loaded": 7,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 6490,
+ "note": "json_records under=cells",
+ "seconds": 0.0,
+ "mode": "apply"
+}

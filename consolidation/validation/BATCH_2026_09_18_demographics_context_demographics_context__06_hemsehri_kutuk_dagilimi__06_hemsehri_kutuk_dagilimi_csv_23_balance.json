@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__06_hemsehri_kutuk_dagilimi__06_hemsehri_kutuk_dagilimi_csv_23",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__06_hemsehri_kutuk_dagilimi__06_hemsehri_kutuk_dagilimi_csv_23",
+ "target": "stg_06_hemsehri_kutuk_dagilimi",
+ "file_id": "FILE_00000945",
+ "input_count": 80,
+ "successfully_loaded": 80,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": 81,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_06_hemsehri_kutuk_dagilimi/part-BATCH_2026_09_18_demographics_context_demographics_context__06_hemsehri_kutuk_dagilimi__06_hemsehri_kutuk_dagilimi_csv_23.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

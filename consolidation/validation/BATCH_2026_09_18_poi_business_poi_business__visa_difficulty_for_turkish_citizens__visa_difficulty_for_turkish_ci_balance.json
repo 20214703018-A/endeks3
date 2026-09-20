@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__visa_difficulty_for_turkish_citizens__visa_difficulty_for_turkish_ci",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__visa_difficulty_for_turkish_citizens__visa_difficulty_for_turkish_ci",
+ "target": "stg_visa_difficulty_for_turkish_citizens",
+ "file_id": "FILE_00016853",
+ "input_count": 50,
+ "successfully_loaded": 50,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": 51,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_visa_difficulty_for_turkish_citizens/part-BATCH_2026_09_18_poi_business_poi_business__visa_difficulty_for_turkish_citizens__visa_difficulty_for_turkish_ci.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

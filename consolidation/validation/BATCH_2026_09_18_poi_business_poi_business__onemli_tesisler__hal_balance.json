@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__onemli_tesisler__hal",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__onemli_tesisler__hal",
+ "target": "stg_onemli_tesisler__hal",
+ "file_id": "FILE_00005048",
+ "input_count": 177,
+ "successfully_loaded": 177,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_onemli_tesisler__hal/part-BATCH_2026_09_18_poi_business_poi_business__onemli_tesisler__hal.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

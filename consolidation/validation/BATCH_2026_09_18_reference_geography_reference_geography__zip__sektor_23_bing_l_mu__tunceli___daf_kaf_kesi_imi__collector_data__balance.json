@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__zip__sektor_23_bing_l_mu__tunceli___daf_kaf_kesi_imi__collector_data_",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_23_bing_l_mu__tunceli___daf_kaf_kesi_imi__collector_data_",
+ "target": "stg_sektor_23_bing_l_mu__tunceli___daf_kaf_kesi_imi",
+ "file_id": "FILE_00000113",
+ "input_count": 6332,
+ "successfully_loaded": 6332,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_sektor_23_bing_l_mu__tunceli___daf_kaf_kesi_imi/part-BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_23_bing_l_mu__tunceli___daf_kaf_kesi_imi__collector_data_.parquet zaten var (append-only)",
+ "seconds": 1.1,
+ "mode": "apply"
+}

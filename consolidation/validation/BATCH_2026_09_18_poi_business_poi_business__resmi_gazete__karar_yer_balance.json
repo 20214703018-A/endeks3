@@ -1,0 +1,18 @@
+{
+ "source_id": "poi_business__resmi_gazete__karar_yer",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__resmi_gazete__karar_yer",
+ "target": "stg_resmi_gazete__karar_yer",
+ "file_id": "FILE_00005053",
+ "input_count": 583,
+ "successfully_loaded": 583,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 8,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "review_flags": {},
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_resmi_gazete__karar_yer/part-BATCH_2026_09_18_poi_business_poi_business__resmi_gazete__karar_yer.parquet",
+ "seconds": 0.0,
+ "mode": "apply"
+}

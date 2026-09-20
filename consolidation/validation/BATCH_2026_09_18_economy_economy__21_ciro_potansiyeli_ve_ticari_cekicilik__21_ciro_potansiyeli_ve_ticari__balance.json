@@ -1,0 +1,17 @@
+{
+ "source_id": "economy__21_ciro_potansiyeli_ve_ticari_cekicilik__21_ciro_potansiyeli_ve_ticari_",
+ "batch_id": "BATCH_2026_09_18_economy_economy__21_ciro_potansiyeli_ve_ticari_cekicilik__21_ciro_potansiyeli_ve_ticari_",
+ "target": "stg_21_ciro_potansiyeli_ve_ticari_cekicilik",
+ "file_id": "FILE_00008659",
+ "input_count": 969,
+ "successfully_loaded": 969,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "raw_line_count": 970,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/economy/stg_21_ciro_potansiyeli_ve_ticari_cekicilik/part-BATCH_2026_09_18_economy_economy__21_ciro_potansiyeli_ve_ticari_cekicilik__21_ciro_potansiyeli_ve_ticari_.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

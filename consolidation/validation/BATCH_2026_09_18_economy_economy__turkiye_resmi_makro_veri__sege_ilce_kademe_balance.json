@@ -1,0 +1,17 @@
+{
+ "source_id": "economy__turkiye_resmi_makro_veri__sege_ilce_kademe",
+ "batch_id": "BATCH_2026_09_18_economy_economy__turkiye_resmi_makro_veri__sege_ilce_kademe",
+ "target": "stg_turkiye_resmi_makro_veri__sege_ilce_kademe",
+ "file_id": "FILE_00005057",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/economy/stg_turkiye_resmi_makro_veri__sege_ilce_kademe/part-BATCH_2026_09_18_economy_economy__turkiye_resmi_makro_veri__sege_ilce_kademe.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

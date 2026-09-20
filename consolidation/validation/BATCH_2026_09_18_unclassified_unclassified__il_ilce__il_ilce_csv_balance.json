@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__il_ilce__il_ilce_csv",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__il_ilce__il_ilce_csv",
+ "target": "stg_il_ilce",
+ "file_id": "FILE_00016684",
+ "input_count": 973,
+ "successfully_loaded": 973,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": 974,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_il_ilce/part-BATCH_2026_09_18_unclassified_unclassified__il_ilce__il_ilce_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

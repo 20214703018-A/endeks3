@@ -1,0 +1,17 @@
+{
+ "source_id": "education__zip__koord_3__koord_3_csv",
+ "batch_id": "BATCH_2026_09_18_education_education__zip__koord_3__koord_3_csv",
+ "target": "stg_koord_3",
+ "file_id": "FILE_00016761",
+ "input_count": 1306,
+ "successfully_loaded": 1306,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "raw_line_count": 1307,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/education/stg_koord_3/part-BATCH_2026_09_18_education_education__zip__koord_3__koord_3_csv.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

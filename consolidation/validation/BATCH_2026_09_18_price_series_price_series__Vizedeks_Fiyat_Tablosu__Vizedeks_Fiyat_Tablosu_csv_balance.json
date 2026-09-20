@@ -1,0 +1,19 @@
+{
+ "source_id": "price_series__Vizedeks_Fiyat_Tablosu__Vizedeks_Fiyat_Tablosu_csv",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__Vizedeks_Fiyat_Tablosu__Vizedeks_Fiyat_Tablosu_csv",
+ "target": "stg_Vizedeks_Fiyat_Tablosu",
+ "file_id": "FILE_00016562",
+ "input_count": 3,
+ "successfully_loaded": 3,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": 3,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_Vizedeks_Fiyat_Tablosu/part-BATCH_2026_09_18_price_series_price_series__Vizedeks_Fiyat_Tablosu__Vizedeks_Fiyat_Tablosu_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

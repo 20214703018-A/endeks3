@@ -1,0 +1,19 @@
+{
+ "source_id": "P_pdb_07_fiyat_dagilim",
+ "batch_id": "BATCH_2026_09_18_price_series_P_pdb_07_fiyat_dagilim",
+ "target": "stg_price_breakdown",
+ "file_id": "FILE_00000927",
+ "input_count": 168,
+ "successfully_loaded": 168,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_breakdown/part-BATCH_2026_09_18_price_series_P_pdb_07_fiyat_dagilim.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

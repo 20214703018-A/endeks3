@@ -1,0 +1,19 @@
+{
+ "source_id": "S11_il_listesi_07",
+ "batch_id": "BATCH_2026_09_18_reference_geography_S11_il_listesi_07",
+ "target": "stg_admin_list",
+ "file_id": "FILE_00000312",
+ "input_count": 81,
+ "successfully_loaded": 81,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 3,
+ "geometry_types": [],
+ "review_flags": {
+  "F9_COVERAGE_VARIES": 81
+ },
+ "estimated_bytes": 3220,
+ "note": "csv enc=utf-8-sig",
+ "seconds": 0.0,
+ "mode": "dry-run"
+}

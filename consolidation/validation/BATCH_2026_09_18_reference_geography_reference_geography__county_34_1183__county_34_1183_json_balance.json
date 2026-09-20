@@ -1,0 +1,17 @@
+{
+ "source_id": "reference_geography__county_34_1183__county_34_1183_json",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__county_34_1183__county_34_1183_json",
+ "target": "stg_county_34_1183",
+ "file_id": "FILE_00000590",
+ "input_count": 24,
+ "successfully_loaded": 24,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 3,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 35470,
+ "note": "json_records under=polygons",
+ "seconds": 0.0,
+ "mode": "apply"
+}

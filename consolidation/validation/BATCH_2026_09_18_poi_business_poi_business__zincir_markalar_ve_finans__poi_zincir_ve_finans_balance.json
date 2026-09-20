@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__zincir_markalar_ve_finans__poi_zincir_ve_finans",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__zincir_markalar_ve_finans__poi_zincir_ve_finans",
+ "target": "stg_zincir_markalar_ve_finans__poi_zincir_ve_finans",
+ "file_id": "FILE_00005064",
+ "input_count": 27645,
+ "successfully_loaded": 27645,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_zincir_markalar_ve_finans__poi_zincir_ve_finans/part-BATCH_2026_09_18_poi_business_poi_business__zincir_markalar_ve_finans__poi_zincir_ve_finans.parquet",
+ "review_flags": {},
+ "seconds": 0.2,
+ "mode": "apply"
+}

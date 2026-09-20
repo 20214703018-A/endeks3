@@ -1,0 +1,152 @@
+{
+ "batch_id": "BATCH_2026_09_18_reference_geography_admin_polygon_il1",
+ "mode": "apply",
+ "pipeline_version": "1.0.0",
+ "files": 16,
+ "files_missing_in_inventory": [],
+ "input_count": 857,
+ "successfully_loaded": 857,
+ "quarantined_records": 0,
+ "unaccounted": 0,
+ "rows_by_level_kind": {
+  "ilce/admin": 15,
+  "mahalle/admin": 833,
+  "mahalle/water_or_island": 9
+ },
+ "invalid_geometries": 0,
+ "outside_tr_bbox": 0,
+ "estimated_output_bytes": 3160515,
+ "free_disk_bytes": 26889637888,
+ "seconds": 0.3,
+ "at": "2026-09-18T06:15:02+00:00",
+ "per_file": [
+  {
+   "file": "city_1.json",
+   "file_id": "FILE_00000974",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1104.json",
+   "file_id": "FILE_00001173",
+   "input": 96,
+   "staged": 96,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1219.json",
+   "file_id": "FILE_00001174",
+   "input": 113,
+   "staged": 113,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1329.json",
+   "file_id": "FILE_00001175",
+   "input": 48,
+   "staged": 48,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1437.json",
+   "file_id": "FILE_00001176",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1443.json",
+   "file_id": "FILE_00001177",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1486.json",
+   "file_id": "FILE_00001178",
+   "input": 103,
+   "staged": 103,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1580.json",
+   "file_id": "FILE_00001179",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1588.json",
+   "file_id": "FILE_00001180",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1687.json",
+   "file_id": "FILE_00001181",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1734.json",
+   "file_id": "FILE_00001182",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1748.json",
+   "file_id": "FILE_00001183",
+   "input": 107,
+   "staged": 107,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1757.json",
+   "file_id": "FILE_00001184",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_1806.json",
+   "file_id": "FILE_00001185",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_2032.json",
+   "file_id": "FILE_00001186",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_1_2033.json",
+   "file_id": "FILE_00001187",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  }
+ ]
+}

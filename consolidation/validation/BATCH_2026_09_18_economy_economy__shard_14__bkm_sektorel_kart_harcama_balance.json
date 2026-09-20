@@ -1,0 +1,17 @@
+{
+ "source_id": "economy__shard_14__bkm_sektorel_kart_harcama",
+ "batch_id": "BATCH_2026_09_18_economy_economy__shard_14__bkm_sektorel_kart_harcama",
+ "target": "stg_shard_14__bkm_sektorel_kart_harcama",
+ "file_id": "FILE_00002088",
+ "input_count": 1,
+ "successfully_loaded": 1,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/economy/stg_shard_14__bkm_sektorel_kart_harcama/part-BATCH_2026_09_18_economy_economy__shard_14__bkm_sektorel_kart_harcama.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,6 @@
+{"family": "poi_business", "standard_version": "1.0.0",
+ "sources": [
+  {"kind": "geojsonseq", "geometry": {"type": "geojson_feature", "crs": "EPSG:4326"}, "acquisition_class": "official_public", "distribution_class": "public",
+   "transformation_id": "T02_GEOJSON_TEXT_TO_WKB_V1", "review_flags": ["OSM_ODBL_ATTRIBUTION_REQUIRED"], "source_id": "OSM_food_pois_2026_09_13",
+   "path": "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/osm_extract/turkey-latest_2026-09-13/food_pois.geojsonseq", "target": "stg_osm_food_poi"}
+ ]}

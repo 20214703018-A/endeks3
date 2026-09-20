@@ -1,0 +1,12 @@
+{
+ "source_id": "price_series__zip__calibre_bookmarks__META_INF_calibre_boo_2",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__zip__calibre_bookmarks__META_INF_calibre_boo_2",
+ "target": "stg_calibre_bookmarks",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "error": "ValueError: DELIMITER_SUSPECT: tek sütun okundu; başlıkta '|' ×6 var — spec delimiter yanlış",
+ "seconds": 0.0,
+ "mode": "apply"
+}

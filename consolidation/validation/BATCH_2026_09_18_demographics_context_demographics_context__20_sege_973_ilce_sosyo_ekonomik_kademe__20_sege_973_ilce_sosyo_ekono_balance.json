@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__20_sege_973_ilce_sosyo_ekonomik_kademe__20_sege_973_ilce_sosyo_ekono",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__20_sege_973_ilce_sosyo_ekonomik_kademe__20_sege_973_ilce_sosyo_ekono",
+ "target": "stg_20_sege_973_ilce_sosyo_ekonomik_kademe",
+ "file_id": "FILE_00008658",
+ "input_count": 969,
+ "successfully_loaded": 969,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": 970,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/demographics_context/stg_20_sege_973_ilce_sosyo_ekonomik_kademe/part-BATCH_2026_09_18_demographics_context_demographics_context__20_sege_973_ilce_sosyo_ekonomik_kademe__20_sege_973_ilce_sosyo_ekono.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

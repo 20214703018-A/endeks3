@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__B0__B0_json",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__B0__B0_json",
+ "target": "stg_B0",
+ "file_id": "FILE_00017184",
+ "input_count": 323,
+ "successfully_loaded": 323,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 123410,
+ "note": "json_records under=None",
+ "seconds": 0.0,
+ "mode": "apply"
+}

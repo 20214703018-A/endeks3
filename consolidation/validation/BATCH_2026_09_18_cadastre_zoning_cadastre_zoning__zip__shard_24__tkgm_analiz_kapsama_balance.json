@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__zip__shard_24__tkgm_analiz_kapsama",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__zip__shard_24__tkgm_analiz_kapsama",
+ "target": "stg_shard_24__tkgm_analiz_kapsama",
+ "file_id": "FILE_00000796",
+ "input_count": 12,
+ "successfully_loaded": 12,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 8,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_shard_24__tkgm_analiz_kapsama/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__zip__shard_24__tkgm_analiz_kapsama.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

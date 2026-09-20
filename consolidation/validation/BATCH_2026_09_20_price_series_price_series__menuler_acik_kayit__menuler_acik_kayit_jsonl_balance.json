@@ -1,0 +1,19 @@
+{
+ "source_id": "price_series__menuler_acik_kayit__menuler_acik_kayit_jsonl",
+ "batch_id": "BATCH_2026_09_20_price_series_price_series__menuler_acik_kayit__menuler_acik_kayit_jsonl",
+ "target": "stg_menuler_acik_kayit",
+ "file_id": "FILE_00021126",
+ "input_count": 9,
+ "successfully_loaded": 9,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 7,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "jsonl",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_menuler_acik_kayit/part-BATCH_2026_09_20_price_series_price_series__menuler_acik_kayit__menuler_acik_kayit_jsonl.parquet",
+ "review_flags": {},
+ "seconds": 0.2,
+ "mode": "apply"
+}

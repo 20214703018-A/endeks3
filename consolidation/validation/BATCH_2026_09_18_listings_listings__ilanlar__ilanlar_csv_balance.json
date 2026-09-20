@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__ilanlar__ilanlar_csv",
+ "batch_id": "BATCH_2026_09_18_listings_listings__ilanlar__ilanlar_csv",
+ "target": "stg_ilanlar",
+ "file_id": "FILE_00008362",
+ "input_count": 92,
+ "successfully_loaded": 92,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 21,
+ "raw_line_count": 93,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_ilanlar/part-BATCH_2026_09_18_listings_listings__ilanlar__ilanlar_csv.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

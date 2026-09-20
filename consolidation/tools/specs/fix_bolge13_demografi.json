@@ -1,0 +1,21 @@
+{
+ "family": "demographics_context",
+ "standard_version": "1.0.0",
+ "sources": [
+  {
+   "kind": "csv",
+   "engine": "duckdb",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "transformation_id": "T00_RAW_COPY_V1",
+   "review_flags": [
+    "PLANNER_SKIP_FIX(object_type=text misdetection)"
+   ],
+   "source_id": "01_demografi_ve_nufus_csv_13",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_13_orta_karadeniz/01_demografi_ve_nufus.csv",
+   "target": "stg_01_demografi_ve_nufus"
+  }
+ ]
+}

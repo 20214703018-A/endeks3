@@ -1,0 +1,19 @@
+{
+ "source_id": "P_arsadb_ext_arsa_mahalle_alan_segmentleri",
+ "batch_id": "BATCH_2026_09_18_price_series_P_arsadb_ext_arsa_mahalle_alan_segmentleri",
+ "target": "stg_land_area_segments",
+ "file_id": "FILE_00008560",
+ "input_count": 2851,
+ "successfully_loaded": 2851,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 16,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_land_area_segments/part-BATCH_2026_09_18_price_series_P_arsadb_ext_arsa_mahalle_alan_segmentleri.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__turkiye_su_ve_altyapi_envanteri__ham_su_hatlari_ve_kanallar",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_su_ve_altyapi_envanteri__ham_su_hatlari_ve_kanallar",
+ "target": "stg_turkiye_su_ve_altyapi_envanteri__ham_su_hatlari_ve_kanallar",
+ "file_id": "FILE_00008596",
+ "input_count": 1591,
+ "successfully_loaded": 1591,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_turkiye_su_ve_altyapi_envanteri__ham_su_hatlari_ve_kanallar/part-BATCH_2026_09_18_poi_business_poi_business__turkiye_su_ve_altyapi_envanteri__ham_su_hatlari_ve_kanallar.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "economy__shard_14__ticari_koridor_ve_aks",
+ "batch_id": "BATCH_2026_09_18_economy_economy__shard_14__ticari_koridor_ve_aks",
+ "target": "stg_shard_14__ticari_koridor_ve_aks",
+ "file_id": "FILE_00002088",
+ "input_count": 3,
+ "successfully_loaded": 3,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/economy/stg_shard_14__ticari_koridor_ve_aks/part-BATCH_2026_09_18_economy_economy__shard_14__ticari_koridor_ve_aks.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

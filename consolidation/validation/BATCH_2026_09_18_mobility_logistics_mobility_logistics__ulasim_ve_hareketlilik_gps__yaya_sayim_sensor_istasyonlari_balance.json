@@ -1,0 +1,17 @@
+{
+ "source_id": "mobility_logistics__ulasim_ve_hareketlilik_gps__yaya_sayim_sensor_istasyonlari",
+ "batch_id": "BATCH_2026_09_18_mobility_logistics_mobility_logistics__ulasim_ve_hareketlilik_gps__yaya_sayim_sensor_istasyonlari",
+ "target": "stg_ulasim_ve_hareketlilik_gps__yaya_sayim_sensor_istasyonlari",
+ "file_id": "FILE_00005059",
+ "input_count": 2562,
+ "successfully_loaded": 2562,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/mobility_logistics/stg_ulasim_ve_hareketlilik_gps__yaya_sayim_sensor_istasyonlari/part-BATCH_2026_09_18_mobility_logistics_mobility_logistics__ulasim_ve_hareketlilik_gps__yaya_sayim_sensor_istasyonlari.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

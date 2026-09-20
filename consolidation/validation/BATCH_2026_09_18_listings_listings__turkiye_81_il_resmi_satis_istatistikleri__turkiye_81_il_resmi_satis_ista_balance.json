@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__turkiye_81_il_resmi_satis_istatistikleri__turkiye_81_il_resmi_satis_ista",
+ "batch_id": "BATCH_2026_09_18_listings_listings__turkiye_81_il_resmi_satis_istatistikleri__turkiye_81_il_resmi_satis_ista",
+ "target": "stg_turkiye_81_il_resmi_satis_istatistikleri",
+ "file_id": "FILE_00008677",
+ "input_count": 81,
+ "successfully_loaded": 81,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": 82,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_turkiye_81_il_resmi_satis_istatistikleri/part-BATCH_2026_09_18_listings_listings__turkiye_81_il_resmi_satis_istatistikleri__turkiye_81_il_resmi_satis_ista.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

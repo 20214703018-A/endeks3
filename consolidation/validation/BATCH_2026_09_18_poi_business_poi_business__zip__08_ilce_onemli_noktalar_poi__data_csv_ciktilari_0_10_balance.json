@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__zip__08_ilce_onemli_noktalar_poi__data_csv_ciktilari_0_10",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__zip__08_ilce_onemli_noktalar_poi__data_csv_ciktilari_0_10",
+ "target": "stg_08_ilce_onemli_noktalar_poi",
+ "file_id": "FILE_00000194",
+ "input_count": 22044,
+ "successfully_loaded": 22044,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": 22045,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_08_ilce_onemli_noktalar_poi/part-BATCH_2026_09_18_poi_business_poi_business__zip__08_ilce_onemli_noktalar_poi__data_csv_ciktilari_0_10.parquet",
+ "review_flags": {},
+ "seconds": 0.2,
+ "mode": "apply"
+}

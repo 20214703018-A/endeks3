@@ -1,0 +1,24 @@
+{
+ "source_id": "listings__zip__piyasa_verileri__fiyat_trend_2",
+ "batch_id": "BATCH_2026_09_20_listings_listings__zip__piyasa_verileri__fiyat_trend_2",
+ "target": "stg_piyasa_verileri__fiyat_trend",
+ "file_id": "FILE_00000180",
+ "input_count": 4560,
+ "successfully_loaded": 4560,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_piyasa_verileri__fiyat_trend/part-BATCH_2026_09_20_listings_listings__zip__piyasa_verileri__fiyat_trend_2.parquet",
+ "review_flags": {
+  "C03": 4560,
+  "NESTED_ZIP_MEMBER": 4560,
+  "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)": 4560,
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 684
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

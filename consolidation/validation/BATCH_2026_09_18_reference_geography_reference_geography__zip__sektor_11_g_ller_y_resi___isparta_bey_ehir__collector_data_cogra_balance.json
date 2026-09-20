@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__zip__sektor_11_g_ller_y_resi___isparta_bey_ehir__collector_data_cogra",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_11_g_ller_y_resi___isparta_bey_ehir__collector_data_cogra",
+ "target": "stg_sektor_11_g_ller_y_resi___isparta_bey_ehir",
+ "file_id": "FILE_00000100",
+ "input_count": 11239,
+ "successfully_loaded": 11239,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_sektor_11_g_ller_y_resi___isparta_bey_ehir/part-BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_11_g_ller_y_resi___isparta_bey_ehir__collector_data_cogra.parquet zaten var (append-only)",
+ "seconds": 1.1,
+ "mode": "apply"
+}

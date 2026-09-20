@@ -1,0 +1,19 @@
+{
+ "source_id": "price_series__turkiye_fiziksel_ve_hukuki_altyapi__rtree_sit_alanlari_parent",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__turkiye_fiziksel_ve_hukuki_altyapi__rtree_sit_alanlari_parent",
+ "target": "stg_turkiye_fiziksel_ve_hukuki_altyapi__rtree_sit_alanlari_parent",
+ "file_id": "FILE_00008592",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_turkiye_fiziksel_ve_hukuki_altyapi__rtree_sit_alanlari_parent/part-BATCH_2026_09_18_price_series_price_series__turkiye_fiziksel_ve_hukuki_altyapi__rtree_sit_alanlari_parent.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__sahibinden_istanbul_kadikoy_caferaga_1789116768512__sahibinden_istanbul_kadikoy_",
+ "batch_id": "BATCH_2026_09_18_listings_listings__sahibinden_istanbul_kadikoy_caferaga_1789116768512__sahibinden_istanbul_kadikoy_",
+ "target": "stg_sahibinden_istanbul_kadikoy_caferaga_1789116768512",
+ "file_id": "FILE_00008377",
+ "input_count": 20,
+ "successfully_loaded": 20,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 3204,
+ "note": "json_records under=ilanlar",
+ "seconds": 0.0,
+ "mode": "apply"
+}

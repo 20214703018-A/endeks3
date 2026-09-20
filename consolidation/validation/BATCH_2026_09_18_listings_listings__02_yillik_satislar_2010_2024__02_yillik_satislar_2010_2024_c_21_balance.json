@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__02_yillik_satislar_2010_2024__02_yillik_satislar_2010_2024_c_21",
+ "batch_id": "BATCH_2026_09_18_listings_listings__02_yillik_satislar_2010_2024__02_yillik_satislar_2010_2024_c_21",
+ "target": "stg_02_yillik_satislar_2010_2024",
+ "file_id": "FILE_00000513",
+ "input_count": 1365,
+ "successfully_loaded": 1365,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": 1366,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_02_yillik_satislar_2010_2024/part-BATCH_2026_09_18_listings_listings__02_yillik_satislar_2010_2024__02_yillik_satislar_2010_2024_c_21.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

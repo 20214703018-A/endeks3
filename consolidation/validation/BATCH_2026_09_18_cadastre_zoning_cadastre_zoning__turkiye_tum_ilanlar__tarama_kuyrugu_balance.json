@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__turkiye_tum_ilanlar__tarama_kuyrugu",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__turkiye_tum_ilanlar__tarama_kuyrugu",
+ "target": "stg_turkiye_tum_ilanlar__tarama_kuyrugu",
+ "file_id": "FILE_00008371",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_turkiye_tum_ilanlar__tarama_kuyrugu/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__turkiye_tum_ilanlar__tarama_kuyrugu.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

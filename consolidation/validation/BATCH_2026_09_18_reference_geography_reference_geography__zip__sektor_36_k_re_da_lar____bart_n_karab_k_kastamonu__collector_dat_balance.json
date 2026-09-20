@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__zip__sektor_36_k_re_da_lar____bart_n_karab_k_kastamonu__collector_dat",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_36_k_re_da_lar____bart_n_karab_k_kastamonu__collector_dat",
+ "target": "stg_sektor_36_k_re_da_lar____bart_n_karab_k_kastamonu",
+ "file_id": "FILE_00000127",
+ "input_count": 6416,
+ "successfully_loaded": 6416,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_sektor_36_k_re_da_lar____bart_n_karab_k_kastamonu/part-BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_36_k_re_da_lar____bart_n_karab_k_kastamonu__collector_dat.parquet zaten var (append-only)",
+ "seconds": 1.0,
+ "mode": "apply"
+}

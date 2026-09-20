@@ -1,0 +1,21 @@
+{
+ "source_id": "poi_business__restoran_ve_kafe_menuleri__isletme_ardil_oncul_donusum_ta",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__restoran_ve_kafe_menuleri__isletme_ardil_oncul_donusum_ta",
+ "target": "stg_restoran_ve_kafe_menuleri__isletme_ardil_oncul_donusum_tarihcesi",
+ "file_id": "FILE_00005055",
+ "input_count": 1898,
+ "successfully_loaded": 1898,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_restoran_ve_kafe_menuleri__isletme_ardil_oncul_donusum_tarihcesi/part-BATCH_2026_09_18_poi_business_poi_business__restoran_ve_kafe_menuleri__isletme_ardil_oncul_donusum_ta.parquet",
+ "review_flags": {
+  "T07": 1898
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,18 @@
+{
+ "source_id": "poi_business__osm_degisim__poi_yasam",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__osm_degisim__poi_yasam",
+ "target": "stg_osm_degisim__poi_yasam",
+ "file_id": "FILE_00005049",
+ "input_count": 680481,
+ "successfully_loaded": 680481,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "review_flags": {},
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_osm_degisim__poi_yasam/part-BATCH_2026_09_18_poi_business_poi_business__osm_degisim__poi_yasam.parquet",
+ "seconds": 11.4,
+ "mode": "apply"
+}

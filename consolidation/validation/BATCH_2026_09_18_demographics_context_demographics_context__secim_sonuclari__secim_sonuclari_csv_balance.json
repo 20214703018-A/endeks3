@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__secim_sonuclari__secim_sonuclari_csv",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__secim_sonuclari__secim_sonuclari_csv",
+ "target": "stg_secim_sonuclari",
+ "file_id": "FILE_00000967",
+ "input_count": 112,
+ "successfully_loaded": 112,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": 113,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_secim_sonuclari/part-BATCH_2026_09_18_demographics_context_demographics_context__secim_sonuclari__secim_sonuclari_csv.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__07_secim_sonuclari_ve_oylar__07_secim_sonuclari_ve_oylar_cs_3",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__07_secim_sonuclari_ve_oylar__07_secim_sonuclari_ve_oylar_cs_3",
+ "target": "stg_07_secim_sonuclari_ve_oylar",
+ "file_id": "FILE_00000251",
+ "input_count": 19277,
+ "successfully_loaded": 19277,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "raw_line_count": 19278,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_07_secim_sonuclari_ve_oylar/part-BATCH_2026_09_18_demographics_context_demographics_context__07_secim_sonuclari_ve_oylar__07_secim_sonuclari_ve_oylar_cs_3.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "P_05_price_brea_15_bolge_15_dogu_guneydogu",
+ "batch_id": "BATCH_2026_09_18_price_series_P_05_price_brea_15_bolge_15_dogu_guneydogu",
+ "target": "stg_price_breakdown",
+ "file_id": "FILE_00000417",
+ "input_count": 11468,
+ "successfully_loaded": 11468,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 11469,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_breakdown/part-BATCH_2026_09_18_price_series_P_05_price_brea_15_bolge_15_dogu_guneydogu.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

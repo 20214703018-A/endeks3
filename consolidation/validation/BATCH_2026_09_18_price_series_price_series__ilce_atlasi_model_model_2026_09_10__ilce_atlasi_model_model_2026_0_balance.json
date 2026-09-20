@@ -1,0 +1,19 @@
+{
+ "source_id": "price_series__ilce_atlasi_model_model_2026_09_10__ilce_atlasi_model_model_2026_0",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__ilce_atlasi_model_model_2026_09_10__ilce_atlasi_model_model_2026_0",
+ "target": "stg_ilce_atlasi_model_model_2026_09_10",
+ "file_id": "FILE_00016704",
+ "input_count": 276,
+ "successfully_loaded": 276,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "raw_line_count": 276,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_ilce_atlasi_model_model_2026_09_10/part-BATCH_2026_09_18_price_series_price_series__ilce_atlasi_model_model_2026_09_10__ilce_atlasi_model_model_2026_0.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

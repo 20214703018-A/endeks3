@@ -1,0 +1,19 @@
+{
+ "source_id": "S13_piyasa_db_06_mahalleler",
+ "batch_id": "BATCH_2026_09_18_reference_geography_S13_piyasa_db_06_mahalleler",
+ "target": "stg_admin_list",
+ "file_id": "FILE_00000747",
+ "input_count": 123,
+ "successfully_loaded": 123,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "geometry_types": [],
+ "review_flags": {
+  "F9_COVERAGE_VARIES": 123
+ },
+ "estimated_bytes": 7806,
+ "note": "sqlite",
+ "seconds": 0.0,
+ "mode": "dry-run"
+}

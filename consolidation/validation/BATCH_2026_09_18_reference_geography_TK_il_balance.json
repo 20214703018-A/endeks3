@@ -1,0 +1,23 @@
+{
+ "source_id": "TK_il",
+ "batch_id": "BATCH_2026_09_18_reference_geography_TK_il",
+ "target": "stg_tkgm_il",
+ "file_id": "FILE_00017583",
+ "input_count": 81,
+ "successfully_loaded": 81,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "geometry_types": [
+  "MultiPolygon",
+  "Polygon"
+ ],
+ "review_flags": {
+  "TKGM_CADASTRAL_UNIT_NOT_NVI": 81,
+  "GEOMETRY_MISSING": 2
+ },
+ "estimated_bytes": 534574,
+ "note": "geojson crs={\"properties\":{\"name\":\"EPSG:4326\"},\"type\":\"name\"}",
+ "seconds": 0.4,
+ "mode": "apply"
+}

@@ -1,0 +1,21 @@
+{
+ "source_id": "YS_records_v1",
+ "batch_id": "BATCH_2026_09_19_poi_business_YS_records_v1",
+ "target": "stg_yemeksepeti_records_parser_v1",
+ "file_id": "FILE_00020201",
+ "input_count": 683,
+ "successfully_loaded": 683,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 21,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "jsonl",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_yemeksepeti_records_parser_v1/part-BATCH_2026_09_19_poi_business_YS_records_v1.parquet",
+ "review_flags": {
+  "SUPERSEDED_PARSER_V1_reference_only": 683
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

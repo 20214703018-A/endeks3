@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__bolge_istatistik__ref_ilce",
+ "batch_id": "BATCH_2026_09_18_listings_listings__bolge_istatistik__ref_ilce",
+ "target": "stg_bolge_istatistik__ref_ilce",
+ "file_id": "FILE_00005033",
+ "input_count": 951,
+ "successfully_loaded": 951,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_bolge_istatistik__ref_ilce/part-BATCH_2026_09_18_listings_listings__bolge_istatistik__ref_ilce.parquet zaten var (append-only)",
+ "seconds": 0.6,
+ "mode": "apply"
+}

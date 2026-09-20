@@ -1,0 +1,21 @@
+{
+ "source_id": "demographics_context__zip__county_69_1176__data_poligonlar_coun",
+ "batch_id": "BATCH_2026_09_20_reference_geography_demographics_context__zip__county_69_1176__data_poligonlar_coun",
+ "target": "stg_admin_polygon_snapshot_json",
+ "file_id": "FILE_00000157",
+ "input_count": 138,
+ "successfully_loaded": 138,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "geometry_types": [],
+ "review_flags": {
+  "C03": 138,
+  "NESTED_ZIP_MEMBER": 138,
+  "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)": 138
+ },
+ "estimated_bytes": 496692,
+ "note": "json_records under=polygons",
+ "seconds": 0.1,
+ "mode": "apply"
+}

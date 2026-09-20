@@ -1,0 +1,22 @@
+{
+ "source_id": "poi_business__google_places_ve_yogunluk__google_places_yorumlar_ve_niye_25",
+ "batch_id": "BATCH_2026_09_19_poi_business_poi_business__google_places_ve_yogunluk__google_places_yorumlar_ve_niye_25",
+ "target": "stg_google_places_ve_yogunluk__google_places_yorumlar_ve_niyet",
+ "file_id": "FILE_00019842",
+ "input_count": 10224,
+ "successfully_loaded": 10224,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_google_places_ve_yogunluk__google_places_yorumlar_ve_niyet/part-BATCH_2026_09_19_poi_business_poi_business__google_places_ve_yogunluk__google_places_yorumlar_ve_niye_25.parquet",
+ "review_flags": {
+  "C04": 10224,
+  "T07": 10224
+ },
+ "seconds": 0.4,
+ "mode": "apply"
+}

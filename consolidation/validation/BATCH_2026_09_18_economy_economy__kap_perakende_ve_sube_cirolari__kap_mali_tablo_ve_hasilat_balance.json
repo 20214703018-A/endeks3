@@ -1,0 +1,17 @@
+{
+ "source_id": "economy__kap_perakende_ve_sube_cirolari__kap_mali_tablo_ve_hasilat",
+ "batch_id": "BATCH_2026_09_18_economy_economy__kap_perakende_ve_sube_cirolari__kap_mali_tablo_ve_hasilat",
+ "target": "stg_kap_perakende_ve_sube_cirolari__kap_mali_tablo_ve_hasilat",
+ "file_id": "FILE_00005069",
+ "input_count": 37,
+ "successfully_loaded": 37,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/economy/stg_kap_perakende_ve_sube_cirolari__kap_mali_tablo_ve_hasilat/part-BATCH_2026_09_18_economy_economy__kap_perakende_ve_sube_cirolari__kap_mali_tablo_ve_hasilat.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

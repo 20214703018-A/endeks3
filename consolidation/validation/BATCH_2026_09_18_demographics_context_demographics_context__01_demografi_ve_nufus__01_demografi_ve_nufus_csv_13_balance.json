@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__01_demografi_ve_nufus__01_demografi_ve_nufus_csv_13",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__01_demografi_ve_nufus__01_demografi_ve_nufus_csv_13",
+ "target": "stg_01_demografi_ve_nufus",
+ "file_id": "FILE_00000399",
+ "input_count": 1045,
+ "successfully_loaded": 1045,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 41,
+ "raw_line_count": 1046,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_01_demografi_ve_nufus/part-BATCH_2026_09_18_demographics_context_demographics_context__01_demografi_ve_nufus__01_demografi_ve_nufus_csv_13.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

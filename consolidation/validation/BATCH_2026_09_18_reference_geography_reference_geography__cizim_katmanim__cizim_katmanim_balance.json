@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__cizim_katmanim__cizim_katmanim",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__cizim_katmanim__cizim_katmanim",
+ "target": "stg_cizim_katmanim",
+ "file_id": "FILE_00016628",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 1,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_cizim_katmanim/part-BATCH_2026_09_18_reference_geography_reference_geography__cizim_katmanim__cizim_katmanim.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

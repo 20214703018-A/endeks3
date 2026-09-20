@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__ilan_gozlemleri__ilan_gozlemleri_csv",
+ "batch_id": "BATCH_2026_09_18_listings_listings__ilan_gozlemleri__ilan_gozlemleri_csv",
+ "target": "stg_ilan_gozlemleri",
+ "file_id": "FILE_00008361",
+ "input_count": 102,
+ "successfully_loaded": 102,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 14,
+ "raw_line_count": 103,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_ilan_gozlemleri/part-BATCH_2026_09_18_listings_listings__ilan_gozlemleri__ilan_gozlemleri_csv.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "reference_geography__navigation_obstacles__navigation_obstacles_json",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__navigation_obstacles__navigation_obstacles_json",
+ "target": "stg_navigation_obstacles",
+ "file_id": "FILE_00016024",
+ "input_count": 933,
+ "successfully_loaded": 933,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 17,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 278191,
+ "note": "json_records under=uncertain_keep_out_zones",
+ "seconds": 0.1,
+ "mode": "apply"
+}

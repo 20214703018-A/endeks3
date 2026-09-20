@@ -1,0 +1,19 @@
+{
+ "source_id": "demographics_context__deprem_senaryosu__deprem_senaryosu_csv",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__deprem_senaryosu__deprem_senaryosu_csv",
+ "target": "stg_deprem_senaryosu",
+ "file_id": "FILE_00005071",
+ "input_count": 959,
+ "successfully_loaded": 959,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "geometry_types": [],
+ "review_flags": {
+  "X03": 959
+ },
+ "estimated_bytes": 200957,
+ "note": "csv enc=cp1254",
+ "seconds": 0.0,
+ "mode": "apply"
+}

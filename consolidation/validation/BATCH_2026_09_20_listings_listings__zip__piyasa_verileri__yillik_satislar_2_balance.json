@@ -1,0 +1,23 @@
+{
+ "source_id": "listings__zip__piyasa_verileri__yillik_satislar_2",
+ "batch_id": "BATCH_2026_09_20_listings_listings__zip__piyasa_verileri__yillik_satislar_2",
+ "target": "stg_piyasa_verileri__yillik_satislar",
+ "file_id": "FILE_00000180",
+ "input_count": 726,
+ "successfully_loaded": 726,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_piyasa_verileri__yillik_satislar/part-BATCH_2026_09_20_listings_listings__zip__piyasa_verileri__yillik_satislar_2.parquet",
+ "review_flags": {
+  "C03": 726,
+  "NESTED_ZIP_MEMBER": 726,
+  "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)": 726
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

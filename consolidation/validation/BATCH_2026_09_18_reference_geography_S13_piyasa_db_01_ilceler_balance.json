@@ -1,0 +1,19 @@
+{
+ "source_id": "S13_piyasa_db_01_ilceler",
+ "batch_id": "BATCH_2026_09_18_reference_geography_S13_piyasa_db_01_ilceler",
+ "target": "stg_admin_list",
+ "file_id": "FILE_00000572",
+ "input_count": 39,
+ "successfully_loaded": 39,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "geometry_types": [],
+ "review_flags": {
+  "F9_COVERAGE_VARIES": 39
+ },
+ "estimated_bytes": 1993,
+ "note": "sqlite",
+ "seconds": 0.1,
+ "mode": "dry-run"
+}

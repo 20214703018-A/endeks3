@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__su_hatlari_ve_kanallar__su_hatlari_ve_kanallar_csv",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__su_hatlari_ve_kanallar__su_hatlari_ve_kanallar_csv",
+ "target": "stg_su_hatlari_ve_kanallar",
+ "file_id": "FILE_00008601",
+ "input_count": 1591,
+ "successfully_loaded": 1591,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": 1592,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_su_hatlari_ve_kanallar/part-BATCH_2026_09_18_poi_business_poi_business__su_hatlari_ve_kanallar__su_hatlari_ve_kanallar_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

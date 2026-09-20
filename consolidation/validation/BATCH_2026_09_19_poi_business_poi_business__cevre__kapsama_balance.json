@@ -1,0 +1,17 @@
+{
+ "source_id": "poi_business__cevre__kapsama",
+ "batch_id": "BATCH_2026_09_19_poi_business_poi_business__cevre__kapsama",
+ "target": "stg_cevre__kapsama",
+ "file_id": "FILE_00019718",
+ "input_count": 1,
+ "successfully_loaded": 1,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_cevre__kapsama/part-BATCH_2026_09_19_poi_business_poi_business__cevre__kapsama.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

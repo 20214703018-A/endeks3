@@ -1,0 +1,23 @@
+{
+ "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_8",
+ "batch_id": "BATCH_2026_09_20_demographics_context_demographics_context__zip__piyasa_verileri__danismanlar_8",
+ "target": "stg_piyasa_verileri__danismanlar",
+ "file_id": "FILE_00000150",
+ "input_count": 80,
+ "successfully_loaded": 80,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_piyasa_verileri__danismanlar/part-BATCH_2026_09_20_demographics_context_demographics_context__zip__piyasa_verileri__danismanlar_8.parquet",
+ "review_flags": {
+  "C03": 80,
+  "NESTED_ZIP_MEMBER": 80,
+  "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)": 80
+ },
+ "seconds": 0.5,
+ "mode": "apply"
+}

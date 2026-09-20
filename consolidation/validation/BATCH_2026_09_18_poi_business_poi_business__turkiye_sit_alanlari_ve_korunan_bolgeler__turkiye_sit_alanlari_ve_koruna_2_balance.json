@@ -1,0 +1,18 @@
+{
+ "source_id": "poi_business__turkiye_sit_alanlari_ve_korunan_bolgeler__turkiye_sit_alanlari_ve_koruna_2",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_sit_alanlari_ve_korunan_bolgeler__turkiye_sit_alanlari_ve_koruna_2",
+ "target": "stg_turkiye_sit_alanlari_ve_korunan_bolgeler",
+ "file_id": "FILE_00008619",
+ "input_count": 6,
+ "successfully_loaded": 6,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 8,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_turkiye_sit_alanlari_ve_korunan_bolgeler/part-BATCH_2026_09_18_poi_business_poi_business__turkiye_sit_alanlari_ve_korunan_bolgeler__turkiye_sit_alanlari_ve_koruna_2.parquet",
+ "review_flags": {},
+ "seconds": 0.3,
+ "mode": "apply"
+}

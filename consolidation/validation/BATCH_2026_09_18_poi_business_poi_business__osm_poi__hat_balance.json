@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__osm_poi__hat",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__osm_poi__hat",
+ "target": "stg_osm_poi__hat",
+ "file_id": "FILE_00005050",
+ "input_count": 2996,
+ "successfully_loaded": 2996,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_osm_poi__hat/part-BATCH_2026_09_18_poi_business_poi_business__osm_poi__hat.parquet",
+ "review_flags": {},
+ "seconds": 1.2,
+ "mode": "apply"
+}

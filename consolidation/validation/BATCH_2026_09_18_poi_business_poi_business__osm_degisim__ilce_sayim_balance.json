@@ -1,0 +1,18 @@
+{
+ "source_id": "poi_business__osm_degisim__ilce_sayim",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__osm_degisim__ilce_sayim",
+ "target": "stg_osm_degisim__ilce_sayim",
+ "file_id": "FILE_00005049",
+ "input_count": 26832,
+ "successfully_loaded": 26832,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "review_flags": {},
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_osm_degisim__ilce_sayim/part-BATCH_2026_09_18_poi_business_poi_business__osm_degisim__ilce_sayim.parquet",
+ "seconds": 0.6,
+ "mode": "apply"
+}

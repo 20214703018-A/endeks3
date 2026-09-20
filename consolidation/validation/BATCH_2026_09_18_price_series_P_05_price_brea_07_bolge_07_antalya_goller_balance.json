@@ -1,0 +1,19 @@
+{
+ "source_id": "P_05_price_brea_07_bolge_07_antalya_goller",
+ "batch_id": "BATCH_2026_09_18_price_series_P_05_price_brea_07_bolge_07_antalya_goller",
+ "target": "stg_price_breakdown",
+ "file_id": "FILE_00000305",
+ "input_count": 6571,
+ "successfully_loaded": 6571,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 6572,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_breakdown/part-BATCH_2026_09_18_price_series_P_05_price_brea_07_bolge_07_antalya_goller.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,22 @@
+{
+ "source_id": "poi_business__google_places_ve_yogunluk__google_places_gozlem_14",
+ "batch_id": "BATCH_2026_09_19_poi_business_poi_business__google_places_ve_yogunluk__google_places_gozlem_14",
+ "target": "stg_google_places_ve_yogunluk__google_places_gozlem",
+ "file_id": "FILE_00019782",
+ "input_count": 24100,
+ "successfully_loaded": 24100,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 21,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_google_places_ve_yogunluk__google_places_gozlem/part-BATCH_2026_09_19_poi_business_poi_business__google_places_ve_yogunluk__google_places_gozlem_14.parquet",
+ "review_flags": {
+  "C04": 24100,
+  "T07": 24100
+ },
+ "seconds": 0.3,
+ "mode": "apply"
+}

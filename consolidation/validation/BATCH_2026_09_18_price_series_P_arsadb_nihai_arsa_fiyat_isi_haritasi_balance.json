@@ -1,0 +1,19 @@
+{
+ "source_id": "P_arsadb_nihai_arsa_fiyat_isi_haritasi",
+ "batch_id": "BATCH_2026_09_18_price_series_P_arsadb_nihai_arsa_fiyat_isi_haritasi",
+ "target": "stg_land_price_heatmap",
+ "file_id": "FILE_00000765",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_land_price_heatmap/part-BATCH_2026_09_18_price_series_P_arsadb_nihai_arsa_fiyat_isi_haritasi.parquet",
+ "review_flags": {},
+ "seconds": 0.7,
+ "mode": "apply"
+}

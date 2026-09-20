@@ -1,0 +1,23 @@
+{
+ "source_id": "TK_mah_38_289",
+ "batch_id": "BATCH_2026_09_18_reference_geography_TK_mah_38_289",
+ "target": "stg_tkgm_mahalle",
+ "file_id": "FILE_00018185",
+ "input_count": 108,
+ "successfully_loaded": 108,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "geometry_types": [
+  "MultiPolygon",
+  "Polygon"
+ ],
+ "review_flags": {
+  "TKGM_CADASTRAL_UNIT_NOT_NVI": 108,
+  "GEOMETRY_MISSING": 2
+ },
+ "estimated_bytes": 384278,
+ "note": "geojson crs={\"properties\":{\"name\":\"EPSG:4326\"},\"type\":\"name\"}",
+ "seconds": 0.0,
+ "mode": "apply"
+}

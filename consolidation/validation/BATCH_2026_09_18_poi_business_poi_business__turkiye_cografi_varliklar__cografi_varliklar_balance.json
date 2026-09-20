@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__turkiye_cografi_varliklar__cografi_varliklar",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_cografi_varliklar__cografi_varliklar",
+ "target": "stg_turkiye_cografi_varliklar__cografi_varliklar",
+ "file_id": "FILE_00000935",
+ "input_count": 19757,
+ "successfully_loaded": 19757,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_turkiye_cografi_varliklar__cografi_varliklar/part-BATCH_2026_09_18_poi_business_poi_business__turkiye_cografi_varliklar__cografi_varliklar.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

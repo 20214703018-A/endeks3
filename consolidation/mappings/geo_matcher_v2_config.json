@@ -1,0 +1,25 @@
+{
+ "matcher_version": "GEO_MATCHER_V2",
+ "thresholds": {
+  "virtually_certain": 0.995,
+  "very_high": 0.98,
+  "high": 0.95,
+  "review": 0.85
+ },
+ "combination": "noisy-OR: 1-Π(1-e_i)",
+ "evidence": {
+  "name": "0.90×(jw−0.80)/0.20 aynı ilçede (0.60 farklı ilçede); jw<0.80 → 0",
+  "centroid_inside": 0.8,
+  "iou": "iou (≥0.20; <0.20 → 0; tavan 0.985)",
+  "population_consistency": "0.85×(1−min(1,|oran−1|/0.30))"
+ },
+ "penalties": {
+  "CONFLICT_same_name_disjoint_geometry": "×0.60 (ad≥0.95, IoU<0.20, merkez dışarıda)",
+  "CONFLICT_population_ratio_out_of_30pct": "×0.70",
+  "TKGM_NO_GEOMETRY": "tavan 0.94",
+  "NAME_MISMATCH_geometry_match": "tavan 0.985 + bayrak"
+ },
+ "seed": 20260918,
+ "code_hash": "762b1985006d04acc51b62bc2d26fd487648bf64a7385f39908500c2119c1e7e",
+ "signals_from": "GEO_MATCHER_V1 aday dosyaları (yeniden hesaplanmadı)"
+}

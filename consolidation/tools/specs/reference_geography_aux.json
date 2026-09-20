@@ -1,0 +1,1030 @@
+{
+ "family": "reference_geography",
+ "standard_version": "1.0.0",
+ "sources": [
+  {
+   "source_id": "S3_sinir",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/product/idari_sinirlar.sqlite",
+   "table": "sinir",
+   "target": "stg_admin_boundary_alt",
+   "geometry": {
+    "type": "geojson_text",
+    "column": "geometri",
+    "crs": "EPSG:4326"
+   },
+   "transformation_id": "T02_GEOJSON_TEXT_TO_WKB_V1",
+   "review_flags": [
+    "F6_NO_ID_ALT_BOUNDARY"
+   ]
+  },
+  {
+   "source_id": "S4_mahalle_koordinat_db",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/product/idari_sinirlar.sqlite",
+   "table": "mahalle_koordinat",
+   "target": "stg_neighbourhood_point",
+   "geometry": {
+    "type": "latlon",
+    "lat": "lat",
+    "lon": "lon",
+    "crs": "EPSG:4326"
+   },
+   "transformation_id": "T04_LATLON_TO_POINT_V1"
+  },
+  {
+   "source_id": "S4_mahalle_koordinat_json",
+   "kind": "json_dict",
+   "path": "/Users/acar/Desktop/GEOPROP/collector/mahalle_koordinatlari.json",
+   "target": "stg_neighbourhood_point",
+   "geometry": {
+    "type": "latlon",
+    "lat": "lat",
+    "lon": "lon",
+    "crs": "EPSG:4326"
+   },
+   "transformation_id": "T04_LATLON_TO_POINT_V1",
+   "object_path_template": "$.<key>[{i}]"
+  },
+  {
+   "source_id": "S5_il_ilce_rehberi",
+   "kind": "json_nested_guide",
+   "path": "/Users/acar/Desktop/GEOPROP/collector/turkiye_il_ilce_rehberi.json",
+   "target": "stg_admin_guide"
+  },
+  {
+   "source_id": "S6_mahalle_listesi_01",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_01_istanbul/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_02",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_02_ankara/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_03",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_03_izmir/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_04",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_04_bursa_yalova/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_05",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_05_kocaeli_sakarya/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_06",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_06_trakya_guney_marmara/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_07",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_07_antalya_goller/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_08",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_08_guney_ege/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_09",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_09_kuzey_ege/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_10",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_10_cukurova/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_11",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_11_konya_karaman/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_12",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_12_orta_anadolu/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_13",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_13_orta_karadeniz/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_14",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_14_dogu_bati_karadeniz/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_15",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_15_dogu_guneydogu/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_16",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m01_van/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_17",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m02_batman/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_18",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m03_sirnak/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_19",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m04_ardahan/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_20",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m05_igdir/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_21",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m06_kilis/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_22",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/TUM_TURKIYE_TEK_PAKET_CSV 4/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S6_mahalle_listesi_23",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/collector/data/csv_ciktilari/14_mahalleler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S7_ref_mahalle",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/product/bolge_istatistik.sqlite",
+   "table": "ref_mahalle",
+   "target": "stg_neighbourhood_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S8_nuts3",
+   "kind": "geojson",
+   "path": "/Users/acar/Desktop/tkgm/data/nuts3.json",
+   "target": "stg_admin_boundary_alt",
+   "geometry": {
+    "type": "geojson_feature",
+    "crs": "EPSG:4326"
+   },
+   "transformation_id": "T02_GEOJSON_TEXT_TO_WKB_V1",
+   "review_flags": [
+    "F8_NUTS_SOURCE_UNKNOWN"
+   ]
+  },
+  {
+   "source_id": "S8_nuts4",
+   "kind": "geojson",
+   "path": "/Users/acar/Desktop/tkgm/data/nuts4.json",
+   "target": "stg_admin_boundary_alt",
+   "geometry": {
+    "type": "geojson_feature",
+    "crs": "EPSG:4326"
+   },
+   "transformation_id": "T02_GEOJSON_TEXT_TO_WKB_V1",
+   "review_flags": [
+    "F8_NUTS_SOURCE_UNKNOWN"
+   ]
+  },
+  {
+   "source_id": "S9_silver_reference_geography",
+   "mode": "reference_only",
+   "note": "GEOPROP warehouse/silver/reference_geography/* — önceki pipeline türevi; mappings/derived_reference'da satır sayısı doğrulaması (D5)"
+  },
+  {
+   "source_id": "S10_tuik_nufus_mahalle",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/quarantine_macro/tuik_bolge.sqlite",
+   "table": "nufus_mahalle",
+   "target": "stg_tuik_nufus_mahalle",
+   "acquisition_class": "official_public",
+   "review_flags": [
+    "OFFICIAL_TOTALS_VERIFIED_2023_2024",
+    "PROMOTED_FROM_QUARANTINE_FOLDER_DEC_2026_09_18"
+   ],
+   "distribution_class": "public"
+  },
+  {
+   "source_id": "S10_tuik_nufus_koy",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/quarantine_macro/tuik_bolge.sqlite",
+   "table": "nufus_koy",
+   "target": "stg_tuik_nufus_koy",
+   "acquisition_class": "official_public",
+   "review_flags": [
+    "OFFICIAL_TOTALS_VERIFIED_2023_2024",
+    "PROMOTED_FROM_QUARANTINE_FOLDER_DEC_2026_09_18"
+   ],
+   "distribution_class": "public"
+  },
+  {
+   "source_id": "S10_tuik_nufus_ilce",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/quarantine_macro/tuik_bolge.sqlite",
+   "table": "nufus_ilce",
+   "target": "stg_tuik_nufus_ilce",
+   "acquisition_class": "official_public",
+   "review_flags": [
+    "OFFICIAL_TOTALS_VERIFIED_2023_2024",
+    "PROMOTED_FROM_QUARANTINE_FOLDER_DEC_2026_09_18"
+   ],
+   "distribution_class": "public"
+  },
+  {
+   "source_id": "S10_tuik_nufus_projeksiyon_il",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/quarantine_macro/tuik_bolge.sqlite",
+   "table": "nufus_projeksiyon_il",
+   "target": "stg_tuik_nufus_projeksiyon_il",
+   "acquisition_class": "official_public",
+   "review_flags": [
+    "OFFICIAL_TOTALS_VERIFIED_2023_2024",
+    "PROMOTED_FROM_QUARANTINE_FOLDER_DEC_2026_09_18"
+   ],
+   "distribution_class": "public"
+  },
+  {
+   "source_id": "S11_il_listesi_01",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_01_istanbul/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_02",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_02_ankara/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_03",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_03_izmir/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_04",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_04_bursa_yalova/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_05",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_05_kocaeli_sakarya/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_06",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_06_trakya_guney_marmara/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_07",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_07_antalya_goller/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_08",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_08_guney_ege/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_09",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_09_kuzey_ege/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_10",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_10_cukurova/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_11",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_11_konya_karaman/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_12",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_12_orta_anadolu/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_13",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_13_orta_karadeniz/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_14",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_14_dogu_bati_karadeniz/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_15",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_15_dogu_guneydogu/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_16",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m01_van/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_17",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m02_batman/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_18",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m03_sirnak/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_19",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m04_ardahan/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_20",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m05_igdir/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_21",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m06_kilis/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_22",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/TUM_TURKIYE_TEK_PAKET_CSV 4/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S11_il_listesi_23",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/collector/data/csv_ciktilari/12_iller_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_01",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_01_istanbul/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_02",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_02_ankara/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_03",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_03_izmir/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_04",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_04_bursa_yalova/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_05",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_05_kocaeli_sakarya/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_06",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_06_trakya_guney_marmara/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_07",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_07_antalya_goller/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_08",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_08_guney_ege/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_09",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_09_kuzey_ege/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_10",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_10_cukurova/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_11",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_11_konya_karaman/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_12",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_12_orta_anadolu/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_13",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_13_orta_karadeniz/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_14",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_14_dogu_bati_karadeniz/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_15",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/bolge_15_dogu_guneydogu/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_16",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m01_van/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_17",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m02_batman/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_18",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m03_sirnak/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_19",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m04_ardahan/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_20",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m05_igdir/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_21",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/BOLGE_CSV/m06_kilis/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_22",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/TUM_TURKIYE_TEK_PAKET_CSV 4/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S12_ilce_listesi_23",
+   "kind": "csv",
+   "path": "/Users/acar/Desktop/GEOPROP/collector/data/csv_ciktilari/13_ilceler_listesi.csv",
+   "delimiter": ";",
+   "encoding": "utf-8-sig",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_01_mahalleler",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_01_istanbul/data 2/piyasa_verileri.db",
+   "table": "mahalleler",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_01_iller",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_01_istanbul/data 2/piyasa_verileri.db",
+   "table": "iller",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_01_ilceler",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_01_istanbul/data 2/piyasa_verileri.db",
+   "table": "ilceler",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_02_mahalleler",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_04_bursa_yalova/data 2/piyasa_verileri.db",
+   "table": "mahalleler",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_02_iller",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_04_bursa_yalova/data 2/piyasa_verileri.db",
+   "table": "iller",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_02_ilceler",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_04_bursa_yalova/data 2/piyasa_verileri.db",
+   "table": "ilceler",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_06_mahalleler",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/m01_van/data 2/piyasa_verileri.db",
+   "table": "mahalleler",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_06_iller",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/m01_van/data 2/piyasa_verileri.db",
+   "table": "iller",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_06_ilceler",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/m01_van/data 2/piyasa_verileri.db",
+   "table": "ilceler",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_07_mahalleler",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/collector/data/piyasa_verileri.db",
+   "table": "mahalleler",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_07_iller",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/collector/data/piyasa_verileri.db",
+   "table": "iller",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  },
+  {
+   "source_id": "S13_piyasa_db_07_ilceler",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/collector/data/piyasa_verileri.db",
+   "table": "ilceler",
+   "target": "stg_admin_list",
+   "review_flags": [
+    "F9_COVERAGE_VARIES"
+   ]
+  }
+ ]
+}

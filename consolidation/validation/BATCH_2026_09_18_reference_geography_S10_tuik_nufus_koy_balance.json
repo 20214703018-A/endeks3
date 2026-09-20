@@ -1,0 +1,20 @@
+{
+ "source_id": "S10_tuik_nufus_koy",
+ "batch_id": "BATCH_2026_09_18_reference_geography_S10_tuik_nufus_koy",
+ "target": "stg_tuik_nufus_koy",
+ "file_id": "FILE_00005070",
+ "input_count": 18183,
+ "successfully_loaded": 18183,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "geometry_types": [],
+ "review_flags": {
+  "OFFICIAL_TOTALS_VERIFIED_2023_2024": 18183,
+  "PROMOTED_FROM_QUARANTINE_FOLDER_DEC_2026_09_18": 18183
+ },
+ "estimated_bytes": 1440056,
+ "note": "sqlite",
+ "seconds": 0.4,
+ "mode": "apply"
+}

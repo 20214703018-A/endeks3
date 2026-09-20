@@ -1,0 +1,19 @@
+{
+ "source_id": "P_ej_emlakjet-dagilim-konut_1",
+ "batch_id": "BATCH_2026_09_18_price_series_P_ej_emlakjet-dagilim-konut_1",
+ "target": "stg_ej_breakdown",
+ "file_id": "FILE_00000169",
+ "input_count": 3614,
+ "successfully_loaded": 3614,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 19,
+ "raw_line_count": 3615,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_ej_breakdown/part-BATCH_2026_09_18_price_series_P_ej_emlakjet-dagilim-konut_1.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

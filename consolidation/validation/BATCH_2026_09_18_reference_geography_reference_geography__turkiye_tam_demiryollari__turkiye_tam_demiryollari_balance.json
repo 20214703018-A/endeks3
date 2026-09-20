@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__turkiye_tam_demiryollari__turkiye_tam_demiryollari",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__turkiye_tam_demiryollari__turkiye_tam_demiryollari",
+ "target": "stg_turkiye_tam_demiryollari",
+ "file_id": "FILE_00008624",
+ "input_count": 697,
+ "successfully_loaded": 697,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_turkiye_tam_demiryollari/part-BATCH_2026_09_18_reference_geography_reference_geography__turkiye_tam_demiryollari__turkiye_tam_demiryollari.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

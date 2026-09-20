@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__22_tuik_sigara_ve_tutun_tuketim_endeksi__22_tuik_sigara_ve_tutun_tuk",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__22_tuik_sigara_ve_tutun_tuketim_endeksi__22_tuik_sigara_ve_tutun_tuk",
+ "target": "stg_22_tuik_sigara_ve_tutun_tuketim_endeksi",
+ "file_id": "FILE_00008660",
+ "input_count": 8,
+ "successfully_loaded": 8,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": 9,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/demographics_context/stg_22_tuik_sigara_ve_tutun_tuketim_endeksi/part-BATCH_2026_09_18_demographics_context_demographics_context__22_tuik_sigara_ve_tutun_tuketim_endeksi__22_tuik_sigara_ve_tutun_tuk.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

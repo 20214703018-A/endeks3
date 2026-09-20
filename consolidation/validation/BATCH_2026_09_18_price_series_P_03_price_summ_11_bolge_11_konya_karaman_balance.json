@@ -1,0 +1,21 @@
+{
+ "source_id": "P_03_price_summ_11_bolge_11_konya_karaman",
+ "batch_id": "BATCH_2026_09_18_price_series_P_03_price_summ_11_bolge_11_konya_karaman",
+ "target": "stg_price_summary",
+ "file_id": "FILE_00000359",
+ "input_count": 998,
+ "successfully_loaded": 998,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 19,
+ "raw_line_count": 999,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_summary/part-BATCH_2026_09_18_price_series_P_03_price_summ_11_bolge_11_konya_karaman.parquet",
+ "review_flags": {
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 78
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

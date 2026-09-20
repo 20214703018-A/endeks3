@@ -1,0 +1,21 @@
+{
+ "source_id": "P_arsaemsal_arsa_mahalle_trend",
+ "batch_id": "BATCH_2026_09_18_price_series_P_arsaemsal_arsa_mahalle_trend",
+ "target": "stg_land_trend_monthly",
+ "file_id": "FILE_00005030",
+ "input_count": 2715520,
+ "successfully_loaded": 2715520,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 25,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "review_flags": {
+  "PRIOR_PIPELINE_PRODUCT": 2715520,
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 407328
+ },
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_land_trend_monthly/part-BATCH_2026_09_18_price_series_P_arsaemsal_arsa_mahalle_trend.parquet",
+ "seconds": 108.7,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__satilik_arsa_ilanlari__satilik_arsa_ilanlari_csv",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__satilik_arsa_ilanlari__satilik_arsa_ilanlari_csv",
+ "target": "stg_satilik_arsa_ilanlari",
+ "file_id": "FILE_00000964",
+ "input_count": 30,
+ "successfully_loaded": 30,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 23,
+ "raw_line_count": 31,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_satilik_arsa_ilanlari/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__satilik_arsa_ilanlari__satilik_arsa_ilanlari_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

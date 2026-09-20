@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__FEDFUNDS__FEDFUNDS_csv",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__FEDFUNDS__FEDFUNDS_csv",
+ "target": "stg_FEDFUNDS",
+ "file_id": "FILE_00016380",
+ "input_count": 97,
+ "successfully_loaded": 97,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": 98,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_FEDFUNDS/part-BATCH_2026_09_18_unclassified_unclassified__FEDFUNDS__FEDFUNDS_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

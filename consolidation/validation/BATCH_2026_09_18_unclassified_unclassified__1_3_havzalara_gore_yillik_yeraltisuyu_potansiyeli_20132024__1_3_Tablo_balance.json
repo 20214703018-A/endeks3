@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__1_3_havzalara_gore_yillik_yeraltisuyu_potansiyeli_20132024__1_3_Tablo",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__1_3_havzalara_gore_yillik_yeraltisuyu_potansiyeli_20132024__1_3_Tablo",
+ "target": "stg_1_3_havzalara_gore_yillik_yeraltisuyu_potansiyeli_20132024__1_3_Tablo",
+ "file_id": "FILE_00016245",
+ "input_count": 31,
+ "successfully_loaded": 31,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 32,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 139,
+ "note": "xlsx",
+ "seconds": 0.0,
+ "mode": "apply"
+}

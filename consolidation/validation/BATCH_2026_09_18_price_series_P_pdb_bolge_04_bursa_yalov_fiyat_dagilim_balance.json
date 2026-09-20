@@ -1,0 +1,16 @@
+{
+ "source_id": "P_pdb_bolge_04_bursa_yalov_fiyat_dagilim",
+ "batch_id": "BATCH_2026_09_18_price_series_P_pdb_bolge_04_bursa_yalov_fiyat_dagilim",
+ "target": "stg_price_breakdown",
+ "file_id": "FILE_00000642",
+ "input_count": 5678,
+ "successfully_loaded": 5678,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "seconds": 0.1,
+ "mode": "dry-run"
+}

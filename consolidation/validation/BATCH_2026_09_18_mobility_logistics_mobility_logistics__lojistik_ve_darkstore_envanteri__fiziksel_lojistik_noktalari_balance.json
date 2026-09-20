@@ -1,0 +1,17 @@
+{
+ "source_id": "mobility_logistics__lojistik_ve_darkstore_envanteri__fiziksel_lojistik_noktalari",
+ "batch_id": "BATCH_2026_09_18_mobility_logistics_mobility_logistics__lojistik_ve_darkstore_envanteri__fiziksel_lojistik_noktalari",
+ "target": "stg_lojistik_ve_darkstore_envanteri__fiziksel_lojistik_noktalari",
+ "file_id": "FILE_00005046",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/mobility_logistics/stg_lojistik_ve_darkstore_envanteri__fiziksel_lojistik_noktalari/part-BATCH_2026_09_18_mobility_logistics_mobility_logistics__lojistik_ve_darkstore_envanteri__fiziksel_lojistik_noktalari.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

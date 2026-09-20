@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__ilce_atlasi_ilanlar_2026_09_10__1___ilce_atlasi_ilanlar_2026_09_10",
+ "batch_id": "BATCH_2026_09_18_listings_listings__ilce_atlasi_ilanlar_2026_09_10__1___ilce_atlasi_ilanlar_2026_09_10",
+ "target": "stg_ilce_atlasi_ilanlar_2026_09_10__1_",
+ "file_id": "FILE_00016694",
+ "input_count": 11704,
+ "successfully_loaded": 11704,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": 11704,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_ilce_atlasi_ilanlar_2026_09_10__1_/part-BATCH_2026_09_18_listings_listings__ilce_atlasi_ilanlar_2026_09_10__1___ilce_atlasi_ilanlar_2026_09_10.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

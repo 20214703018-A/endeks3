@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__1_7_havza_bazinda_yeraltisuyu_seviye_gozlem_kuyulari20132024__1_7_Tablo",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__1_7_havza_bazinda_yeraltisuyu_seviye_gozlem_kuyulari20132024__1_7_Tablo",
+ "target": "stg_1_7_havza_bazinda_yeraltisuyu_seviye_gozlem_kuyulari20132024__1_7_Tablo",
+ "file_id": "FILE_00016246",
+ "input_count": 121,
+ "successfully_loaded": 121,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 34,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 544,
+ "note": "xlsx",
+ "seconds": 0.0,
+ "mode": "apply"
+}

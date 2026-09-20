@@ -1,0 +1,17 @@
+{
+ "source_id": "economy__kap_perakende_ve_sube_cirolari__kap_sube_basi_ciro_gostergeler",
+ "batch_id": "BATCH_2026_09_18_economy_economy__kap_perakende_ve_sube_cirolari__kap_sube_basi_ciro_gostergeler",
+ "target": "stg_kap_perakende_ve_sube_cirolari__kap_sube_basi_ciro_gostergeleri",
+ "file_id": "FILE_00005069",
+ "input_count": 9,
+ "successfully_loaded": 9,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/economy/stg_kap_perakende_ve_sube_cirolari__kap_sube_basi_ciro_gostergeleri/part-BATCH_2026_09_18_economy_economy__kap_perakende_ve_sube_cirolari__kap_sube_basi_ciro_gostergeler.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

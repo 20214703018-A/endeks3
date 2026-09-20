@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__zip__sektor_03_antalya_k_rfezi___alanya_gazipa_a__collector_data_cogr",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_03_antalya_k_rfezi___alanya_gazipa_a__collector_data_cogr",
+ "target": "stg_sektor_03_antalya_k_rfezi___alanya_gazipa_a",
+ "file_id": "FILE_00000120",
+ "input_count": 9784,
+ "successfully_loaded": 9784,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_sektor_03_antalya_k_rfezi___alanya_gazipa_a/part-BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_03_antalya_k_rfezi___alanya_gazipa_a__collector_data_cogr.parquet zaten var (append-only)",
+ "seconds": 1.0,
+ "mode": "apply"
+}

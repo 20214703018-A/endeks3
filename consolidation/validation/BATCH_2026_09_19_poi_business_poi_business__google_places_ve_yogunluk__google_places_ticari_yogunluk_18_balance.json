@@ -1,0 +1,22 @@
+{
+ "source_id": "poi_business__google_places_ve_yogunluk__google_places_ticari_yogunluk_18",
+ "batch_id": "BATCH_2026_09_19_poi_business_poi_business__google_places_ve_yogunluk__google_places_ticari_yogunluk_18",
+ "target": "stg_google_places_ve_yogunluk__google_places_ticari_yogunluk",
+ "file_id": "FILE_00019802",
+ "input_count": 12291,
+ "successfully_loaded": 12291,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 26,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_google_places_ve_yogunluk__google_places_ticari_yogunluk/part-BATCH_2026_09_19_poi_business_poi_business__google_places_ve_yogunluk__google_places_ticari_yogunluk_18.parquet",
+ "review_flags": {
+  "C04": 12291,
+  "T07": 12291
+ },
+ "seconds": 0.2,
+ "mode": "apply"
+}

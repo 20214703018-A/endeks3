@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__demografi__demografi_csv",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__demografi__demografi_csv",
+ "target": "stg_demografi",
+ "file_id": "FILE_00000959",
+ "input_count": 7,
+ "successfully_loaded": 7,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 40,
+ "raw_line_count": 8,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_demografi/part-BATCH_2026_09_18_demographics_context_demographics_context__demografi__demografi_csv.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,21 @@
+{
+ "source_id": "P_03_price_summ_20_m05_igdir",
+ "batch_id": "BATCH_2026_09_18_price_series_P_03_price_summ_20_m05_igdir",
+ "target": "stg_price_summary",
+ "file_id": "FILE_00000497",
+ "input_count": 36,
+ "successfully_loaded": 36,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 19,
+ "raw_line_count": 37,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_summary/part-BATCH_2026_09_18_price_series_P_03_price_summ_20_m05_igdir.parquet",
+ "review_flags": {
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 2
+ },
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__pivot2__pivot2_csv",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__pivot2__pivot2_csv",
+ "target": "stg_pivot2",
+ "file_id": "FILE_00016813",
+ "input_count": 18188,
+ "successfully_loaded": 18188,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "raw_line_count": 18189,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_pivot2/part-BATCH_2026_09_18_unclassified_unclassified__pivot2__pivot2_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__zip__sektor_17_i_zmir_k_rfezi____e_me_karaburun_manisa__collector_dat",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_17_i_zmir_k_rfezi____e_me_karaburun_manisa__collector_dat",
+ "target": "stg_sektor_17_i_zmir_k_rfezi____e_me_karaburun_manisa",
+ "file_id": "FILE_00000106",
+ "input_count": 20959,
+ "successfully_loaded": 20959,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_sektor_17_i_zmir_k_rfezi____e_me_karaburun_manisa/part-BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_17_i_zmir_k_rfezi____e_me_karaburun_manisa__collector_dat.parquet zaten var (append-only)",
+ "seconds": 1.8,
+ "mode": "apply"
+}

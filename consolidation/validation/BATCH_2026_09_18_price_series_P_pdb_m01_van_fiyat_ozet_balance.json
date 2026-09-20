@@ -1,0 +1,16 @@
+{
+ "source_id": "P_pdb_m01_van_fiyat_ozet",
+ "batch_id": "BATCH_2026_09_18_price_series_P_pdb_m01_van_fiyat_ozet",
+ "target": "stg_price_summary",
+ "file_id": "FILE_00000747",
+ "input_count": 154,
+ "successfully_loaded": 154,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 19,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "seconds": 0.0,
+ "mode": "dry-run"
+}

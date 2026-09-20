@@ -1,0 +1,17 @@
+{
+ "source_id": "vehicles__aracrisk_anonim_emsaller_2026_09_07__aracrisk_anonim_emsaller_2026_",
+ "batch_id": "BATCH_2026_09_18_vehicles_vehicles__aracrisk_anonim_emsaller_2026_09_07__aracrisk_anonim_emsaller_2026_",
+ "target": "stg_aracrisk_anonim_emsaller_2026_09_07",
+ "file_id": "FILE_00016600",
+ "input_count": 940,
+ "successfully_loaded": 940,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 23,
+ "raw_line_count": 940,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/vehicles/stg_aracrisk_anonim_emsaller_2026_09_07/part-BATCH_2026_09_18_vehicles_vehicles__aracrisk_anonim_emsaller_2026_09_07__aracrisk_anonim_emsaller_2026_.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__turkiye_dere_yataklari__turkiye_dere_yataklari_csv",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_dere_yataklari__turkiye_dere_yataklari_csv",
+ "target": "stg_turkiye_dere_yataklari",
+ "file_id": "FILE_00008604",
+ "input_count": 5791,
+ "successfully_loaded": 5791,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "raw_line_count": 5792,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_turkiye_dere_yataklari/part-BATCH_2026_09_18_poi_business_poi_business__turkiye_dere_yataklari__turkiye_dere_yataklari_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

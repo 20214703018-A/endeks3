@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__sahibinden_izmir_konak_alsancak_1789116788244__sahibinden_izmir_konak_alsanca",
+ "batch_id": "BATCH_2026_09_18_listings_listings__sahibinden_izmir_konak_alsancak_1789116788244__sahibinden_izmir_konak_alsanca",
+ "target": "stg_sahibinden_izmir_konak_alsancak_1789116788244",
+ "file_id": "FILE_00008378",
+ "input_count": 20,
+ "successfully_loaded": 20,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 3154,
+ "note": "json_records under=ilanlar",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "mobility_logistics__turkiye_toplu_tasima_rotalari__ulasim_istasyonlari_2",
+ "batch_id": "BATCH_2026_09_19_mobility_logistics_mobility_logistics__turkiye_toplu_tasima_rotalari__ulasim_istasyonlari_2",
+ "target": "stg_turkiye_toplu_tasima_rotalari__ulasim_istasyonlari",
+ "file_id": "FILE_00019719",
+ "input_count": 343,
+ "successfully_loaded": 343,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/mobility_logistics/stg_turkiye_toplu_tasima_rotalari__ulasim_istasyonlari/part-BATCH_2026_09_19_mobility_logistics_mobility_logistics__turkiye_toplu_tasima_rotalari__ulasim_istasyonlari_2.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

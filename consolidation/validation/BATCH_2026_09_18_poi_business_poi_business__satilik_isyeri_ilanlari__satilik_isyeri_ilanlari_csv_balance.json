@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__satilik_isyeri_ilanlari__satilik_isyeri_ilanlari_csv",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__satilik_isyeri_ilanlari__satilik_isyeri_ilanlari_csv",
+ "target": "stg_satilik_isyeri_ilanlari",
+ "file_id": "FILE_00000965",
+ "input_count": 30,
+ "successfully_loaded": 30,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 17,
+ "raw_line_count": 31,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_satilik_isyeri_ilanlari/part-BATCH_2026_09_18_poi_business_poi_business__satilik_isyeri_ilanlari__satilik_isyeri_ilanlari_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

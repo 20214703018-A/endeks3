@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__veri_katalogu_tam__veri_katalogu_tam_csv",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__veri_katalogu_tam__veri_katalogu_tam_csv",
+ "target": "stg_veri_katalogu_tam",
+ "file_id": "FILE_00002080",
+ "input_count": 3966,
+ "successfully_loaded": 3966,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "raw_line_count": 3967,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_veri_katalogu_tam/part-BATCH_2026_09_18_unclassified_unclassified__veri_katalogu_tam__veri_katalogu_tam_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__bolge_istatistik__yillik_satis",
+ "batch_id": "BATCH_2026_09_18_listings_listings__bolge_istatistik__yillik_satis",
+ "target": "stg_bolge_istatistik__yillik_satis",
+ "file_id": "FILE_00005033",
+ "input_count": 310051,
+ "successfully_loaded": 310051,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_bolge_istatistik__yillik_satis/part-BATCH_2026_09_18_listings_listings__bolge_istatistik__yillik_satis.parquet zaten var (append-only)",
+ "seconds": 0.8,
+ "mode": "apply"
+}

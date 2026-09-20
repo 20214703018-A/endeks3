@@ -1,0 +1,19 @@
+{
+ "source_id": "P_05_price_brea_18_m03_sirnak",
+ "batch_id": "BATCH_2026_09_18_price_series_P_05_price_brea_18_m03_sirnak",
+ "target": "stg_price_breakdown",
+ "file_id": "FILE_00000465",
+ "input_count": 115,
+ "successfully_loaded": 115,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 116,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_breakdown/part-BATCH_2026_09_18_price_series_P_05_price_brea_18_m03_sirnak.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context___l_ve__l_elere_G_re__l__l_e_Merkezi__Belde_K_y_N_fusu__TR_DF___l_ve_",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context___l_ve__l_elere_G_re__l__l_e_Merkezi__Belde_K_y_N_fusu__TR_DF___l_ve_",
+ "target": "stg__l_ve__l_elere_G_re__l__l_e_Merkezi__Belde_K_y_N_fusu__TR_DF",
+ "file_id": "FILE_00016874",
+ "input_count": 5230,
+ "successfully_loaded": 5230,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 22,
+ "raw_line_count": 5231,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg__l_ve__l_elere_G_re__l__l_e_Merkezi__Belde_K_y_N_fusu__TR_DF/part-BATCH_2026_09_18_demographics_context_demographics_context___l_ve__l_elere_G_re__l__l_e_Merkezi__Belde_K_y_N_fusu__TR_DF___l_ve_.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

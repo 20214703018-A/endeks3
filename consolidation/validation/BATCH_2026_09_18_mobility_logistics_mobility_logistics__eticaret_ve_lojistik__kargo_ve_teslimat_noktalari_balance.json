@@ -1,0 +1,17 @@
+{
+ "source_id": "mobility_logistics__eticaret_ve_lojistik__kargo_ve_teslimat_noktalari",
+ "batch_id": "BATCH_2026_09_18_mobility_logistics_mobility_logistics__eticaret_ve_lojistik__kargo_ve_teslimat_noktalari",
+ "target": "stg_eticaret_ve_lojistik__kargo_ve_teslimat_noktalari",
+ "file_id": "FILE_00000922",
+ "input_count": 3675,
+ "successfully_loaded": 3675,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 18,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/mobility_logistics/stg_eticaret_ve_lojistik__kargo_ve_teslimat_noktalari/part-BATCH_2026_09_18_mobility_logistics_mobility_logistics__eticaret_ve_lojistik__kargo_ve_teslimat_noktalari.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

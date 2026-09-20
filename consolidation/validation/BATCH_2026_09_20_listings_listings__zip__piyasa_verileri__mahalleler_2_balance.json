@@ -1,0 +1,23 @@
+{
+ "source_id": "listings__zip__piyasa_verileri__mahalleler_2",
+ "batch_id": "BATCH_2026_09_20_listings_listings__zip__piyasa_verileri__mahalleler_2",
+ "target": "stg_piyasa_verileri__mahalleler",
+ "file_id": "FILE_00000180",
+ "input_count": 47,
+ "successfully_loaded": 47,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_piyasa_verileri__mahalleler/part-BATCH_2026_09_20_listings_listings__zip__piyasa_verileri__mahalleler_2.parquet",
+ "review_flags": {
+  "C03": 47,
+  "NESTED_ZIP_MEMBER": 47,
+  "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)": 47
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

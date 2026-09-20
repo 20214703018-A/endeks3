@@ -1,0 +1,5 @@
+*.parquet
+*.duckdb
+*.duckdb.wal
+__pycache__/
+tmp/

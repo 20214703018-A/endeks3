@@ -1,0 +1,251 @@
+band,pair_type,score,centroid_inside,il_n,ilce_n,iou,name_similarity,note,population_consistency,reasons,same_entity(human),tkgm_id,tkgm_ilce_n,tkgm_name,tuik_kodu,tuik_name,tuik_pop_2025,tuik_tur,verified_at,verified_by,web_district_id,web_ilce_n,web_name,web_pop_2024
+virtually_certain,web_tkgm,0.9977,1.0,izmir,,0.995,1.0,,,name_similarity=1.000; iou=0.995; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,170629,tire,Topalak,,,,,,,194735,tire,Topalak,
+virtually_certain,web_tkgm,0.9987,1.0,kayseri,,0.9971,1.0,,,name_similarity=1.000; iou=0.997; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,154325,incesu,Karahüyük,,,,,,,181095,incesu,Karahüyük,
+virtually_certain,web_tkgm,0.9954,1.0,kocaeli,,0.9897,1.0,,,name_similarity=1.000; iou=0.990; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,208089,gebze,Ulus,,,,,,,50287,gebze,Ulus,
+virtually_certain,web_tkgm,0.9994,1.0,ankara,,0.9986,1.0,,,name_similarity=1.000; iou=0.999; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,45076,haymana,Çeltikli,,,,,,,178477,haymana,Çeltikli,
+virtually_certain,web_tkgm,0.9955,1.0,ordu,,0.99,1.0,,,name_similarity=1.000; iou=0.990; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,16869,mesudiye,Güzle,,,,,,,151753,mesudiye,Güzle,
+virtually_certain,web_tkgm,0.9969,1.0,zonguldak,,0.993,1.0,,,name_similarity=1.000; iou=0.993; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,132599,alapli,Alaplı/Bölücek Köyü,,,,,,,2034375,alapli,Alaplıbölücek Köyü,
+virtually_certain,web_tkgm,0.9974,1.0,burdur,,0.9942,1.0,,,name_similarity=1.000; iou=0.994; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,39249,bucak,Karaseki Köyü,,,,,,,2007180,bucak,Karaseki Köyü,
+virtually_certain,web_tkgm,0.9953,1.0,kayseri,,0.9896,1.0,,,name_similarity=1.000; iou=0.990; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,133411,bunyan,Büyüktuzhisar,,,,,,,180861,bunyan,Büyüktuzhisar,
+virtually_certain,web_tkgm,0.9976,1.0,konya,,0.9946,1.0,,,name_similarity=1.000; iou=0.995; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,144306,beysehir,Şamlar,,,,,,,195261,beysehir,Şamlar,
+virtually_certain,web_tkgm,0.9951,1.0,sivas,,0.9892,1.0,,,name_similarity=1.000; iou=0.989; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,13411,gurun,Kızılburun Köyü,,,,,,,2028925,gurun,Kızılburun Köyü,
+virtually_certain,web_tkgm,0.9987,1.0,konya,,0.9971,1.0,,,name_similarity=1.000; iou=0.997; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,145795,aksehir,Gözpınarı,,,,,,,195135,aksehir,Gözpınarı,
+virtually_certain,web_tkgm,0.9974,1.0,konya,,0.9943,1.0,,,name_similarity=1.000; iou=0.994; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,171054,kulu,Dipdede,,,,,,,196113,kulu,Dipdede,
+virtually_certain,web_tkgm,0.999,1.0,konya,,0.9978,1.0,,,name_similarity=1.000; iou=0.998; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,147601,ilgin,Belekler,,,,,,,195955,ilgin,Belekler,
+virtually_certain,web_tkgm,0.9959,1.0,burdur,,0.9909,1.0,,,name_similarity=1.000; iou=0.991; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,138798,karamanli,Kayali Köyü,,,,,,,2007224,karamanli,Kayalı Köyü,
+virtually_certain,web_tkgm,0.9956,1.0,aydin,,0.9901,1.0,,,name_similarity=1.000; iou=0.990; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,150843,cine,Sarnıç,,,,,,,143869,cine,Sarnıç,
+virtually_certain,web_tkgm,0.9973,1.0,konya,,0.994,1.0,,,name_similarity=1.000; iou=0.994; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,144260,cumra,Dedemoğlu Köyü,,,,,,,195499,cumra,Dedemoğlu,
+virtually_certain,web_tkgm,0.9989,1.0,konya,,0.9976,1.0,,,name_similarity=1.000; iou=0.998; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,147255,kulu,Fevziye,,,,,,,196117,kulu,Fevziye,
+virtually_certain,web_tkgm,0.9991,1.0,mus,,0.9981,1.0,,,name_similarity=1.000; iou=0.998; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,162020,malazgirt,Tıkızlı Köyü,,,,,,,2024881,malazgirt,Tıkızlı Köyü,
+virtually_certain,web_tkgm,0.9983,1.0,konya,,0.9962,1.0,,,name_similarity=1.000; iou=0.996; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,149885,seydisehir,Madenli,,,,,,,196233,seydisehir,Madenli,
+virtually_certain,web_tkgm,0.9985,1.0,mardin,,0.9966,1.0,,,name_similarity=1.000; iou=0.997; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,166175,omerli,Güzelağaç,,,,,,,158341,omerli,Güzelağaç,
+virtually_certain,web_tkgm,0.9995,1.0,tunceli,,0.999,1.0,,,name_similarity=1.000; iou=0.999; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,168987,cemisgezek,Doğanalan Köyü,,,,,,,2031390,cemisgezek,Doğanalan Köyü,
+virtually_certain,web_tkgm,0.9975,1.0,erzurum,,0.9945,1.0,,,name_similarity=1.000; iou=0.995; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,130284,ispir,Ulutaş,,,,,,,189177,ispir,Ulutaş,
+virtually_certain,web_tkgm,0.9985,1.0,giresun,,0.9966,1.0,,,name_similarity=1.000; iou=0.997; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,161871,sebinkarahisar,Gürpınar Köyü,,,,,,,2014783,sebinkarahisar,Gürpınar Köyü,
+virtually_certain,web_tkgm,0.995,1.0,kars,,0.9889,1.0,,,name_similarity=1.000; iou=0.989; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,25876,selim,Yolgeçmez Köyü,,,,,,,2017885,selim,Yolgeçmez Köyü,
+virtually_certain,web_tkgm,0.9955,1.0,kirklareli,,0.9899,1.0,,,name_similarity=1.000; iou=0.990; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,164522,merkez,Ürünlü Köyü,,,,,,,2019501,merkez,Ürünlü Köyü,
+very_high,web_tkgm,0.9873,1.0,balikesir,,0.9717,1.0,,,name_similarity=1.000; iou=0.972; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,167371,gonen,Çakmak,,,,,,,147955,gonen,Çakmak,
+very_high,web_tkgm,0.9886,1.0,balikesir,,0.9747,1.0,,,name_similarity=1.000; iou=0.975; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,167568,kepsut,Danahisar,,,,,,,148175,kepsut,Danahisar,
+very_high,web_tkgm,0.9819,1.0,cankiri,,0.9597,1.0,,,name_similarity=1.000; iou=0.960; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,37059,orta,Kırsakal Köyü,,,,,,,2008929,orta,Kırsakal Köyü,
+very_high,web_tkgm,0.9876,1.0,kastamonu,,0.9725,1.0,,,name_similarity=1.000; iou=0.973; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,150823,arac,Oycalı Köyü,,,,,,,2018222,arac,Oycalı Köyü,
+very_high,web_tkgm,0.9801,1.0,isparta,,0.9558,1.0,,,name_similarity=1.000; iou=0.956; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,28985,aksu,Elecik Köyü,,,,,,,2015840,aksu,Elecik Köyü,
+very_high,web_tkgm,0.9889,1.0,malatya,,0.9754,1.0,,,name_similarity=1.000; iou=0.975; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,161928,darende,Gaziköy,,,,,,,165867,darende,Gaziköy,
+very_high,web_tkgm,0.9804,1.0,cankiri,,0.9565,1.0,,,name_similarity=1.000; iou=0.956; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,135542,ilgaz,Ömerli Köyü,,,,,,,2008835,ilgaz,Ömerli Köyü,
+very_high,web_tkgm,0.982,1.0,bursa,,0.9599,1.0,,,name_similarity=1.000; iou=0.960; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,154566,yenisehir,Mahmudiye Köyü,,,,,,,184751,yenisehir,Mahmudiye,
+very_high,web_tkgm,0.9817,1.0,sanliurfa,,0.9593,1.0,,,name_similarity=1.000; iou=0.959; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,165397,suruc,Kapucu,,,,,,,175065,suruc,Kapucu,
+very_high,web_tkgm,0.9931,1.0,sanliurfa,,0.9846,1.0,,,name_similarity=1.000; iou=0.985; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,131456,karakopru,Apaydın,,,,,,,173599,karakopru,Apaydın,
+very_high,web_tkgm,0.9801,1.0,denizli,,0.9558,1.0,,,name_similarity=1.000; iou=0.956; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,34878,baklan,Konak,,,,,,,150119,baklan,Konak,
+very_high,web_tkgm,0.9906,1.0,trabzon,,0.9792,1.0,,,name_similarity=1.000; iou=0.979; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,162252,akcaabat,Demirtaş,,,,,,,156417,akcaabat,Demirtaş,
+very_high,web_tkgm,0.9895,1.0,izmir,,0.9768,1.0,,,name_similarity=1.000; iou=0.977; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,169217,kinik,Arpaseki,,,,,,,194225,kinik,Arpaseki,
+very_high,web_tkgm,0.9913,1.0,malatya,,0.9807,1.0,,,name_similarity=1.000; iou=0.981; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,160247,darende,Göllüce,,,,,,,165875,darende,Göllüce,
+very_high,web_tkgm,0.9884,1.0,izmir,,0.9742,1.0,,,name_similarity=1.000; iou=0.974; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,150127,urla,Denizli,,,,,,,41699,urla,Denizli,
+very_high,web_tkgm,0.9905,1.0,kastamonu,,0.979,1.0,,,name_similarity=1.000; iou=0.979; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,24504,senpazar,Merkez,,,,,,,41906,senpazar,Merkez,
+very_high,web_tkgm,0.9917,1.0,sivas,,0.9816,1.0,,,name_similarity=1.000; iou=0.982; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,156346,divrigi,Eskibeyli Köyü,,,,,,,2028725,divrigi,Eskibeyli Köyü,
+very_high,web_tkgm,0.9852,1.0,kars,,0.9671,1.0,,,name_similarity=1.000; iou=0.967; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,142617,kagizman,Tunçkaya Köyü,,,,,,,2017774,kagizman,Tunçkaya Köyü,
+very_high,web_tkgm,0.988,1.0,mardin,,0.9732,1.0,,,name_similarity=1.000; iou=0.973; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,166180,omerli,Ikipinar,,,,,,,158349,omerli,İkipınar,
+very_high,web_tkgm,0.9841,1.0,kastamonu,,0.9646,1.0,,,name_similarity=1.000; iou=0.965; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,151692,arac,Akıncılar Köyü,,,,,,,2018121,arac,Akıncılar Köyü,
+very_high,web_tkgm,0.988,1.0,kayseri,,0.9734,1.0,,,name_similarity=1.000; iou=0.973; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,135469,ozvatan,Cumhuriyet,,,,,,,42263,ozvatan,Cumhuriyet,
+very_high,web_tkgm,0.9932,1.0,mardin,,0.985,1.0,,,name_similarity=1.000; iou=0.985; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,166139,nusaybin,Kalecik Köyü,,,,,,,158203,nusaybin,Kalecik,
+very_high,web_tkgm,0.9877,1.0,manisa,,0.9726,1.0,,,name_similarity=1.000; iou=0.973; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,19161,koprubasi,Alanyolu,,,,,,,153293,koprubasi,Alanyolu,
+very_high,web_tkgm,0.9815,1.0,manisa,,0.959,1.0,,,name_similarity=1.000; iou=0.959; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,204700,alasehir,Erenköy,,,,,,,153617,alasehir,Erenköy,
+very_high,web_tkgm,0.9804,1.0,kars,,0.9565,1.0,,,name_similarity=1.000; iou=0.957; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,25846,sarikamis,Topkaya Köyü,,,,,,,2017833,sarikamis,Topkaya Köyü,
+high,web_tkgm,0.9696,1.0,ankara,,0.9323,1.0,,,name_similarity=1.000; iou=0.932; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,123212,mamak,Köstence,,,,,,,1777,mamak,Köstence,
+high,web_tkgm,0.9735,1.0,aydin,,0.9412,1.0,,,name_similarity=1.000; iou=0.941; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,150390,nazilli,Kızıldere,,,,,,,144475,nazilli,Kızıldere,
+high,web_tkgm,0.9685,1.0,elazig,,0.9299,1.0,,,name_similarity=1.000; iou=0.930; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,34604,maden,Kartaldere Köyü,,,,,,,2011779,maden,Kartaldere Köyü,
+high,web_tkgm,0.9787,1.0,gaziantep,,0.9526,1.0,,,name_similarity=1.000; iou=0.953; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,131745,sehitkamil,Günbulur,,,,,,,179367,sehitkamil,Günbulur,
+high,web_tkgm,0.9734,1.0,sakarya,,0.9408,1.0,,,name_similarity=1.000; iou=0.941; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,15375,geyve,Şerefiye,,,,,,,185071,geyve,Şerefiye,
+high,web_tkgm,0.9794,1.0,agri,,0.9541,1.0,,,name_similarity=1.000; iou=0.954; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,47427,tutak,Ozanpınar Köyü,,,,,,,2002032,tutak,Ozanpınar Köyü,
+high,web_tkgm,0.9747,1.0,diyarbakir,,0.9438,1.0,,,name_similarity=1.000; iou=0.944; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,125640,kayapinar,Keklik,,,,,,,193931,kayapinar,Keklik,
+high,web_tkgm,0.978,1.0,sakarya,,0.9511,1.0,,,name_similarity=1.000; iou=0.951; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,15415,karasu,Gölköprü Köyü,,,,,,,185259,karasu,Gölköprü,
+high,web_tkgm,0.979,1.0,balikesir,,0.9533,1.0,,,name_similarity=1.000; iou=0.953; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,167666,manyas,Yeniköy,,,,,,,148339,manyas,Yeniköy,
+high,web_tkgm,0.9735,1.0,diyarbakir,,0.9411,1.0,,,name_similarity=1.000; iou=0.941; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,137918,silvan,Sarıbuğday Köyü,,,,,,,193763,silvan,Sarıbuğday,
+high,web_tkgm,0.9511,1.0,sanliurfa,,0.8913,1.0,,,name_similarity=1.000; iou=0.891; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,165239,hilvan,Barğaç,,,,,,,174611,hilvan,Barğaç,
+high,web_tkgm,0.978,1.0,erzurum,,0.9512,1.0,,,name_similarity=1.000; iou=0.951; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,139895,hinis,Tipideresi Köyü,,,,,,,188689,hinis,Tipideresi,
+high,web_tkgm,0.979,1.0,yozgat,,0.9534,1.0,,,name_similarity=1.000; iou=0.953; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,159413,sorgun,Boğazcumafakili Köyü,,,,,,,2034125,sorgun,Boğazcumafakılı Köyü,
+high,web_tkgm,0.9584,1.0,mugla,,0.9965,0.9,,,name_similarity=0.900; iou=0.997; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,138779,bodrum,Yeniköy(Karaova),,,,,,,176245,bodrum,Yeniköy Karaova,
+high,web_tkgm,0.9758,1.0,samsun,,0.9462,1.0,,,name_similarity=1.000; iou=0.946; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,170425,kavak,Mert,,,,,,,188061,kavak,Mert,
+high,web_tkgm,0.9649,1.0,ankara,,0.922,1.0,,,name_similarity=1.000; iou=0.922; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,55861,golbasi,Bezirhane,,,,,,,1673,golbasi,Bezirhane,
+high,web_tkgm,0.9664,1.0,igdir,,0.9253,1.0,,,name_similarity=1.000; iou=0.925; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,143788,tuzluca,Beyoğlu Köyü,,,,,,,2036654,tuzluca,Beyoğlu Köyü,
+high,web_tkgm,0.9559,1.0,denizli,,0.902,1.0,,,name_similarity=1.000; iou=0.902; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,166326,cameli,Belevi,,,,,,,150317,cameli,Belevi,
+high,web_tkgm,0.9694,1.0,bursa,,0.9321,1.0,,,name_similarity=1.000; iou=0.932; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,202595,orhangazi,Mahmudiye,,,,,,,184659,orhangazi,Mahmudiye,
+high,web_tkgm,0.9755,1.0,balikesir,,0.9456,1.0,,,name_similarity=1.000; iou=0.946; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,166956,altieylul,Yakupköy,,,,,,,147091,altieylul,Yakupköy,
+high,web_tkgm,0.9569,1.0,bayburt,,0.9043,1.0,,,name_similarity=1.000; iou=0.904; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,129313,merkez,Kırkpınar Köyü,,,,,,,2034970,merkez,Kırkpınar Köyü,
+high,web_tkgm,0.9654,1.0,van,,0.9897,0.925,,,name_similarity=0.925; iou=0.990; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,161820,caldiran,Çayır,,,,,,,158909,caldiran,Çayırköy,
+high,web_tkgm,0.9558,1.0,agri,,0.9018,1.0,,,name_similarity=1.000; iou=0.902; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,48710,patnos,Köseler Köyü,,,,,,,2001922,patnos,Köseler Köyü,
+high,web_tkgm,0.9787,1.0,bartin,,0.9527,1.0,,,name_similarity=1.000; iou=0.953; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,130962,merkez,Balat Köyü,,,,,,,2049385,merkez,Balat Köyü,
+high,web_tkgm,0.9694,1.0,ankara,,0.9319,1.0,,,name_similarity=1.000; iou=0.932; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,123356,sincan,Tandoğan,,,,,,,1814,sincan,Tandoğan,
+review_recommended,web_tkgm,0.9,0.0,diyarbakir,,,1.0,,,name_similarity=1.000; iou=n/a(no_geometry); centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,125574,sur,Sati Köyü,,,,,,,21016,sur,Sati,
+review_recommended,web_tkgm,0.9,0.0,kastamonu,,,1.0,,,name_similarity=1.000; iou=n/a(no_geometry); centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,25891,azdavay,Bakırcı Köyü,,,,,,,2018246,azdavay,Bakırcı Köyü,
+review_recommended,web_tkgm,0.853,1.0,mugla,,0.6733,1.0,,,name_similarity=1.000; iou=0.673; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,137123,fethiye,Gökçeovacık,,,,,,,176335,fethiye,Gökçeovacık,
+review_recommended,web_tkgm,0.9,0.0,ankara,,,1.0,,,name_similarity=1.000; iou=n/a(no_geometry); centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,123098,altindag,Hacettepe,,,,,,,1472,altindag,Hacettepe,
+review_recommended,web_tkgm,0.8783,1.0,manisa,,0.7295,1.0,,,name_similarity=1.000; iou=0.729; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,19495,turgutlu,Musalaryeniköy,,,,,,,156055,turgutlu,Musalaryeniköy,
+review_recommended,web_tkgm,0.9462,1.0,izmir,,0.8805,1.0,,,name_similarity=1.000; iou=0.881; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,151499,karaburun,Bozköy,,,,,,,194137,karaburun,Bozköy,
+review_recommended,web_tkgm,0.9269,1.0,denizli,,0.8376,1.0,,,name_similarity=1.000; iou=0.838; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,166254,acipayam,Darıveren,,,,,,,149989,acipayam,Darıveren,
+review_recommended,web_tkgm,0.905,1.0,mersin,,0.7889,1.0,,,name_similarity=1.000; iou=0.789; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,128397,akdeniz,Evci,,,,,,,40115,akdeniz,Evci,
+review_recommended,web_tkgm,0.9264,1.0,kirsehir,,0.8365,1.0,,,name_similarity=1.000; iou=0.836; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,23611,akcakent,Tepefakılı Köyü,,,,,,,2019744,akcakent,Tepefakılı Köyü,
+review_recommended,web_tkgm,0.9497,1.0,izmir,,0.8881,1.0,,,name_similarity=1.000; iou=0.888; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,149696,konak,Güneş,,,,,,,41206,konak,Güneş,
+review_recommended,web_tkgm,0.9,0.0,bursa,,,1.0,,,name_similarity=1.000; iou=n/a(no_geometry); centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,153388,karacabey,Doğla,,,,,,,184003,karacabey,Doğla,
+review_recommended,web_tkgm,0.905,1.0,tokat,,0.7889,1.0,,,name_similarity=1.000; iou=0.789; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,154827,erbaa,Oğlakçı Köyü,,,,,,,2030347,erbaa,Oğlakçı Köyü,
+review_recommended,web_tkgm,0.8593,1.0,afyonkarahisar,,0.6873,1.0,,,name_similarity=1.000; iou=0.687; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,145004,dinar,Yelalan Köyü,,,,,,,2001140,dinar,Yelalan Köyü,
+review_recommended,web_tkgm,0.8788,1.0,elazig,,0.784,0.94,,,name_similarity=0.940; iou=0.784; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,158551,kovancilar,Karınca Köyü,,,,,,,2011713,kovancilar,Karıncaköy Köyü,
+review_recommended,web_tkgm,0.8648,1.0,balikesir,,0.6997,1.0,,,name_similarity=1.000; iou=0.700; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,167729,sindirgi,Rızaiye,,,,,,,10578,sindirgi,Rızaiye,
+review_recommended,web_tkgm,0.904,1.0,erzurum,,0.7867,1.0,,,name_similarity=1.000; iou=0.787; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,33631,askale,Cahitaybar,,,,,,,21750,askale,Cahit Aybar,
+review_recommended,web_tkgm,0.9045,1.0,usak,,0.7878,1.0,,,name_similarity=1.000; iou=0.788; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,137477,esme,Balabancı Köyü,,,,,,,2032970,esme,Balabancı Köyü,
+review_recommended,web_tkgm,0.8992,1.0,van,,0.776,1.0,,,name_similarity=1.000; iou=0.776; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,169879,muradiye,Adaklı,,,,,,,159441,muradiye,Adaklı,
+review_recommended,web_tkgm,0.9,0.0,batman,,,1.0,,,name_similarity=1.000; iou=n/a(no_geometry); centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,206034,merkez,Bağlar,,,,,,,90455,merkez,Bağlar,
+review_recommended,web_tkgm,0.88,1.0,gaziantep,,0.7332,1.0,,,name_similarity=1.000; iou=0.733; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,181068,araban,Hasanoğlu,,,,,,,179477,araban,Hasanoğlu,
+review_recommended,web_tkgm,0.8736,1.0,cankiri,,0.7192,1.0,,,name_similarity=1.000; iou=0.719; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,37377,yaprakli,Buğay Köyü,,,,,,,2008968,yaprakli,Buğay Köyü,
+review_recommended,web_tkgm,0.9,0.0,zonguldak,,,1.0,,,name_similarity=1.000; iou=n/a(no_geometry); centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,207807,alapli,Aşağıdoğancılar,,,,,,,164178,alapli,Aşağıdoğancılar,
+review_recommended,web_tkgm,0.9398,1.0,manisa,,0.8663,1.0,,,name_similarity=1.000; iou=0.866; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,20789,gordes,Beğel,,,,,,,154209,gordes,Beğel,
+review_recommended,web_tkgm,0.9432,1.0,samsun,,0.8737,1.0,,,name_similarity=1.000; iou=0.874; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,158876,vezirkopru,Kadıçayırı,,,,,,,189781,vezirkopru,Kadıçayırı,
+review_recommended,web_tkgm,0.9491,1.0,ardahan,,0.8869,1.0,,,name_similarity=1.000; iou=0.887; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,50481,hanak,Çayağzi Köyü,,,,,,,2036444,hanak,Çayağzı Köyü,
+no_auto_merge,web_tkgm,0.7409,1.0,mersin,,0.8588,0.5111,,,name_similarity=0.511; iou=0.859; centroid_inside=1; candidate_via=spatial; same_ilce=True,,127425,toroslar,Evcili Köyü,,,,,,,183337,toroslar,Güzelyayla,
+no_auto_merge,web_tkgm,0.6961,1.0,kastamonu,,0.3247,1.0,,,name_similarity=1.000; iou=0.325; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,152055,arac,Yeni,,,,,,,41826,arac,Yeni,
+no_auto_merge,web_tkgm,0.2611,0.0,canakkale,,0.0074,0.6444,,,name_similarity=0.644; iou=0.007; centroid_inside=0; candidate_via=spatial; same_ilce=True,,37222,bayramic,Çarşi,,,,,,,20119,bayramic,Camikebir,
+no_auto_merge,web_tkgm,0.7055,1.0,bolu,,0.3455,1.0,,,name_similarity=1.000; iou=0.345; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,206721,merkez,Kolköy,,,,,,,2006617,merkez,Kolköy Köyü,
+no_auto_merge,web_tkgm,0.6557,1.0,ordu,,0.235,1.0,,,name_similarity=1.000; iou=0.235; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,15537,catalpinar,Merkez,,,,,,,60915,catalpinar,Merkez,
+no_auto_merge,web_tkgm,0.7589,0.0,zonguldak,,0.8483,0.9429,,,name_similarity=0.943; iou=0.848; centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,130569,merkez,Korucuk Köyü,,,,,,,2034332,merkez,Korucak Köyü,
+no_auto_merge,web_tkgm,0.8016,1.0,duzce,,0.559,1.0,,,name_similarity=1.000; iou=0.559; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,130737,merkez,Bataklıçiftlik Köyü,,,,,,,2037340,merkez,Bataklı Çiftlik Köyü,
+no_auto_merge,web_tkgm,0.7002,1.0,gaziantep,,0.3337,1.0,,,name_similarity=1.000; iou=0.334; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,131747,sehitkamil,Göksüncük,,,,,,,30564,sehitkamil,Göksüncük,
+no_auto_merge,web_tkgm,0.7114,1.0,malatya,,0.3587,1.0,,,name_similarity=1.000; iou=0.359; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,158343,darende,Gökyar,,,,,,,51894,darende,Gökyar,
+no_auto_merge,web_tkgm,0.8036,1.0,afyonkarahisar,,0.5636,1.0,,,name_similarity=1.000; iou=0.564; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,46820,sandikli,Çambeyli Köyü,,,,,,,2001371,sandikli,Çambeyli Köyü,
+no_auto_merge,web_tkgm,0.464,0.0,adana,,0.1423,1.0,,,name_similarity=1.000; iou=0.142; centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,45729,yumurtalik,Asmalı,,,,,,,177725,yumurtalik,Asmalı,
+no_auto_merge,web_tkgm,0.7392,1.0,bartin,,0.4205,1.0,,,name_similarity=1.000; iou=0.421; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,130903,merkez,Geriş Köyü,,,,,,,2036035,merkez,Geriş Köyü,
+no_auto_merge,web_tkgm,0.6298,0.0,igdir,,0.5108,1.0,,,name_similarity=1.000; iou=0.511; centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,138431,tuzluca,Doğanyurt Köyü,,,,,,,2036606,tuzluca,Doğanyurt Köyü,
+no_auto_merge,web_tkgm,0.7944,1.0,elazig,,0.5431,1.0,,,name_similarity=1.000; iou=0.543; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,34731,sivrice,Çatakkaya Köyü,,,,,,,2011852,sivrice,Çatakkaya Köyü,
+no_auto_merge,web_tkgm,0.603,1.0,osmaniye,,0.6087,0.4476,,,name_similarity=0.448; iou=0.609; centroid_inside=1; candidate_via=spatial; same_ilce=True,,147365,sumbas,Sıtır Köyü,,,,,,,2037309,sumbas,Akçataş Köyü,
+no_auto_merge,web_tkgm,0.7643,1.0,amasya,,0.4763,1.0,,,name_similarity=1.000; iou=0.476; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,47173,tasova,Ballıca Köyü,,,,,,,2002428,tasova,Ballıca Köyü,
+no_auto_merge,web_tkgm,0.6198,1.0,aksaray,,0.1552,1.0,,,name_similarity=1.000; iou=0.155; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,126925,merkez,Tacin,,,,,,,89926,merkez,Tacin,
+no_auto_merge,web_tkgm,0.4026,0.0,erzurum,,0.0058,1.0,,,name_similarity=1.000; iou=0.006; centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,124812,yakutiye,Lalapaşa,,,,,,,21686,yakutiye,Lalapaşa,
+no_auto_merge,web_tkgm,0.7771,1.0,mugla,,0.5048,1.0,,,name_similarity=1.000; iou=0.505; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,137552,seydikemer,Gerişburnu,,,,,,,60161,seydikemer,Gerişburnu,
+no_auto_merge,web_tkgm,0.8184,1.0,adiyaman,,0.5964,1.0,,,name_similarity=1.000; iou=0.596; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,165704,kahta,Damlacik Köyü,,,,,,,2000878,kahta,Damlacık Köyü,
+no_auto_merge,web_tkgm,0.7999,1.0,hatay,,0.676,0.8643,,,name_similarity=0.864; iou=0.676; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,137910,kirikhan,Aktutan Köyü,,,,,,,149659,kirikhan,Attutan,
+no_auto_merge,web_tkgm,0.7017,1.0,hatay,,0.3371,1.0,,,name_similarity=1.000; iou=0.337; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,136620,kirikhan,Çamsarı Köyü,,,,,,,149759,kirikhan,Çamsarı,
+no_auto_merge,web_tkgm,0.434,0.0,kutahya,,0.0756,1.0,,,name_similarity=1.000; iou=0.076; centroid_inside=0; candidate_via=name_same_ilce; same_ilce=True,,204970,saphane,Pazar,,,,,,,51660,saphane,Pazar,
+no_auto_merge,web_tkgm,0.7509,1.0,denizli,,0.4463,1.0,,,name_similarity=1.000; iou=0.446; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,35969,bozkurt,İnceler,,,,,,,150163,bozkurt,İnceler,
+no_auto_merge,web_tkgm,0.6304,1.0,sakarya,,0.2676,0.9,,,name_similarity=0.900; iou=0.268; centroid_inside=1; candidate_via=name_same_ilce; same_ilce=True,,204339,hendek,Çamlıca/Haraklı,,,,,,,185081,hendek,Çamlıca,
+virtually_certain,web_tuik,0.9966,,aydin,germencik,,1.0,,0.9902,name_similarity=1.000; pop_ratio=1.003; population_consistency=0.99,,,,,143991,Moralı,341,mahalle,,,143991,,Moralı,342
+virtually_certain,web_tuik,0.9968,,agri,dogubayazit,,1.0,,0.9908,name_similarity=1.000; pop_ratio=0.997; population_consistency=0.991,,,,,1705,Yılanlı,2182,koy,,,2001705,,Yılanlı Köyü,2176
+virtually_certain,web_tuik,1.0,,izmir,bergama,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,193421,Cevaplı,60,mahalle,,,193421,,Cevaplı,60
+virtually_certain,web_tuik,0.9971,,istanbul,maltepe,,1.0,,0.9919,name_similarity=1.000; pop_ratio=1.002; population_consistency=0.992,,,,,40612,Altayçeşme,32318,mahalle,,,40612,,Altayçeşme,32397
+virtually_certain,web_tuik,0.9966,,izmir,karabaglar,,1.0,,0.9902,name_similarity=1.000; pop_ratio=0.997; population_consistency=0.99,,,,,41159,Arap Hasan,9192,mahalle,,,41159,,Arap Hasan,9165
+virtually_certain,web_tuik,0.9961,,kastamonu,taskopru,,1.0,,0.9888,name_similarity=1.000; pop_ratio=0.997; population_consistency=0.989,,,,,41909,Camikebir,2379,mahalle,,,41909,,Camikebir,2371
+virtually_certain,web_tuik,1.0,,sanliurfa,haliliye,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,173437,Kanatlı,296,mahalle,,,173437,,Kanatlı,296
+virtually_certain,web_tuik,1.0,,tekirdag,saray,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,175897,Çayla,444,mahalle,,,175897,,Çayla,444
+virtually_certain,web_tuik,0.9954,,kilis,merkez,,1.0,,0.9868,name_similarity=1.000; pop_ratio=1.004; population_consistency=0.987,,,,,90942,Atatürk,5559,mahalle,,,90942,,Atatürk,5581
+virtually_certain,web_tuik,1.0,,bayburt,merkez,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,34943,Dağçatı,71,koy,,,2034943,,Dağçatı Köyü,71
+virtually_certain,web_tuik,1.0,,sirnak,guclukonak,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,35861,Damlabaşı,478,koy,,,2035861,,Damlabaşı Köyü,478
+virtually_certain,web_tuik,0.9957,,mardin,savur,,1.0,,0.9876,name_similarity=1.000; pop_ratio=1.004; population_consistency=0.988,,,,,158447,Üçerli,269,mahalle,,,158447,,Üçerli,270
+virtually_certain,web_tuik,1.0,,kutahya,domanic,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,21254,Yeşilköy,230,koy,,,2021254,,Yeşilköy Köyü,230
+virtually_certain,web_tuik,1.0,,isparta,sutculer,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,15947,Melikler,76,koy,,,2015947,,Melikler Köyü,76
+virtually_certain,web_tuik,1.0,,sivas,hafik,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,29002,Eymir,16,koy,,,2029002,,Eymir Köyü,16
+virtually_certain,web_tuik,0.9951,,sinop,ayancik,,1.0,,0.9861,name_similarity=1.000; pop_ratio=0.996; population_consistency=0.986,,,,,28108,Topağaç,240,koy,,,2028108,,Topağaç Köyü,239
+virtually_certain,web_tuik,0.9984,,denizli,merkezefendi,,1.0,,0.9953,name_similarity=1.000; pop_ratio=0.999; population_consistency=0.995,,,,,20598,Yeni,7122,mahalle,,,20598,,Yeni,7112
+virtually_certain,web_tuik,0.9962,,giresun,tirebolu,,1.0,,0.9892,name_similarity=1.000; pop_ratio=0.997; population_consistency=0.989,,,,,14861,Sultanköy,310,koy,,,2014861,,Sultanköy Köyü,309
+virtually_certain,web_tuik,0.9967,,konya,beysehir,,1.0,,0.9906,name_similarity=1.000; pop_ratio=1.003; population_consistency=0.991,,,,,195271,Damlapınar,355,mahalle,,,195271,,Damlapınar,356
+virtually_certain,web_tuik,0.9967,,gaziantep,sehitkamil,,1.0,,0.9906,name_similarity=1.000; pop_ratio=1.003; population_consistency=0.991,,,,,30547,Karahüyük,1413,mahalle,,,30547,,Karahüyük,1417
+virtually_certain,web_tuik,1.0,,sakarya,adapazari,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,185591,İlyaslar,349,mahalle,,,185591,,İlyaslar,349
+virtually_certain,web_tuik,1.0,,aksaray,merkez,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,34786,Küçükgüve,75,koy,,,2034786,,Küçükgüve Köyü,75
+virtually_certain,web_tuik,1.0,,konya,kadinhani,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,195989,Kızılkuyu,152,mahalle,,,195989,,Kızılkuyu,152
+virtually_certain,web_tuik,1.0,,denizli,civril,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,150489,Çağlayan,18,mahalle,,,150489,,Çağlayan,18
+virtually_certain,web_tuik,1.0,,bolu,dortdivan,,1.0,,1.0,name_similarity=1.000; pop_ratio=1.0; population_consistency=1.0,,,,,6699,Dülger,81,koy,,,2006699,,Dülger Köyü,81
+very_high,web_tuik,0.985,,izmir,karaburun,,1.0,,0.9573,name_similarity=1.000; pop_ratio=1.013; population_consistency=0.957,,,,,194149,Parlak,156,mahalle,,,194149,,Parlak,158
+very_high,web_tuik,0.9802,,mersin,erdemli,,1.0,,0.9434,name_similarity=1.000; pop_ratio=0.983; population_consistency=0.943,,,,,182505,Çiriş,1060,mahalle,,,182505,,Çiriş,1042
+very_high,web_tuik,0.9837,,hatay,iskenderun,,1.0,,0.9533,name_similarity=1.000; pop_ratio=1.014; population_consistency=0.953,,,,,149635,Bitişik,999,mahalle,,,149635,,Bitişik,1013
+very_high,web_tuik,0.9932,,izmir,karabaglar,,1.0,,0.9805,name_similarity=1.000; pop_ratio=1.006; population_consistency=0.98,,,,,41259,Osman Aksüner,683,mahalle,,,41259,,Osman Aksüner,687
+very_high,web_tuik,0.9848,,bartin,ulus,,1.0,,0.9567,name_similarity=1.000; pop_ratio=1.013; population_consistency=0.957,,,,,36215,Bahçecik,77,koy,,,2036215,,Bahçecik Köyü,78
+very_high,web_tuik,0.9934,,mersin,mut,,1.0,,0.9813,name_similarity=1.000; pop_ratio=1.006; population_consistency=0.981,,,,,182755,Hacıahmetli,356,mahalle,,,182755,,Hacıahmetli,358
+very_high,web_tuik,0.9945,,konya,emirgazi,,1.0,,0.9842,name_similarity=1.000; pop_ratio=0.995; population_consistency=0.984,,,,,51038,Akmescit,842,mahalle,,,51038,,Akmescit,838
+very_high,web_tuik,0.9939,,bartin,merkez,,1.0,,0.9825,name_similarity=1.000; pop_ratio=1.005; population_consistency=0.983,,,,,36126,Köyyeri,381,koy,,,2036126,,Köyyeri Köyü,383
+very_high,web_tuik,0.9886,,sanliurfa,harran,,1.0,,0.9674,name_similarity=1.000; pop_ratio=1.01; population_consistency=0.967,,,,,174415,Başkaragöz,307,mahalle,,,174415,,Başkaragöz,310
+very_high,web_tuik,0.9807,,balikesir,edremit,,1.0,,0.9449,name_similarity=1.000; pop_ratio=0.983; population_consistency=0.945,,,,,182056,Eroğlan,6477,mahalle,,,182056,,Eroğlan,6370
+very_high,web_tuik,0.9939,,sirnak,idil,,1.0,,0.9825,name_similarity=1.000; pop_ratio=1.005; population_consistency=0.982,,,,,35903,Yarbaşı,1142,koy,,,2035903,,Yarbaşı Köyü,1148
+very_high,web_tuik,0.9822,,konya,ilgin,,1.0,,0.9492,name_similarity=1.000; pop_ratio=1.015; population_consistency=0.949,,,,,195897,Bulcuk,328,mahalle,,,195897,,Bulcuk,333
+very_high,web_tuik,0.9832,,tekirdag,muratli,,1.0,,0.952,name_similarity=1.000; pop_ratio=1.014; population_consistency=0.952,,,,,175883,Yukarısevindikli,417,mahalle,,,175883,,Yukarısevindikli,423
+very_high,web_tuik,0.9894,,diyarbakir,kulp,,1.0,,0.9698,name_similarity=1.000; pop_ratio=0.991; population_consistency=0.97,,,,,193315,Tuzla,442,mahalle,,,193315,,Tuzla,438
+very_high,web_tuik,0.9936,,ankara,yenimahalle,,1.0,,0.9818,name_similarity=1.000; pop_ratio=0.995; population_consistency=0.982,,,,,1882,Mehmet Akif Ersoy,19218,mahalle,,,1882,,Mehmet Akif Ersoy,19113
+very_high,web_tuik,0.9895,,corum,osmancik,,1.0,,0.97,name_similarity=1.000; pop_ratio=0.991; population_consistency=0.97,,,,,20477,Yazı,667,mahalle,,,20477,,Yazı,661
+very_high,web_tuik,0.9942,,ordu,persembe,,1.0,,0.9833,name_similarity=1.000; pop_ratio=0.995; population_consistency=0.983,,,,,151903,Şenyurt,400,mahalle,,,151903,,Şenyurt,398
+very_high,web_tuik,0.9863,,sivas,altinyayla,,1.0,,0.9608,name_similarity=1.000; pop_ratio=1.012; population_consistency=0.961,,,,,28701,Kızılhüyük,255,koy,,,2028701,,Kızılhüyük Köyü,258
+very_high,web_tuik,0.9899,,manisa,yunusemre,,1.0,,0.9711,name_similarity=1.000; pop_ratio=0.991; population_consistency=0.971,,,,,52107,Tevfikiye,11419,mahalle,,,52107,,Tevfikiye,11320
+very_high,web_tuik,0.9801,,diyarbakir,cinar,,1.0,,0.9432,name_similarity=1.000; pop_ratio=1.017; population_consistency=0.943,,,,,192377,Ağaçsever,1350,mahalle,,,192377,,Ağaçsever,1373
+very_high,web_tuik,0.9808,,kocaeli,darica,,1.0,,0.9451,name_similarity=1.000; pop_ratio=0.984; population_consistency=0.945,,,,,50335,Osmangazi,31791,mahalle,,,50335,,Osmangazi,31267
+very_high,web_tuik,0.9896,,konya,eregli,,1.0,,0.9702,name_similarity=1.000; pop_ratio=0.991; population_consistency=0.97,,,,,51075,Selçuklu,224,mahalle,,,51075,,Selçuklu,222
+very_high,web_tuik,0.9812,,istanbul,sariyer,,1.0,,0.9462,name_similarity=1.000; pop_ratio=1.016; population_consistency=0.946,,,,,40663,Emirgan,7924,mahalle,,,40663,,Emirgan,8052
+very_high,web_tuik,0.9806,,gaziantep,araban,,1.0,,0.9444,name_similarity=1.000; pop_ratio=1.017; population_consistency=0.944,,,,,179503,Yaylacık,360,mahalle,,,179503,,Yaylacık,366
+very_high,web_tuik,0.9914,,ordu,altinordu,,1.0,,0.9753,name_similarity=1.000; pop_ratio=0.993; population_consistency=0.975,,,,,60821,Durugöl,9999,mahalle,,,60821,,Durugöl,9925
+high,web_tuik,0.9725,,aydin,bozdogan,,1.0,,0.9214,name_similarity=1.000; pop_ratio=1.024; population_consistency=0.921,,,,,143687,Asma,297,mahalle,,,143687,,Asma,304
+high,web_tuik,0.9781,,siirt,tillo,,1.0,,0.9374,name_similarity=1.000; pop_ratio=1.019; population_consistency=0.937,,,,,70157,Mücahit,692,mahalle,,,70157,,Mücahit,705
+high,web_tuik,0.9785,,sakarya,geyve,,1.0,,0.9387,name_similarity=1.000; pop_ratio=0.982; population_consistency=0.939,,,,,184983,Dereköy,163,mahalle,,,184983,,Dereköy,160
+high,web_tuik,0.9653,,van,ozalp,,1.0,,0.9008,name_similarity=1.000; pop_ratio=1.03; population_consistency=0.901,,,,,159553,Mehmetalan,437,mahalle,,,159553,,Mehmetalan,450
+high,web_tuik,0.9719,,konya,emirgazi,,1.0,,0.9197,name_similarity=1.000; pop_ratio=0.976; population_consistency=0.92,,,,,51041,Fatih,664,mahalle,,,51041,,Fatih,648
+high,web_tuik,0.9701,,izmir,beydag,,1.0,,0.9145,name_similarity=1.000; pop_ratio=1.026; population_consistency=0.915,,,,,193869,Palamutçuk,234,mahalle,,,193869,,Palamutçuk,240
+high,web_tuik,0.9699,,kocaeli,kandira,,1.0,,0.9139,name_similarity=1.000; pop_ratio=1.026; population_consistency=0.914,,,,,656652,Ahmethacılar,271,mahalle,,,656652,,Ahmethacılar,278
+high,web_tuik,0.9711,,kastamonu,cide,,1.0,,0.9174,name_similarity=1.000; pop_ratio=0.975; population_consistency=0.917,,,,,140839,Kırcı,242,mahalle,,,140839,,Kırcı,236
+high,web_tuik,0.9624,,adana,ceyhan,,1.0,,0.8925,name_similarity=1.000; pop_ratio=1.032; population_consistency=0.892,,,,,272,Kelemeti,248,mahalle,,,272,,Kelemeti,256
+high,web_tuik,0.9723,,mus,merkez,,1.0,,0.9209,name_similarity=1.000; pop_ratio=1.024; population_consistency=0.921,,,,,60295,Muratpaşa,8301,mahalle,,,60295,,Muratpaşa,8498
+high,web_tuik,0.9646,,burdur,yesilova,,1.0,,0.899,name_similarity=1.000; pop_ratio=1.03; population_consistency=0.899,,,,,7279,Karaköy,66,koy,,,2007279,,Karaköy Köyü,68
+high,web_tuik,0.9624,,kirikkale,delice,,1.0,,0.8925,name_similarity=1.000; pop_ratio=1.032; population_consistency=0.892,,,,,35365,Taşyazı,31,koy,,,2035365,,Taşyazı Köyü,32
+high,web_tuik,0.9602,,sanliurfa,akcakale,,1.0,,0.8864,name_similarity=1.000; pop_ratio=0.966; population_consistency=0.886,,,,,173771,Aksahrınç,1438,mahalle,,,173771,,Aksahrınç,1389
+high,web_tuik,0.971,,bilecik,bozuyuk,,1.0,,0.9171,name_similarity=1.000; pop_ratio=1.025; population_consistency=0.917,,,,,10630,Tekke,2452,mahalle,,,10630,,Tekke,2513
+high,web_tuik,0.9702,,konya,kulu,,1.0,,0.9149,name_similarity=1.000; pop_ratio=0.974; population_consistency=0.915,,,,,51263,Yeni,5404,mahalle,,,51263,,Yeni,5266
+high,web_tuik,0.9591,,kirikkale,sulakyurt,,1.0,,0.883,name_similarity=1.000; pop_ratio=0.965; population_consistency=0.883,,,,,35452,Sarımbey,57,koy,,,2035452,,Sarımbey Köyü,55
+high,web_tuik,0.9683,,diyarbakir,silvan,,1.0,,0.9095,name_similarity=1.000; pop_ratio=1.027; population_consistency=0.909,,,,,193795,Başdeğirmen,589,mahalle,,,193795,,Başdeğirmen,605
+high,web_tuik,0.9769,,bitlis,merkez,,1.0,,0.9341,name_similarity=1.000; pop_ratio=1.02; population_consistency=0.934,,,,,6260,Çeltikli,253,koy,,,2006260,,Çeltikli Köyü,258
+high,web_tuik,0.9697,,izmir,konak,,1.0,,0.9135,name_similarity=1.000; pop_ratio=1.026; population_consistency=0.913,,,,,41223,Kahramanlar,3969,mahalle,,,41223,,Kahramanlar,4072
+high,web_tuik,0.9661,,kars,sarikamis,,1.0,,0.9031,name_similarity=1.000; pop_ratio=1.029; population_consistency=0.903,,,,,17823,Çamyazı,894,koy,,,2017823,,Çamyazı Köyü,920
+high,web_tuik,0.9716,,canakkale,biga,,1.0,,0.9188,name_similarity=1.000; pop_ratio=1.024; population_consistency=0.919,,,,,8226,İdriskoru,575,koy,,,2008226,,İdriskoru Köyü,589
+high,web_tuik,0.9627,,samsun,ladik,,1.0,,0.8935,name_similarity=1.000; pop_ratio=1.032; population_consistency=0.893,,,,,69984,Koğa,876,mahalle,,,69984,,Koğa,904
+high,web_tuik,0.9741,,denizli,civril,,1.0,,0.9259,name_similarity=1.000; pop_ratio=1.022; population_consistency=0.926,,,,,150403,Bekirli,90,mahalle,,,150403,,Bekirli,92
+high,web_tuik,0.977,,trabzon,macka,,1.0,,0.9343,name_similarity=1.000; pop_ratio=1.02; population_consistency=0.934,,,,,156875,Sevinç,355,mahalle,,,156875,,Sevinç,362
+high,web_tuik,0.9778,,sanliurfa,ceylanpinar,,1.0,,0.9366,name_similarity=1.000; pop_ratio=0.981; population_consistency=0.937,,,,,480707,Gellegöç,1420,mahalle,,,480707,,Gellegöç,1393
+review_recommended,web_tuik,0.9369,,kars,digor,,1.0,,0.8198,name_similarity=1.000; pop_ratio=1.054; population_consistency=0.82,,,,,17690,Halıkışlak,148,koy,,,2017690,,Halıkışlak Köyü,156
+review_recommended,web_tuik,0.9215,,adiyaman,gerger,,1.0,,0.7756,name_similarity=1.000; pop_ratio=1.067; population_consistency=0.776,,,,,749,Çifthisar,104,koy,,,2000749,,Çifthisar Köyü,111
+review_recommended,web_tuik,0.9444,,ordu,fatsa,,1.0,,0.8413,name_similarity=1.000; pop_ratio=1.048; population_consistency=0.841,,,,,151141,Tahtabaş,126,mahalle,,,151141,,Tahtabaş,132
+review_recommended,web_tuik,0.8992,,bolu,gerede,,1.0,,0.7119,name_similarity=1.000; pop_ratio=1.086; population_consistency=0.712,,,,,6750,Ertuğrulköy,81,koy,,,2006750,,Ertuğrulköy Köyü,88
+review_recommended,web_tuik,0.9352,,balikesir,dursunbey,,1.0,,0.8148,name_similarity=1.000; pop_ratio=1.056; population_consistency=0.815,,,,,147571,Sakızköy,108,mahalle,,,147571,,Sakızköy,114
+review_recommended,web_tuik,0.9448,,igdir,aralik,,1.0,,0.8422,name_similarity=1.000; pop_ratio=0.953; population_consistency=0.842,,,,,36572,Yenidoğan,338,koy,,,2036572,,Yenidoğan Köyü,322
+review_recommended,web_tuik,0.9039,,corum,merkez,,1.0,,0.7255,name_similarity=1.000; pop_ratio=1.082; population_consistency=0.725,,,,,9009,Akçakaya,85,koy,,,2009009,,Akçakaya Köyü,92
+review_recommended,web_tuik,0.9412,,kahramanmaras,pazarcik,,1.0,,0.8321,name_similarity=1.000; pop_ratio=1.05; population_consistency=0.832,,,,,160929,Memişkahya,139,mahalle,,,160929,,Memişkahya,146
+review_recommended,web_tuik,0.9341,,corum,merkez,,1.0,,0.8117,name_similarity=1.000; pop_ratio=1.056; population_consistency=0.812,,,,,9048,Elmalı,177,koy,,,2009048,,Elmalı Köyü,187
+review_recommended,web_tuik,0.8986,,amasya,merkez,,1.0,,0.7101,name_similarity=1.000; pop_ratio=1.087; population_consistency=0.71,,,,,2134,Karaali,184,koy,,,2002134,,Karaali Köyü,200
+review_recommended,web_tuik,0.861,,konya,selcuklu,,1.0,,0.6028,name_similarity=1.000; pop_ratio=1.119; population_consistency=0.603,,,,,195029,Küçükmuhsine,193,mahalle,,,195029,,Küçükmuhsine,216
+review_recommended,web_tuik,0.9017,,sanliurfa,suruc,,1.0,,0.7192,name_similarity=1.000; pop_ratio=1.084; population_consistency=0.719,,,,,175185,Kalkanlı,273,mahalle,,,175185,,Kalkanlı,296
+review_recommended,web_tuik,0.9362,,sakarya,tarakli,,1.0,,0.8176,name_similarity=1.000; pop_ratio=1.055; population_consistency=0.818,,,,,185569,Yeniköy,201,mahalle,,,185569,,Yeniköy,212
+review_recommended,web_tuik,0.9014,,bilecik,bozuyuk,,1.0,,0.7183,name_similarity=1.000; pop_ratio=0.915; population_consistency=0.718,,,,,5684,Kuyupınar,71,koy,,,2005684,,Kuyupınar Köyü,65
+review_recommended,web_tuik,0.9235,,giresun,bulancak,,1.0,,0.7814,name_similarity=1.000; pop_ratio=1.066; population_consistency=0.781,,,,,14486,Yeşiltepe,61,koy,,,2014486,,Yeşiltepe Köyü,65
+review_recommended,web_tuik,0.9413,,igdir,tuzluca,,1.0,,0.8322,name_similarity=1.000; pop_ratio=1.05; population_consistency=0.832,,,,,36646,Gaziler,596,koy,,,2036646,,Gaziler Köyü,626
+review_recommended,web_tuik,0.8532,,izmir,menemen,,1.0,,0.5805,name_similarity=1.000; pop_ratio=0.874; population_consistency=0.58,,,,,194421,Belen,294,mahalle,,,194421,,Belen,257
+review_recommended,web_tuik,0.9364,,kutahya,tavsanli,,1.0,,0.8182,name_similarity=1.000; pop_ratio=1.055; population_consistency=0.818,,,,,21582,Köseler,330,koy,,,2021582,,Köseler Köyü,348
+review_recommended,web_tuik,0.8619,,hakkari,yuksekova,,1.0,,0.6055,name_similarity=1.000; pop_ratio=0.882; population_consistency=0.605,,,,,31045,Yılmaz,414,mahalle,,,31045,,Yılmaz,365
+review_recommended,web_tuik,0.883,,samsun,ilkadim,,1.0,,0.6656,name_similarity=1.000; pop_ratio=0.9; population_consistency=0.666,,,,,61860,Kavacık,1575,mahalle,,,61860,,Kavacık,1417
+review_recommended,web_tuik,0.9231,,bursa,mudanya,,1.0,,0.7803,name_similarity=1.000; pop_ratio=1.066; population_consistency=0.78,,,,,184247,İpekyayla,349,mahalle,,,184247,,İpekyayla,372
+review_recommended,web_tuik,0.9378,,batman,kozluk,,1.0,,0.8224,name_similarity=1.000; pop_ratio=1.053; population_consistency=0.822,,,,,90533,Adnan Menderes,319,mahalle,,,90533,,Adnan Menderes,336
+review_recommended,web_tuik,0.8576,,eskisehir,tepebasi,,1.0,,0.5933,name_similarity=1.000; pop_ratio=1.122; population_consistency=0.593,,,,,191629,Beyazaltın,336,mahalle,,,191629,,Beyazaltın,377
+review_recommended,web_tuik,0.8731,,erzurum,horasan,,0.9429,,0.7436,name_similarity=0.943; pop_ratio=1.077; population_consistency=0.744,,,,,188909,Pinarli,65,mahalle,,,188909,,Pınar,70
+review_recommended,web_tuik,0.949,,izmir,konak,,1.0,,0.8542,name_similarity=1.000; pop_ratio=1.044; population_consistency=0.854,,,,,41230,Kocakapı,2240,mahalle,,,41230,,Kocakapı,2338
+no_auto_merge,web_tuik,0.7083,,sivas,imranli,,1.0,,0.1667,name_similarity=1.000; pop_ratio=1.25; population_consistency=0.167,,,,,29112,Refik,20,koy,,,2029112,,Refik Köyü,25
+no_auto_merge,web_tuik,0.8413,,kilis,elbeyli,,0.975,,0.5929,name_similarity=0.975; pop_ratio=1.122; population_consistency=0.593,,,,,37068,Akçaağıl,131,koy,,,2037068,,Akçağıl Köyü,147
+no_auto_merge,web_tuik,0.65,,kirklareli,merkez,,1.0,,0.0,name_similarity=1.000; pop_ratio=0.671; population_consistency=0.0,,,,,49903,Yeni,654,mahalle,,,49903,,Yeni,439
+no_auto_merge,web_tuik,0.8135,,kirsehir,kaman,,1.0,,0.4673,name_similarity=1.000; pop_ratio=1.16; population_consistency=0.467,,,,,19837,Ağapınar,219,koy,,,2019837,,Ağapınar Köyü,254
+no_auto_merge,web_tuik,0.8056,,mardin,midyat,,1.0,,0.4444,name_similarity=1.000; pop_ratio=0.833; population_consistency=0.444,,,,,158121,İkizdere,60,mahalle,,,158121,,İkizdere,50
+no_auto_merge,web_tuik,0.811,,rize,merkez,,1.0,,0.4599,name_similarity=1.000; pop_ratio=0.838; population_consistency=0.46,,,,,61323,Düz,395,mahalle,,,61323,,Düz,331
+no_auto_merge,web_tuik,0.8409,,kastamonu,kure,,1.0,,0.5455,name_similarity=1.000; pop_ratio=1.136; population_consistency=0.545,,,,,18722,Afşarimam,66,koy,,,2018722,,Afşarimam Köyü,75
+no_auto_merge,web_tuik,0.8056,,ankara,nallihan,,1.0,,0.4444,name_similarity=1.000; pop_ratio=1.167; population_consistency=0.444,,,,,178873,Epçeler,60,mahalle,,,178873,,Epçeler,70
+no_auto_merge,web_tuik,0.8462,,igdir,aralik,,0.85,,0.839,name_similarity=0.850; pop_ratio=0.952; population_consistency=0.839,,,,,36567,Kulukent,497,koy,,,2036567,,Kolikent Köyü,473
+no_auto_merge,web_tuik,0.65,,siirt,merkez,,1.0,,0.0,name_similarity=1.000; pop_ratio=1.467; population_consistency=0.0,,,,,27761,Meşelidere,45,koy,,,2027761,,Meşelidere Köyü,66
+no_auto_merge,web_tuik,0.65,,hatay,antakya,,1.0,,0.0,name_similarity=1.000; pop_ratio=1.379; population_consistency=0.0,,,,,31057,Biniciler,132,mahalle,,,31057,,Biniciler,182
+no_auto_merge,web_tuik,0.65,,igdir,tuzluca,,1.0,,0.0,name_similarity=1.000; pop_ratio=1.324; population_consistency=0.0,,,,,36662,Karataş,37,koy,,,2036662,,Karataş Köyü,49
+no_auto_merge,web_tuik,0.7222,,sivas,imranli,,1.0,,0.2063,name_similarity=1.000; pop_ratio=1.238; population_consistency=0.206,,,,,29150,Koçgediği,21,koy,,,2029150,,Koçgediği Köyü,26
+no_auto_merge,web_tuik,0.6889,,corum,merkez,,1.0,,0.1111,name_similarity=1.000; pop_ratio=1.267; population_consistency=0.111,,,,,9140,Yenihayat,120,koy,,,2009140,,Yenihayat Köyü,152
+no_auto_merge,web_tuik,0.8451,,erzurum,koprukoy,,1.0,,0.5575,name_similarity=1.000; pop_ratio=1.133; population_consistency=0.558,,,,,189801,Aşağıkızılkale,113,mahalle,,,189801,,Aşağıkızılkale,128
+no_auto_merge,web_tuik,0.8257,,mus,merkez,,1.0,,0.5021,name_similarity=1.000; pop_ratio=1.149; population_consistency=0.502,,,,,24688,Dereyurt,241,koy,,,2024688,,Dereyurt Köyü,277
+no_auto_merge,web_tuik,0.8478,,istanbul,fatih,,1.0,,0.5652,name_similarity=1.000; pop_ratio=0.87; population_consistency=0.565,,,,,40334,Sururi,46,mahalle,,,40334,,Sururi,40
+no_auto_merge,web_tuik,0.8056,,bolu,kibriscik,,1.0,,0.4444,name_similarity=1.000; pop_ratio=1.167; population_consistency=0.444,,,,,6896,Sarıkaya,84,koy,,,2006896,,Sarıkaya Köyü,98
+no_auto_merge,web_tuik,0.6578,,yozgat,sarikaya,,1.0,,0.0222,name_similarity=1.000; pop_ratio=1.293; population_consistency=0.022,,,,,34059,Burunkışla,150,koy,,,2034059,,Burunkışla Köyü,194
+no_auto_merge,web_tuik,0.65,,karaman,merkez,,1.0,,0.0,name_similarity=1.000; pop_ratio=1.345; population_consistency=0.0,,,,,35186,Üçbaş,29,koy,,,2035186,,Üçbaş Köyü,39
+no_auto_merge,web_tuik,0.7083,,elazig,baskil,,1.0,,0.1667,name_similarity=1.000; pop_ratio=1.25; population_consistency=0.167,,,,,11544,Konalga,140,koy,,,2011544,,Konalga Köyü,175
+no_auto_merge,web_tuik,0.65,,gumushane,merkez,,1.0,,0.0,name_similarity=1.000; pop_ratio=1.38; population_consistency=0.0,,,,,14987,Dumanlı,50,koy,,,2014987,,Dumanlı Köyü,69
+no_auto_merge,web_tuik,0.817,,sivas,divrigi,,1.0,,0.4771,name_similarity=1.000; pop_ratio=0.843; population_consistency=0.477,,,,,28789,Sincan,51,koy,,,2028789,,Sincan Köyü,43
+no_auto_merge,web_tuik,0.7407,,samsun,kavak,,1.0,,0.2593,name_similarity=1.000; pop_ratio=1.222; population_consistency=0.259,,,,,187979,Çarıklıbaşı,27,mahalle,,,187979,,Çarıklıbaşı,33
+no_auto_merge,web_tuik,0.825,,afyonkarahisar,emirdag,,1.0,,,name_similarity=1.000; pop_ratio=n/a; population_consistency=n/a,,,,,279109,Aziziye,2897,mahalle,,,279109,,Aziziye,

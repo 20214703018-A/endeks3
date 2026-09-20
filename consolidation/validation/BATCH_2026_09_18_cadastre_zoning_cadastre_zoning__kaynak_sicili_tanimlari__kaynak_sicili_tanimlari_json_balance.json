@@ -1,0 +1,17 @@
+{
+ "source_id": "cadastre_zoning__kaynak_sicili_tanimlari__kaynak_sicili_tanimlari_json",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__kaynak_sicili_tanimlari__kaynak_sicili_tanimlari_json",
+ "target": "stg_kaynak_sicili_tanimlari",
+ "file_id": "FILE_00002028",
+ "input_count": 16,
+ "successfully_loaded": 16,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 4304,
+ "note": "json_records under=sources",
+ "seconds": 0.0,
+ "mode": "apply"
+}

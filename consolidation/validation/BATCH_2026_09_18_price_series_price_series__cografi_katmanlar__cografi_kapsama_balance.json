@@ -1,0 +1,19 @@
+{
+ "source_id": "price_series__cografi_katmanlar__cografi_kapsama",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__cografi_katmanlar__cografi_kapsama",
+ "target": "stg_cografi_katmanlar__cografi_kapsama",
+ "file_id": "FILE_00005037",
+ "input_count": 40,
+ "successfully_loaded": 40,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 3,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_cografi_katmanlar__cografi_kapsama/part-BATCH_2026_09_18_price_series_price_series__cografi_katmanlar__cografi_kapsama.parquet",
+ "review_flags": {},
+ "seconds": 8.0,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "vehicles__aracrisk_defter__aracrisk_defter_json",
+ "batch_id": "BATCH_2026_09_18_vehicles_vehicles__aracrisk_defter__aracrisk_defter_json",
+ "target": "stg_aracrisk_defter",
+ "file_id": "FILE_00016896",
+ "input_count": 303,
+ "successfully_loaded": 303,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 26,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 357673,
+ "note": "json_records under=rows",
+ "seconds": 0.0,
+ "mode": "apply"
+}

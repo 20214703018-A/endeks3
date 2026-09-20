@@ -1,0 +1,21 @@
+{
+ "family": "demographics_context",
+ "standard_version": "1.0.0",
+ "sources": [
+  {
+   "kind": "xls",
+   "header_row": 2,
+   "acquisition_class": "official_public",
+   "distribution_class": "public",
+   "transformation_id": "T00_RAW_COPY_V1",
+   "review_flags": [
+    "NDR_000003",
+    "TUIK_BULTEN_54146_ILCE_TABLOSU",
+    "YIL_SUTUNU_ILK_SATIRDA(ileri doldurma kanonikte)"
+   ],
+   "source_id": "tuik_konut_satis_ilce_2015_2025",
+   "path": "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/tuik_konut_satis/2026-09-20/ilcelere_gore_konut_satis_sayilari_2024.xls",
+   "target": "stg_tuik_konut_satis_ilce_resmi"
+  }
+ ]
+}

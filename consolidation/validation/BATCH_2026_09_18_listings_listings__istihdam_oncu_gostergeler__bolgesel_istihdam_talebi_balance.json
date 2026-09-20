@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__istihdam_oncu_gostergeler__bolgesel_istihdam_talebi",
+ "batch_id": "BATCH_2026_09_18_listings_listings__istihdam_oncu_gostergeler__bolgesel_istihdam_talebi",
+ "target": "stg_istihdam_oncu_gostergeler__bolgesel_istihdam_talebi",
+ "file_id": "FILE_00005044",
+ "input_count": 144,
+ "successfully_loaded": 144,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_istihdam_oncu_gostergeler__bolgesel_istihdam_talebi/part-BATCH_2026_09_18_listings_listings__istihdam_oncu_gostergeler__bolgesel_istihdam_talebi.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

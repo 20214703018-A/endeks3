@@ -1,0 +1,21 @@
+{
+ "source_id": "tuik_konut_satis_ilce_2015_2025",
+ "batch_id": "BATCH_2026_09_20_demographics_context_tuik_konut_satis_ilce_2015_2025",
+ "target": "stg_tuik_konut_satis_ilce_resmi",
+ "file_id": "FILE_00021130",
+ "input_count": 6380,
+ "successfully_loaded": 6380,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "geometry_types": [],
+ "review_flags": {
+  "NDR_000003": 6380,
+  "TUIK_BULTEN_54146_ILCE_TABLOSU": 6380,
+  "YIL_SUTUNU_ILK_SATIRDA(ileri doldurma kanonikte)": 6380
+ },
+ "estimated_bytes": 946573,
+ "note": "xls sheet=t7 header_row=2",
+ "seconds": 0.5,
+ "mode": "apply"
+}

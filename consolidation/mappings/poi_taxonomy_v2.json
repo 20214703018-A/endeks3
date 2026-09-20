@@ -1,0 +1,1562 @@
+{
+ "version": "POI_CATEGORY_V2",
+ "rules_in_order": [
+  {
+   "sector": "Yeme-İçme",
+   "category": "Çay Ocağı & Kahvehane",
+   "keywords": [
+    "cay ocagi",
+    "çay ocağı",
+    "cay evi",
+    "çay evi",
+    "kiraathanesi",
+    "kahvehanesi",
+    "cay bahcesi"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Pide & Lahmacun",
+   "keywords": [
+    "etliekmek",
+    "etli ekmek"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Bar & Lounge",
+   "keywords": [
+    "lounge",
+    "bar",
+    "pub",
+    "bistro",
+    "meyhane",
+    "nargile",
+    "shisha",
+    "hookah"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Dinlenme Tesisi",
+   "keywords": [
+    "dinlenme tesis",
+    "tesisleri",
+    "tesisi",
+    "mola"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Gıda Perakende",
+   "category": "Tekel Bayii",
+   "keywords": [
+    "tekel",
+    "tobacco",
+    "tütün",
+    "tutun",
+    "sigara"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Gıda Perakende",
+   "category": "Yöresel & Gıda Ürünleri",
+   "keywords": [
+    "gida",
+    "gıda",
+    "yoresel",
+    "yöresel",
+    "lezzet",
+    "sut urunleri",
+    "süt ürünleri",
+    "sut",
+    "süt",
+    "peynir",
+    "yogurt",
+    "yoğurt",
+    "bal",
+    "zeytin",
+    "tavuk",
+    "yumurta",
+    "organik",
+    "dogal",
+    "doğal",
+    "kuru gida",
+    "kuru gıda",
+    "unlu"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Gıda Perakende",
+   "category": "Ucuzluk & İndirim Market",
+   "keywords": [
+    "ucuzluk",
+    "indirim",
+    "gross",
+    "toptan gida",
+    "toptan gıda"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Gıda Perakende",
+   "category": "Pazar Yeri & Çarşı",
+   "keywords": [
+    "pazari",
+    "pazarı",
+    "pazar yeri",
+    "carsi",
+    "çarşı",
+    "carsisi",
+    "çarşısı",
+    "halk pazari"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Perakende",
+   "category": "AVM & Alışveriş Merkezi",
+   "keywords": [
+    "avm",
+    "alisveris merkezi",
+    "alışveriş merkezi",
+    "alisveris",
+    "alışveriş",
+    "shopping",
+    "outlet",
+    "mall"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Perakende",
+   "category": "Mağaza (Genel Perakende)",
+   "keywords": [
+    "magaza",
+    "mağaza",
+    "magazasi",
+    "mağazası",
+    "magazalari",
+    "shop",
+    "store",
+    "boutique",
+    "collection",
+    "fashion",
+    "moda",
+    "konfeksiyon",
+    "esarp",
+    "eşarp",
+    "kundura",
+    "aksesuar",
+    "tesettur",
+    "tesettür",
+    "abiye"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Perakende",
+   "category": "Tuhafiye & Çeyiz & Bebek",
+   "keywords": [
+    "tuhafiye",
+    "ceyiz",
+    "çeyiz",
+    "bebe",
+    "bebek",
+    "kids",
+    "oyuncak",
+    "anne bebek"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Perakende",
+   "category": "Spot & İkinci El Eşya",
+   "keywords": [
+    "spot",
+    "ikinci el",
+    "2. el",
+    "2.el",
+    "eskici"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Perakende",
+   "category": "Ev Aletleri & Beyaz Eşya",
+   "keywords": [
+    "beyaz esya",
+    "beyaz eşya",
+    "ev aletleri",
+    "kucuk ev",
+    "küçük ev",
+    "elektro"
+   ],
+   "brands": [
+    "Arçelik",
+    "Beko",
+    "Vestel",
+    "Bosch",
+    "Siemens",
+    "Samsung",
+    "LG",
+    "Profilo"
+   ]
+  },
+  {
+   "sector": "Elektronik",
+   "category": "Elektronik & Telefon",
+   "keywords": [
+    "iletisim",
+    "iletişim",
+    "elektronikci",
+    "elektronikçi",
+    "cep telefonu",
+    "telefon aksesuar"
+   ],
+   "brands": [
+    "Turkcell",
+    "Vodafone",
+    "Türk Telekom"
+   ]
+  },
+  {
+   "sector": "Otomotiv",
+   "category": "Oto Servis & Yedek Parça",
+   "keywords": [
+    "auto",
+    "motors",
+    "motor",
+    "motorlu",
+    "garage",
+    "garaj",
+    "car",
+    "arac",
+    "araç",
+    "araclar",
+    "araçlar",
+    "yetkili servis",
+    "servisi",
+    "servis",
+    "otomobil",
+    "tuning",
+    "rot",
+    "balans",
+    "fren",
+    "sanayi sitesi"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Otomotiv",
+   "category": "Otoyıkama",
+   "keywords": [
+    "oto yikama",
+    "oto yıkama",
+    "yikama",
+    "yıkama",
+    "car wash",
+    "detailing"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Otomotiv",
+   "category": "Akaryakıt & Otopark",
+   "keywords": [
+    "istasyonu",
+    "istasyon"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Ev & Yapı",
+   "category": "Elektrikçi & Elektrik Malzeme",
+   "keywords": [
+    "elektrik",
+    "elektrikci",
+    "elektrikçi",
+    "aydinlatma",
+    "aydınlatma",
+    "avize"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Ev & Yapı",
+   "category": "Yapı & İnşaat Firması",
+   "keywords": [
+    "yapi",
+    "yapı",
+    "insaat",
+    "inşaat",
+    "muhendislik",
+    "mühendislik",
+    "mimarlik",
+    "mimarlık",
+    "proje",
+    "tasarim",
+    "tasarım",
+    "sistemleri",
+    "cati",
+    "çatı",
+    "izolasyon",
+    "asansor",
+    "asansör"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Ev & Yapı",
+   "category": "Mobilya & Ev Dekorasyon",
+   "keywords": [
+    "home",
+    "house",
+    "ev dekor",
+    "dekor",
+    "mutfak",
+    "banyo",
+    "hali",
+    "halı",
+    "perde"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Sanayi & Toptan",
+   "category": "Toptan & Ticaret",
+   "keywords": [
+    "ticaret",
+    "toptan",
+    "tic.",
+    "ltd",
+    "sti",
+    "şti",
+    "a.s.",
+    "a.ş.",
+    "sanayi",
+    "san.",
+    "pazarlama",
+    "dis ticaret",
+    "dış ticaret",
+    "ithalat",
+    "ihracat",
+    "lojistik",
+    "depo"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Sanayi & Toptan",
+   "category": "Fabrika & Üretim",
+   "keywords": [
+    "fabrika",
+    "fabrikasi",
+    "fabrikası",
+    "uretim",
+    "üretim",
+    "imalat",
+    "atolye",
+    "atölye",
+    "iplik",
+    "dokuma",
+    "plastik",
+    "metal",
+    "makina",
+    "makine",
+    "kimya",
+    "ambalaj",
+    "mermer",
+    "tekstil san"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Sanayi & Toptan",
+   "category": "Tarım & Hayvancılık",
+   "keywords": [
+    "tarim",
+    "tarım",
+    "zirai",
+    "ziraat",
+    "tohum",
+    "gubre",
+    "gübre",
+    "hayvancilik",
+    "hayvancılık",
+    "ciftlik",
+    "çiftlik",
+    "sera",
+    "fidan",
+    "yem"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Sağlık",
+   "category": "Sağlık Kabini & Eczane",
+   "keywords": [
+    "saglik",
+    "sağlık",
+    "sagligi",
+    "sağlığı",
+    "kabini",
+    "tahlil",
+    "laboratuvar",
+    "gorüntüleme",
+    "goruntuleme",
+    "diyaliz"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Kişisel Bakım",
+   "category": "Kuaför & Berber",
+   "keywords": [
+    "saloon",
+    "salon",
+    "salonu",
+    "erkek kuaforu",
+    "bayan kuaforu",
+    "makas",
+    "tras",
+    "tıraş",
+    "traş"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Park & Bahçe & Rekreasyon",
+   "keywords": [
+    "park",
+    "parki",
+    "parkı",
+    "bahce",
+    "bahçe",
+    "garden",
+    "mesire",
+    "piknik",
+    "yesil alan",
+    "yeşil alan",
+    "sahil",
+    "plaj",
+    "plaji",
+    "plajı",
+    "koy",
+    "iskele",
+    "sehir ormani"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Müze & Tarihi Yer & Turizm",
+   "keywords": [
+    "muze",
+    "müze",
+    "muzesi",
+    "müzesi",
+    "kumbet",
+    "kümbet",
+    "turbe",
+    "türbe",
+    "kale",
+    "kalesi",
+    "camii",
+    "cami",
+    "kilise",
+    "anit",
+    "anıt",
+    "tarihi",
+    "harabe",
+    "antik",
+    "hamam",
+    "koprusu",
+    "köprüsü",
+    "saat kulesi"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Konaklama",
+   "keywords": [
+    "kiralik daire",
+    "kiralık daire",
+    "gunluk kiralik",
+    "günlük kiralık",
+    "apart",
+    "suit",
+    "suites",
+    "villa",
+    "bungalov",
+    "bungalow",
+    "kamp",
+    "camping",
+    "konak",
+    "konaklama"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Düğün & Organizasyon",
+   "keywords": [
+    "dugun salonu",
+    "düğün salonu",
+    "dugun",
+    "düğün",
+    "kina",
+    "kına",
+    "organizasyon",
+    "davet",
+    "balo"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Kamu & Kurum",
+   "keywords": [
+    "belediye",
+    "muhtarlik",
+    "muhtarlık",
+    "mudurlugu",
+    "müdürlüğü",
+    "mudurluk",
+    "kaymakamlik",
+    "kaymakamlık",
+    "valilik",
+    "adliye",
+    "postane",
+    "ptt",
+    "karakol",
+    "jandarma",
+    "osb",
+    "organize sanayi",
+    "sendika",
+    "dernek",
+    "vakif",
+    "vakıf",
+    "oda",
+    "kooperatif",
+    "birligi",
+    "birliği",
+    "okulu",
+    "ilkokulu",
+    "ortaokulu",
+    "lisesi",
+    "yurdu",
+    "kres",
+    "kreş",
+    "anaokulu"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Şirket & Ofis (sektörü belirsiz)",
+   "keywords": [
+    "ofis",
+    "office",
+    "buro",
+    "büro",
+    "danismanlik",
+    "danışmanlık",
+    "holding",
+    "grup",
+    "group",
+    "hizmetleri",
+    "hizmet",
+    "yonetim",
+    "yönetim",
+    "ajans",
+    "ajansi",
+    "ajansı",
+    "reklam",
+    "medya",
+    "yazilim",
+    "yazılım",
+    "bilisim",
+    "bilişim",
+    "teknoloji"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Kokoreççi & Sakatatçı",
+   "keywords": [
+    "kokorec",
+    "kokoreç",
+    "iskembe",
+    "işkembe",
+    "sakatat",
+    "midye",
+    "kelle paca",
+    "kelle paça",
+    "paca",
+    "paça"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Çiğ Köfteci",
+   "keywords": [
+    "cig kofte",
+    "çiğ köfte",
+    "cigkofte",
+    "çiğköfte",
+    "oses",
+    "komagene"
+   ],
+   "brands": [
+    "Oses",
+    "Komagene"
+   ]
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Dönerci",
+   "keywords": [
+    "doner",
+    "döner",
+    "iskender",
+    "tantuni"
+   ],
+   "brands": [
+    "Bursa İskender"
+   ]
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Kebapçı & Ocakbaşı",
+   "keywords": [
+    "kebap",
+    "kebab",
+    "ocakbasi",
+    "ocakbaşı",
+    "ciger",
+    "ciğer",
+    "kavurma",
+    "kavurmaci",
+    "kavurmacı",
+    "izgara",
+    "ızgara",
+    "mangal",
+    "kofteci",
+    "köfteci",
+    "kofte",
+    "köfte",
+    "adana",
+    "urfa"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Pide & Lahmacun",
+   "keywords": [
+    "pide",
+    "lahmacun",
+    "pidecisi",
+    "etli ekmek"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Hamburgerci & Fast Food",
+   "keywords": [
+    "burger",
+    "hamburger",
+    "fast food",
+    "fastfood",
+    "pizza",
+    "waffle",
+    "hot dog",
+    "dürüm",
+    "durum"
+   ],
+   "brands": [
+    "Burger King",
+    "McDonald",
+    "Popeyes",
+    "Domino",
+    "KFC",
+    "Little Caesars",
+    "Pizza Hut",
+    "Subway"
+   ]
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Tost & Büfe",
+   "keywords": [
+    "tost",
+    "bufe",
+    "büfe",
+    "sandvic",
+    "sandviç",
+    "kumru",
+    "gozleme",
+    "gözleme"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Balık & Deniz Ürünleri",
+   "keywords": [
+    "balik",
+    "balık",
+    "deniz urun",
+    "deniz ürün",
+    "levrek",
+    "cupra",
+    "çupra",
+    "hamsi"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Tatlıcı & Baklavacı",
+   "keywords": [
+    "baklava",
+    "kunefe",
+    "künefe",
+    "tatli",
+    "tatlı",
+    "sutlac",
+    "sütlaç",
+    "kadayif",
+    "kadayıf",
+    "lokum",
+    "dondurma",
+    "gullu",
+    "güllü",
+    "hafiz mustafa"
+   ],
+   "brands": [
+    "Hafız Mustafa",
+    "Güllüoğlu",
+    "Mado",
+    "Karaköy Güllüoğlu"
+   ]
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Pastane & Fırın & Börekçi",
+   "keywords": [
+    "pastane",
+    "firin",
+    "fırın",
+    "borek",
+    "börek",
+    "simit",
+    "ekmek",
+    "unlu mamul",
+    "poğaça",
+    "pogaca",
+    "bakery",
+    ""
+   ],
+   "brands": [
+    "Simit Sarayı",
+    "Komşufırın",
+    "Uno"
+   ]
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "3. Nesil Kahveci",
+   "keywords": [
+    "coffee",
+    "kahve",
+    "roastery",
+    "espresso",
+    "cafe",
+    "kafe",
+    "cay bahcesi",
+    "çay bahçesi",
+    "kahvehane",
+    "kiraathane",
+    "kıraathane"
+   ],
+   "brands": [
+    "Starbucks",
+    "Kahve Dünyası",
+    "Espressolab",
+    "Gloria Jean",
+    "Caribou",
+    "Coffy",
+    "Petra"
+   ]
+  },
+  {
+   "sector": "Yeme-İçme",
+   "category": "Restoran & Lokanta",
+   "keywords": [
+    "restaurant",
+    "restoran",
+    "lokanta",
+    "ev yemek",
+    "sofrasi",
+    "sofrası",
+    "yemek",
+    "mutfak",
+    "mutfagi",
+    "mutfağı",
+    "meyhane",
+    "kebaphane",
+    "et evi",
+    "steak",
+    "mantı",
+    "manti",
+    "corba",
+    "çorba",
+    "pilav"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Gıda Perakende",
+   "category": "Süpermarket & Market",
+   "keywords": [
+    "market",
+    "bakkal",
+    "supermarket",
+    "süpermarket",
+    "sarkuteri",
+    "şarküteri",
+    "grocery"
+   ],
+   "brands": [
+    "A101",
+    "BİM",
+    "BIM",
+    "ŞOK",
+    "SOK",
+    "Migros",
+    "CarrefourSA",
+    "Carrefour",
+    "Macrocenter",
+    "Metro",
+    "File",
+    "Hakmar",
+    "Tarım Kredi",
+    "Getir"
+   ]
+  },
+  {
+   "sector": "Gıda Perakende",
+   "category": "Manav",
+   "keywords": [
+    "manav",
+    "meyve",
+    "sebze"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Gıda Perakende",
+   "category": "Kasap",
+   "keywords": [
+    "kasap",
+    "et market",
+    "et urunleri",
+    "et ürünleri",
+    "tavukcu",
+    "tavukçu"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Gıda Perakende",
+   "category": "Kuruyemiş & Şekerleme",
+   "keywords": [
+    "kuruyemis",
+    "kuruyemiş",
+    "sekerleme",
+    "şekerleme",
+    "cerez",
+    "çerez",
+    "baharat",
+    "aktar"
+   ],
+   "brands": [
+    "Tadım",
+    "Peyman"
+   ]
+  },
+  {
+   "sector": "Gıda Perakende",
+   "category": "Su & Tüp Bayii",
+   "keywords": [
+    "su bayi",
+    "damacana",
+    "tup bayi",
+    "tüp bayi",
+    "aygaz",
+    "ipragaz",
+    "milangaz"
+   ],
+   "brands": [
+    "Aygaz",
+    "İpragaz",
+    "Milangaz"
+   ]
+  },
+  {
+   "sector": "Kişisel Bakım",
+   "category": "Kuaför & Berber",
+   "keywords": [
+    "kuafor",
+    "kuaför",
+    "berber",
+    "hair",
+    "sac",
+    "saç",
+    "barber",
+    "coiffeur"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Kişisel Bakım",
+   "category": "Güzellik & Kozmetik",
+   "keywords": [
+    "guzellik",
+    "güzellik",
+    "beauty",
+    "kozmetik",
+    "epilasyon",
+    "nail",
+    "tirnak",
+    "tırnak",
+    "makyaj",
+    "spa",
+    "masaj",
+    "estetik"
+   ],
+   "brands": [
+    "Gratis",
+    "Watsons",
+    "Sephora",
+    "Rossmann",
+    "Eve"
+   ]
+  },
+  {
+   "sector": "Sağlık",
+   "category": "Eczane",
+   "keywords": [
+    "eczane",
+    "pharmacy",
+    "eczanesi"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Sağlık",
+   "category": "Klinik & Muayenehane",
+   "keywords": [
+    "klinik",
+    "poliklinik",
+    "muayenehane",
+    "hastane",
+    "dis hekimi",
+    "diş hekimi",
+    "dishekimi",
+    "dişhekimi",
+    "ortodonti",
+    "tip merkezi",
+    "tıp merkezi",
+    "fizik tedavi",
+    "psikolog",
+    "veteriner",
+    "optik",
+    "gozluk",
+    "gözlük",
+    "isitme",
+    "işitme",
+    "medikal"
+   ],
+   "brands": [
+    "Medical Park",
+    "Acıbadem",
+    "Memorial",
+    "Lokman Hekim"
+   ]
+  },
+  {
+   "sector": "Otomotiv",
+   "category": "Oto Servis & Yedek Parça",
+   "keywords": [
+    "oto",
+    "oto servis",
+    "otomotiv",
+    "lastik",
+    "rot balans",
+    "egzoz",
+    "kaporta",
+    "boya",
+    "yedek parca",
+    "yedek parça",
+    "oto elektrik",
+    "oto yikama",
+    "oto yıkama",
+    "araba yikama",
+    "oto tamir",
+    "sanayi",
+    "motosiklet",
+    "akü",
+    "aku"
+   ],
+   "brands": [
+    "Bosch Car Service",
+    "Lastik",
+    "Petlas",
+    "Michelin",
+    "Bridgestone"
+   ]
+  },
+  {
+   "sector": "Otomotiv",
+   "category": "Akaryakıt & Otopark",
+   "keywords": [
+    "petrol",
+    "akaryakit",
+    "akaryakıt",
+    "benzin",
+    "otopark",
+    "ispark",
+    "lpg"
+   ],
+   "brands": [
+    "Shell",
+    "Opet",
+    "BP",
+    "Petrol Ofisi",
+    "Total",
+    "Aytemiz",
+    "Lukoil",
+    "Alpet",
+    "Türkiye Petrolleri",
+    "Moil"
+   ]
+  },
+  {
+   "sector": "Otomotiv",
+   "category": "Galeri & Oto Kiralama",
+   "keywords": [
+    "oto galeri",
+    "otogaleri",
+    "oto kiralama",
+    "rent a car",
+    "otomobil",
+    "araç kiralama",
+    "arac kiralama"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Moda",
+   "category": "Giyim & Ayakkabı",
+   "keywords": [
+    "giyim",
+    "butik",
+    "tekstil",
+    "moda",
+    "ayakkabi",
+    "ayakkabı",
+    "canta",
+    "çanta",
+    "kuyumcu",
+    "saatci",
+    "saatçi",
+    "altin",
+    "altın",
+    "gumus",
+    "gümüş",
+    "optik",
+    "elbise",
+    "abiye",
+    "gelinlik",
+    "cocuk giyim",
+    "çocuk giyim",
+    "ic giyim",
+    "iç giyim",
+    "corap",
+    "çorap",
+    "triko",
+    "kot",
+    "jeans"
+   ],
+   "brands": [
+    "LC Waikiki",
+    "LCW",
+    "Koton",
+    "DeFacto",
+    "Mavi",
+    "Colin",
+    "Zara",
+    "H&M",
+    "Boyner",
+    "Flo",
+    "Deichmann",
+    "Kinetix",
+    "Penti",
+    "Bershka",
+    "Pull&Bear"
+   ]
+  },
+  {
+   "sector": "Elektronik",
+   "category": "Elektronik & Telefon",
+   "keywords": [
+    "elektronik",
+    "telefon",
+    "telefoncu",
+    "bilgisayar",
+    "computer",
+    "gsm",
+    "teknoloji",
+    "beyaz esya",
+    "beyaz eşya",
+    "teknik servis",
+    ""
+   ],
+   "brands": [
+    "Teknosa",
+    "MediaMarkt",
+    "Vatan",
+    "Turkcell",
+    "Vodafone",
+    "Türk Telekom",
+    "Apple",
+    "Samsung",
+    "Arçelik",
+    "Beko",
+    "Vestel",
+    "Bosch"
+   ]
+  },
+  {
+   "sector": "Ev & Yapı",
+   "category": "Mobilya & Ev Dekorasyon",
+   "keywords": [
+    "mobilya",
+    "dekorasyon",
+    "ev tekstil",
+    "perde",
+    "hali",
+    "halı",
+    "yatak",
+    "koltuk",
+    "mutfak dolabi",
+    "mutfak dolabı",
+    "avize",
+    "zuccaciye",
+    "züccaciye",
+    "cam balkon"
+   ],
+   "brands": [
+    "IKEA",
+    "Bellona",
+    "İstikbal",
+    "Doğtaş",
+    "Kelebek",
+    "Yataş",
+    "Madame Coco",
+    "English Home",
+    "Karaca",
+    "Tefal",
+    "Koçtaş",
+    "Bauhaus"
+   ]
+  },
+  {
+   "sector": "Ev & Yapı",
+   "category": "Yapı Malzemesi & Nalbur",
+   "keywords": [
+    "nalbur",
+    "hirdavat",
+    "hırdavat",
+    "yapi market",
+    "yapı market",
+    "yapi malzeme",
+    "yapı malzeme",
+    "insaat",
+    "inşaat",
+    "boya badana",
+    "seramik",
+    "fayans",
+    "aluminyum",
+    "alüminyum",
+    "pvc",
+    "elektrik malzeme",
+    "tesisat",
+    "kombi",
+    "dogalgaz",
+    "doğalgaz",
+    "klima",
+    "sihhi tesisat",
+    "sıhhi tesisat"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Emlak & Gayrimenkul",
+   "keywords": [
+    "emlak",
+    "gayrimenkul",
+    "realty",
+    "real estate",
+    "remax",
+    "re/max"
+   ],
+   "brands": [
+    "RE/MAX",
+    "Century 21",
+    "Coldwell Banker",
+    "Turyap",
+    "Keller Williams"
+   ]
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Finans & Sigorta",
+   "keywords": [
+    "banka",
+    "bank",
+    "sigorta",
+    "atm",
+    "doviz",
+    "döviz",
+    "finans",
+    "kredi",
+    "muhasebe",
+    "mali musavir",
+    "mali müşavir"
+   ],
+   "brands": [
+    "Ziraat",
+    "Garanti",
+    "Akbank",
+    "Yapı Kredi",
+    "İş Bankası",
+    "Halkbank",
+    "VakıfBank",
+    "QNB",
+    "Denizbank",
+    "TEB",
+    "ING",
+    "Kuveyt Türk",
+    "Albaraka",
+    "Enpara"
+   ]
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Eğitim & Kurs",
+   "keywords": [
+    "okul",
+    "kurs",
+    "egitim",
+    "eğitim",
+    "dershane",
+    "anaokulu",
+    "kres",
+    "kreş",
+    "etut",
+    "etüt",
+    "universite",
+    "üniversite",
+    "surucu kursu",
+    "sürücü kursu",
+    "kolej",
+    "akademi",
+    "yurt"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Kargo & Kurye",
+   "keywords": [
+    "kargo",
+    "kurye",
+    "lojistik",
+    "nakliyat",
+    "nakliye",
+    "evden eve"
+   ],
+   "brands": [
+    "Aras",
+    "Yurtiçi",
+    "MNG",
+    "PTT",
+    "Sürat",
+    "UPS",
+    "DHL",
+    "Trendyol Express",
+    "Hepsijet",
+    "Sendeo"
+   ]
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Konaklama",
+   "keywords": [
+    "otel",
+    "hotel",
+    "pansiyon",
+    "hostel",
+    "konukevi",
+    "motel",
+    "resort",
+    ""
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Temizlik & Kuru Temizleme",
+   "keywords": [
+    "kuru temizleme",
+    "camasir",
+    "çamaşır",
+    "utu",
+    "ütü",
+    "temizlik",
+    "hali yikama",
+    "halı yıkama"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Terzi & Ayakkabı Tamir",
+   "keywords": [
+    "terzi",
+    "tamirci",
+    "ayakkabi tamir",
+    "ayakkabı tamir",
+    "anahtarci",
+    "anahtarcı",
+    "cilingir",
+    "çilingir"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Hukuk & Danışmanlık",
+   "keywords": [
+    "avukat",
+    "hukuk",
+    "noter",
+    "danismanlik",
+    "danışmanlık",
+    "musavir",
+    "müşavir"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Fotoğraf & Matbaa & Kırtasiye",
+   "keywords": [
+    "fotograf",
+    "fotoğraf",
+    "matbaa",
+    "baski",
+    "baskı",
+    "kirtasiye",
+    "kırtasiye",
+    "kitabevi",
+    "kitap",
+    "reklam",
+    "tabela",
+    "fotokopi"
+   ],
+   "brands": [
+    "D&R"
+   ]
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Çiçekçi & Hediyelik",
+   "keywords": [
+    "cicek",
+    "çiçek",
+    "cicekci",
+    "çiçekçi",
+    "hediyelik",
+    "hediye",
+    "oyuncak"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Spor & Eğlence",
+   "keywords": [
+    "spor",
+    "fitness",
+    "gym",
+    "hali saha",
+    "halı saha",
+    "yuzme",
+    "yüzme",
+    "pilates",
+    "yoga",
+    "bilardo",
+    "playstation",
+    "internet cafe",
+    "oyun salonu",
+    "sinema",
+    "tiyatro",
+    "düğün",
+    "dugun",
+    ""
+   ],
+   "brands": [
+    "MACFit",
+    "Sports International"
+   ]
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Evcil Hayvan",
+   "keywords": [
+    "petshop",
+    "pet shop",
+    "pet ",
+    "evcil",
+    "kopek",
+    "köpek",
+    "kedi mamasi",
+    "kedi maması"
+   ],
+   "brands": []
+  },
+  {
+   "sector": "Hizmet",
+   "category": "Kamu & Dini Tesis",
+   "keywords": [
+    "belediye",
+    "muhtarlik",
+    "muhtarlık",
+    "cami",
+    "camii",
+    "mescit",
+    "kilise",
+    "postane",
+    "karakol",
+    "nufus mudurlugu",
+    "nüfus müdürlüğü",
+    "saglik ocagi",
+    "sağlık ocağı",
+    "asm",
+    "kutuphane",
+    "kütüphane",
+    ""
+   ],
+   "brands": []
+  }
+ ],
+ "search_map": {
+  "restoranlar": [
+   "Yeme-İçme",
+   "Restoran & Lokanta"
+  ],
+  "kafeler": [
+   "Yeme-İçme",
+   "3. Nesil Kahveci"
+  ],
+  "pastaneler": [
+   "Yeme-İçme",
+   "Pastane & Fırın & Börekçi"
+  ],
+  "kuaför güzellik": [
+   "Kişisel Bakım",
+   null
+  ],
+  "otomotiv servisleri": [
+   "Otomotiv",
+   "Oto Servis & Yedek Parça"
+  ],
+  "marketler": [
+   "Gıda Perakende",
+   "Süpermarket & Market"
+  ],
+  "giyim": [
+   "Moda",
+   "Giyim & Ayakkabı"
+  ],
+  "eczaneler": [
+   "Sağlık",
+   "Eczane"
+  ],
+  "elektronikçiler": [
+   "Elektronik",
+   "Elektronik & Telefon"
+  ],
+  "mobilyacılar": [
+   "Ev & Yapı",
+   "Mobilya & Ev Dekorasyon"
+  ],
+  "nalburlar": [
+   "Ev & Yapı",
+   "Yapı Malzemesi & Nalbur"
+  ],
+  "kasaplar": [
+   "Gıda Perakende",
+   "Kasap"
+  ],
+  "manavlar": [
+   "Gıda Perakende",
+   "Manav"
+  ],
+  "oteller": [
+   "Hizmet",
+   "Konaklama"
+  ],
+  "bankalar": [
+   "Hizmet",
+   "Finans & Sigorta"
+  ],
+  "okullar": [
+   "Hizmet",
+   "Kamu & Kurum"
+  ],
+  "dükkanlar": [
+   null,
+   null
+  ]
+ },
+ "name_model": {
+  "holdout_accuracy": 0.8905255322899731,
+  "p085_coverage": 0.6953558067106732,
+  "p085_accuracy": 0.9625070422535211
+ },
+ "review_model": {
+  "train": 130063,
+  "holdout_accuracy": 0.5649867374005305,
+  "p085_coverage": 0.052627532387652325,
+  "p085_accuracy": 0.997808619430241
+ },
+ "seed": 20260919,
+ "code_hash": "0bdaea729af31128d87cdb1cff6381423852bccfc3018cdb41fc461f657cd92f"
+}

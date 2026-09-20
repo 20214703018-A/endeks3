@@ -1,0 +1,20 @@
+{
+ "source_id": "P_arsaemsal_arsa_alan_segmentleri",
+ "batch_id": "BATCH_2026_09_18_price_series_P_arsaemsal_arsa_alan_segmentleri",
+ "target": "stg_land_area_segments",
+ "file_id": "FILE_00005030",
+ "input_count": 2851,
+ "successfully_loaded": 2851,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 17,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "review_flags": {
+  "PRIOR_PIPELINE_PRODUCT": 2851
+ },
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_land_area_segments/part-BATCH_2026_09_18_price_series_P_arsaemsal_arsa_alan_segmentleri.parquet",
+ "seconds": 5.1,
+ "mode": "apply"
+}

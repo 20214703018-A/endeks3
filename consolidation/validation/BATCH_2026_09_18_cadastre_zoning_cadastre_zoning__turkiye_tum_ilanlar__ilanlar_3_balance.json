@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__turkiye_tum_ilanlar__ilanlar_3",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__turkiye_tum_ilanlar__ilanlar_3",
+ "target": "stg_turkiye_tum_ilanlar__ilanlar",
+ "file_id": "FILE_00008371",
+ "input_count": 1327,
+ "successfully_loaded": 1327,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 33,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_turkiye_tum_ilanlar__ilanlar/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__turkiye_tum_ilanlar__ilanlar_3.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

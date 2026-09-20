@@ -1,0 +1,19 @@
+{
+ "source_id": "demographics_context__istanbul__istanbul_json",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__istanbul__istanbul_json",
+ "target": "stg_istanbul",
+ "file_id": "FILE_00002040",
+ "input_count": 39,
+ "successfully_loaded": 39,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 20,
+ "geometry_types": [],
+ "review_flags": {
+  "Q06": 39
+ },
+ "estimated_bytes": 271120,
+ "note": "json_records under=ilceler",
+ "seconds": 0.3,
+ "mode": "apply"
+}

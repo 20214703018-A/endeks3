@@ -1,0 +1,3464 @@
+{
+ "family": "demographics_context",
+ "standard_version": "1.0.0",
+ "sources": [
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_3",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_02_ankara.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_02_ankara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_02_ankara.zip::paket_02_ankara.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "78b658b6611a5170b833ed8b3d8785024289fa604a87f66a5a81b20867a5fbc0"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_4",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_03_izmir.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_03_izmir.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_03_izmir.zip::paket_03_izmir.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "d1ad674945cb037ee103922ea2856748b08623f9e60379dc1d2ac237e51b5a37"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_5",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_05_kocaeli_sakarya.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_05_kocaeli_sakarya.zip::paket_05_kocaeli_sakarya.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "3722a61b28f42f5a8e718b1b9cd551f6706487925f5f9babd592be4f0464cf2c"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_6",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_06_trakya_guney_marmara.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_06_trakya_guney_marmara.zip::paket_06_trakya_guney_marmara.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "1259fe0f8db8ac3deb142a2b7568c6b0e8fc9b2421cfcca7772973ce1c14b635"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_7",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_07_antalya_goller.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_07_antalya_goller.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_07_antalya_goller.zip::paket_07_antalya_goller.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "0cd78bd8a5a535805145d6f5424007e2eeb3817b9e9e3643b8bcbebdc75e0110"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_8",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_08_guney_ege.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_08_guney_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_08_guney_ege.zip::paket_08_guney_ege.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "7c2f822efe7f090b53a470fec3bca5dd653179e2f99cc23bde2f5e599fd5d0d5"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_9",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_09_kuzey_ege.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_09_kuzey_ege.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_09_kuzey_ege.zip::paket_09_kuzey_ege.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "7bdfba1d4f9b63e2107585e47747ca0ba9a5aa30360eecf149bae9cc40a15c5f"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_10",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_10_cukurova.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_10_cukurova.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_10_cukurova.zip::paket_10_cukurova.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "4cc4015cf290c1206a530d78bcc39e65f2fa298f6761318d80b2fbb9511349ea"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_11",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_11_konya_karaman.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_11_konya_karaman.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_11_konya_karaman.zip::paket_11_konya_karaman.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "18170d236a2a32b11743ca38a2195094f5033801b8ffee35bbf617c9f922be92"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_12",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_12_orta_anadolu (1).zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_12_orta_anadolu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_12_orta_anadolu (1).zip::paket_12_orta_anadolu.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "3b10b8e998c352f0d2122290f3238f1fd9235c7292508afc42c577ae755ace57"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_13",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_13_orta_karadeniz.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_13_orta_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_13_orta_karadeniz.zip::paket_13_orta_karadeniz.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "7088f3a65e3d28490ba3db342110cbc01e73a15d349b7c1d519a1a5143dedbf3"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_14",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_14_dogu_bati_karadeniz.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_14_dogu_bati_karadeniz.zip::paket_14_dogu_bati_karadeniz.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "46680f7b5b9b9083ff9bd80461a53df27364eba49be1561cd6168cc764133e52"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__danismanlar_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__danismanlar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "danismanlar",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::danismanlar",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__demografi_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__demografi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "demografi",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::demografi",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__emlak_ofisleri_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__emlak_ofisleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "emlak_ofisleri",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::emlak_ofisleri",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_dagilim_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__fiyat_dagilim",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_dagilim",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::fiyat_dagilim",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_ozet_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__fiyat_ozet",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_ozet",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::fiyat_ozet",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__fiyat_trend_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__fiyat_trend",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "fiyat_trend",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::fiyat_trend",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__hemsehri_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__hemsehri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "hemsehri",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::hemsehri",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__ilceler_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__ilceler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "ilceler",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::ilceler",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__iller_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__iller",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "iller",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::iller",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__mahalleler_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__mahalleler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "mahalleler",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::mahalleler",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__poi_noktalari_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__poi_noktalari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "poi_noktalari",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::poi_noktalari",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__secim_sonuclari_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__secim_sonuclari",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "secim_sonuclari",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::secim_sonuclari",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__sirketler_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__sirketler",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "sirketler",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::sirketler",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  },
+  {
+   "source_id": "demographics_context__zip__piyasa_verileri__yillik_satislar_15",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/VERİLER/Öğelerle Yeni Klasör 2/bolge_15_dogu_guneydogu.zip",
+   "target": "stg_piyasa_verileri__yillik_satislar",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "C03",
+    "NESTED_ZIP_MEMBER",
+    "PACKAGE_SNAPSHOT_2026-09-11(bolge paketi; guncel surum ayrica staged)"
+   ],
+   "table": "yillik_satislar",
+   "zip_member": "paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db",
+   "inventory_table": "bolge_15_dogu_guneydogu.zip::paket_15_dogu_guneydogu.zip::data/piyasa_verileri.db::yillik_satislar",
+   "family": "demographics_context",
+   "member_sha256": "8acaea31bddfc3fffa20457f14e65554625fca0c1bcce34b01713ffeca3f2c1e"
+  }
+ ]
+}

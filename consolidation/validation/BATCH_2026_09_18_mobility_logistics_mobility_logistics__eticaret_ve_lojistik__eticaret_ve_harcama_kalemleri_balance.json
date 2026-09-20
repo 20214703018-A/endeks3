@@ -1,0 +1,17 @@
+{
+ "source_id": "mobility_logistics__eticaret_ve_lojistik__eticaret_ve_harcama_kalemleri",
+ "batch_id": "BATCH_2026_09_18_mobility_logistics_mobility_logistics__eticaret_ve_lojistik__eticaret_ve_harcama_kalemleri",
+ "target": "stg_eticaret_ve_lojistik__eticaret_ve_harcama_kalemleri",
+ "file_id": "FILE_00000922",
+ "input_count": 20073,
+ "successfully_loaded": 20073,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 41,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/mobility_logistics/stg_eticaret_ve_lojistik__eticaret_ve_harcama_kalemleri/part-BATCH_2026_09_18_mobility_logistics_mobility_logistics__eticaret_ve_lojistik__eticaret_ve_harcama_kalemleri.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

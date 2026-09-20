@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__turkiye_tam_sit_alanlari__turkiye_tam_sit_alanlari",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__turkiye_tam_sit_alanlari__turkiye_tam_sit_alanlari",
+ "target": "stg_turkiye_tam_sit_alanlari",
+ "file_id": "FILE_00008629",
+ "input_count": 141,
+ "successfully_loaded": 141,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_turkiye_tam_sit_alanlari/part-BATCH_2026_09_18_reference_geography_reference_geography__turkiye_tam_sit_alanlari__turkiye_tam_sit_alanlari.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

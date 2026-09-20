@@ -1,0 +1,21 @@
+{
+ "source_id": "price_series__24_ilce_ve_mahalle_arac_refah_endeksi__24_ilce_ve_mahalle_arac_refah_",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__24_ilce_ve_mahalle_arac_refah_endeksi__24_ilce_ve_mahalle_arac_refah_",
+ "target": "stg_24_ilce_ve_mahalle_arac_refah_endeksi",
+ "file_id": "FILE_00008662",
+ "input_count": 6,
+ "successfully_loaded": 6,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 7,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_24_ilce_ve_mahalle_arac_refah_endeksi/part-BATCH_2026_09_18_price_series_price_series__24_ilce_ve_mahalle_arac_refah_endeksi__24_ilce_ve_mahalle_arac_refah_.parquet",
+ "review_flags": {
+  "R01": 6
+ },
+ "seconds": 0.0,
+ "mode": "apply"
+}

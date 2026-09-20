@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__turkiye_tam_birlesik_envanter__Turkiye_Tam_Fiziksel_ve_Hukuki",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__turkiye_tam_birlesik_envanter__Turkiye_Tam_Fiziksel_ve_Hukuki",
+ "target": "stg_turkiye_tam_birlesik_envanter",
+ "file_id": "FILE_00008623",
+ "input_count": 38486,
+ "successfully_loaded": 38486,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_turkiye_tam_birlesik_envanter/part-BATCH_2026_09_18_reference_geography_reference_geography__turkiye_tam_birlesik_envanter__Turkiye_Tam_Fiziksel_ve_Hukuki.parquet zaten var (append-only)",
+ "seconds": 2.2,
+ "mode": "apply"
+}

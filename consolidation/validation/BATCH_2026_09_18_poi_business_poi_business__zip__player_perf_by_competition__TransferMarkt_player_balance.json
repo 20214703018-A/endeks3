@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__zip__player_perf_by_competition__TransferMarkt_player",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__zip__player_perf_by_competition__TransferMarkt_player",
+ "target": "stg_player_perf_by_competition",
+ "file_id": "FILE_00016606",
+ "input_count": 227100,
+ "successfully_loaded": 227100,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": 227101,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_player_perf_by_competition/part-BATCH_2026_09_18_poi_business_poi_business__zip__player_perf_by_competition__TransferMarkt_player.parquet",
+ "review_flags": {},
+ "seconds": 0.8,
+ "mode": "apply"
+}

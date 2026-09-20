@@ -1,0 +1,106 @@
+{
+ "version": "1.0.0",
+ "created_at": "2026-09-20T03:54:37+00:00",
+ "policy": "Kullanıcı kararı 2026-09-20: kişisel veri içeren alanlar DB'de kalır; ayrı/işaretli sütunlarda durur; distribution=restricted → ürün paketine girmez, yalnız dahili kullanım. Kişisel: gerçek kişi adı, telefon (kişi veya işletme ayrımı yapılmadan), e-posta, kimlik/vergi no.",
+ "classes": {
+  "person_name": "restricted",
+  "phone": "restricted",
+  "email": "restricted",
+  "id_number": "restricted",
+  "business_name": "public"
+ },
+ "columns": {
+  "stg_kisisel_veriler__danisman": {
+   "raw_danisman_adi": "person_name",
+   "raw_telefon": "phone"
+  },
+  "stg_kisisel_veriler__iletisim": {
+   "raw_deger": "phone",
+   "raw_deger_sha256": "phone_hash(public-safe)"
+  },
+  "stg_piyasa_verileri__danismanlar": {
+   "raw_danisman_adi": "person_name",
+   "raw_telefon": "phone"
+  },
+  "stg_10_gayrimenkul_danismanlari": {
+   "raw_danisman_adi": "person_name",
+   "raw_telefon": "phone"
+  },
+  "stg_piyasa_verileri__emlak_ofisleri": {
+   "raw_telefon": "phone"
+  },
+  "stg_09_emlak_ofisleri_rehberi": {
+   "raw_telefon": "phone"
+  },
+  "stg_turkiye_arsa_ayrintili": {
+   "raw__leti_im_Telefonu": "phone",
+   "raw_Sat_c__Telefon": "phone"
+  },
+  "stg_turkiye_isyeri_ayrintili": {
+   "raw__leti_im_Telefonu": "phone",
+   "raw_Sat_c__Telefon": "phone"
+  },
+  "stg_turkiye_konut_ayrintili": {
+   "raw__leti_im_Telefonu": "phone",
+   "raw_Sat_c__Telefon": "phone"
+  },
+  "stg_turkiye_tum_ilanlar__ilanlar": {
+   "raw_satici_telefon": "phone"
+  },
+  "stg_resmi_egitim__okul": {
+   "raw_telefon": "phone"
+  },
+  "stg_18_kargo_ve_teslimat_noktalari": {
+   "raw_telefon": "phone"
+  },
+  "stg_kargo_ve_lojistik_noktalari__kargo_ve_teslimat": {
+   "raw_telefon": "phone"
+  },
+  "stg_turkiye_kargo_ve_kargomatlar": {
+   "raw_telefon": "phone"
+  },
+  "stg_zincir_markalar_ve_finans__poi_zincir_ve_finans": {
+   "raw_telefon": "phone"
+  },
+  "stg_google_places_ve_yogunluk__google_places_gozlem": {
+   "raw_telefon": "phone"
+  },
+  "stg_google_places_ve_yogunluk__google_places_ticari_yogunluk": {
+   "raw_telefon": "phone"
+  },
+  "stg_restoran_ve_kafe_menuleri__google_places_ticari_yogunluk": {
+   "raw_telefon": "phone"
+  },
+  "stg_restoran_ve_kafe_menuleri__isletme_tarihsel_yasam_dongusu": {
+   "raw_telefon": "phone"
+  },
+  "stg_osm_food_poi": {
+   "raw_phone": "phone",
+   "raw_contact_phone": "phone",
+   "raw_alt_phone": "phone",
+   "raw_phone_mobile": "phone",
+   "raw_phone_1": "phone",
+   "raw_communication_mobile_phone": "phone",
+   "raw_phone_delivery": "phone",
+   "raw_email": "email",
+   "raw_contact_email": "email",
+   "raw_owner": "person_name"
+  },
+  "canonical.poi": {
+   "phone": "phone",
+   "osm_phone": "phone"
+  },
+  "canonical.venue_delivery_observation": {},
+  "canonical.business_contact(v1.5)": {
+   "person_name": "person_name",
+   "phone": "phone"
+  }
+ },
+ "false_positives_reviewed": [
+  "*_ev_sahibi_orani (oran)",
+  "*_degisim* (fiyat değişimi)",
+  "raw_isim (işletme adı — public)",
+  "Chinook_Sqlite (demo DB; Q06 karantina adayı)",
+  "raw_acquisition_owner (kaynak sicili; kurum)"
+ ]
+}

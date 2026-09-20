@@ -1,0 +1,17 @@
+{
+ "source_id": "mobility_logistics__ulasim_ve_hareketlilik_gps__arac_gps_saatlik_akis",
+ "batch_id": "BATCH_2026_09_18_mobility_logistics_mobility_logistics__ulasim_ve_hareketlilik_gps__arac_gps_saatlik_akis",
+ "target": "stg_ulasim_ve_hareketlilik_gps__arac_gps_saatlik_akis",
+ "file_id": "FILE_00005059",
+ "input_count": 16840,
+ "successfully_loaded": 16840,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/mobility_logistics/stg_ulasim_ve_hareketlilik_gps__arac_gps_saatlik_akis/part-BATCH_2026_09_18_mobility_logistics_mobility_logistics__ulasim_ve_hareketlilik_gps__arac_gps_saatlik_akis.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

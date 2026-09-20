@@ -1,0 +1,16 @@
+{
+ "source_id": "poi_business__10_gayrimenkul_danismanlari__10_gayrimenkul_danismanlari_cs_17",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__10_gayrimenkul_danismanlari__10_gayrimenkul_danismanlari_cs_17",
+ "target": "stg_10_gayrimenkul_danismanlari",
+ "file_id": "FILE_00000453",
+ "input_count": 20,
+ "successfully_loaded": 20,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": 21,
+ "engine": "duckdb",
+ "note": "csv",
+ "seconds": 0.0,
+ "mode": "dry-run"
+}

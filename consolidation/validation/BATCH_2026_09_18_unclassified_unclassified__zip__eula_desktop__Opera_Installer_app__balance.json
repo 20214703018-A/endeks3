@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__zip__eula_desktop__Opera_Installer_app_",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__zip__eula_desktop__Opera_Installer_app_",
+ "target": "stg_eula_desktop",
+ "file_id": "FILE_00016519",
+ "input_count": 20,
+ "successfully_loaded": 20,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 17,
+ "raw_line_count": 42,
+ "engine": "duckdb",
+ "note": "csv LINE_COUNT_MISMATCH raw_lines=42 accounted=21 (çok satırlı alan olabilir)",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_eula_desktop/part-BATCH_2026_09_18_unclassified_unclassified__zip__eula_desktop__Opera_Installer_app_.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

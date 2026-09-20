@@ -1,0 +1,17 @@
+{
+ "source_id": "economy__19_etbis_il_bazli_e_ticaret_hacimleri__19_etbis_il_bazli_e_ticaret_ha",
+ "batch_id": "BATCH_2026_09_18_economy_economy__19_etbis_il_bazli_e_ticaret_hacimleri__19_etbis_il_bazli_e_ticaret_ha",
+ "target": "stg_19_etbis_il_bazli_e_ticaret_hacimleri",
+ "file_id": "FILE_00008657",
+ "input_count": 81,
+ "successfully_loaded": 81,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 14,
+ "raw_line_count": 82,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/economy/stg_19_etbis_il_bazli_e_ticaret_hacimleri/part-BATCH_2026_09_18_economy_economy__19_etbis_il_bazli_e_ticaret_hacimleri__19_etbis_il_bazli_e_ticaret_ha.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

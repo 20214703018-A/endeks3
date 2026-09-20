@@ -1,0 +1,19 @@
+{
+ "source_id": "price_series__zip__llms__bozcarrental_com_llm",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__zip__llms__bozcarrental_com_llm",
+ "target": "stg_llms",
+ "file_id": "FILE_00016620",
+ "input_count": 14,
+ "successfully_loaded": 14,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "raw_line_count": 20,
+ "engine": "duckdb",
+ "note": "csv LINE_COUNT_MISMATCH raw_lines=20 accounted=15 (çok satırlı alan olabilir)",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_llms/part-BATCH_2026_09_18_price_series_price_series__zip__llms__bozcarrental_com_llm.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

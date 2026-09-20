@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__U3__U3_json",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__U3__U3_json",
+ "target": "stg_U3",
+ "file_id": "FILE_00017191",
+ "input_count": 174,
+ "successfully_loaded": 174,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 97132,
+ "note": "json_records under=None",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,23 @@
+{
+ "source_id": "S8_nuts4",
+ "batch_id": "BATCH_2026_09_18_reference_geography_S8_nuts4",
+ "target": "stg_admin_boundary_alt",
+ "file_id": "FILE_00008366",
+ "input_count": 973,
+ "successfully_loaded": 973,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "geometry_types": [
+  "MultiPolygon",
+  "Polygon"
+ ],
+ "review_flags": {
+  "F8_NUTS_SOURCE_UNKNOWN": 973,
+  "GEOMETRY_INVALID": 1
+ },
+ "estimated_bytes": 596442,
+ "note": "geojson crs={\"properties\":{\"name\":\"urn:ogc:def:crs:OGC:1.3:CRS84\"},\"type\":\"name\"}",
+ "seconds": 0.1,
+ "mode": "apply"
+}

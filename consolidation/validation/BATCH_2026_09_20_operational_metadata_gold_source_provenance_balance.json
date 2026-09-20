@@ -1,0 +1,19 @@
+{
+ "source_id": "gold_source_provenance",
+ "batch_id": "BATCH_2026_09_20_operational_metadata_gold_source_provenance",
+ "target": "stg_gold_source_provenance",
+ "file_id": "FILE_00005029",
+ "input_count": 2890,
+ "successfully_loaded": 2890,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "geometry_types": [],
+ "review_flags": {
+  "PREVIOUS_AUTOMATION_GOLD_REGISTRY": 2890
+ },
+ "estimated_bytes": 1106756,
+ "note": "duckdb_table",
+ "seconds": 0.1,
+ "mode": "apply"
+}

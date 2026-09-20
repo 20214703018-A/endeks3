@@ -1,0 +1,22 @@
+{
+ "source_id": "poi_business__google_places_ve_yogunluk__google_places_arama_gecmisi_11",
+ "batch_id": "BATCH_2026_09_19_poi_business_poi_business__google_places_ve_yogunluk__google_places_arama_gecmisi_11",
+ "target": "stg_google_places_ve_yogunluk__google_places_arama_gecmisi",
+ "file_id": "FILE_00019767",
+ "input_count": 3974,
+ "successfully_loaded": 3974,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 6,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_google_places_ve_yogunluk__google_places_arama_gecmisi/part-BATCH_2026_09_19_poi_business_poi_business__google_places_ve_yogunluk__google_places_arama_gecmisi_11.parquet",
+ "review_flags": {
+  "C04": 3974,
+  "T07": 3974
+ },
+ "seconds": 0.3,
+ "mode": "apply"
+}

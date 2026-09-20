@@ -1,0 +1,19 @@
+{
+ "source_id": "S12_ilce_listesi_20",
+ "batch_id": "BATCH_2026_09_18_reference_geography_S12_ilce_listesi_20",
+ "target": "stg_admin_list",
+ "file_id": "FILE_00000507",
+ "input_count": 3,
+ "successfully_loaded": 3,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "geometry_types": [],
+ "review_flags": {
+  "F9_COVERAGE_VARIES": 3
+ },
+ "estimated_bytes": 150,
+ "note": "csv enc=utf-8-sig",
+ "seconds": 0.0,
+ "mode": "dry-run"
+}

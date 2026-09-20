@@ -1,0 +1,21 @@
+{
+ "source_id": "listings__airbnb_fiyat_ve_potansiyel__airbnb_ilanlar_15",
+ "batch_id": "BATCH_2026_09_19_listings_listings__airbnb_fiyat_ve_potansiyel__airbnb_ilanlar_15",
+ "target": "stg_airbnb_fiyat_ve_potansiyel__airbnb_ilanlar",
+ "file_id": "FILE_00019795",
+ "input_count": 58,
+ "successfully_loaded": 58,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 16,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_airbnb_fiyat_ve_potansiyel__airbnb_ilanlar/part-BATCH_2026_09_19_listings_listings__airbnb_fiyat_ve_potansiyel__airbnb_ilanlar_15.parquet",
+ "review_flags": {
+  "C04": 58
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

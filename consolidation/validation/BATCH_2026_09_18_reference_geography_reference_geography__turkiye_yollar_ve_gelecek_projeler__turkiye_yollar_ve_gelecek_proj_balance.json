@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__turkiye_yollar_ve_gelecek_projeler__turkiye_yollar_ve_gelecek_proj",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__turkiye_yollar_ve_gelecek_projeler__turkiye_yollar_ve_gelecek_proj",
+ "target": "stg_turkiye_yollar_ve_gelecek_projeler",
+ "file_id": "FILE_00008622",
+ "input_count": 28663,
+ "successfully_loaded": 28663,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_turkiye_yollar_ve_gelecek_projeler/part-BATCH_2026_09_18_reference_geography_reference_geography__turkiye_yollar_ve_gelecek_projeler__turkiye_yollar_ve_gelecek_proj.parquet zaten var (append-only)",
+ "seconds": 1.7,
+ "mode": "apply"
+}

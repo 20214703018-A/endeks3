@@ -1,0 +1,23 @@
+{
+ "source_id": "cadastre_zoning__parsel_imar_degisiklikleri__bagimsiz_bolumler",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__parsel_imar_degisiklikleri__bagimsiz_bolumler",
+ "target": "stg_parsel_imar_degisiklikleri__bagimsiz_bolumler",
+ "file_id": "FILE_00000969",
+ "input_count": 27,
+ "successfully_loaded": 27,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/cadastre_zoning/stg_parsel_imar_degisiklikleri__bagimsiz_bolumler/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__parsel_imar_degisiklikleri__bagimsiz_bolumler.parquet",
+ "review_flags": {
+  "Q04": 27,
+  "R01": 27,
+  "T03": 27
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

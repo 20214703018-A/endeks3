@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__medas_adnks_mahalle_nufus_2025__medas_adnks_mahalle_nufus_2025",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__medas_adnks_mahalle_nufus_2025__medas_adnks_mahalle_nufus_2025",
+ "target": "stg_medas_adnks_mahalle_nufus_2025",
+ "file_id": "FILE_00005401",
+ "input_count": 32259,
+ "successfully_loaded": 32259,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "raw_line_count": 32260,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_medas_adnks_mahalle_nufus_2025/part-BATCH_2026_09_18_demographics_context_demographics_context__medas_adnks_mahalle_nufus_2025__medas_adnks_mahalle_nufus_2025.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

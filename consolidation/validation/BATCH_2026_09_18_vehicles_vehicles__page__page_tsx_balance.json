@@ -1,0 +1,17 @@
+{
+ "source_id": "vehicles__page__page_tsx",
+ "batch_id": "BATCH_2026_09_18_vehicles_vehicles__page__page_tsx",
+ "target": "stg_page",
+ "file_id": "FILE_00017246",
+ "input_count": 4,
+ "successfully_loaded": 4,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": 7,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/vehicles/stg_page/part-BATCH_2026_09_18_vehicles_vehicles__page__page_tsx.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

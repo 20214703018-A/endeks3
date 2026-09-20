@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__turkiye_altyapi_ve_riskler__rtree_meskun_parent",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_altyapi_ve_riskler__rtree_meskun_parent",
+ "target": "stg_turkiye_altyapi_ve_riskler__rtree_meskun_parent",
+ "file_id": "FILE_00008585",
+ "input_count": 1550,
+ "successfully_loaded": 1550,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_turkiye_altyapi_ve_riskler__rtree_meskun_parent/part-BATCH_2026_09_18_poi_business_poi_business__turkiye_altyapi_ve_riskler__rtree_meskun_parent.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

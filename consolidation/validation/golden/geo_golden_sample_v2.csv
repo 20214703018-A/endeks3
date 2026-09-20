@@ -1,0 +1,226 @@
+band,pair_type,score,centroid_inside,flags,il_n,ilce_n,iou,name_similarity,note,population_consistency,reasons,same_entity(human),same_ilce,tkgm_id,tkgm_ilce_n,tkgm_name,tuik_kodu,tuik_name,tuik_pop_2025,tuik_tur,verified_at,verified_by,web_district_id,web_ilce_n,web_name,web_pop_2024
+virtually_certain,web_tkgm,0.9993,1.0,,yozgat,,0.9967,0.9667,,,"name_ev=0.75(jw=0.967,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.985",,True,127188,merkez,Mezra Köyü,,,,,,,2033726,merkez,Mezraa Köyü,
+virtually_certain,web_tkgm,0.9996,1.0,,kastamonu,,0.9807,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.981",,True,24013,pinarbasi,Dizdarlı Köyü,,,,,,,2018764,pinarbasi,Dizdarlı Köyü,
+virtually_certain,web_tkgm,0.9978,1.0,,manisa,,0.8892,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.889",,True,151010,kirkagac,Firdanlar,,,,,,,154567,kirkagac,Fırdanlar,
+virtually_certain,web_tkgm,0.9997,1.0,,izmir,,0.9883,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.985",,True,207262,gaziemir,Aktepe,,,,,,,41073,gaziemir,Aktepe,
+virtually_certain,web_tkgm,0.9979,1.0,,ordu,,0.8973,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.897",,True,203721,caybasi,Namazli,,,,,,,60927,caybasi,Namazlı,
+virtually_certain,web_tkgm,0.9989,1.0,,samsun,,0.9459,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.946",,True,154667,alacam,Umutlu,,,,,,,186127,alacam,Umutlu,
+virtually_certain,web_tkgm,0.9991,1.0,,ankara,,0.954,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.954",,True,135377,camlidere,Eldelek,,,,,,,178123,camlidere,Eldelek,
+virtually_certain,web_tkgm,0.9954,1.0,,sinop,,0.7722,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.772",,True,12438,sarayduzu,Yalmansaray Köyü,,,,,,,2028470,sarayduzu,Yalmansaray Köyü,
+virtually_certain,web_tkgm,0.9956,1.0,,antalya,,0.7803,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.780",,True,137377,korkuteli,Dereköy Köyü,,,,,,,181201,korkuteli,Dereköy,
+virtually_certain,web_tkgm,0.9977,1.0,,kastamonu,,0.8829,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.883",,True,133213,cide,Kuşçu Köyü,,,,,,,2018380,cide,Kuşçu Köyü,
+virtually_certain,web_tkgm,0.9992,1.0,,erzurum,,0.961,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.961",,True,140847,horasan,Değirmenler,,,,,,,188749,horasan,Değirmenler,
+virtually_certain,web_tkgm,0.9974,1.0,,kars,,0.8723,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.872",,True,143831,selim,Sarıgün Köyü,,,,,,,2017875,selim,Sarıgün Köyü,
+virtually_certain,web_tkgm,0.9996,1.0,,kocaeli,,0.9807,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.981",,True,206501,izmit,Tepeköy,,,,,,,50147,izmit,Tepeköy,
+virtually_certain,web_tkgm,0.9991,1.0,,canakkale,,0.9534,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.953",,True,152490,can,Çaltıkara Köyü,,,,,,,2008367,can,Çaltıkara Köyü,
+virtually_certain,web_tkgm,0.9953,1.0,,sanliurfa,,0.7658,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.766",,True,165342,siverek,İleri,,,,,,,174869,siverek,İleri,
+virtually_certain,web_tkgm,0.9965,1.0,,canakkale,,0.8256,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.826",,True,136651,biga,Tokatkırı Köyü,,,,,,,2008303,biga,Tokatkırı Köyü,
+virtually_certain,web_tkgm,0.9997,1.0,,tekirdag,,0.9905,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.985",,True,164774,malkara,Deliller,,,,,,,175757,malkara,Deliller,
+virtually_certain,web_tkgm,0.9983,1.0,,mardin,,0.9159,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.916",,True,169169,midyat,Sivrice,,,,,,,158147,midyat,Sivrice,
+virtually_certain,web_tkgm,0.998,1.0,,giresun,,0.9004,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.900",,True,162738,espiye,Aralıcak Köyü,,,,,,,2014581,espiye,Aralıcak Köyü,
+virtually_certain,web_tkgm,0.9991,1.0,,malatya,,0.9556,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.956",,True,163162,darende,Yavuzlar,,,,,,,165871,darende,Yavuzlar,
+virtually_certain,web_tkgm,0.9997,1.0,,van,,0.9893,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.985",,True,158055,caldiran,Beydoğan,,,,,,,158901,caldiran,Beydoğan,
+virtually_certain,web_tkgm,0.9997,1.0,,rize,,0.9861,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.985",,True,16508,hemsin,Mutlu,,,,,,,61419,hemsin,Mutlu,
+virtually_certain,web_tkgm,0.9995,1.0,,yozgat,,0.9727,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.973",,True,161429,sarikaya,Kadili Köyü,,,,,,,2034068,sarikaya,Kadılı Köyü,
+virtually_certain,web_tkgm,0.9995,1.0,,edirne,,0.9736,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.974",,True,164470,uzunkopru,Sultanşah Köyü,,,,,,,2011296,uzunkopru,Sultanşah Köyü,
+virtually_certain,web_tkgm,0.9997,1.0,,izmir,,0.9942,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.985",,True,150348,kiraz,Umurlu,,,,,,,194371,kiraz,Umurlu,
+very_high,web_tkgm,0.9912,1.0,,hatay,,0.5591,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.559",,True,206744,arsuz,Yukarı Kepirce,,,,,,,149487,arsuz,Yukarıkepirce,
+very_high,web_tkgm,0.9932,1.0,,batman,,0.659,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.659",,True,204562,merkez,Kocalar Köyü,,,,,,,2010431,merkez,Kocalar Köyü,
+very_high,web_tkgm,0.98,1.0,,kirsehir,,0.0062,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.000",,True,123265,merkez,Kayabaşi,,,,,,,50009,merkez,Kayabaşı,
+very_high,web_tkgm,0.985,1.0,NAME_MISMATCH_geometry_match(renamed?),nevsehir,,0.9773,0.3556,,,centroid_inside_ev=0.80; iou_ev=0.977,,True,137708,avanos,Türkeli/Aşağı,,,,,,,60503,avanos,Aşağı,
+very_high,web_tkgm,0.9918,1.0,,afyonkarahisar,,0.5921,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.592",,True,144961,suhut,Isali Köyü,,,,,,,2001450,suhut,İsalı Köyü,
+very_high,web_tkgm,0.9925,1.0,,bolu,,0.6274,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.627",,True,130678,merkez,Örencik Köyü,,,,,,,2006637,merkez,Örencik Köyü,
+very_high,web_tkgm,0.985,1.0,NAME_MISMATCH_geometry_match(renamed?),yozgat,,0.9292,0.0,,,centroid_inside_ev=0.80; iou_ev=0.929,,True,204087,bogazliyan,Uzunlu/Koç,,,,,,,80748,bogazliyan,Koç,
+very_high,web_tkgm,0.9836,1.0,,van,,0.7384,0.9526,,,"name_ev=0.69(jw=0.953,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.738",,True,161992,ozalp,Yukarı Turgalı,,,,,,,159619,ozalp,Yukarıtulgalı,
+very_high,web_tkgm,0.988,1.0,,ankara,,0.4021,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.402",,True,123099,altindag,Gültepe,,,,,,,1471,altindag,Gültepe,
+very_high,web_tkgm,0.992,1.0,,malatya,,0.6008,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.601",,True,21814,arapgir,Tarhan,,,,,,,165663,arapgir,Tarhan,
+very_high,web_tkgm,0.9863,1.0,,tunceli,,0.3139,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.314",,True,169002,cemisgezek,Sakyol Köyü,,,,,,,2031372,cemisgezek,Sakyol Köyü,
+very_high,web_tkgm,0.9927,1.0,,kirikkale,,0.6361,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.636",,True,136474,delice,Fadilobasi Köyü,,,,,,,2035348,delice,Fadılobası Köyü,
+very_high,web_tkgm,0.98,1.0,,kutahya,,0.1853,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.000",,True,21705,altintas,Hürriyet,,,,,,,51463,altintas,Hürriyet,
+very_high,web_tkgm,0.9866,1.0,,eskisehir,,0.3297,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.330",,True,31813,inonu,Çarşı,,,,,,,30277,inonu,Çarşı,
+very_high,web_tkgm,0.9881,1.0,,bingol,,0.4072,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.407",,True,40630,adakli,Yeldeğirmeni Köyü,,,,,,,2005994,adakli,Yeldeğirmeni Köyü,
+very_high,web_tkgm,0.9878,1.0,,denizli,,0.8352,0.94,,,"name_ev=0.63(jw=0.940,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.835",,True,166445,tavas,Çiftlik,,,,,,,150719,tavas,Çiftlikköy,
+very_high,web_tkgm,0.9943,1.0,,adana,,0.7129,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.713",,True,128610,ceyhan,Mercin,,,,,,,177003,ceyhan,Mercin,
+very_high,web_tkgm,0.9863,1.0,,samsun,,0.3175,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.318",,True,154483,bafra,Kızılırmak,,,,,,,69908,bafra,Kızılırmak,
+very_high,web_tkgm,0.9934,1.0,,bolu,,0.6711,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.671",,True,166657,dortdivan,Yağbaşlar Köyü,,,,,,,2006711,dortdivan,Yağbaşlar Köyü,
+very_high,web_tkgm,0.9929,1.0,,burdur,,0.6458,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.646",,True,138999,merkez,Tepe,,,,,,,10972,merkez,Tepe,
+very_high,web_tkgm,0.9937,1.0,,mersin,,0.6825,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.682",,True,128301,silifke,Hüseyinler,,,,,,,182919,silifke,Hüseyinler,
+very_high,web_tkgm,0.9924,1.0,,gaziantep,,0.6218,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.622",,True,146875,oguzeli,Demirkonak,,,,,,,180105,oguzeli,Demirkonak,
+very_high,web_tkgm,0.98,1.0,,amasya,,0.1455,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.000",,True,47319,tasova,Yeni,,,,,,,1415,tasova,Yeni,
+very_high,web_tkgm,0.985,1.0,NAME_MISMATCH_geometry_match(renamed?),izmir,,0.9582,0.0,,,centroid_inside_ev=0.80; iou_ev=0.958,,True,149539,konak,Şeyh,,,,,,,41156,konak,Altınordu,
+very_high,web_tkgm,0.9934,1.0,,izmir,,0.6703,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.670",,True,28115,foca,Yenibağarasi,,,,,,,194127,foca,Yenibağarası,
+high,web_tkgm,0.9753,1.0,,tokat,,0.7175,0.925,,,"name_ev=0.56(jw=0.925,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.718",,True,157280,pazar,Tatar Köyü,,,,,,,2030462,pazar,Tatarköy Köyü,
+high,web_tkgm,0.9629,1.0,,elazig,,0.3375,0.96,,,"name_ev=0.72(jw=0.960,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.338",,True,170989,aricak,Camii,,,,,,,21387,aricak,Cami,
+high,web_tkgm,0.9682,1.0,,karabuk,,0.7847,0.8583,,,"name_ev=0.26(jw=0.858,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.785",,True,132469,eskipazar,K.Hasanlar Köyü,,,,,,,2036862,eskipazar,Karahasanlar Köyü,
+high,web_tkgm,0.961,1.0,,siirt,,0.5987,0.9143,,,"name_ev=0.51(jw=0.914,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.599",,True,168121,kurtalan,Gözpınar Beldesi Merkez,,,,,,,2027917,kurtalan,Gözpınar Köyü,
+high,web_tkgm,0.9682,1.0,,sinop,,0.4573,0.9571,,,"name_ev=0.71(jw=0.957,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.457",,True,153134,sarayduzu,Asarcık Hacı Köyü,,,,,,,2028448,sarayduzu,Asarcıkhacıköy Köyü,
+high,web_tkgm,0.9776,1.0,,mus,,0.4819,0.9741,,,"name_ev=0.78(jw=0.974,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.482",,True,159160,varto,Çallı Dere Köyü,,,,,,,2024973,varto,Çalıdere Köyü,
+high,web_tkgm,0.9675,1.0,,malatya,,0.5611,0.94,,,"name_ev=0.63(jw=0.940,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.561",,True,21285,yesilyurt,Mollakasim,,,,,,,52047,yesilyurt,Mullakasım,
+high,web_tkgm,0.956,1.0,,kastamonu,,0.7474,0.8286,,,"name_ev=0.13(jw=0.829,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.747",,True,151037,azdavay,Ahatlar Köyü,,,,,,,2018241,azdavay,Ahatköy Köyü,
+high,web_tkgm,0.9546,0.0,,mugla,,0.5463,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.546",,True,135614,koycegiz,Gülpınar,,,,,,,60186,koycegiz,Gülpınar,
+high,web_tkgm,0.969,1.0,,elazig,,0.646,0.925,,,"name_ev=0.56(jw=0.925,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.646",,True,161481,maden,Polat Köyü,,,,,,,2011802,maden,Polatköy Köyü,
+high,web_tkgm,0.973,1.0,,van,,0.6531,0.9356,,,"name_ev=0.61(jw=0.936,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.653",,True,156079,ercis,Camikebir,,,,,,,80618,ercis,Camiikebir,
+high,web_tkgm,0.9784,1.0,,malatya,,0.7087,0.94,,,"name_ev=0.63(jw=0.940,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.709",,True,159394,battalgazi,Hasirci Köyü,,,,,,,165313,battalgazi,Hasırcılar,
+high,web_tkgm,0.9542,0.0,,istanbul,,0.5419,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.542",,True,151154,arnavutkoy,Sazlıbosna,,,,,,,40907,arnavutkoy,Sazlıbosna,
+high,web_tkgm,0.9515,1.0,,ordu,,0.5589,0.9,,,"name_ev=0.45(jw=0.900,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.559",,True,159129,mesudiye,Topçam/Merkez,,,,,,,151671,mesudiye,Topçam,
+high,web_tkgm,0.955,1.0,,yozgat,,0.1794,0.9722,,,"name_ev=0.77(jw=0.972,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.000",,True,161996,saraykent,Fevzi Çakmak,,,,,,,80803,saraykent,M.Fevzi Çakmak,
+high,web_tkgm,0.9728,1.0,,denizli,,0.6414,0.9378,,,"name_ev=0.62(jw=0.938,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.641",,True,166446,tavas,Denizoluk,,,,,,,150721,tavas,Denizoluğu,
+high,web_tkgm,0.9792,1.0,NAME_MISMATCH_geometry_match(renamed?),nigde,,0.8958,0.5222,,,centroid_inside_ev=0.80; iou_ev=0.896,,True,180631,ciftlik,Çiftlik/Çarşı,,,,,,,60779,ciftlik,Çarşı,
+high,web_tkgm,0.9743,1.0,NAME_MISMATCH_geometry_match(renamed?),nevsehir,,0.8713,0.4286,,,centroid_inside_ev=0.80; iou_ev=0.871,,True,205407,merkez,Nar/Orta,,,,,,,140322,merkez,Orta,
+high,web_tkgm,0.9777,1.0,,bayburt,,0.8887,0.775,,,centroid_inside_ev=0.80; iou_ev=0.889,,True,203432,merkez,Arpalı/Cumhuriyet,,,,,,,90143,merkez,Cumhuriyet,
+high,web_tkgm,0.9787,1.0,,bolu,,0.7803,0.9143,,,"name_ev=0.51(jw=0.914,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.780",,True,137804,yenicaga,Örenköy Köyü,,,,,,,2007074,yenicaga,Ören Köyü,
+high,web_tkgm,0.9729,1.0,,bingol,,0.6617,0.9333,,,"name_ev=0.60(jw=0.933,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.662",,True,127892,merkez,Çavuşlar Afet Köyü,,,,,,,2005925,merkez,Çavuşlar Köyü,
+high,web_tkgm,0.9563,0.0,,burdur,,0.5634,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.563",,True,39645,kemer,Kayi Köyü,,,,,,,2007234,kemer,Kayı Köyü,
+high,web_tkgm,0.9777,1.0,,kastamonu,,0.7702,0.9143,,,"name_ev=0.51(jw=0.914,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.770",,True,130438,merkez,İmam Köyü,,,,,,,2018029,merkez,İmamköy Köyü,
+high,web_tkgm,0.9786,1.0,,afyonkarahisar,,0.8928,0.7308,,,centroid_inside_ev=0.80; iou_ev=0.893,,True,206390,merkez,Erkmen/Fevzi Çakmak,,,,,,,696,merkez,Fevzi Çakmak,
+high,web_tkgm,0.9611,1.0,NAME_MISMATCH_geometry_match(renamed?),izmir,,0.8053,0.2884,,,centroid_inside_ev=0.80; iou_ev=0.805,,True,148583,konak,Üçkuyular,,,,,,,41244,konak,Mehmet Ali Akman,
+review_recommended,web_tkgm,0.9336,1.0,,antalya,,0.6679,0.3074,,,centroid_inside_ev=0.80; iou_ev=0.668,,True,134233,finike,Incirağaci,,,,,,,180503,finike,Sahilkent,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,bitlis,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,40116,guroymak,Bağlar,,,,,,,10797,guroymak,Bağlar,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,ankara,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,207286,bala,Akkoyunlu,,,,,,,177965,bala,Akkoyunlu,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,trabzon,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,206099,arakli,Taşgeçit,,,,,,,156515,arakli,Taşgeçit,
+review_recommended,web_tkgm,0.9133,1.0,,mersin,,0.5665,0.4222,,,centroid_inside_ev=0.80; iou_ev=0.567,,True,128395,tarsus,Deliminnet Köyü,,,,,,,183019,tarsus,Atalar,
+review_recommended,web_tkgm,0.9328,0.0,,izmir,,0.3278,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.328",,True,206004,bornova,Evka-3,,,,,,,40991,bornova,Evka 3,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,ordu,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,204518,unye,Aydintepe,,,,,,,152145,unye,Aydıntepe,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,artvin,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,207995,yusufeli,Livane,,,,,,,128900,yusufeli,Livane,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,trabzon,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,206180,hayrat,Sarmaşık,,,,,,,156775,hayrat,Sarmaşık,
+review_recommended,web_tkgm,0.9438,0.0,,nevsehir,,0.438,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.438",,True,16586,avanos,Karacauşağı Köyü,,,,,,,2025053,avanos,Karacauşağı Köyü,
+review_recommended,web_tkgm,0.9134,1.0,,trabzon,,0.2129,0.9,,,"name_ev=0.45(jw=0.900,same_ilce=True); centroid_inside_ev=0.80; iou_ev=0.213",,True,123863,ortahisar,Yalıncak Esentepe,,,,,,,156221,ortahisar,Yalıncak,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,nigde,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,207223,merkez,Selçuk,,,,,,,60621,merkez,Selçuk,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,van,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,207549,gevas,Barışık,,,,,,,185546,gevas,Barışık,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,kutahya,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,144745,merkez,Sultan Bağı,,,,,,,51402,merkez,Sultanbağı,
+review_recommended,web_tkgm,0.944,0.0,,sanliurfa,,0.4404,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.440",,True,165166,harran,Aslankuyusu,,,,,,,174399,harran,Aslankuyusu,
+review_recommended,web_tkgm,0.9226,0.0,,batman,,0.2259,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.226",,True,51955,hasankeyf,Saklı Köyü,,,,,,,2035624,hasankeyf,Saklı Köyü,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,hakkari,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,157217,semdinli,Moda,,,,,,,31018,semdinli,Moda,
+review_recommended,web_tkgm,0.9219,1.0,,bitlis,,0.6094,0.437,,,centroid_inside_ev=0.80; iou_ev=0.609,,True,126779,merkez,İngöl Köyü,,,,,,,2006247,merkez,Ağaçpınar Köyü,
+review_recommended,web_tkgm,0.9495,1.0,,afyonkarahisar,,0.7475,0.7659,,,centroid_inside_ev=0.80; iou_ev=0.748,,True,206777,bolvadin,Dişli/Malazgirt,,,,,,,804,bolvadin,Malazgirt Dişli,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,kahramanmaras,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,206197,dulkadiroglu,Karataş,,,,,,,199777,dulkadiroglu,Karataş,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,hakkari,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,208268,semdinli,Çalişkanlar Köyü,,,,,,,2751297,semdinli,Çalışkanlar Köyü,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,hatay,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,28673,erzin,Bahçelievler,,,,,,,31194,erzin,Bahçelievler,
+review_recommended,web_tkgm,0.9,0.0,TKGM_NO_GEOMETRY_name_only,hatay,,,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True)",,True,208221,kirikhan,Dedeçınar,,,,,,,149685,kirikhan,Dedeçınar,
+review_recommended,web_tkgm,0.8897,1.0,,ardahan,,0.4483,0.3095,,,centroid_inside_ev=0.80; iou_ev=0.448,,True,137497,cildir,Aşikşenlik/Yenimahalle,,,,,,,180744,cildir,Suhara,
+review_recommended,web_tkgm,0.8959,1.0,,konya,,0.4794,0.4278,,,centroid_inside_ev=0.80; iou_ev=0.479,,True,128169,selcuklu,Özlem,,,,,,,50717,selcuklu,Kılınçarslan,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,zonguldak,,0.1036,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,132496,devrek,Eski (Devrek),,,,,,,89837,devrek,Eski,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,kilis,,0.0,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,132255,merkez,Büyükkütah,,,,,,,90946,merkez,Büyükkütah,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,konya,,0.0004,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,151085,ilgin,Orhaniye,,,,,,,195941,ilgin,Orhaniye,
+no_auto_merge,web_tkgm,0.8,1.0,,hatay,,0.0665,0.6714,,,centroid_inside_ev=0.80; iou_ev=0.000,,True,145890,reyhanli,Sıçanlı,,,,,,,447847,reyhanli,Zeytindalı,
+no_auto_merge,web_tkgm,0.8,1.0,,afyonkarahisar,,0.1629,0.5009,,,centroid_inside_ev=0.80; iou_ev=0.000,,True,145970,dinar,Haydarlı,,,,,,,919,dinar,Cumhuriyet Haydarlı,
+no_auto_merge,web_tkgm,0.8488,1.0,,adiyaman,,0.2441,0.4196,,,centroid_inside_ev=0.80; iou_ev=0.244,,True,166233,merkez,Yaylakonak-Yünlüce,,,,,,,455,merkez,Zivar,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,diyarbakir,,0.0069,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,137557,kocakoy,Gözebaşı,,,,,,,193119,kocakoy,Gözebaşı,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,istanbul,,0.1559,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,10036,sultangazi,Yunusemre,,,,,,,40466,sultangazi,Yunus Emre,
+no_auto_merge,web_tkgm,0.0,0.0,,hatay,,0.0002,0.4242,,,iou_ev=0.000,,True,147516,reyhanli,Kiremittepe,,,,,,,149813,reyhanli,Fevzipaşa,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,istanbul,,0.064,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,147934,gaziosmanpasa,Yeni Mahalle,,,,,,,40460,gaziosmanpasa,Yeni Mahalle,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,mardin,,0.0712,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,203744,yesilli,Tepebaşi,,,,,,,60045,yesilli,Tepebaşı,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,bolu,,0.0987,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,136428,mengen,Kayabükü Köyü,,,,,,,2006932,mengen,Kayabükü Köyü,
+no_auto_merge,web_tkgm,0.6164,0.0,,ankara,,0.3209,0.8967,,,"name_ev=0.44(jw=0.897,same_ilce=True); iou_ev=0.321",,True,137397,kizilcahamam,Eğerlikuzviran,,,,,,,178773,kizilcahamam,Eğerlikozören,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,istanbul,,0.0,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,147345,maltepe,Altay Çeşme,,,,,,,40612,maltepe,Altayçeşme,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,isparta,,0.0706,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,29165,aksu,Eldere Köyü,,,,,,,2015839,aksu,Eldere Köyü,
+no_auto_merge,web_tkgm,0.643,0.0,TKGM_NO_GEOMETRY_name_only,van,,,0.9429,,,"name_ev=0.64(jw=0.943,same_ilce=True)",,True,160996,saray,Kurucam,,,,,,,159657,saray,Kurucan,
+no_auto_merge,web_tkgm,0.0,0.0,,tunceli,,0.0665,0.5,,,iou_ev=0.000,,True,168988,cemisgezek,Ekindere Köyü,,,,,,,2037926,cemisgezek,Akçayunt Köyü,
+no_auto_merge,web_tkgm,0.2566,0.0,,sanliurfa,,0.2566,0.5333,,,iou_ev=0.257,,True,165358,suruc,Cumhuriyet,,,,,,,180914,suruc,Barış,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,diyarbakir,,0.0,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,125691,yenisehir,Yüksek,,,,,,,21008,yenisehir,Yüksek,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,sinop,,0.0,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,12999,erfelek,Ahmetmuhipdıranas Köyü,,,,,,,2028379,erfelek,Ahmetmuhipdıranas Köyü,
+no_auto_merge,web_tkgm,0.5501,0.0,,rize,,0.2804,0.8833,,,"name_ev=0.37(jw=0.883,same_ilce=True); iou_ev=0.280",,True,163412,pazar,Irmak Köyü,,,,,,,2026258,pazar,Irmakyeniköy Köyü,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,sanliurfa,,0.1667,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,203671,siverek,Gözeli,,,,,,,174921,siverek,Gözeli,
+no_auto_merge,web_tkgm,0.0,0.0,,sivas,,0.0002,0.3784,,,iou_ev=0.000,,False,204781,sarkisla,Kızılcakışla/Fatih Köyü,,,,,,,2028870,gemerek,Osmanuşağı Köyü,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,bitlis,,0.1201,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,179592,mutki,Pınarbaşı,,,,,,,10840,mutki,Pınarbaşı,
+no_auto_merge,web_tkgm,0.54,0.0,CONFLICT_same_name_disjoint_geometry,tokat,,0.0055,1.0,,,"name_ev=0.90(jw=1.000,same_ilce=True); iou_ev=0.000",,True,153176,erbaa,Akça Köyü,,,,,,,2030272,erbaa,Akça Köyü,
+very_high,web_tuik,0.9802,,,diyarbakir,hani,,1.0,,0.9433,name_ev=0.90(jw=1.000); pop_ev=0.80(consistency=0.94),,,,,,21103,Zirve,823,mahalle,,,21103,,Zirve,837
+very_high,web_tuik,0.9836,,,sanliurfa,eyyubiye,,1.0,,0.9834,name_ev=0.90(jw=1.000); pop_ev=0.84(consistency=0.98),,,,,,201451,Küçük Çamurlu,201,mahalle,,,201451,,Küçük Çamurlu,202
+very_high,web_tuik,0.9845,,,balikesir,dursunbey,,1.0,,0.9938,name_ev=0.90(jw=1.000); pop_ev=0.84(consistency=0.99),,,,,,10446,Çakmak,1070,mahalle,,,10446,,Çakmak,1072
+very_high,web_tuik,0.984,,,balikesir,manyas,,1.0,,0.9883,name_ev=0.90(jw=1.000); pop_ev=0.84(consistency=0.99),,,,,,148359,Şevketiye,285,mahalle,,,148359,,Şevketiye,286
+very_high,web_tuik,0.9825,,,sanliurfa,suruc,,1.0,,0.9708,name_ev=0.90(jw=1.000); pop_ev=0.83(consistency=0.97),,,,,,80434,Sarayaltı,9691,mahalle,,,80434,,Sarayaltı,9606
+very_high,web_tuik,0.9804,,,sanliurfa,hilvan,,1.0,,0.9454,name_ev=0.90(jw=1.000); pop_ev=0.80(consistency=0.95),,,,,,80396,Bahçelievler,4887,mahalle,,,80396,,Bahçelievler,4967
+very_high,web_tuik,0.9831,,,elazig,karakocan,,1.0,,0.9778,name_ev=0.90(jw=1.000); pop_ev=0.83(consistency=0.98),,,,,,11623,Deveci,150,koy,,,2011623,,Deveci Köyü,151
+very_high,web_tuik,0.9818,,,sakarya,serdivan,,1.0,,0.9629,name_ev=0.90(jw=1.000); pop_ev=0.82(consistency=0.96),,,,,,185665,Yukarıdereköy,539,mahalle,,,185665,,Yukarıdereköy,533
+very_high,web_tuik,0.9808,,,istanbul,avcilar,,1.0,,0.9502,name_ev=0.90(jw=1.000); pop_ev=0.81(consistency=0.95),,,,,,40147,Denizköşkler,39439,mahalle,,,40147,,Denizköşkler,40028
+very_high,web_tuik,0.981,,,kahramanmaras,caglayancerit,,1.0,,0.9525,name_ev=0.90(jw=1.000); pop_ev=0.81(consistency=0.95),,,,,,160307,Bozlar,842,mahalle,,,160307,,Bozlar,854
+very_high,web_tuik,0.9842,,,malatya,dogansehir,,1.0,,0.9905,name_ev=0.90(jw=1.000); pop_ev=0.84(consistency=0.99),,,,,,166023,Gövdeli,1400,mahalle,,,166023,,Gövdeli,1396
+very_high,web_tuik,0.9812,,,mersin,akdeniz,,1.0,,0.9553,name_ev=0.90(jw=1.000); pop_ev=0.81(consistency=0.96),,,,,,31832,Bahçeli Aşağıburhan,447,mahalle,,,31832,,Bahçeli Aşağıburhan,453
+very_high,web_tuik,0.9808,,,rize,ardesen,,1.0,,0.95,name_ev=0.90(jw=1.000); pop_ev=0.81(consistency=0.95),,,,,,61335,Bahar,200,mahalle,,,61335,,Bahar,203
+very_high,web_tuik,0.9803,,,samsun,vezirkopru,,1.0,,0.9449,name_ev=0.90(jw=1.000); pop_ev=0.80(consistency=0.94),,,,,,189633,Tatarkale,121,mahalle,,,189633,,Tatarkale,123
+very_high,web_tuik,0.9831,,,afyonkarahisar,ihsaniye,,1.0,,0.9775,name_ev=0.90(jw=1.000); pop_ev=0.83(consistency=0.98),,,,,,1303,Yukarıtandır,741,koy,,,2001303,,Yukarıtandır Köyü,736
+very_high,web_tuik,0.9833,,,eskisehir,tepebasi,,1.0,,0.98,name_ev=0.90(jw=1.000); pop_ev=0.83(consistency=0.98),,,,,,30243,Sakintepe,835,mahalle,,,30243,,Sakintepe,840
+very_high,web_tuik,0.9831,,,sirnak,cizre,,1.0,,0.9775,name_ev=0.90(jw=1.000); pop_ev=0.83(consistency=0.98),,,,,,47943,Aşağıkonak,592,koy,,,2047943,,Aşağıkonak Köyü,596
+very_high,web_tuik,0.983,,,kayseri,yahyali,,1.0,,0.9765,name_ev=0.90(jw=1.000); pop_ev=0.83(consistency=0.98),,,,,,181771,Kopçu,567,mahalle,,,181771,,Kopçu,571
+very_high,web_tuik,0.9838,,,antalya,manavgat,,1.0,,0.9858,name_ev=0.90(jw=1.000); pop_ev=0.84(consistency=0.99),,,,,,2740,Milli Egemenlik,4918,mahalle,,,2740,,Milli Egemenlik,4897
+very_high,web_tuik,0.9843,,,samsun,bafra,,1.0,,0.9919,name_ev=0.90(jw=1.000); pop_ev=0.84(consistency=0.99),,,,,,186665,Evrenuşağı,411,mahalle,,,186665,,Evrenuşağı,410
+very_high,web_tuik,0.9834,,,gumushane,kelkit,,1.0,,0.9817,name_ev=0.90(jw=1.000); pop_ev=0.83(consistency=0.98),,,,,,30951,Merkez,2363,mahalle,,,30951,,Merkez,2376
+very_high,web_tuik,0.9823,,,kilis,polateli,,1.0,,0.9678,name_ev=0.90(jw=1.000); pop_ev=0.82(consistency=0.97),,,,,,37147,Ömeroğlu,207,koy,,,2037147,,Ömeroğlu Köyü,205
+very_high,web_tuik,0.9804,,,mus,merkez,,1.0,,0.9462,name_ev=0.90(jw=1.000); pop_ev=0.80(consistency=0.95),,,,,,24698,Mescitli,248,koy,,,2024698,,Mescitli Köyü,244
+very_high,web_tuik,0.9808,,,aydin,efeler,,1.0,,0.9504,name_ev=0.90(jw=1.000); pop_ev=0.81(consistency=0.95),,,,,,143549,Dalama,1478,mahalle,,,143549,,Dalama,1500
+very_high,web_tuik,0.9808,,,adana,ceyhan,,1.0,,0.9507,name_ev=0.90(jw=1.000); pop_ev=0.81(consistency=0.95),,,,,,176973,Çevretepe,338,mahalle,,,176973,,Çevretepe,343
+high,web_tuik,0.9753,,,tekirdag,muratli,,1.0,,0.8864,name_ev=0.90(jw=1.000); pop_ev=0.75(consistency=0.89),,,,,,175867,Çevrimkaya,88,mahalle,,,175867,,Çevrimkaya,85
+high,web_tuik,0.9737,,,batman,sason,,1.0,,0.8667,name_ev=0.90(jw=1.000); pop_ev=0.74(consistency=0.87),,,,,,35738,Köprübaşı,175,koy,,,2035738,,Köprübaşı Köyü,182
+high,web_tuik,0.9763,,,eskisehir,tepebasi,,1.0,,0.898,name_ev=0.90(jw=1.000); pop_ev=0.76(consistency=0.90),,,,,,191657,Nemli,98,mahalle,,,191657,,Nemli,101
+high,web_tuik,0.9783,,,istanbul,kartal,,1.0,,0.9211,name_ev=0.90(jw=1.000); pop_ev=0.78(consistency=0.92),,,,,,40569,Uğur Mumcu,39210,mahalle,,,40569,,Uğur Mumcu,40138
+high,web_tuik,0.9788,,,bingol,merkez,,1.0,,0.9275,name_ev=0.90(jw=1.000); pop_ev=0.79(consistency=0.93),,,,,,5874,Altınışık,46,koy,,,2005874,,Altınışık Köyü,47
+high,web_tuik,0.9727,,,mugla,mentese,,1.0,,0.8551,name_ev=0.90(jw=1.000); pop_ev=0.73(consistency=0.86),,,,,,176043,Sungur,207,mahalle,,,176043,,Sungur,216
+high,web_tuik,0.9501,,,malatya,puturge,,1.0,,0.5897,name_ev=0.90(jw=1.000); pop_ev=0.50(consistency=0.59),,,,,,166487,Gertan,130,mahalle,,,166487,,Gertan,146
+high,web_tuik,0.9674,,,batman,kozluk,,1.0,,0.7927,name_ev=0.90(jw=1.000); pop_ev=0.67(consistency=0.79),,,,,,35638,Geyikli,193,koy,,,2035638,,Geyikli Köyü,205
+high,web_tuik,0.9714,,,adiyaman,gerger,,1.0,,0.8401,name_ev=0.90(jw=1.000); pop_ev=0.71(consistency=0.84),,,,,,775,Yayladalı,271,koy,,,2000775,,Yayladalı Köyü,284
+high,web_tuik,0.9789,,,balikesir,sindirgi,,1.0,,0.9281,name_ev=0.90(jw=1.000); pop_ev=0.79(consistency=0.93),,,,,,10574,Camicedit,3060,mahalle,,,10574,,Camicedit,3126
+high,web_tuik,0.9724,,,izmir,kemalpasa,,1.0,,0.8513,name_ev=0.90(jw=1.000); pop_ev=0.72(consistency=0.85),,,,,,194175,Çınarköy,1233,mahalle,,,194175,,Çınarköy,1178
+high,web_tuik,0.9658,,,bursa,karacabey,,1.0,,0.7746,name_ev=0.90(jw=1.000); pop_ev=0.66(consistency=0.77),,,,,,184003,Doğla,281,mahalle,,,184003,,Doğla,300
+high,web_tuik,0.9791,,,sirnak,merkez,,1.0,,0.9302,name_ev=0.90(jw=1.000); pop_ev=0.79(consistency=0.93),,,,,,90586,Boğaz,716,mahalle,,,90586,,Boğaz,701
+high,web_tuik,0.9797,,,kastamonu,agli,,1.0,,0.9371,name_ev=0.90(jw=1.000); pop_ev=0.80(consistency=0.94),,,,,,18118,Tunuslar,53,koy,,,2018118,,Tunuslar Köyü,54
+high,web_tuik,0.9793,,,elazig,kovancilar,,1.0,,0.9325,name_ev=0.90(jw=1.000); pop_ev=0.79(consistency=0.93),,,,,,181432,Toki,2715,mahalle,,,181432,,Toki,2770
+high,web_tuik,0.9523,,,bursa,iznik,,1.0,,0.6154,name_ev=0.90(jw=1.000); pop_ev=0.52(consistency=0.62),,,,,,183951,Osmaniye,78,mahalle,,,183951,,Osmaniye,87
+high,web_tuik,0.9757,,,manisa,akhisar,,1.0,,0.8905,name_ev=0.90(jw=1.000); pop_ev=0.76(consistency=0.89),,,,,,52157,Ragıp Bey,6300,mahalle,,,52157,,Ragıp Bey,6507
+high,web_tuik,0.9518,,,kastamonu,bozkurt,,1.0,,0.6094,name_ev=0.90(jw=1.000); pop_ev=0.52(consistency=0.61),,,,,,41836,Yeni,128,mahalle,,,41836,,Yeni,143
+high,web_tuik,0.9681,,,konya,doganhisar,,1.0,,0.8016,name_ev=0.90(jw=1.000); pop_ev=0.68(consistency=0.80),,,,,,195595,Kemer,336,mahalle,,,195595,,Kemer,356
+high,web_tuik,0.9793,,,edirne,kesan,,1.0,,0.9333,name_ev=0.90(jw=1.000); pop_ev=0.79(consistency=0.93),,,,,,11162,Karahisar,200,koy,,,2011162,,Karahisar Köyü,204
+high,web_tuik,0.9596,,,mersin,silifke,,1.0,,0.7011,name_ev=0.90(jw=1.000); pop_ev=0.60(consistency=0.70),,,,,,182979,Kıca,368,mahalle,,,182979,,Kıca,401
+high,web_tuik,0.9697,,,bingol,solhan,,1.0,,0.8205,name_ev=0.90(jw=1.000); pop_ev=0.70(consistency=0.82),,,,,,6143,Hazarşah,1281,koy,,,2006143,,Hazarşah Köyü,1350
+high,web_tuik,0.9708,,,afyonkarahisar,dinar,,1.0,,0.8333,name_ev=0.90(jw=1.000); pop_ev=0.71(consistency=0.83),,,,,,1156,Yeşilyurt,40,koy,,,2001156,,Yeşilyurt Köyü,42
+high,web_tuik,0.9763,,,bolu,mudurnu,,1.0,,0.8972,name_ev=0.90(jw=1.000); pop_ev=0.76(consistency=0.90),,,,,,6990,Güveytepe,227,koy,,,2006990,,Güveytepe Köyü,234
+high,web_tuik,0.9792,,,istanbul,zeytinburnu,,1.0,,0.9323,name_ev=0.90(jw=1.000); pop_ev=0.79(consistency=0.93),,,,,,40837,Çırpıcı,25399,mahalle,,,40837,,Çırpıcı,25915
+review_recommended,web_tuik,0.941,,,bingol,genc,,1.0,,0.4819,name_ev=0.90(jw=1.000); pop_ev=0.41(consistency=0.48),,,,,,6014,Gerçekli,193,koy,,,2006014,,Gerçekli Köyü,223
+review_recommended,web_tuik,0.9488,,,hatay,defne,,1.0,,0.5747,name_ev=0.90(jw=1.000); pop_ev=0.49(consistency=0.57),,,,,,149195,Tavla,3535,mahalle,,,149195,,Tavla,3084
+review_recommended,web_tuik,0.933,,,van,baskale,,1.0,,0.3878,name_ev=0.90(jw=1.000); pop_ev=0.33(consistency=0.39),,,,,,158795,Keçilioba,49,mahalle,,,158795,,Keçilioba,58
+review_recommended,web_tuik,0.9417,,,sivas,yildizeli,,1.0,,0.4902,name_ev=0.90(jw=1.000); pop_ev=0.42(consistency=0.49),,,,,,29616,Akçalı,85,koy,,,2029616,,Akçalı Köyü,98
+review_recommended,web_tuik,0.9031,,,gumushane,siran,,1.0,,0.037,name_ev=0.90(jw=1.000); pop_ev=0.03(consistency=0.04),,,,,,15203,Pelitli,45,koy,,,2015203,,Pelitli Köyü,32
+review_recommended,web_tuik,0.9086,,,yozgat,sorgun,,1.0,,0.1014,name_ev=0.90(jw=1.000); pop_ev=0.09(consistency=0.10),,,,,,34195,Tulum,115,koy,,,2034195,,Tulum Köyü,146
+review_recommended,web_tuik,0.9411,,,ankara,haymana,,1.0,,0.4841,name_ev=0.90(jw=1.000); pop_ev=0.41(consistency=0.48),,,,,,178395,Demirözü,336,mahalle,,,178395,,Demirözü,388
+review_recommended,web_tuik,0.9115,,,malatya,puturge,,1.0,,0.1358,name_ev=0.90(jw=1.000); pop_ev=0.12(consistency=0.14),,,,,,166435,Teluşağı,135,mahalle,,,166435,,Teluşağı,170
+review_recommended,web_tuik,0.907,,,nevsehir,kozakli,,1.0,,0.0821,name_ev=0.90(jw=1.000); pop_ev=0.07(consistency=0.08),,,,,,25165,Yassıca,69,koy,,,2025165,,Yassıca Köyü,88
+review_recommended,web_tuik,0.9445,,,kayseri,sariz,,1.0,,0.5238,name_ev=0.90(jw=1.000); pop_ev=0.45(consistency=0.52),,,,,,181597,Ördekli,63,mahalle,,,181597,,Ördekli,72
+review_recommended,web_tuik,0.9392,,,elazig,merkez,,1.0,,0.4613,name_ev=0.90(jw=1.000); pop_ev=0.39(consistency=0.46),,,,,,11456,Kepektaş,99,koy,,,2011456,,Kepektaş Köyü,115
+review_recommended,web_tuik,0.9475,,,samsun,vezirkopru,,1.0,,0.5594,name_ev=0.90(jw=1.000); pop_ev=0.48(consistency=0.56),,,,,,189405,Boğazkoru,174,mahalle,,,189405,,Boğazkoru,197
+review_recommended,web_tuik,0.948,,,konya,kadinhani,,1.0,,0.5652,name_ev=0.90(jw=1.000); pop_ev=0.48(consistency=0.57),,,,,,196023,Karakurtlu,115,mahalle,,,196023,,Karakurtlu,130
+review_recommended,web_tuik,0.9231,,,bitlis,ahlat,,0.9538,,0.8825,name_ev=0.69(jw=0.954); pop_ev=0.75(consistency=0.88),,,,,,6308,Cemalettinköy,397,koy,,,2006308,,Cemalettin Köyü,411
+review_recommended,web_tuik,0.9381,,,diyarbakir,ergani,,1.0,,0.4484,name_ev=0.90(jw=1.000); pop_ev=0.38(consistency=0.45),,,,,,192911,Sallar,139,mahalle,,,192911,,Sallar,162
+review_recommended,web_tuik,0.935,,,diyarbakir,sur,,1.0,,0.4118,name_ev=0.90(jw=1.000); pop_ev=0.35(consistency=0.41),,,,,,20946,Hasırlı,867,mahalle,,,20946,,Hasırlı,1020
+review_recommended,web_tuik,0.9346,,,rize,merkez,,1.0,,0.4068,name_ev=0.90(jw=1.000); pop_ev=0.35(consistency=0.41),,,,,,25966,Yolüstü,236,koy,,,2025966,,Yolüstü Köyü,278
+review_recommended,web_tuik,0.9369,,,bayburt,merkez,,1.0,,0.4345,name_ev=0.90(jw=1.000); pop_ev=0.37(consistency=0.43),,,,,,34953,Gökler,112,koy,,,2034953,,Gökler Köyü,131
+review_recommended,web_tuik,0.9136,,,zonguldak,eregli,,0.9,,0.9917,name_ev=0.45(jw=0.900); pop_ev=0.84(consistency=0.99),,,,,,34687,Ormanlı,401,koy,,,2034687,,Ormanlı Ormanlı Köyü,400
+review_recommended,web_tuik,0.9387,,,bursa,mustafakemalpasa,,1.0,,0.4548,name_ev=0.90(jw=1.000); pop_ev=0.39(consistency=0.45),,,,,,184501,Körekem,483,mahalle,,,184501,,Körekem,562
+review_recommended,web_tuik,0.9216,,,hatay,antakya,,1.0,,0.254,name_ev=0.90(jw=1.000); pop_ev=0.22(consistency=0.25),,,,,,149143,Derince,4151,mahalle,,,149143,,Derince,3222
+review_recommended,web_tuik,0.9124,,,erzincan,kemah,,1.0,,0.1453,name_ev=0.90(jw=1.000); pop_ev=0.12(consistency=0.15),,,,,,12125,Çiğdemli,39,koy,,,2012125,,Çiğdemli Köyü,49
+review_recommended,web_tuik,0.9009,,,osmaniye,duzici,,1.0,,0.0103,name_ev=0.90(jw=1.000); pop_ev=0.01(consistency=0.01),,,,,,91108,Yeşil Yurt,357,mahalle,,,91108,,Yeşil Yurt,251
+review_recommended,web_tuik,0.9367,,,trabzon,of,,1.0,,0.4316,name_ev=0.90(jw=1.000); pop_ev=0.37(consistency=0.43),,,,,,156987,Kiraz,217,mahalle,,,156987,,Kiraz,254
+review_recommended,web_tuik,0.9352,,,bitlis,guroymak,,1.0,,0.4139,name_ev=0.90(jw=1.000); pop_ev=0.35(consistency=0.41),,,,,,6339,Cevizyatağı,91,koy,,,2006339,,Cevizyatağı Köyü,107
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,malatya,kale,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,166289,Tepebaşı,363,mahalle,,,166289,,Tepebaşı,214
+no_auto_merge,web_tuik,0.7544,,,batman,kozluk,,0.9143,,0.5815,name_ev=0.51(jw=0.914); pop_ev=0.49(consistency=0.58),,,,,,35660,Dereköy,454,koy,,,2035660,,Dere Köyü,511
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,hatay,antakya,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,31059,Cumhuriyet,1001,mahalle,,,31059,,Cumhuriyet,2474
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,sivas,imranli,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,29065,Başlıca,20,koy,,,2029065,,Başlıca Köyü,26
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,gaziantep,oguzeli,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,180155,Tüzel,92,mahalle,,,180155,,Tüzel,139
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,batman,gercus,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,35579,Kutlu,26,koy,,,2035579,,Kutlu Köyü,36
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,bitlis,mutki,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,6467,İkizler,796,koy,,,2006467,,İkizler Köyü,1116
+no_auto_merge,web_tuik,0.7554,,,adiyaman,besni,,0.9067,,0.623,name_ev=0.48(jw=0.907); pop_ev=0.53(consistency=0.62),,,,,,503,Hürriyet,610,mahalle,,,503,,Hürriyet Suvarlı,679
+no_auto_merge,web_tuik,0.7875,,,sinop,turkeli,,0.9143,,0.6618,name_ev=0.51(jw=0.914); pop_ev=0.56(consistency=0.66),,,,,,28487,Hacıköy,207,koy,,,2028487,,Hacı Köyü,228
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,elazig,baskil,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,11534,Yukarıkuluşağı,127,koy,,,2011534,,Yukarıkuluşağı Köyü,167
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,sivas,sarkisla,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,70483,Karşıyaka,425,mahalle,,,70483,,Karşıyaka,286
+no_auto_merge,web_tuik,0.755,,,mus,bulanik,,0.8833,,0.7154,name_ev=0.37(jw=0.883); pop_ev=0.61(consistency=0.72),,,,,,60349,Fatih,972,mahalle,,,60356,,Fatih Uzgörür,889
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,erzincan,tercan,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,12412,Tepebaşı,28,koy,,,2012412,,Tepebaşı Köyü,41
+no_auto_merge,web_tuik,0.7658,,,corum,iskilip,,0.8833,,0.7357,name_ev=0.37(jw=0.883); pop_ev=0.63(consistency=0.74),,,,,,9415,Kuzköy,227,koy,,,2009415,,Kuz Köyü,245
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,adiyaman,kahta,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,847,Salkımbağı,2345,koy,,,2000847,,Salkımbağı Köyü,1488
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,gaziantep,sahinbey,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,776195,Çamtepe,1175,mahalle,,,776195,,Çamtepe,646
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,erzincan,cayirli,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,12020,Turnaçayırı,14,koy,,,2012020,,Turnaçayırı Köyü,19
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,siirt,merkez,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,27766,Sağlarca,18,koy,,,2027766,,Sağlarca Köyü,24
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,adiyaman,merkez,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,633,Çamlıca,117,koy,,,2000633,,Çamlıca Köyü,157
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,elazig,sivrice,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,11889,Kılıçkaya,26,koy,,,2011889,,Kılıçkaya Köyü,35
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,sivas,divrigi,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,28778,Bahtiyar,14,koy,,,2028778,,Bahtiyar Köyü,21
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,corum,ortakoy,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,9588,Yukarıkuyucak,66,koy,,,2009588,,Yukarı Kuyucak Köyü,86
+no_auto_merge,web_tuik,0.839,,,aksaray,gulagac,,0.9067,,0.8122,name_ev=0.48(jw=0.907); pop_ev=0.69(consistency=0.81),,,,,,90066,İstiklal,497,mahalle,,,90066,,İstiklal Saratlı,525
+no_auto_merge,web_tuik,0.63,,CONFLICT_population_ratio_out_of_30pct,batman,hasankeyf,,1.0,,0.0,name_ev=0.90(jw=1.000); pop_ev=0.00(consistency=0.00),,,,,,35623,Palamut,68,koy,,,2035623,,Palamut Köyü,95
+no_auto_merge,web_tuik,0.8087,,,corum,merkez,,0.9333,,0.614,name_ev=0.60(jw=0.933); pop_ev=0.52(consistency=0.61),,,,,,9176,Arslanköy,95,koy,,,2009176,,Arslan Köyü,106

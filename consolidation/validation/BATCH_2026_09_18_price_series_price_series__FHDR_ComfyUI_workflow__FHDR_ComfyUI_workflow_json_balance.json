@@ -1,0 +1,17 @@
+{
+ "source_id": "price_series__FHDR_ComfyUI_workflow__FHDR_ComfyUI_workflow_json",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__FHDR_ComfyUI_workflow__FHDR_ComfyUI_workflow_json",
+ "target": "stg_FHDR_ComfyUI_workflow",
+ "file_id": "FILE_00016383",
+ "input_count": 10,
+ "successfully_loaded": 10,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 1923,
+ "note": "json_records under=nodes",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,16 @@
+{
+ "source_id": "poi_business__piyasa_verileri__sirketler_2",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__piyasa_verileri__sirketler_2",
+ "target": "stg_piyasa_verileri__sirketler",
+ "file_id": "FILE_00000642",
+ "input_count": 1451,
+ "successfully_loaded": 1451,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "seconds": 0.1,
+ "mode": "dry-run"
+}

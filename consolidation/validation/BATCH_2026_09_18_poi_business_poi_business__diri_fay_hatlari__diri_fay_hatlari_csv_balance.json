@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__diri_fay_hatlari__diri_fay_hatlari_csv",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__diri_fay_hatlari__diri_fay_hatlari_csv",
+ "target": "stg_diri_fay_hatlari",
+ "file_id": "FILE_00008599",
+ "input_count": 23,
+ "successfully_loaded": 23,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": 24,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_diri_fay_hatlari/part-BATCH_2026_09_18_poi_business_poi_business__diri_fay_hatlari__diri_fay_hatlari_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

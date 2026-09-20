@@ -1,0 +1,19 @@
+{
+ "source_id": "price_series__awos_istasyon_koordinatlar__awos_istasyon_koordinatlar_csv",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__awos_istasyon_koordinatlar__awos_istasyon_koordinatlar_csv",
+ "target": "stg_awos_istasyon_koordinatlar",
+ "file_id": "FILE_00016612",
+ "input_count": 10,
+ "successfully_loaded": 10,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 3,
+ "raw_line_count": 10,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_awos_istasyon_koordinatlar/part-BATCH_2026_09_18_price_series_price_series__awos_istasyon_koordinatlar__awos_istasyon_koordinatlar_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

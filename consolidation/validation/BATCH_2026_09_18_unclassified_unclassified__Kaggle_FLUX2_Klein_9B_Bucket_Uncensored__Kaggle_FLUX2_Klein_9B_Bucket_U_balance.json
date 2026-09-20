@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__Kaggle_FLUX2_Klein_9B_Bucket_Uncensored__Kaggle_FLUX2_Klein_9B_Bucket_U",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__Kaggle_FLUX2_Klein_9B_Bucket_Uncensored__Kaggle_FLUX2_Klein_9B_Bucket_U",
+ "target": "stg_Kaggle_FLUX2_Klein_9B_Bucket_Uncensored",
+ "file_id": "FILE_00016485",
+ "input_count": 24,
+ "successfully_loaded": 24,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 6300,
+ "note": "json_records under=cells",
+ "seconds": 0.0,
+ "mode": "apply"
+}

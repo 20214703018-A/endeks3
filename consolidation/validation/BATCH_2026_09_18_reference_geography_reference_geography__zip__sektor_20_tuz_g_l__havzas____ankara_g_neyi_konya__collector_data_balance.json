@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__zip__sektor_20_tuz_g_l__havzas____ankara_g_neyi_konya__collector_data",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_20_tuz_g_l__havzas____ankara_g_neyi_konya__collector_data",
+ "target": "stg_sektor_20_tuz_g_l__havzas____ankara_g_neyi_konya",
+ "file_id": "FILE_00000110",
+ "input_count": 38,
+ "successfully_loaded": 38,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 8,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_sektor_20_tuz_g_l__havzas____ankara_g_neyi_konya/part-BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_20_tuz_g_l__havzas____ankara_g_neyi_konya__collector_data.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

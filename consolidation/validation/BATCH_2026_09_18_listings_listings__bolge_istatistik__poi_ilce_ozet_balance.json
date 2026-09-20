@@ -1,0 +1,16 @@
+{
+ "source_id": "listings__bolge_istatistik__poi_ilce_ozet",
+ "batch_id": "BATCH_2026_09_18_listings_listings__bolge_istatistik__poi_ilce_ozet",
+ "target": "stg_bolge_istatistik__poi_ilce_ozet",
+ "file_id": "FILE_00005033",
+ "input_count": 28432,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 4,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_bolge_istatistik__poi_ilce_ozet/part-BATCH_2026_09_18_listings_listings__bolge_istatistik__poi_ilce_ozet.parquet zaten var (append-only)",
+ "seconds": 0.6,
+ "mode": "apply"
+}

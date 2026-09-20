@@ -1,0 +1,25 @@
+{
+ "matcher_version": "POI_MATCHER_V1",
+ "radius_m": 250,
+ "thresholds": {
+  "virtually_certain": 0.995,
+  "very_high": 0.98,
+  "high": 0.95,
+  "review": 0.85
+ },
+ "combination": "noisy-OR 1-Π(1-e_i); kategori çelişkisi ×0.55",
+ "evidence": {
+  "name": "0.92×(sim−0.80)/0.20 (sim≥0.80); 0.10 (0.75–0.80); sim=max(JW, 0.80+0.20×tokenJaccard[≥0.5])",
+  "distance": "≤25m 0.85 · ≤60m 0.70 · ≤120m 0.50 · ≤200m 0.25 · else 0.10",
+  "phone": "0.95 (son 10 hane eşit)",
+  "category": "OSM gıda & Google gıda +0.30; Google gıda-dışı → ×0.55"
+ },
+ "candidacy": "name_sim ≥ 0.75 veya telefon eşleşmesi (yakınlık tek başına yetmez)",
+ "assignment": "bire-bir açgözlü (skor↓, mesafe↑)",
+ "seed": 20260919,
+ "code_hash": "e427db63250dfb3ef5eda55f79ad86331a1910b423ed2a771fbce6557d323a8c",
+ "inputs": {
+  "canonical": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/canonical/v1.1/geoprop_canonical_v1_1.duckdb",
+  "osm_view": "stg.poi_business__stg_osm_food_poi"
+ }
+}

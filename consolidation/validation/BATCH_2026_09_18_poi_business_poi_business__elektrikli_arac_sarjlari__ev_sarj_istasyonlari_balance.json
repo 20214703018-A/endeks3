@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__elektrikli_arac_sarjlari__ev_sarj_istasyonlari",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__elektrikli_arac_sarjlari__ev_sarj_istasyonlari",
+ "target": "stg_elektrikli_arac_sarjlari__ev_sarj_istasyonlari",
+ "file_id": "FILE_00005038",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_elektrikli_arac_sarjlari__ev_sarj_istasyonlari/part-BATCH_2026_09_18_poi_business_poi_business__elektrikli_arac_sarjlari__ev_sarj_istasyonlari.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

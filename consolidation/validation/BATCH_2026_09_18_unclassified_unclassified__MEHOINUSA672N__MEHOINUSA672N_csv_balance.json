@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__MEHOINUSA672N__MEHOINUSA672N_csv",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__MEHOINUSA672N__MEHOINUSA672N_csv",
+ "target": "stg_MEHOINUSA672N",
+ "file_id": "FILE_00016502",
+ "input_count": 7,
+ "successfully_loaded": 7,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": 8,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_MEHOINUSA672N/part-BATCH_2026_09_18_unclassified_unclassified__MEHOINUSA672N__MEHOINUSA672N_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

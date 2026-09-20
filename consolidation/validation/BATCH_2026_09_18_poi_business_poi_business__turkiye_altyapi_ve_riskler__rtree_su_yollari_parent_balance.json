@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__turkiye_altyapi_ve_riskler__rtree_su_yollari_parent",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_altyapi_ve_riskler__rtree_su_yollari_parent",
+ "target": "stg_turkiye_altyapi_ve_riskler__rtree_su_yollari_parent",
+ "file_id": "FILE_00008585",
+ "input_count": 260,
+ "successfully_loaded": 260,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_turkiye_altyapi_ve_riskler__rtree_su_yollari_parent/part-BATCH_2026_09_18_poi_business_poi_business__turkiye_altyapi_ve_riskler__rtree_su_yollari_parent.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

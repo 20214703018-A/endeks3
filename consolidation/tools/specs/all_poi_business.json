@@ -1,0 +1,50 @@
+{
+ "family": "poi_business",
+ "standard_version": "1.0.0",
+ "sources": [
+  {
+   "source_id": "poi_business__restoran_ve_kafe_menuleri__mekan_menu_gorselleri",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Desktop/GEOPROP/warehouse/product/restoran_ve_kafe_menuleri.sqlite",
+   "target": "stg_restoran_ve_kafe_menuleri__mekan_menu_gorselleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [
+    "T07"
+   ],
+   "table": "mekan_menu_gorselleri",
+   "family": "poi_business"
+  },
+  {
+   "source_id": "poi_business__zip__restoran_ve_kafe_menuleri__mekan_menu_gorseller",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Downloads/menu_db_shard_1.zip",
+   "target": "stg_restoran_ve_kafe_menuleri__mekan_menu_gorselleri",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [],
+   "table": "mekan_menu_gorselleri",
+   "zip_member": "restoran_ve_kafe_menuleri.sqlite",
+   "inventory_table": "menu_db_shard_1.zip::restoran_ve_kafe_menuleri.sqlite::mekan_menu_gorselleri",
+   "family": "poi_business",
+   "member_sha256": "ae9e73bde459cf3dc607ea37945468ee45623a2f0ee54cf7bae32da7533cf566"
+  },
+  {
+   "source_id": "poi_business__zip__restoran_ve_kafe_menuleri__mekan_menu_kalemleri",
+   "kind": "sqlite_table",
+   "path": "/Users/acar/Downloads/menu_db_shard_1.zip",
+   "target": "stg_restoran_ve_kafe_menuleri__mekan_menu_kalemleri_ve_fiyat_tarihcesi",
+   "engine": "duckdb",
+   "acquisition_class": "web_research",
+   "distribution_class": "public",
+   "review_flags": [],
+   "table": "mekan_menu_kalemleri_ve_fiyat_tarihcesi",
+   "zip_member": "restoran_ve_kafe_menuleri.sqlite",
+   "inventory_table": "menu_db_shard_1.zip::restoran_ve_kafe_menuleri.sqlite::mekan_menu_kalemleri_ve_fiyat_tarihcesi",
+   "family": "poi_business",
+   "member_sha256": "ae9e73bde459cf3dc607ea37945468ee45623a2f0ee54cf7bae32da7533cf566"
+  }
+ ]
+}

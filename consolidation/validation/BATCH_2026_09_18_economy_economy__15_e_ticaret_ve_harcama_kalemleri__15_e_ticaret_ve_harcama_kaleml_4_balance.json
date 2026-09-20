@@ -1,0 +1,17 @@
+{
+ "source_id": "economy__15_e_ticaret_ve_harcama_kalemleri__15_e_ticaret_ve_harcama_kaleml_4",
+ "batch_id": "BATCH_2026_09_18_economy_economy__15_e_ticaret_ve_harcama_kalemleri__15_e_ticaret_ve_harcama_kaleml_4",
+ "target": "stg_15_e_ticaret_ve_harcama_kalemleri",
+ "file_id": "FILE_00000492",
+ "input_count": 31,
+ "successfully_loaded": 31,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 23,
+ "raw_line_count": 32,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/economy/stg_15_e_ticaret_ve_harcama_kalemleri/part-BATCH_2026_09_18_economy_economy__15_e_ticaret_ve_harcama_kalemleri__15_e_ticaret_ve_harcama_kaleml_4.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

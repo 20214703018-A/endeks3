@@ -1,0 +1,19 @@
+{
+ "source_id": "price_series__Chinook_Sqlite__InvoiceLine",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__Chinook_Sqlite__InvoiceLine",
+ "target": "stg_Chinook_Sqlite__InvoiceLine",
+ "file_id": "FILE_00016365",
+ "input_count": 2240,
+ "successfully_loaded": 2240,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_Chinook_Sqlite__InvoiceLine/part-BATCH_2026_09_18_price_series_price_series__Chinook_Sqlite__InvoiceLine.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

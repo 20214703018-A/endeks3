@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__osm_poi__poi_rtree_parent",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__osm_poi__poi_rtree_parent",
+ "target": "stg_osm_poi__poi_rtree_parent",
+ "file_id": "FILE_00005050",
+ "input_count": 18983,
+ "successfully_loaded": 18983,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_osm_poi__poi_rtree_parent/part-BATCH_2026_09_18_poi_business_poi_business__osm_poi__poi_rtree_parent.parquet",
+ "review_flags": {},
+ "seconds": 0.3,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__ham_devren_ve_isyeri_ilanlari__ham_isyeri_ilanlari",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__ham_devren_ve_isyeri_ilanlari__ham_isyeri_ilanlari",
+ "target": "stg_ham_devren_ve_isyeri_ilanlari__ham_isyeri_ilanlari",
+ "file_id": "FILE_00005042",
+ "input_count": 12108,
+ "successfully_loaded": 12108,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 26,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_ham_devren_ve_isyeri_ilanlari__ham_isyeri_ilanlari/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__ham_devren_ve_isyeri_ilanlari__ham_isyeri_ilanlari.parquet",
+ "review_flags": {},
+ "seconds": 0.2,
+ "mode": "apply"
+}

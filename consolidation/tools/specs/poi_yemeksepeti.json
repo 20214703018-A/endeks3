@@ -1,0 +1,7 @@
+{"family": "poi_business", "standard_version": "1.0.0",
+ "sources": [
+  {"kind": "jsonl", "engine": "duckdb", "acquisition_class": "web_research", "distribution_class": "internal", "review_flags": ["LIVE_COLLECTOR_SNAPSHOT_2026-09-19", "PARSER_V2"],
+   "source_id": "YS_records_v2", "path": "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/yemeksepeti_menu/2026-09-18/records_YS_MENU_PARSER_V2.jsonl", "target": "stg_yemeksepeti_records"},
+  {"kind": "jsonl", "engine": "duckdb", "acquisition_class": "web_research", "distribution_class": "internal", "review_flags": ["SUPERSEDED_PARSER_V1_reference_only"],
+   "source_id": "YS_records_v1", "path": "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/yemeksepeti_menu/2026-09-18/records_YS_MENU_PARSER_V1.jsonl", "target": "stg_yemeksepeti_records_parser_v1"}
+ ]}

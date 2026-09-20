@@ -1,0 +1,17 @@
+{
+ "source_id": "mobility_logistics__cevre__hava_istasyon",
+ "batch_id": "BATCH_2026_09_18_mobility_logistics_mobility_logistics__cevre__hava_istasyon",
+ "target": "stg_cevre__hava_istasyon",
+ "file_id": "FILE_00005035",
+ "input_count": 338,
+ "successfully_loaded": 338,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/mobility_logistics/stg_cevre__hava_istasyon/part-BATCH_2026_09_18_mobility_logistics_mobility_logistics__cevre__hava_istasyon.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

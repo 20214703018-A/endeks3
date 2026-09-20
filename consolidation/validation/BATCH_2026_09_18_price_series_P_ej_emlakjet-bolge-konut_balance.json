@@ -1,0 +1,19 @@
+{
+ "source_id": "P_ej_emlakjet-bolge-konut",
+ "batch_id": "BATCH_2026_09_18_price_series_P_ej_emlakjet-bolge-konut",
+ "target": "stg_ej_region_index",
+ "file_id": "FILE_00000164",
+ "input_count": 780,
+ "successfully_loaded": 780,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 31,
+ "raw_line_count": 781,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_ej_region_index/part-BATCH_2026_09_18_price_series_P_ej_emlakjet-bolge-konut.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

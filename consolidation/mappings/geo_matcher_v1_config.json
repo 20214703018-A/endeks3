@@ -1,0 +1,23 @@
+{
+ "matcher_version": "GEO_MATCHER_V1",
+ "thresholds": {
+  "virtually_certain": 0.995,
+  "very_high": 0.98,
+  "high": 0.95,
+  "review": 0.85
+ },
+ "weights_web_tkgm": {
+  "name": 0.4,
+  "iou": 0.45,
+  "centroid_inside": 0.15
+ },
+ "weights_web_tuik": {
+  "name": 0.65,
+  "population": 0.35
+ },
+ "name_normalization": "lower, Türkçe harf eşleme, parantez içi ve mah/mahallesi/köyü/beldesi ekleri atılır, alfasayısal dışı silinir",
+ "candidate_generation": "aynı il+ilçe & JW≥0.80; TKGM için ayrıca aynı ilde centroid-içinde/kesişen poligonlar",
+ "population_consistency": "1 - min(1, |web2024/tuik2025 - 1| / 0.30)",
+ "seed": 20260918,
+ "code_hash": "2fd08328c5aac7dc167169bf1fa9b493ce2a303d9feec357226ef42d15d02ad8"
+}

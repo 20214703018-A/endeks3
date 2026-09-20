@@ -1,0 +1,16 @@
+{
+ "source_id": "poi_business__08_ilce_onemli_noktalar_poi__08_ilce_onemli_noktalar_poi_cs_4",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__08_ilce_onemli_noktalar_poi__08_ilce_onemli_noktalar_poi_cs_4",
+ "target": "stg_08_ilce_onemli_noktalar_poi",
+ "file_id": "FILE_00000266",
+ "input_count": 775,
+ "successfully_loaded": 775,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": 776,
+ "engine": "duckdb",
+ "note": "csv",
+ "seconds": 0.0,
+ "mode": "dry-run"
+}

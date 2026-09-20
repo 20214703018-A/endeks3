@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__turkiye_cografi_varliklar_ozet__turkiye_cografi_varliklar_ozet",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_cografi_varliklar_ozet__turkiye_cografi_varliklar_ozet",
+ "target": "stg_turkiye_cografi_varliklar_ozet",
+ "file_id": "FILE_00000936",
+ "input_count": 19757,
+ "successfully_loaded": 19757,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 8,
+ "raw_line_count": 19758,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_turkiye_cografi_varliklar_ozet/part-BATCH_2026_09_18_poi_business_poi_business__turkiye_cografi_varliklar_ozet__turkiye_cografi_varliklar_ozet.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

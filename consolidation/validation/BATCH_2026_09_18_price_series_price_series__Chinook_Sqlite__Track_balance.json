@@ -1,0 +1,19 @@
+{
+ "source_id": "price_series__Chinook_Sqlite__Track",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__Chinook_Sqlite__Track",
+ "target": "stg_Chinook_Sqlite__Track",
+ "file_id": "FILE_00016365",
+ "input_count": 3503,
+ "successfully_loaded": 3503,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_Chinook_Sqlite__Track/part-BATCH_2026_09_18_price_series_price_series__Chinook_Sqlite__Track.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

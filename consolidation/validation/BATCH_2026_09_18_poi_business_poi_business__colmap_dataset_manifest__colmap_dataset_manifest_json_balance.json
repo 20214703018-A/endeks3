@@ -1,0 +1,17 @@
+{
+ "source_id": "poi_business__colmap_dataset_manifest__colmap_dataset_manifest_json",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__colmap_dataset_manifest__colmap_dataset_manifest_json",
+ "target": "stg_colmap_dataset_manifest",
+ "file_id": "FILE_00015616",
+ "input_count": 404,
+ "successfully_loaded": 404,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 78043,
+ "note": "json_records under=images",
+ "seconds": 0.0,
+ "mode": "apply"
+}

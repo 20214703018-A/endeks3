@@ -1,0 +1,21 @@
+{
+ "source_id": "price_series__15_e_ticaret_ve_harcama_kalemleri__15_e_ticaret_ve_harcama_kaleml",
+ "batch_id": "BATCH_2026_09_18_price_series_price_series__15_e_ticaret_ve_harcama_kalemleri__15_e_ticaret_ve_harcama_kaleml",
+ "target": "stg_15_e_ticaret_ve_harcama_kalemleri",
+ "file_id": "FILE_00008653",
+ "input_count": 9,
+ "successfully_loaded": 9,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 33,
+ "raw_line_count": 10,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/price_series/stg_15_e_ticaret_ve_harcama_kalemleri/part-BATCH_2026_09_18_price_series_price_series__15_e_ticaret_ve_harcama_kalemleri__15_e_ticaret_ve_harcama_kaleml.parquet",
+ "review_flags": {
+  "T06": 9
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

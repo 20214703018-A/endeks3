@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__15_e_ticaret_ve_harcama_kalemleri__15_e_ticaret_ve_harcama_kaleml",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__15_e_ticaret_ve_harcama_kalemleri__15_e_ticaret_ve_harcama_kaleml",
+ "target": "stg_15_e_ticaret_ve_harcama_kalemleri",
+ "file_id": "FILE_00000954",
+ "input_count": 20073,
+ "successfully_loaded": 20073,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 41,
+ "raw_line_count": 20074,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/quarantine/staged/demographics_context/stg_15_e_ticaret_ve_harcama_kalemleri/part-BATCH_2026_09_18_demographics_context_demographics_context__15_e_ticaret_ve_harcama_kalemleri__15_e_ticaret_ve_harcama_kaleml.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

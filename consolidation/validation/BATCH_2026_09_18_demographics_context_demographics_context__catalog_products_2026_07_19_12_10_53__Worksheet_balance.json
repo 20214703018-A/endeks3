@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__catalog_products_2026_07_19_12_10_53__Worksheet",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__catalog_products_2026_07_19_12_10_53__Worksheet",
+ "target": "stg_catalog_products_2026_07_19_12_10_53__Worksheet",
+ "file_id": "FILE_00016625",
+ "input_count": 2,
+ "successfully_loaded": 2,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 31,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 6282,
+ "note": "xlsx",
+ "seconds": 0.1,
+ "mode": "apply"
+}

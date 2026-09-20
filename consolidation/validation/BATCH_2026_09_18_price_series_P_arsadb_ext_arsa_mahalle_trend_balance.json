@@ -1,0 +1,22 @@
+{
+ "source_id": "P_arsadb_ext_arsa_mahalle_trend",
+ "batch_id": "BATCH_2026_09_18_price_series_P_arsadb_ext_arsa_mahalle_trend",
+ "target": "stg_land_trend_monthly",
+ "file_id": "FILE_00008560",
+ "input_count": 3280,
+ "successfully_loaded": 3280,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 22,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_land_trend_monthly/part-BATCH_2026_09_18_price_series_P_arsadb_ext_arsa_mahalle_trend.parquet",
+ "review_flags": {
+  "SOURCE_MARKED_PROJECTION": 492,
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 492
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

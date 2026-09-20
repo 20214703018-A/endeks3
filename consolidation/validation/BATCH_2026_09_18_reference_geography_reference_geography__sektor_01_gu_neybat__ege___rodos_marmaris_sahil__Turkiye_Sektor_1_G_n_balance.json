@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__sektor_01_gu_neybat__ege___rodos_marmaris_sahil__Turkiye_Sektor_1_G_n",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__sektor_01_gu_neybat__ege___rodos_marmaris_sahil__Turkiye_Sektor_1_G_n",
+ "target": "stg_sektor_01_gu_neybat__ege___rodos_marmaris_sahil",
+ "file_id": "FILE_00008447",
+ "input_count": 6407,
+ "successfully_loaded": 6407,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_sektor_01_gu_neybat__ege___rodos_marmaris_sahil/part-BATCH_2026_09_18_reference_geography_reference_geography__sektor_01_gu_neybat__ege___rodos_marmaris_sahil__Turkiye_Sektor_1_G_n.parquet zaten var (append-only)",
+ "seconds": 1.0,
+ "mode": "apply"
+}

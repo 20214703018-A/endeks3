@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__turkiye_elektrik_hatlari__turkiye_elektrik_hatlari_csv",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_elektrik_hatlari__turkiye_elektrik_hatlari_csv",
+ "target": "stg_turkiye_elektrik_hatlari",
+ "file_id": "FILE_00008606",
+ "input_count": 349,
+ "successfully_loaded": 349,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": 350,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_turkiye_elektrik_hatlari/part-BATCH_2026_09_18_poi_business_poi_business__turkiye_elektrik_hatlari__turkiye_elektrik_hatlari_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

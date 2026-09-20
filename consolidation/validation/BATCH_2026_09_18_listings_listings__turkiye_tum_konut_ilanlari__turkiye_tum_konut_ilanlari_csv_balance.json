@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__turkiye_tum_konut_ilanlari__turkiye_tum_konut_ilanlari_csv",
+ "batch_id": "BATCH_2026_09_18_listings_listings__turkiye_tum_konut_ilanlari__turkiye_tum_konut_ilanlari_csv",
+ "target": "stg_turkiye_tum_konut_ilanlari",
+ "file_id": "FILE_00008382",
+ "input_count": 1156,
+ "successfully_loaded": 1156,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 20,
+ "raw_line_count": 1157,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_turkiye_tum_konut_ilanlari/part-BATCH_2026_09_18_listings_listings__turkiye_tum_konut_ilanlari__turkiye_tum_konut_ilanlari_csv.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__dogal_pinarlar_ve_cesmeler__dogal_pinarlar_ve_cesmeler_csv",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__dogal_pinarlar_ve_cesmeler__dogal_pinarlar_ve_cesmeler_csv",
+ "target": "stg_dogal_pinarlar_ve_cesmeler",
+ "file_id": "FILE_00008600",
+ "input_count": 1926,
+ "successfully_loaded": 1926,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "raw_line_count": 1927,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_dogal_pinarlar_ve_cesmeler/part-BATCH_2026_09_18_poi_business_poi_business__dogal_pinarlar_ve_cesmeler__dogal_pinarlar_ve_cesmeler_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__pannellum__pannellum_css",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__pannellum__pannellum_css",
+ "target": "stg_pannellum",
+ "file_id": "FILE_00015600",
+ "input_count": 1,
+ "successfully_loaded": 1,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 51,
+ "raw_line_count": 1,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_pannellum/part-BATCH_2026_09_18_unclassified_unclassified__pannellum__pannellum_css.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

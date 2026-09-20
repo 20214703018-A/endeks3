@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__turkiye_sahil_seritleri__turkiye_sahil_seritleri",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__turkiye_sahil_seritleri__turkiye_sahil_seritleri",
+ "target": "stg_turkiye_sahil_seritleri",
+ "file_id": "FILE_00008618",
+ "input_count": 266,
+ "successfully_loaded": 266,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_turkiye_sahil_seritleri/part-BATCH_2026_09_18_reference_geography_reference_geography__turkiye_sahil_seritleri__turkiye_sahil_seritleri.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

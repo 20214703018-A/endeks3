@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__nufus_bilgileri__Sheet0",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__nufus_bilgileri__Sheet0",
+ "target": "stg_nufus_bilgileri__Sheet0",
+ "file_id": "FILE_00016797",
+ "input_count": 734,
+ "successfully_loaded": 734,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 41,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 352535,
+ "note": "xlsx",
+ "seconds": 0.1,
+ "mode": "apply"
+}

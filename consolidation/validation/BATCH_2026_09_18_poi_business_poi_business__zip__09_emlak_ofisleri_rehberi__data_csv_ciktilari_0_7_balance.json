@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__zip__09_emlak_ofisleri_rehberi__data_csv_ciktilari_0_7",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__zip__09_emlak_ofisleri_rehberi__data_csv_ciktilari_0_7",
+ "target": "stg_09_emlak_ofisleri_rehberi",
+ "file_id": "FILE_00000203",
+ "input_count": 78,
+ "successfully_loaded": 78,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "raw_line_count": 79,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_09_emlak_ofisleri_rehberi/part-BATCH_2026_09_18_poi_business_poi_business__zip__09_emlak_ofisleri_rehberi__data_csv_ciktilari_0_7.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

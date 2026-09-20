@@ -1,0 +1,19 @@
+{
+ "source_id": "S6_mahalle_listesi_13",
+ "batch_id": "BATCH_2026_09_18_reference_geography_S6_mahalle_listesi_13",
+ "target": "stg_neighbourhood_list",
+ "file_id": "FILE_00000398",
+ "input_count": 1808,
+ "successfully_loaded": 1808,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "geometry_types": [],
+ "review_flags": {
+  "F9_COVERAGE_VARIES": 1808
+ },
+ "estimated_bytes": 115103,
+ "note": "csv enc=utf-8-sig",
+ "seconds": 0.0,
+ "mode": "apply"
+}

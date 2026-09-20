@@ -1,0 +1,21 @@
+{
+ "source_id": "poi_business__restoran_ve_kafe_menuleri__mekan_menu_gorselleri",
+ "batch_id": "BATCH_2026_09_20_poi_business_poi_business__restoran_ve_kafe_menuleri__mekan_menu_gorselleri",
+ "target": "stg_restoran_ve_kafe_menuleri__mekan_menu_gorselleri",
+ "file_id": "FILE_00005055",
+ "input_count": 55,
+ "successfully_loaded": 55,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_restoran_ve_kafe_menuleri__mekan_menu_gorselleri/part-BATCH_2026_09_20_poi_business_poi_business__restoran_ve_kafe_menuleri__mekan_menu_gorselleri.parquet",
+ "review_flags": {
+  "T07": 55
+ },
+ "seconds": 0.3,
+ "mode": "apply"
+}

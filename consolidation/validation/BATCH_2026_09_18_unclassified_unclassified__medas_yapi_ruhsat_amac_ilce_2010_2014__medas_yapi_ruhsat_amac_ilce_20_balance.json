@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__medas_yapi_ruhsat_amac_ilce_2010_2014__medas_yapi_ruhsat_amac_ilce_20",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__medas_yapi_ruhsat_amac_ilce_2010_2014__medas_yapi_ruhsat_amac_ilce_20",
+ "target": "stg_medas_yapi_ruhsat_amac_ilce_2010_2014",
+ "file_id": "FILE_00005407",
+ "input_count": 49,
+ "successfully_loaded": 49,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 987,
+ "raw_line_count": 50,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_medas_yapi_ruhsat_amac_ilce_2010_2014/part-BATCH_2026_09_18_unclassified_unclassified__medas_yapi_ruhsat_amac_ilce_2010_2014__medas_yapi_ruhsat_amac_ilce_20.parquet",
+ "review_flags": {},
+ "seconds": 0.2,
+ "mode": "apply"
+}

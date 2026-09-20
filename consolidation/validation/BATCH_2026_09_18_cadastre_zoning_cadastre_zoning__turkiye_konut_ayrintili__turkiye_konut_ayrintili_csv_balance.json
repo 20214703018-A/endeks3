@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__turkiye_konut_ayrintili__turkiye_konut_ayrintili_csv",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__turkiye_konut_ayrintili__turkiye_konut_ayrintili_csv",
+ "target": "stg_turkiye_konut_ayrintili",
+ "file_id": "FILE_00000775",
+ "input_count": 132739,
+ "successfully_loaded": 132739,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 33,
+ "raw_line_count": 132740,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_turkiye_konut_ayrintili/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__turkiye_konut_ayrintili__turkiye_konut_ayrintili_csv.parquet",
+ "review_flags": {},
+ "seconds": 1.0,
+ "mode": "apply"
+}

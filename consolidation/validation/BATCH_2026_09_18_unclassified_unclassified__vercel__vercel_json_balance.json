@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__vercel__vercel_json",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__vercel__vercel_json",
+ "target": "stg_vercel",
+ "file_id": "FILE_00016970",
+ "input_count": 2,
+ "successfully_loaded": 2,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 2,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 60,
+ "note": "json_records under=crons",
+ "seconds": 0.0,
+ "mode": "apply"
+}

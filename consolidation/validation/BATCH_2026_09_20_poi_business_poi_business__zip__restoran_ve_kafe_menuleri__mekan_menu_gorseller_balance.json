@@ -1,0 +1,18 @@
+{
+ "source_id": "poi_business__zip__restoran_ve_kafe_menuleri__mekan_menu_gorseller",
+ "batch_id": "BATCH_2026_09_20_poi_business_poi_business__zip__restoran_ve_kafe_menuleri__mekan_menu_gorseller",
+ "target": "stg_restoran_ve_kafe_menuleri__mekan_menu_gorselleri",
+ "file_id": "FILE_00020196",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table EMPTY_SOURCE_TABLE (0 satır; dosya yazılmadı)",
+ "readback_ok": true,
+ "output": null,
+ "seconds": 0.0,
+ "mode": "apply"
+}

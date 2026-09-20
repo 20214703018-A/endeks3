@@ -1,0 +1,8328 @@
+{
+ "batch_id": "BATCH_2026_09_18_reference_geography_admin_polygon_all",
+ "mode": "apply",
+ "pipeline_version": "1.0.0",
+ "files": 1038,
+ "files_missing_in_inventory": [],
+ "input_count": 51294,
+ "successfully_loaded": 51294,
+ "quarantined_records": 0,
+ "unaccounted": 0,
+ "rows_by_level_kind": {
+  "ilce/admin": 958,
+  "mahalle/admin": 49805,
+  "mahalle/water_or_island": 531
+ },
+ "invalid_geometries": 7,
+ "outside_tr_bbox": 0,
+ "estimated_output_bytes": 229589565,
+ "free_disk_bytes": 26866049024,
+ "seconds": 27.1,
+ "at": "2026-09-18T06:16:43+00:00",
+ "per_file": [
+  {
+   "file": "city_10.json",
+   "file_id": "FILE_00000975",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_11.json",
+   "file_id": "FILE_00000976",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_12.json",
+   "file_id": "FILE_00000977",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_13.json",
+   "file_id": "FILE_00000978",
+   "input": 7,
+   "staged": 7,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_14.json",
+   "file_id": "FILE_00000979",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_15.json",
+   "file_id": "FILE_00000980",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_16.json",
+   "file_id": "FILE_00000981",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_17.json",
+   "file_id": "FILE_00000982",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_18.json",
+   "file_id": "FILE_00000983",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_19.json",
+   "file_id": "FILE_00000984",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_2.json",
+   "file_id": "FILE_00000985",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_20.json",
+   "file_id": "FILE_00000986",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_21.json",
+   "file_id": "FILE_00000987",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_22.json",
+   "file_id": "FILE_00000988",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_23.json",
+   "file_id": "FILE_00000989",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_24.json",
+   "file_id": "FILE_00000990",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_25.json",
+   "file_id": "FILE_00000991",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_26.json",
+   "file_id": "FILE_00000992",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_27.json",
+   "file_id": "FILE_00000993",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_28.json",
+   "file_id": "FILE_00000994",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_29.json",
+   "file_id": "FILE_00000995",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_3.json",
+   "file_id": "FILE_00000996",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_30.json",
+   "file_id": "FILE_00000997",
+   "input": 5,
+   "staged": 5,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_31.json",
+   "file_id": "FILE_00000998",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_32.json",
+   "file_id": "FILE_00000999",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_33.json",
+   "file_id": "FILE_00001000",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_34.json",
+   "file_id": "FILE_00001001",
+   "input": 39,
+   "staged": 39,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_35.json",
+   "file_id": "FILE_00001002",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_36.json",
+   "file_id": "FILE_00001003",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_37.json",
+   "file_id": "FILE_00001004",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_38.json",
+   "file_id": "FILE_00001005",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_39.json",
+   "file_id": "FILE_00001006",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_4.json",
+   "file_id": "FILE_00001007",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_40.json",
+   "file_id": "FILE_00001008",
+   "input": 7,
+   "staged": 7,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_41.json",
+   "file_id": "FILE_00001009",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_42.json",
+   "file_id": "FILE_00001010",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_43.json",
+   "file_id": "FILE_00001011",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_44.json",
+   "file_id": "FILE_00001012",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_45.json",
+   "file_id": "FILE_00001013",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_46.json",
+   "file_id": "FILE_00001014",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_47.json",
+   "file_id": "FILE_00001015",
+   "input": 10,
+   "staged": 10,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_48.json",
+   "file_id": "FILE_00001016",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_49.json",
+   "file_id": "FILE_00001017",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_5.json",
+   "file_id": "FILE_00001018",
+   "input": 7,
+   "staged": 7,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_50.json",
+   "file_id": "FILE_00001019",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_51.json",
+   "file_id": "FILE_00001020",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_52.json",
+   "file_id": "FILE_00001021",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_53.json",
+   "file_id": "FILE_00001022",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_54.json",
+   "file_id": "FILE_00001023",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_55.json",
+   "file_id": "FILE_00001024",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_56.json",
+   "file_id": "FILE_00001025",
+   "input": 7,
+   "staged": 7,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_57.json",
+   "file_id": "FILE_00001026",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_58.json",
+   "file_id": "FILE_00001027",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_59.json",
+   "file_id": "FILE_00001028",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_6.json",
+   "file_id": "FILE_00001029",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_60.json",
+   "file_id": "FILE_00001030",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_61.json",
+   "file_id": "FILE_00001031",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_62.json",
+   "file_id": "FILE_00001032",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_63.json",
+   "file_id": "FILE_00001033",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_64.json",
+   "file_id": "FILE_00001034",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_65.json",
+   "file_id": "FILE_00001035",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_66.json",
+   "file_id": "FILE_00001036",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_67.json",
+   "file_id": "FILE_00001037",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_68.json",
+   "file_id": "FILE_00001038",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_69.json",
+   "file_id": "FILE_00001039",
+   "input": 3,
+   "staged": 3,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_7.json",
+   "file_id": "FILE_00001040",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_70.json",
+   "file_id": "FILE_00001041",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_71.json",
+   "file_id": "FILE_00001042",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_72.json",
+   "file_id": "FILE_00001043",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_73.json",
+   "file_id": "FILE_00001044",
+   "input": 7,
+   "staged": 7,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_74.json",
+   "file_id": "FILE_00001045",
+   "input": 4,
+   "staged": 4,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_75.json",
+   "file_id": "FILE_00001046",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_76.json",
+   "file_id": "FILE_00001047",
+   "input": 4,
+   "staged": 4,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_77.json",
+   "file_id": "FILE_00001048",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_78.json",
+   "file_id": "FILE_00001049",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_79.json",
+   "file_id": "FILE_00001050",
+   "input": 4,
+   "staged": 4,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_8.json",
+   "file_id": "FILE_00001051",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_80.json",
+   "file_id": "FILE_00001052",
+   "input": 7,
+   "staged": 7,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_81.json",
+   "file_id": "FILE_00001053",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "city_9.json",
+   "file_id": "FILE_00001054",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1161.json",
+   "file_id": "FILE_00001055",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1169.json",
+   "file_id": "FILE_00001056",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1171.json",
+   "file_id": "FILE_00001057",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1191.json",
+   "file_id": "FILE_00001058",
+   "input": 80,
+   "staged": 80,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1216.json",
+   "file_id": "FILE_00001059",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1291.json",
+   "file_id": "FILE_00001060",
+   "input": 110,
+   "staged": 110,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1294.json",
+   "file_id": "FILE_00001061",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1310.json",
+   "file_id": "FILE_00001062",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1360.json",
+   "file_id": "FILE_00001063",
+   "input": 102,
+   "staged": 102,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1384.json",
+   "file_id": "FILE_00001064",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1418.json",
+   "file_id": "FILE_00001065",
+   "input": 70,
+   "staged": 70,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1462.json",
+   "file_id": "FILE_00001066",
+   "input": 69,
+   "staged": 69,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1514.json",
+   "file_id": "FILE_00001067",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1608.json",
+   "file_id": "FILE_00001068",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1619.json",
+   "file_id": "FILE_00001069",
+   "input": 75,
+   "staged": 75,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1644.json",
+   "file_id": "FILE_00001070",
+   "input": 54,
+   "staged": 54,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1824.json",
+   "file_id": "FILE_00001071",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_1928.json",
+   "file_id": "FILE_00001072",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_2077.json",
+   "file_id": "FILE_00001073",
+   "input": 96,
+   "staged": 96,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_10_2078.json",
+   "file_id": "FILE_00001074",
+   "input": 70,
+   "staged": 70,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_11_1192.json",
+   "file_id": "FILE_00001075",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_11_1210.json",
+   "file_id": "FILE_00001076",
+   "input": 59,
+   "staged": 59,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_11_1359.json",
+   "file_id": "FILE_00001077",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_11_1559.json",
+   "file_id": "FILE_00001078",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_11_1571.json",
+   "file_id": "FILE_00001079",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_11_1636.json",
+   "file_id": "FILE_00001080",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_11_1857.json",
+   "file_id": "FILE_00001081",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_11_1948.json",
+   "file_id": "FILE_00001082",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_12_1193.json",
+   "file_id": "FILE_00001083",
+   "input": 117,
+   "staged": 117,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_12_1344.json",
+   "file_id": "FILE_00001084",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_12_1446.json",
+   "file_id": "FILE_00001085",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_12_1475.json",
+   "file_id": "FILE_00001086",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_12_1633.json",
+   "file_id": "FILE_00001087",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_12_1750.json",
+   "file_id": "FILE_00001088",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_12_1855.json",
+   "file_id": "FILE_00001089",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_12_1996.json",
+   "file_id": "FILE_00001090",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_13_1106.json",
+   "file_id": "FILE_00001091",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_13_1112.json",
+   "file_id": "FILE_00001092",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_13_1196.json",
+   "file_id": "FILE_00001093",
+   "input": 100,
+   "staged": 100,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_13_1394.json",
+   "file_id": "FILE_00001094",
+   "input": 89,
+   "staged": 89,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_13_1537.json",
+   "file_id": "FILE_00001095",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_13_1669.json",
+   "file_id": "FILE_00001096",
+   "input": 81,
+   "staged": 81,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_13_1798.json",
+   "file_id": "FILE_00001097",
+   "input": 55,
+   "staged": 55,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_14_1199.json",
+   "file_id": "FILE_00001098",
+   "input": 156,
+   "staged": 156,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_14_1346.json",
+   "file_id": "FILE_00001099",
+   "input": 101,
+   "staged": 101,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_14_1364.json",
+   "file_id": "FILE_00001100",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_14_1466.json",
+   "file_id": "FILE_00001101",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_14_1522.json",
+   "file_id": "FILE_00001102",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_14_1531.json",
+   "file_id": "FILE_00001103",
+   "input": 82,
+   "staged": 82,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_14_1610.json",
+   "file_id": "FILE_00001104",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_14_1916.json",
+   "file_id": "FILE_00001105",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_14_1997.json",
+   "file_id": "FILE_00001106",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1109.json",
+   "file_id": "FILE_00001107",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1211.json",
+   "file_id": "FILE_00001108",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1215.json",
+   "file_id": "FILE_00001109",
+   "input": 89,
+   "staged": 89,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1357.json",
+   "file_id": "FILE_00001110",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1672.json",
+   "file_id": "FILE_00001111",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1728.json",
+   "file_id": "FILE_00001112",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1813.json",
+   "file_id": "FILE_00001113",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1816.json",
+   "file_id": "FILE_00001114",
+   "input": 10,
+   "staged": 10,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1874.json",
+   "file_id": "FILE_00001115",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1899.json",
+   "file_id": "FILE_00001116",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_15_1903.json",
+   "file_id": "FILE_00001117",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1343.json",
+   "file_id": "FILE_00001118",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1411.json",
+   "file_id": "FILE_00001119",
+   "input": 118,
+   "staged": 118,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1420.json",
+   "file_id": "FILE_00001120",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1434.json",
+   "file_id": "FILE_00001121",
+   "input": 90,
+   "staged": 90,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1457.json",
+   "file_id": "FILE_00001122",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1530.json",
+   "file_id": "FILE_00001123",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1535.json",
+   "file_id": "FILE_00001124",
+   "input": 133,
+   "staged": 133,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1553.json",
+   "file_id": "FILE_00001125",
+   "input": 61,
+   "staged": 61,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1554.json",
+   "file_id": "FILE_00001126",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1725.json",
+   "file_id": "FILE_00001127",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1783.json",
+   "file_id": "FILE_00001128",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1799.json",
+   "file_id": "FILE_00001129",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1829.json",
+   "file_id": "FILE_00001130",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1832.json",
+   "file_id": "FILE_00001131",
+   "input": 137,
+   "staged": 137,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1859.json",
+   "file_id": "FILE_00001132",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1935.json",
+   "file_id": "FILE_00001133",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_16_1960.json",
+   "file_id": "FILE_00001134",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1160.json",
+   "file_id": "FILE_00001135",
+   "input": 70,
+   "staged": 70,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1180.json",
+   "file_id": "FILE_00001136",
+   "input": 79,
+   "staged": 79,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1190.json",
+   "file_id": "FILE_00001137",
+   "input": 124,
+   "staged": 124,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1205.json",
+   "file_id": "FILE_00001138",
+   "input": 2,
+   "staged": 2,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1229.json",
+   "file_id": "FILE_00001139",
+   "input": 74,
+   "staged": 74,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1230.json",
+   "file_id": "FILE_00001140",
+   "input": 62,
+   "staged": 62,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1293.json",
+   "file_id": "FILE_00001141",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1326.json",
+   "file_id": "FILE_00001142",
+   "input": 61,
+   "staged": 61,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1340.json",
+   "file_id": "FILE_00001143",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1408.json",
+   "file_id": "FILE_00001144",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1503.json",
+   "file_id": "FILE_00001145",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_17_1722.json",
+   "file_id": "FILE_00001146",
+   "input": 83,
+   "staged": 83,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1232.json",
+   "file_id": "FILE_00001147",
+   "input": 65,
+   "staged": 65,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1248.json",
+   "file_id": "FILE_00001148",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1300.json",
+   "file_id": "FILE_00001149",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1399.json",
+   "file_id": "FILE_00001150",
+   "input": 84,
+   "staged": 84,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1494.json",
+   "file_id": "FILE_00001151",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1555.json",
+   "file_id": "FILE_00001152",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1649.json",
+   "file_id": "FILE_00001153",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1718.json",
+   "file_id": "FILE_00001154",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1765.json",
+   "file_id": "FILE_00001155",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1817.json",
+   "file_id": "FILE_00001156",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1885.json",
+   "file_id": "FILE_00001157",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_18_1963.json",
+   "file_id": "FILE_00001158",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1124.json",
+   "file_id": "FILE_00001159",
+   "input": 108,
+   "staged": 108,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1177.json",
+   "file_id": "FILE_00001160",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1259.json",
+   "file_id": "FILE_00001161",
+   "input": 222,
+   "staged": 222,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1414.json",
+   "file_id": "FILE_00001162",
+   "input": 78,
+   "staged": 78,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1445.json",
+   "file_id": "FILE_00001163",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1520.json",
+   "file_id": "FILE_00001164",
+   "input": 62,
+   "staged": 62,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1556.json",
+   "file_id": "FILE_00001165",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1558.json",
+   "file_id": "FILE_00001166",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1642.json",
+   "file_id": "FILE_00001167",
+   "input": 125,
+   "staged": 125,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1778.json",
+   "file_id": "FILE_00001168",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1850.json",
+   "file_id": "FILE_00001169",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1911.json",
+   "file_id": "FILE_00001170",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1972.json",
+   "file_id": "FILE_00001171",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_19_1976.json",
+   "file_id": "FILE_00001172",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1102.json",
+   "file_id": "FILE_00001188",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1214.json",
+   "file_id": "FILE_00001189",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1224.json",
+   "file_id": "FILE_00001190",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1226.json",
+   "file_id": "FILE_00001191",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1233.json",
+   "file_id": "FILE_00001192",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1257.json",
+   "file_id": "FILE_00001193",
+   "input": 78,
+   "staged": 78,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1371.json",
+   "file_id": "FILE_00001194",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1426.json",
+   "file_id": "FILE_00001195",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1597.json",
+   "file_id": "FILE_00001196",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1670.json",
+   "file_id": "FILE_00001197",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1769.json",
+   "file_id": "FILE_00001198",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1774.json",
+   "file_id": "FILE_00001199",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1803.json",
+   "file_id": "FILE_00001200",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1840.json",
+   "file_id": "FILE_00001201",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1871.json",
+   "file_id": "FILE_00001202",
+   "input": 61,
+   "staged": 61,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1881.json",
+   "file_id": "FILE_00001203",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1888.json",
+   "file_id": "FILE_00001204",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_1889.json",
+   "file_id": "FILE_00001205",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_20_2079.json",
+   "file_id": "FILE_00001206",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1195.json",
+   "file_id": "FILE_00001207",
+   "input": 123,
+   "staged": 123,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1249.json",
+   "file_id": "FILE_00001208",
+   "input": 81,
+   "staged": 81,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1253.json",
+   "file_id": "FILE_00001209",
+   "input": 101,
+   "staged": 101,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1263.json",
+   "file_id": "FILE_00001210",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1278.json",
+   "file_id": "FILE_00001211",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1315.json",
+   "file_id": "FILE_00001212",
+   "input": 107,
+   "staged": 107,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1381.json",
+   "file_id": "FILE_00001213",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1389.json",
+   "file_id": "FILE_00001214",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1490.json",
+   "file_id": "FILE_00001215",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1504.json",
+   "file_id": "FILE_00001216",
+   "input": 70,
+   "staged": 70,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1624.json",
+   "file_id": "FILE_00001217",
+   "input": 93,
+   "staged": 93,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1791.json",
+   "file_id": "FILE_00001218",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_1962.json",
+   "file_id": "FILE_00001219",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_2040.json",
+   "file_id": "FILE_00001220",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_2041.json",
+   "file_id": "FILE_00001221",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_2042.json",
+   "file_id": "FILE_00001222",
+   "input": 100,
+   "staged": 100,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_21_2043.json",
+   "file_id": "FILE_00001223",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_22_1295.json",
+   "file_id": "FILE_00001224",
+   "input": 65,
+   "staged": 65,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_22_1307.json",
+   "file_id": "FILE_00001225",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_22_1385.json",
+   "file_id": "FILE_00001226",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_22_1412.json",
+   "file_id": "FILE_00001227",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_22_1464.json",
+   "file_id": "FILE_00001228",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_22_1502.json",
+   "file_id": "FILE_00001229",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_22_1523.json",
+   "file_id": "FILE_00001230",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_22_1705.json",
+   "file_id": "FILE_00001231",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_22_1988.json",
+   "file_id": "FILE_00001232",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1110.json",
+   "file_id": "FILE_00001233",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1173.json",
+   "file_id": "FILE_00001234",
+   "input": 67,
+   "staged": 67,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1298.json",
+   "file_id": "FILE_00001235",
+   "input": 205,
+   "staged": 205,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1438.json",
+   "file_id": "FILE_00001236",
+   "input": 97,
+   "staged": 97,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1455.json",
+   "file_id": "FILE_00001237",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1506.json",
+   "file_id": "FILE_00001238",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1566.json",
+   "file_id": "FILE_00001239",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1631.json",
+   "file_id": "FILE_00001240",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1762.json",
+   "file_id": "FILE_00001241",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1820.json",
+   "file_id": "FILE_00001242",
+   "input": 90,
+   "staged": 90,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_23_1873.json",
+   "file_id": "FILE_00001243",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_24_1243.json",
+   "file_id": "FILE_00001244",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_24_1318.json",
+   "file_id": "FILE_00001245",
+   "input": 144,
+   "staged": 144,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_24_1406.json",
+   "file_id": "FILE_00001246",
+   "input": 62,
+   "staged": 62,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_24_1459.json",
+   "file_id": "FILE_00001247",
+   "input": 83,
+   "staged": 83,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_24_1460.json",
+   "file_id": "FILE_00001248",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_24_1583.json",
+   "file_id": "FILE_00001249",
+   "input": 126,
+   "staged": 126,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_24_1675.json",
+   "file_id": "FILE_00001250",
+   "input": 88,
+   "staged": 88,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_24_1853.json",
+   "file_id": "FILE_00001251",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_24_1977.json",
+   "file_id": "FILE_00001252",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1153.json",
+   "file_id": "FILE_00001253",
+   "input": 76,
+   "staged": 76,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1235.json",
+   "file_id": "FILE_00001254",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1392.json",
+   "file_id": "FILE_00001255",
+   "input": 98,
+   "staged": 98,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1396.json",
+   "file_id": "FILE_00001256",
+   "input": 87,
+   "staged": 87,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1416.json",
+   "file_id": "FILE_00001257",
+   "input": 101,
+   "staged": 101,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1444.json",
+   "file_id": "FILE_00001258",
+   "input": 75,
+   "staged": 75,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1540.json",
+   "file_id": "FILE_00001259",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1550.json",
+   "file_id": "FILE_00001260",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1551.json",
+   "file_id": "FILE_00001261",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1567.json",
+   "file_id": "FILE_00001262",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1657.json",
+   "file_id": "FILE_00001263",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1674.json",
+   "file_id": "FILE_00001264",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1683.json",
+   "file_id": "FILE_00001265",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1812.json",
+   "file_id": "FILE_00001266",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1851.json",
+   "file_id": "FILE_00001267",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1865.json",
+   "file_id": "FILE_00001268",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1945.json",
+   "file_id": "FILE_00001269",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_1967.json",
+   "file_id": "FILE_00001270",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_2044.json",
+   "file_id": "FILE_00001271",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_25_2045.json",
+   "file_id": "FILE_00001272",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1255.json",
+   "file_id": "FILE_00001273",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1508.json",
+   "file_id": "FILE_00001274",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1527.json",
+   "file_id": "FILE_00001275",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1599.json",
+   "file_id": "FILE_00001276",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1618.json",
+   "file_id": "FILE_00001277",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1632.json",
+   "file_id": "FILE_00001278",
+   "input": 78,
+   "staged": 78,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1759.json",
+   "file_id": "FILE_00001279",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1777.json",
+   "file_id": "FILE_00001280",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1808.json",
+   "file_id": "FILE_00001281",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1934.json",
+   "file_id": "FILE_00001282",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1939.json",
+   "file_id": "FILE_00001283",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_1973.json",
+   "file_id": "FILE_00001284",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_2046.json",
+   "file_id": "FILE_00001285",
+   "input": 86,
+   "staged": 86,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_26_2047.json",
+   "file_id": "FILE_00001286",
+   "input": 92,
+   "staged": 92,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_27_1139.json",
+   "file_id": "FILE_00001287",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_27_1415.json",
+   "file_id": "FILE_00001288",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_27_1546.json",
+   "file_id": "FILE_00001289",
+   "input": 111,
+   "staged": 111,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_27_1549.json",
+   "file_id": "FILE_00001290",
+   "input": 92,
+   "staged": 92,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_27_1720.json",
+   "file_id": "FILE_00001291",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_27_1841.json",
+   "file_id": "FILE_00001292",
+   "input": 164,
+   "staged": 164,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_27_1844.json",
+   "file_id": "FILE_00001293",
+   "input": 122,
+   "staged": 122,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_27_1956.json",
+   "file_id": "FILE_00001294",
+   "input": 39,
+   "staged": 39,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_27_1974.json",
+   "file_id": "FILE_00001295",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1133.json",
+   "file_id": "FILE_00001296",
+   "input": 48,
+   "staged": 48,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1212.json",
+   "file_id": "FILE_00001297",
+   "input": 88,
+   "staged": 88,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1272.json",
+   "file_id": "FILE_00001298",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1320.json",
+   "file_id": "FILE_00001299",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1324.json",
+   "file_id": "FILE_00001300",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1352.json",
+   "file_id": "FILE_00001301",
+   "input": 88,
+   "staged": 88,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1361.json",
+   "file_id": "FILE_00001302",
+   "input": 83,
+   "staged": 83,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1465.json",
+   "file_id": "FILE_00001303",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1654.json",
+   "file_id": "FILE_00001304",
+   "input": 77,
+   "staged": 77,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1678.json",
+   "file_id": "FILE_00001305",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1837.json",
+   "file_id": "FILE_00001306",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1854.json",
+   "file_id": "FILE_00001307",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1893.json",
+   "file_id": "FILE_00001308",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1894.json",
+   "file_id": "FILE_00001309",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1912.json",
+   "file_id": "FILE_00001310",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_28_1930.json",
+   "file_id": "FILE_00001311",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_29_1369.json",
+   "file_id": "FILE_00001312",
+   "input": 115,
+   "staged": 115,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_29_1458.json",
+   "file_id": "FILE_00001313",
+   "input": 98,
+   "staged": 98,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_29_1660.json",
+   "file_id": "FILE_00001314",
+   "input": 77,
+   "staged": 77,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_29_1684.json",
+   "file_id": "FILE_00001315",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_29_1822.json",
+   "file_id": "FILE_00001316",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_29_1971.json",
+   "file_id": "FILE_00001317",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_2_1105.json",
+   "file_id": "FILE_00001318",
+   "input": 188,
+   "staged": 188,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_2_1182.json",
+   "file_id": "FILE_00001319",
+   "input": 105,
+   "staged": 105,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_2_1246.json",
+   "file_id": "FILE_00001320",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_2_1347.json",
+   "file_id": "FILE_00001321",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_2_1354.json",
+   "file_id": "FILE_00001322",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_2_1425.json",
+   "file_id": "FILE_00001323",
+   "input": 129,
+   "staged": 129,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_2_1592.json",
+   "file_id": "FILE_00001324",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_2_1985.json",
+   "file_id": "FILE_00001325",
+   "input": 39,
+   "staged": 39,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_2_1989.json",
+   "file_id": "FILE_00001326",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_30_1261.json",
+   "file_id": "FILE_00001327",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_30_1377.json",
+   "file_id": "FILE_00001328",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_30_1656.json",
+   "file_id": "FILE_00001329",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_30_1737.json",
+   "file_id": "FILE_00001330",
+   "input": 77,
+   "staged": 77,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_30_2107.json",
+   "file_id": "FILE_00001331",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1131.json",
+   "file_id": "FILE_00001332",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1289.json",
+   "file_id": "FILE_00001333",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1382.json",
+   "file_id": "FILE_00001334",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1413.json",
+   "file_id": "FILE_00001335",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1468.json",
+   "file_id": "FILE_00001336",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1585.json",
+   "file_id": "FILE_00001337",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1591.json",
+   "file_id": "FILE_00001338",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1721.json",
+   "file_id": "FILE_00001339",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1792.json",
+   "file_id": "FILE_00001340",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1887.json",
+   "file_id": "FILE_00001341",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_1970.json",
+   "file_id": "FILE_00001342",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_2080.json",
+   "file_id": "FILE_00001343",
+   "input": 95,
+   "staged": 95,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_2081.json",
+   "file_id": "FILE_00001344",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_2082.json",
+   "file_id": "FILE_00001345",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_31_2083.json",
+   "file_id": "FILE_00001346",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1154.json",
+   "file_id": "FILE_00001347",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1297.json",
+   "file_id": "FILE_00001348",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1341.json",
+   "file_id": "FILE_00001349",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1401.json",
+   "file_id": "FILE_00001350",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1456.json",
+   "file_id": "FILE_00001351",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1615.json",
+   "file_id": "FILE_00001352",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1648.json",
+   "file_id": "FILE_00001353",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1651.json",
+   "file_id": "FILE_00001354",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1699.json",
+   "file_id": "FILE_00001355",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1717.json",
+   "file_id": "FILE_00001356",
+   "input": 70,
+   "staged": 70,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1755.json",
+   "file_id": "FILE_00001357",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_1929.json",
+   "file_id": "FILE_00001358",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_32_2001.json",
+   "file_id": "FILE_00001359",
+   "input": 5,
+   "staged": 5,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_1135.json",
+   "file_id": "FILE_00001360",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_1311.json",
+   "file_id": "FILE_00001361",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_1366.json",
+   "file_id": "FILE_00001362",
+   "input": 52,
+   "staged": 52,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_1536.json",
+   "file_id": "FILE_00001363",
+   "input": 102,
+   "staged": 102,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_1621.json",
+   "file_id": "FILE_00001364",
+   "input": 93,
+   "staged": 93,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_1665.json",
+   "file_id": "FILE_00001365",
+   "input": 180,
+   "staged": 180,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_1766.json",
+   "file_id": "FILE_00001366",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_1779.json",
+   "file_id": "FILE_00001367",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_1892.json",
+   "file_id": "FILE_00001368",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_2064.json",
+   "file_id": "FILE_00001369",
+   "input": 69,
+   "staged": 69,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_2065.json",
+   "file_id": "FILE_00001370",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_2066.json",
+   "file_id": "FILE_00001371",
+   "input": 67,
+   "staged": 67,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_33_2067.json",
+   "file_id": "FILE_00001372",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1103.json",
+   "file_id": "FILE_00001373",
+   "input": 10,
+   "staged": 10,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1166.json",
+   "file_id": "FILE_00001374",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1183.json",
+   "file_id": "FILE_00001375",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1185.json",
+   "file_id": "FILE_00001376",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1186.json",
+   "file_id": "FILE_00001377",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1237.json",
+   "file_id": "FILE_00001378",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1325.json",
+   "file_id": "FILE_00001379",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1327.json",
+   "file_id": "FILE_00001380",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1336.json",
+   "file_id": "FILE_00001381",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1421.json",
+   "file_id": "FILE_00001382",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1449.json",
+   "file_id": "FILE_00001383",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1604.json",
+   "file_id": "FILE_00001384",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1622.json",
+   "file_id": "FILE_00001385",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1659.json",
+   "file_id": "FILE_00001386",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1663.json",
+   "file_id": "FILE_00001387",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1708.json",
+   "file_id": "FILE_00001388",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1739.json",
+   "file_id": "FILE_00001389",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1782.json",
+   "file_id": "FILE_00001390",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1810.json",
+   "file_id": "FILE_00001391",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1823.json",
+   "file_id": "FILE_00001392",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1835.json",
+   "file_id": "FILE_00001393",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1852.json",
+   "file_id": "FILE_00001394",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_1886.json",
+   "file_id": "FILE_00001395",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2003.json",
+   "file_id": "FILE_00001396",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2004.json",
+   "file_id": "FILE_00001397",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2005.json",
+   "file_id": "FILE_00001398",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2010.json",
+   "file_id": "FILE_00001399",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2012.json",
+   "file_id": "FILE_00001400",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2014.json",
+   "file_id": "FILE_00001401",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2015.json",
+   "file_id": "FILE_00001402",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2016.json",
+   "file_id": "FILE_00001403",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2048.json",
+   "file_id": "FILE_00001404",
+   "input": 39,
+   "staged": 39,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2049.json",
+   "file_id": "FILE_00001405",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2050.json",
+   "file_id": "FILE_00001406",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2051.json",
+   "file_id": "FILE_00001407",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2052.json",
+   "file_id": "FILE_00001408",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2053.json",
+   "file_id": "FILE_00001409",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2054.json",
+   "file_id": "FILE_00001410",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_34_2055.json",
+   "file_id": "FILE_00001411",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1128.json",
+   "file_id": "FILE_00001412",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1178.json",
+   "file_id": "FILE_00001413",
+   "input": 59,
+   "staged": 59,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1181.json",
+   "file_id": "FILE_00001414",
+   "input": 138,
+   "staged": 138,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1203.json",
+   "file_id": "FILE_00001415",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1251.json",
+   "file_id": "FILE_00001416",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1280.json",
+   "file_id": "FILE_00001417",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1334.json",
+   "file_id": "FILE_00001418",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1432.json",
+   "file_id": "FILE_00001419",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1448.json",
+   "file_id": "FILE_00001420",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1461.json",
+   "file_id": "FILE_00001421",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1467.json",
+   "file_id": "FILE_00001422",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1477.json",
+   "file_id": "FILE_00001423",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1521.json",
+   "file_id": "FILE_00001424",
+   "input": 67,
+   "staged": 67,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1563.json",
+   "file_id": "FILE_00001425",
+   "input": 99,
+   "staged": 99,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1611.json",
+   "file_id": "FILE_00001426",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1612.json",
+   "file_id": "FILE_00001427",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1677.json",
+   "file_id": "FILE_00001428",
+   "input": 89,
+   "staged": 89,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1682.json",
+   "file_id": "FILE_00001429",
+   "input": 62,
+   "staged": 62,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1703.json",
+   "file_id": "FILE_00001430",
+   "input": 52,
+   "staged": 52,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1776.json",
+   "file_id": "FILE_00001431",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1780.json",
+   "file_id": "FILE_00001432",
+   "input": 48,
+   "staged": 48,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1819.json",
+   "file_id": "FILE_00001433",
+   "input": 113,
+   "staged": 113,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_1826.json",
+   "file_id": "FILE_00001434",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_2006.json",
+   "file_id": "FILE_00001435",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_2007.json",
+   "file_id": "FILE_00001436",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_2009.json",
+   "file_id": "FILE_00001437",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_2013.json",
+   "file_id": "FILE_00001438",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_2018.json",
+   "file_id": "FILE_00001439",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_2056.json",
+   "file_id": "FILE_00001440",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_35_2057.json",
+   "file_id": "FILE_00001441",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_36_1149.json",
+   "file_id": "FILE_00001442",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_36_1279.json",
+   "file_id": "FILE_00001443",
+   "input": 39,
+   "staged": 39,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_36_1424.json",
+   "file_id": "FILE_00001444",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_36_1447.json",
+   "file_id": "FILE_00001445",
+   "input": 97,
+   "staged": 97,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_36_1601.json",
+   "file_id": "FILE_00001446",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_36_1614.json",
+   "file_id": "FILE_00001447",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_36_1645.json",
+   "file_id": "FILE_00001448",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_36_1756.json",
+   "file_id": "FILE_00001449",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1101.json",
+   "file_id": "FILE_00001450",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1140.json",
+   "file_id": "FILE_00001451",
+   "input": 125,
+   "staged": 125,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1162.json",
+   "file_id": "FILE_00001452",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1208.json",
+   "file_id": "FILE_00001453",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1221.json",
+   "file_id": "FILE_00001454",
+   "input": 91,
+   "staged": 91,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1238.json",
+   "file_id": "FILE_00001455",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1264.json",
+   "file_id": "FILE_00001456",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1277.json",
+   "file_id": "FILE_00001457",
+   "input": 62,
+   "staged": 62,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1410.json",
+   "file_id": "FILE_00001458",
+   "input": 91,
+   "staged": 91,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1450.json",
+   "file_id": "FILE_00001459",
+   "input": 197,
+   "staged": 197,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1499.json",
+   "file_id": "FILE_00001460",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1666.json",
+   "file_id": "FILE_00001461",
+   "input": 140,
+   "staged": 140,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1685.json",
+   "file_id": "FILE_00001462",
+   "input": 77,
+   "staged": 77,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1805.json",
+   "file_id": "FILE_00001463",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1836.json",
+   "file_id": "FILE_00001464",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1845.json",
+   "file_id": "FILE_00001465",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1867.json",
+   "file_id": "FILE_00001466",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1915.json",
+   "file_id": "FILE_00001467",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1940.json",
+   "file_id": "FILE_00001468",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_37_1984.json",
+   "file_id": "FILE_00001469",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1218.json",
+   "file_id": "FILE_00001470",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1275.json",
+   "file_id": "FILE_00001471",
+   "input": 77,
+   "staged": 77,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1330.json",
+   "file_id": "FILE_00001472",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1409.json",
+   "file_id": "FILE_00001473",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1576.json",
+   "file_id": "FILE_00001474",
+   "input": 122,
+   "staged": 122,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1603.json",
+   "file_id": "FILE_00001475",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1605.json",
+   "file_id": "FILE_00001476",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1680.json",
+   "file_id": "FILE_00001477",
+   "input": 54,
+   "staged": 54,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1715.json",
+   "file_id": "FILE_00001478",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1727.json",
+   "file_id": "FILE_00001479",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1752.json",
+   "file_id": "FILE_00001480",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1846.json",
+   "file_id": "FILE_00001481",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1863.json",
+   "file_id": "FILE_00001482",
+   "input": 88,
+   "staged": 88,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1864.json",
+   "file_id": "FILE_00001483",
+   "input": 61,
+   "staged": 61,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1936.json",
+   "file_id": "FILE_00001484",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_38_1978.json",
+   "file_id": "FILE_00001485",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_39_1163.json",
+   "file_id": "FILE_00001486",
+   "input": 52,
+   "staged": 52,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_39_1270.json",
+   "file_id": "FILE_00001487",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_39_1471.json",
+   "file_id": "FILE_00001488",
+   "input": 66,
+   "staged": 66,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_39_1480.json",
+   "file_id": "FILE_00001489",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_39_1505.json",
+   "file_id": "FILE_00001490",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_39_1572.json",
+   "file_id": "FILE_00001491",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_39_1577.json",
+   "file_id": "FILE_00001492",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_39_1714.json",
+   "file_id": "FILE_00001493",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1108.json",
+   "file_id": "FILE_00001494",
+   "input": 132,
+   "staged": 132,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1200.json",
+   "file_id": "FILE_00001495",
+   "input": 60,
+   "staged": 60,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1239.json",
+   "file_id": "FILE_00001496",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1267.json",
+   "file_id": "FILE_00001497",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1281.json",
+   "file_id": "FILE_00001498",
+   "input": 101,
+   "staged": 101,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1306.json",
+   "file_id": "FILE_00001499",
+   "input": 93,
+   "staged": 93,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1404.json",
+   "file_id": "FILE_00001500",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1594.json",
+   "file_id": "FILE_00001501",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1626.json",
+   "file_id": "FILE_00001502",
+   "input": 81,
+   "staged": 81,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1639.json",
+   "file_id": "FILE_00001503",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1664.json",
+   "file_id": "FILE_00001504",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1771.json",
+   "file_id": "FILE_00001505",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1773.json",
+   "file_id": "FILE_00001506",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1809.json",
+   "file_id": "FILE_00001507",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1906.json",
+   "file_id": "FILE_00001508",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1923.json",
+   "file_id": "FILE_00001509",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1944.json",
+   "file_id": "FILE_00001510",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_3_1961.json",
+   "file_id": "FILE_00001511",
+   "input": 6,
+   "staged": 6,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_40_1254.json",
+   "file_id": "FILE_00001512",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_40_1429.json",
+   "file_id": "FILE_00001513",
+   "input": 66,
+   "staged": 66,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_40_1472.json",
+   "file_id": "FILE_00001514",
+   "input": 76,
+   "staged": 76,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_40_1529.json",
+   "file_id": "FILE_00001515",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_40_1754.json",
+   "file_id": "FILE_00001516",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_40_1869.json",
+   "file_id": "FILE_00001517",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_40_1890.json",
+   "file_id": "FILE_00001518",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_1338.json",
+   "file_id": "FILE_00001519",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_1355.json",
+   "file_id": "FILE_00001520",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_1430.json",
+   "file_id": "FILE_00001521",
+   "input": 97,
+   "staged": 97,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_1440.json",
+   "file_id": "FILE_00001522",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_1821.json",
+   "file_id": "FILE_00001523",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_2030.json",
+   "file_id": "FILE_00001524",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_2058.json",
+   "file_id": "FILE_00001525",
+   "input": 39,
+   "staged": 39,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_2059.json",
+   "file_id": "FILE_00001526",
+   "input": 11,
+   "staged": 11,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_2060.json",
+   "file_id": "FILE_00001527",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_2061.json",
+   "file_id": "FILE_00001528",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_2062.json",
+   "file_id": "FILE_00001529",
+   "input": 104,
+   "staged": 104,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_41_2063.json",
+   "file_id": "FILE_00001530",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1122.json",
+   "file_id": "FILE_00001531",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1188.json",
+   "file_id": "FILE_00001532",
+   "input": 75,
+   "staged": 75,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1207.json",
+   "file_id": "FILE_00001533",
+   "input": 52,
+   "staged": 52,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1222.json",
+   "file_id": "FILE_00001534",
+   "input": 48,
+   "staged": 48,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1262.json",
+   "file_id": "FILE_00001535",
+   "input": 55,
+   "staged": 55,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1285.json",
+   "file_id": "FILE_00001536",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1312.json",
+   "file_id": "FILE_00001537",
+   "input": 87,
+   "staged": 87,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1375.json",
+   "file_id": "FILE_00001538",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1400.json",
+   "file_id": "FILE_00001539",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1422.json",
+   "file_id": "FILE_00001540",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1441.json",
+   "file_id": "FILE_00001541",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1491.json",
+   "file_id": "FILE_00001542",
+   "input": 48,
+   "staged": 48,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1598.json",
+   "file_id": "FILE_00001543",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1617.json",
+   "file_id": "FILE_00001544",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1735.json",
+   "file_id": "FILE_00001545",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1753.json",
+   "file_id": "FILE_00001546",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1760.json",
+   "file_id": "FILE_00001547",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1789.json",
+   "file_id": "FILE_00001548",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1804.json",
+   "file_id": "FILE_00001549",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1814.json",
+   "file_id": "FILE_00001550",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1827.json",
+   "file_id": "FILE_00001551",
+   "input": 69,
+   "staged": 69,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1839.json",
+   "file_id": "FILE_00001552",
+   "input": 75,
+   "staged": 75,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1848.json",
+   "file_id": "FILE_00001553",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1868.json",
+   "file_id": "FILE_00001554",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1902.json",
+   "file_id": "FILE_00001555",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1907.json",
+   "file_id": "FILE_00001556",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1920.json",
+   "file_id": "FILE_00001557",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1933.json",
+   "file_id": "FILE_00001558",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1937.json",
+   "file_id": "FILE_00001559",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1990.json",
+   "file_id": "FILE_00001560",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_42_1994.json",
+   "file_id": "FILE_00001561",
+   "input": 5,
+   "staged": 5,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1132.json",
+   "file_id": "FILE_00001562",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1288.json",
+   "file_id": "FILE_00001563",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1304.json",
+   "file_id": "FILE_00001564",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1339.json",
+   "file_id": "FILE_00001565",
+   "input": 83,
+   "staged": 83,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1500.json",
+   "file_id": "FILE_00001566",
+   "input": 181,
+   "staged": 181,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1625.json",
+   "file_id": "FILE_00001567",
+   "input": 119,
+   "staged": 119,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1671.json",
+   "file_id": "FILE_00001568",
+   "input": 126,
+   "staged": 126,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1764.json",
+   "file_id": "FILE_00001569",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1790.json",
+   "file_id": "FILE_00001570",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1802.json",
+   "file_id": "FILE_00001571",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1843.json",
+   "file_id": "FILE_00001572",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1898.json",
+   "file_id": "FILE_00001573",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_43_1979.json",
+   "file_id": "FILE_00001574",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1114.json",
+   "file_id": "FILE_00001575",
+   "input": 77,
+   "staged": 77,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1143.json",
+   "file_id": "FILE_00001576",
+   "input": 63,
+   "staged": 63,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1148.json",
+   "file_id": "FILE_00001577",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1265.json",
+   "file_id": "FILE_00001578",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1286.json",
+   "file_id": "FILE_00001579",
+   "input": 39,
+   "staged": 39,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1390.json",
+   "file_id": "FILE_00001580",
+   "input": 65,
+   "staged": 65,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1582.json",
+   "file_id": "FILE_00001581",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1729.json",
+   "file_id": "FILE_00001582",
+   "input": 84,
+   "staged": 84,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1772.json",
+   "file_id": "FILE_00001583",
+   "input": 105,
+   "staged": 105,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1914.json",
+   "file_id": "FILE_00001584",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1953.json",
+   "file_id": "FILE_00001585",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1969.json",
+   "file_id": "FILE_00001586",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_44_1995.json",
+   "file_id": "FILE_00001587",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1118.json",
+   "file_id": "FILE_00001588",
+   "input": 110,
+   "staged": 110,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1127.json",
+   "file_id": "FILE_00001589",
+   "input": 87,
+   "staged": 87,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1269.json",
+   "file_id": "FILE_00001590",
+   "input": 101,
+   "staged": 101,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1362.json",
+   "file_id": "FILE_00001591",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1470.json",
+   "file_id": "FILE_00001592",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1489.json",
+   "file_id": "FILE_00001593",
+   "input": 60,
+   "staged": 60,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1590.json",
+   "file_id": "FILE_00001594",
+   "input": 105,
+   "staged": 105,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1600.json",
+   "file_id": "FILE_00001595",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1606.json",
+   "file_id": "FILE_00001596",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1613.json",
+   "file_id": "FILE_00001597",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1634.json",
+   "file_id": "FILE_00001598",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1689.json",
+   "file_id": "FILE_00001599",
+   "input": 62,
+   "staged": 62,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1751.json",
+   "file_id": "FILE_00001600",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1793.json",
+   "file_id": "FILE_00001601",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_1965.json",
+   "file_id": "FILE_00001602",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_2086.json",
+   "file_id": "FILE_00001603",
+   "input": 67,
+   "staged": 67,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_45_2087.json",
+   "file_id": "FILE_00001604",
+   "input": 88,
+   "staged": 88,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_1107.json",
+   "file_id": "FILE_00001605",
+   "input": 66,
+   "staged": 66,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_1136.json",
+   "file_id": "FILE_00001606",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_1299.json",
+   "file_id": "FILE_00001607",
+   "input": 94,
+   "staged": 94,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_1353.json",
+   "file_id": "FILE_00001608",
+   "input": 75,
+   "staged": 75,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_1570.json",
+   "file_id": "FILE_00001609",
+   "input": 84,
+   "staged": 84,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_1694.json",
+   "file_id": "FILE_00001610",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_1785.json",
+   "file_id": "FILE_00001611",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_1919.json",
+   "file_id": "FILE_00001612",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_1975.json",
+   "file_id": "FILE_00001613",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_2084.json",
+   "file_id": "FILE_00001614",
+   "input": 105,
+   "staged": 105,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_46_2085.json",
+   "file_id": "FILE_00001615",
+   "input": 142,
+   "staged": 142,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_1273.json",
+   "file_id": "FILE_00001616",
+   "input": 80,
+   "staged": 80,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_1474.json",
+   "file_id": "FILE_00001617",
+   "input": 184,
+   "staged": 184,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_1519.json",
+   "file_id": "FILE_00001618",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_1526.json",
+   "file_id": "FILE_00001619",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_1547.json",
+   "file_id": "FILE_00001620",
+   "input": 83,
+   "staged": 83,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_1564.json",
+   "file_id": "FILE_00001621",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_1609.json",
+   "file_id": "FILE_00001622",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_1787.json",
+   "file_id": "FILE_00001623",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_2002.json",
+   "file_id": "FILE_00001624",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_47_2088.json",
+   "file_id": "FILE_00001625",
+   "input": 92,
+   "staged": 92,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1197.json",
+   "file_id": "FILE_00001626",
+   "input": 89,
+   "staged": 89,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1266.json",
+   "file_id": "FILE_00001627",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1331.json",
+   "file_id": "FILE_00001628",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1488.json",
+   "file_id": "FILE_00001629",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1517.json",
+   "file_id": "FILE_00001630",
+   "input": 74,
+   "staged": 74,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1528.json",
+   "file_id": "FILE_00001631",
+   "input": 143,
+   "staged": 143,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1695.json",
+   "file_id": "FILE_00001632",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1719.json",
+   "file_id": "FILE_00001633",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1742.json",
+   "file_id": "FILE_00001634",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1831.json",
+   "file_id": "FILE_00001635",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_1958.json",
+   "file_id": "FILE_00001636",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_2089.json",
+   "file_id": "FILE_00001637",
+   "input": 66,
+   "staged": 66,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_48_2090.json",
+   "file_id": "FILE_00001638",
+   "input": 65,
+   "staged": 65,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_49_1213.json",
+   "file_id": "FILE_00001639",
+   "input": 85,
+   "staged": 85,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_49_1510.json",
+   "file_id": "FILE_00001640",
+   "input": 90,
+   "staged": 90,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_49_1534.json",
+   "file_id": "FILE_00001641",
+   "input": 149,
+   "staged": 149,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_49_1711.json",
+   "file_id": "FILE_00001642",
+   "input": 100,
+   "staged": 100,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_49_1801.json",
+   "file_id": "FILE_00001643",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_49_1964.json",
+   "file_id": "FILE_00001644",
+   "input": 39,
+   "staged": 39,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_4_1111.json",
+   "file_id": "FILE_00001645",
+   "input": 124,
+   "staged": 124,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_4_1283.json",
+   "file_id": "FILE_00001646",
+   "input": 69,
+   "staged": 69,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_4_1287.json",
+   "file_id": "FILE_00001647",
+   "input": 99,
+   "staged": 99,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_4_1301.json",
+   "file_id": "FILE_00001648",
+   "input": 75,
+   "staged": 75,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_4_1379.json",
+   "file_id": "FILE_00001649",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_4_1568.json",
+   "file_id": "FILE_00001650",
+   "input": 121,
+   "staged": 121,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_4_1667.json",
+   "file_id": "FILE_00001651",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_4_1691.json",
+   "file_id": "FILE_00001652",
+   "input": 85,
+   "staged": 85,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_50_1155.json",
+   "file_id": "FILE_00001653",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_50_1274.json",
+   "file_id": "FILE_00001654",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_50_1367.json",
+   "file_id": "FILE_00001655",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_50_1374.json",
+   "file_id": "FILE_00001656",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_50_1485.json",
+   "file_id": "FILE_00001657",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_50_1543.json",
+   "file_id": "FILE_00001658",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_50_1707.json",
+   "file_id": "FILE_00001659",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_50_1749.json",
+   "file_id": "FILE_00001660",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_51_1201.json",
+   "file_id": "FILE_00001661",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_51_1225.json",
+   "file_id": "FILE_00001662",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_51_1544.json",
+   "file_id": "FILE_00001663",
+   "input": 90,
+   "staged": 90,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_51_1700.json",
+   "file_id": "FILE_00001664",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_51_1876.json",
+   "file_id": "FILE_00001665",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_51_1904.json",
+   "file_id": "FILE_00001666",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1119.json",
+   "file_id": "FILE_00001667",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1158.json",
+   "file_id": "FILE_00001668",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1328.json",
+   "file_id": "FILE_00001669",
+   "input": 90,
+   "staged": 90,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1358.json",
+   "file_id": "FILE_00001670",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1482.json",
+   "file_id": "FILE_00001671",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1493.json",
+   "file_id": "FILE_00001672",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1525.json",
+   "file_id": "FILE_00001673",
+   "input": 70,
+   "staged": 70,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1573.json",
+   "file_id": "FILE_00001674",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1696.json",
+   "file_id": "FILE_00001675",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1706.json",
+   "file_id": "FILE_00001676",
+   "input": 85,
+   "staged": 85,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1795.json",
+   "file_id": "FILE_00001677",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1797.json",
+   "file_id": "FILE_00001678",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1891.json",
+   "file_id": "FILE_00001679",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1897.json",
+   "file_id": "FILE_00001680",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1900.json",
+   "file_id": "FILE_00001681",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1947.json",
+   "file_id": "FILE_00001682",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1950.json",
+   "file_id": "FILE_00001683",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_1951.json",
+   "file_id": "FILE_00001684",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_52_2103.json",
+   "file_id": "FILE_00001685",
+   "input": 93,
+   "staged": 93,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1146.json",
+   "file_id": "FILE_00001686",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1228.json",
+   "file_id": "FILE_00001687",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1241.json",
+   "file_id": "FILE_00001688",
+   "input": 89,
+   "staged": 89,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1332.json",
+   "file_id": "FILE_00001689",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1405.json",
+   "file_id": "FILE_00001690",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1428.json",
+   "file_id": "FILE_00001691",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1569.json",
+   "file_id": "FILE_00001692",
+   "input": 60,
+   "staged": 60,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1586.json",
+   "file_id": "FILE_00001693",
+   "input": 127,
+   "staged": 127,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1796.json",
+   "file_id": "FILE_00001694",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1908.json",
+   "file_id": "FILE_00001695",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1943.json",
+   "file_id": "FILE_00001696",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_53_1949.json",
+   "file_id": "FILE_00001697",
+   "input": 16,
+   "staged": 16,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1123.json",
+   "file_id": "FILE_00001698",
+   "input": 76,
+   "staged": 76,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1351.json",
+   "file_id": "FILE_00001699",
+   "input": 73,
+   "staged": 73,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1391.json",
+   "file_id": "FILE_00001700",
+   "input": 93,
+   "staged": 93,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1442.json",
+   "file_id": "FILE_00001701",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1453.json",
+   "file_id": "FILE_00001702",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1595.json",
+   "file_id": "FILE_00001703",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1818.json",
+   "file_id": "FILE_00001704",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1833.json",
+   "file_id": "FILE_00001705",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1847.json",
+   "file_id": "FILE_00001706",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1925.json",
+   "file_id": "FILE_00001707",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1955.json",
+   "file_id": "FILE_00001708",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_1986.json",
+   "file_id": "FILE_00001709",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_2068.json",
+   "file_id": "FILE_00001710",
+   "input": 84,
+   "staged": 84,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_2069.json",
+   "file_id": "FILE_00001711",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_2070.json",
+   "file_id": "FILE_00001712",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_54_2071.json",
+   "file_id": "FILE_00001713",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1125.json",
+   "file_id": "FILE_00001714",
+   "input": 65,
+   "staged": 65,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1164.json",
+   "file_id": "FILE_00001715",
+   "input": 139,
+   "staged": 139,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1234.json",
+   "file_id": "FILE_00001716",
+   "input": 143,
+   "staged": 143,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1386.json",
+   "file_id": "FILE_00001717",
+   "input": 98,
+   "staged": 98,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1452.json",
+   "file_id": "FILE_00001718",
+   "input": 92,
+   "staged": 92,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1501.json",
+   "file_id": "FILE_00001719",
+   "input": 67,
+   "staged": 67,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1676.json",
+   "file_id": "FILE_00001720",
+   "input": 82,
+   "staged": 82,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1712.json",
+   "file_id": "FILE_00001721",
+   "input": 161,
+   "staged": 161,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1763.json",
+   "file_id": "FILE_00001722",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1830.json",
+   "file_id": "FILE_00001723",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1838.json",
+   "file_id": "FILE_00001724",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1849.json",
+   "file_id": "FILE_00001725",
+   "input": 67,
+   "staged": 67,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1879.json",
+   "file_id": "FILE_00001726",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_1993.json",
+   "file_id": "FILE_00001727",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_2072.json",
+   "file_id": "FILE_00001728",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_2073.json",
+   "file_id": "FILE_00001729",
+   "input": 52,
+   "staged": 52,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_55_2074.json",
+   "file_id": "FILE_00001730",
+   "input": 62,
+   "staged": 62,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_56_1179.json",
+   "file_id": "FILE_00001731",
+   "input": 39,
+   "staged": 39,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_56_1317.json",
+   "file_id": "FILE_00001732",
+   "input": 61,
+   "staged": 61,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_56_1495.json",
+   "file_id": "FILE_00001733",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_56_1575.json",
+   "file_id": "FILE_00001734",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_56_1620.json",
+   "file_id": "FILE_00001735",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_56_1662.json",
+   "file_id": "FILE_00001736",
+   "input": 63,
+   "staged": 63,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_56_1878.json",
+   "file_id": "FILE_00001737",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_57_1156.json",
+   "file_id": "FILE_00001738",
+   "input": 76,
+   "staged": 76,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_57_1204.json",
+   "file_id": "FILE_00001739",
+   "input": 116,
+   "staged": 116,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_57_1290.json",
+   "file_id": "FILE_00001740",
+   "input": 75,
+   "staged": 75,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_57_1314.json",
+   "file_id": "FILE_00001741",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_57_1349.json",
+   "file_id": "FILE_00001742",
+   "input": 47,
+   "staged": 47,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_57_1627.json",
+   "file_id": "FILE_00001743",
+   "input": 54,
+   "staged": 54,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_57_1693.json",
+   "file_id": "FILE_00001744",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_57_1910.json",
+   "file_id": "FILE_00001745",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_57_1981.json",
+   "file_id": "FILE_00001746",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1282.json",
+   "file_id": "FILE_00001747",
+   "input": 133,
+   "staged": 133,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1342.json",
+   "file_id": "FILE_00001748",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1373.json",
+   "file_id": "FILE_00001749",
+   "input": 79,
+   "staged": 79,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1376.json",
+   "file_id": "FILE_00001750",
+   "input": 80,
+   "staged": 80,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1407.json",
+   "file_id": "FILE_00001751",
+   "input": 109,
+   "staged": 109,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1431.json",
+   "file_id": "FILE_00001752",
+   "input": 120,
+   "staged": 120,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1484.json",
+   "file_id": "FILE_00001753",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1628.json",
+   "file_id": "FILE_00001754",
+   "input": 224,
+   "staged": 224,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1646.json",
+   "file_id": "FILE_00001755",
+   "input": 84,
+   "staged": 84,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1650.json",
+   "file_id": "FILE_00001756",
+   "input": 114,
+   "staged": 114,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1731.json",
+   "file_id": "FILE_00001757",
+   "input": 132,
+   "staged": 132,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1738.json",
+   "file_id": "FILE_00001758",
+   "input": 144,
+   "staged": 144,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1870.json",
+   "file_id": "FILE_00001759",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1875.json",
+   "file_id": "FILE_00001760",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1913.json",
+   "file_id": "FILE_00001761",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1927.json",
+   "file_id": "FILE_00001762",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_58_1991.json",
+   "file_id": "FILE_00001763",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_1250.json",
+   "file_id": "FILE_00001764",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_1258.json",
+   "file_id": "FILE_00001765",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_1388.json",
+   "file_id": "FILE_00001766",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_1511.json",
+   "file_id": "FILE_00001767",
+   "input": 77,
+   "staged": 77,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_1538.json",
+   "file_id": "FILE_00001768",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_1596.json",
+   "file_id": "FILE_00001769",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_1652.json",
+   "file_id": "FILE_00001770",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_1825.json",
+   "file_id": "FILE_00001771",
+   "input": 10,
+   "staged": 10,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_2094.json",
+   "file_id": "FILE_00001772",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_2095.json",
+   "file_id": "FILE_00001773",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_59_2096.json",
+   "file_id": "FILE_00001774",
+   "input": 78,
+   "staged": 78,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_5_1134.json",
+   "file_id": "FILE_00001775",
+   "input": 140,
+   "staged": 140,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_5_1363.json",
+   "file_id": "FILE_00001776",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_5_1368.json",
+   "file_id": "FILE_00001777",
+   "input": 56,
+   "staged": 56,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_5_1524.json",
+   "file_id": "FILE_00001778",
+   "input": 91,
+   "staged": 91,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_5_1641.json",
+   "file_id": "FILE_00001779",
+   "input": 61,
+   "staged": 61,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_5_1668.json",
+   "file_id": "FILE_00001780",
+   "input": 70,
+   "staged": 70,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_5_1938.json",
+   "file_id": "FILE_00001781",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1129.json",
+   "file_id": "FILE_00001782",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1151.json",
+   "file_id": "FILE_00001783",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1308.json",
+   "file_id": "FILE_00001784",
+   "input": 119,
+   "staged": 119,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1545.json",
+   "file_id": "FILE_00001785",
+   "input": 133,
+   "staged": 133,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1584.json",
+   "file_id": "FILE_00001786",
+   "input": 119,
+   "staged": 119,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1679.json",
+   "file_id": "FILE_00001787",
+   "input": 167,
+   "staged": 167,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1690.json",
+   "file_id": "FILE_00001788",
+   "input": 88,
+   "staged": 88,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1740.json",
+   "file_id": "FILE_00001789",
+   "input": 134,
+   "staged": 134,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1834.json",
+   "file_id": "FILE_00001790",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1858.json",
+   "file_id": "FILE_00001791",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1883.json",
+   "file_id": "FILE_00001792",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_60_1987.json",
+   "file_id": "FILE_00001793",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1113.json",
+   "file_id": "FILE_00001794",
+   "input": 79,
+   "staged": 79,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1141.json",
+   "file_id": "FILE_00001795",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1150.json",
+   "file_id": "FILE_00001796",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1244.json",
+   "file_id": "FILE_00001797",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1507.json",
+   "file_id": "FILE_00001798",
+   "input": 67,
+   "staged": 67,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1548.json",
+   "file_id": "FILE_00001799",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1647.json",
+   "file_id": "FILE_00001800",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1681.json",
+   "file_id": "FILE_00001801",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1709.json",
+   "file_id": "FILE_00001802",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1732.json",
+   "file_id": "FILE_00001803",
+   "input": 25,
+   "staged": 25,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1775.json",
+   "file_id": "FILE_00001804",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1842.json",
+   "file_id": "FILE_00001805",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1896.json",
+   "file_id": "FILE_00001806",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1909.json",
+   "file_id": "FILE_00001807",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1917.json",
+   "file_id": "FILE_00001808",
+   "input": 22,
+   "staged": 22,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1942.json",
+   "file_id": "FILE_00001809",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_1966.json",
+   "file_id": "FILE_00001810",
+   "input": 10,
+   "staged": 10,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_61_2097.json",
+   "file_id": "FILE_00001811",
+   "input": 88,
+   "staged": 88,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_62_1247.json",
+   "file_id": "FILE_00001812",
+   "input": 48,
+   "staged": 48,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_62_1397.json",
+   "file_id": "FILE_00001813",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_62_1518.json",
+   "file_id": "FILE_00001814",
+   "input": 79,
+   "staged": 79,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_62_1541.json",
+   "file_id": "FILE_00001815",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_62_1562.json",
+   "file_id": "FILE_00001816",
+   "input": 65,
+   "staged": 65,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_62_1574.json",
+   "file_id": "FILE_00001817",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_62_1581.json",
+   "file_id": "FILE_00001818",
+   "input": 54,
+   "staged": 54,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_62_1688.json",
+   "file_id": "FILE_00001819",
+   "input": 63,
+   "staged": 63,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1115.json",
+   "file_id": "FILE_00001820",
+   "input": 123,
+   "staged": 123,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1194.json",
+   "file_id": "FILE_00001821",
+   "input": 83,
+   "staged": 83,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1209.json",
+   "file_id": "FILE_00001822",
+   "input": 89,
+   "staged": 89,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1220.json",
+   "file_id": "FILE_00001823",
+   "input": 52,
+   "staged": 52,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1378.json",
+   "file_id": "FILE_00001824",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1393.json",
+   "file_id": "FILE_00001825",
+   "input": 71,
+   "staged": 71,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1630.json",
+   "file_id": "FILE_00001826",
+   "input": 183,
+   "staged": 183,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1643.json",
+   "file_id": "FILE_00001827",
+   "input": 95,
+   "staged": 95,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1713.json",
+   "file_id": "FILE_00001828",
+   "input": 148,
+   "staged": 148,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_1800.json",
+   "file_id": "FILE_00001829",
+   "input": 138,
+   "staged": 138,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_2091.json",
+   "file_id": "FILE_00001830",
+   "input": 164,
+   "staged": 164,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_2092.json",
+   "file_id": "FILE_00001831",
+   "input": 170,
+   "staged": 170,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_63_2093.json",
+   "file_id": "FILE_00001832",
+   "input": 101,
+   "staged": 101,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_64_1170.json",
+   "file_id": "FILE_00001833",
+   "input": 55,
+   "staged": 55,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_64_1323.json",
+   "file_id": "FILE_00001834",
+   "input": 69,
+   "staged": 69,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_64_1436.json",
+   "file_id": "FILE_00001835",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_64_1629.json",
+   "file_id": "FILE_00001836",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_64_1697.json",
+   "file_id": "FILE_00001837",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_64_1704.json",
+   "file_id": "FILE_00001838",
+   "input": 114,
+   "staged": 114,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1175.json",
+   "file_id": "FILE_00001839",
+   "input": 69,
+   "staged": 69,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1236.json",
+   "file_id": "FILE_00001840",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1309.json",
+   "file_id": "FILE_00001841",
+   "input": 103,
+   "staged": 103,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1350.json",
+   "file_id": "FILE_00001842",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1372.json",
+   "file_id": "FILE_00001843",
+   "input": 79,
+   "staged": 79,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1533.json",
+   "file_id": "FILE_00001844",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1565.json",
+   "file_id": "FILE_00001845",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1770.json",
+   "file_id": "FILE_00001846",
+   "input": 20,
+   "staged": 20,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1786.json",
+   "file_id": "FILE_00001847",
+   "input": 70,
+   "staged": 70,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1918.json",
+   "file_id": "FILE_00001848",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_1980.json",
+   "file_id": "FILE_00001849",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_2098.json",
+   "file_id": "FILE_00001850",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_65_2099.json",
+   "file_id": "FILE_00001851",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1117.json",
+   "file_id": "FILE_00001852",
+   "input": 97,
+   "staged": 97,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1198.json",
+   "file_id": "FILE_00001853",
+   "input": 53,
+   "staged": 53,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1242.json",
+   "file_id": "FILE_00001854",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1245.json",
+   "file_id": "FILE_00001855",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1602.json",
+   "file_id": "FILE_00001856",
+   "input": 75,
+   "staged": 75,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1635.json",
+   "file_id": "FILE_00001857",
+   "input": 123,
+   "staged": 123,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1655.json",
+   "file_id": "FILE_00001858",
+   "input": 52,
+   "staged": 52,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1726.json",
+   "file_id": "FILE_00001859",
+   "input": 74,
+   "staged": 74,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1733.json",
+   "file_id": "FILE_00001860",
+   "input": 123,
+   "staged": 123,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1877.json",
+   "file_id": "FILE_00001861",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1895.json",
+   "file_id": "FILE_00001862",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1952.json",
+   "file_id": "FILE_00001863",
+   "input": 34,
+   "staged": 34,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1982.json",
+   "file_id": "FILE_00001864",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_66_1998.json",
+   "file_id": "FILE_00001865",
+   "input": 12,
+   "staged": 12,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_67_1240.json",
+   "file_id": "FILE_00001866",
+   "input": 120,
+   "staged": 120,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_67_1276.json",
+   "file_id": "FILE_00001867",
+   "input": 94,
+   "staged": 94,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_67_1313.json",
+   "file_id": "FILE_00001868",
+   "input": 140,
+   "staged": 140,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_67_1741.json",
+   "file_id": "FILE_00001869",
+   "input": 61,
+   "staged": 61,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_67_1758.json",
+   "file_id": "FILE_00001870",
+   "input": 61,
+   "staged": 61,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_67_1926.json",
+   "file_id": "FILE_00001871",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_67_2100.json",
+   "file_id": "FILE_00001872",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_67_2101.json",
+   "file_id": "FILE_00001873",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_68_1120.json",
+   "file_id": "FILE_00001874",
+   "input": 162,
+   "staged": 162,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_68_1557.json",
+   "file_id": "FILE_00001875",
+   "input": 42,
+   "staged": 42,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_68_1860.json",
+   "file_id": "FILE_00001876",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_68_1861.json",
+   "file_id": "FILE_00001877",
+   "input": 19,
+   "staged": 19,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_68_1866.json",
+   "file_id": "FILE_00001878",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_68_1921.json",
+   "file_id": "FILE_00001879",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_68_1932.json",
+   "file_id": "FILE_00001880",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_68_2106.json",
+   "file_id": "FILE_00001881",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_69_1176.json",
+   "file_id": "FILE_00001882",
+   "input": 138,
+   "staged": 138,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_69_1767.json",
+   "file_id": "FILE_00001883",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_69_1788.json",
+   "file_id": "FILE_00001884",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1130.json",
+   "file_id": "FILE_00001885",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1157.json",
+   "file_id": "FILE_00001886",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1167.json",
+   "file_id": "FILE_00001887",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1187.json",
+   "file_id": "FILE_00001888",
+   "input": 78,
+   "staged": 78,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1227.json",
+   "file_id": "FILE_00001889",
+   "input": 48,
+   "staged": 48,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1231.json",
+   "file_id": "FILE_00001890",
+   "input": 124,
+   "staged": 124,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1260.json",
+   "file_id": "FILE_00001891",
+   "input": 85,
+   "staged": 85,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1302.json",
+   "file_id": "FILE_00001892",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1365.json",
+   "file_id": "FILE_00001893",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1387.json",
+   "file_id": "FILE_00001894",
+   "input": 78,
+   "staged": 78,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1427.json",
+   "file_id": "FILE_00001895",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1473.json",
+   "file_id": "FILE_00001896",
+   "input": 109,
+   "staged": 109,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1539.json",
+   "file_id": "FILE_00001897",
+   "input": 84,
+   "staged": 84,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1578.json",
+   "file_id": "FILE_00001898",
+   "input": 96,
+   "staged": 96,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1658.json",
+   "file_id": "FILE_00001899",
+   "input": 69,
+   "staged": 69,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1723.json",
+   "file_id": "FILE_00001900",
+   "input": 59,
+   "staged": 59,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1744.json",
+   "file_id": "FILE_00001901",
+   "input": 54,
+   "staged": 54,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1745.json",
+   "file_id": "FILE_00001902",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1746.json",
+   "file_id": "FILE_00001903",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1747.json",
+   "file_id": "FILE_00001904",
+   "input": 62,
+   "staged": 62,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1815.json",
+   "file_id": "FILE_00001905",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1872.json",
+   "file_id": "FILE_00001906",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1922.json",
+   "file_id": "FILE_00001907",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_1924.json",
+   "file_id": "FILE_00001908",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_6_2034.json",
+   "file_id": "FILE_00001909",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_70_1316.json",
+   "file_id": "FILE_00001910",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_70_1439.json",
+   "file_id": "FILE_00001911",
+   "input": 159,
+   "staged": 159,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_70_1768.json",
+   "file_id": "FILE_00001912",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_70_1862.json",
+   "file_id": "FILE_00001913",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_70_1884.json",
+   "file_id": "FILE_00001914",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_70_1983.json",
+   "file_id": "FILE_00001915",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_71_1268.json",
+   "file_id": "FILE_00001916",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_71_1463.json",
+   "file_id": "FILE_00001917",
+   "input": 61,
+   "staged": 61,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_71_1469.json",
+   "file_id": "FILE_00001918",
+   "input": 40,
+   "staged": 40,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_71_1638.json",
+   "file_id": "FILE_00001919",
+   "input": 33,
+   "staged": 33,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_71_1880.json",
+   "file_id": "FILE_00001920",
+   "input": 10,
+   "staged": 10,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_71_1882.json",
+   "file_id": "FILE_00001921",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_71_1901.json",
+   "file_id": "FILE_00001922",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_71_1954.json",
+   "file_id": "FILE_00001923",
+   "input": 10,
+   "staged": 10,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_71_1992.json",
+   "file_id": "FILE_00001924",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_72_1174.json",
+   "file_id": "FILE_00001925",
+   "input": 82,
+   "staged": 82,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_72_1184.json",
+   "file_id": "FILE_00001926",
+   "input": 62,
+   "staged": 62,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_72_1345.json",
+   "file_id": "FILE_00001927",
+   "input": 64,
+   "staged": 64,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_72_1487.json",
+   "file_id": "FILE_00001928",
+   "input": 103,
+   "staged": 103,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_72_1607.json",
+   "file_id": "FILE_00001929",
+   "input": 93,
+   "staged": 93,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_72_1941.json",
+   "file_id": "FILE_00001930",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_73_1189.json",
+   "file_id": "FILE_00001931",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_73_1223.json",
+   "file_id": "FILE_00001932",
+   "input": 48,
+   "staged": 48,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_73_1403.json",
+   "file_id": "FILE_00001933",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_73_1623.json",
+   "file_id": "FILE_00001934",
+   "input": 48,
+   "staged": 48,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_73_1661.json",
+   "file_id": "FILE_00001935",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_73_1698.json",
+   "file_id": "FILE_00001936",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_73_1931.json",
+   "file_id": "FILE_00001937",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_74_1172.json",
+   "file_id": "FILE_00001938",
+   "input": 167,
+   "staged": 167,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_74_1496.json",
+   "file_id": "FILE_00001939",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_74_1701.json",
+   "file_id": "FILE_00001940",
+   "input": 81,
+   "staged": 81,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_74_1761.json",
+   "file_id": "FILE_00001941",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_75_1144.json",
+   "file_id": "FILE_00001942",
+   "input": 69,
+   "staged": 69,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_75_1252.json",
+   "file_id": "FILE_00001943",
+   "input": 44,
+   "staged": 44,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_75_1356.json",
+   "file_id": "FILE_00001944",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_75_1380.json",
+   "file_id": "FILE_00001945",
+   "input": 32,
+   "staged": 32,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_75_1579.json",
+   "file_id": "FILE_00001946",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_75_2008.json",
+   "file_id": "FILE_00001947",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_76_1142.json",
+   "file_id": "FILE_00001948",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_76_1398.json",
+   "file_id": "FILE_00001949",
+   "input": 66,
+   "staged": 66,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_76_1692.json",
+   "file_id": "FILE_00001950",
+   "input": 86,
+   "staged": 86,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_76_2011.json",
+   "file_id": "FILE_00001951",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_77_1716.json",
+   "file_id": "FILE_00001952",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_77_2019.json",
+   "file_id": "FILE_00001953",
+   "input": 21,
+   "staged": 21,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_77_2020.json",
+   "file_id": "FILE_00001954",
+   "input": 8,
+   "staged": 8,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_77_2021.json",
+   "file_id": "FILE_00001955",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_77_2022.json",
+   "file_id": "FILE_00001956",
+   "input": 17,
+   "staged": 17,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_77_2026.json",
+   "file_id": "FILE_00001957",
+   "input": 4,
+   "staged": 4,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_78_1296.json",
+   "file_id": "FILE_00001958",
+   "input": 60,
+   "staged": 60,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_78_1321.json",
+   "file_id": "FILE_00001959",
+   "input": 57,
+   "staged": 57,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_78_1433.json",
+   "file_id": "FILE_00001960",
+   "input": 66,
+   "staged": 66,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_78_1561.json",
+   "file_id": "FILE_00001961",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_78_1587.json",
+   "file_id": "FILE_00001962",
+   "input": 81,
+   "staged": 81,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_78_1856.json",
+   "file_id": "FILE_00001963",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_79_1476.json",
+   "file_id": "FILE_00001964",
+   "input": 131,
+   "staged": 131,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_79_2023.json",
+   "file_id": "FILE_00001965",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_79_2024.json",
+   "file_id": "FILE_00001966",
+   "input": 49,
+   "staged": 49,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_79_2025.json",
+   "file_id": "FILE_00001967",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1121.json",
+   "file_id": "FILE_00001968",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1126.json",
+   "file_id": "FILE_00001969",
+   "input": 103,
+   "staged": 103,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1303.json",
+   "file_id": "FILE_00001970",
+   "input": 60,
+   "staged": 60,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1333.json",
+   "file_id": "FILE_00001971",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1337.json",
+   "file_id": "FILE_00001972",
+   "input": 55,
+   "staged": 55,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1370.json",
+   "file_id": "FILE_00001973",
+   "input": 29,
+   "staged": 29,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1451.json",
+   "file_id": "FILE_00001974",
+   "input": 93,
+   "staged": 93,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1483.json",
+   "file_id": "FILE_00001975",
+   "input": 58,
+   "staged": 58,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1492.json",
+   "file_id": "FILE_00001976",
+   "input": 45,
+   "staged": 45,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1512.json",
+   "file_id": "FILE_00001977",
+   "input": 106,
+   "staged": 106,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1616.json",
+   "file_id": "FILE_00001978",
+   "input": 66,
+   "staged": 66,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1811.json",
+   "file_id": "FILE_00001979",
+   "input": 30,
+   "staged": 30,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1946.json",
+   "file_id": "FILE_00001980",
+   "input": 9,
+   "staged": 9,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_1959.json",
+   "file_id": "FILE_00001981",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_2035.json",
+   "file_id": "FILE_00001982",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_2036.json",
+   "file_id": "FILE_00001983",
+   "input": 35,
+   "staged": 35,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_2037.json",
+   "file_id": "FILE_00001984",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_2038.json",
+   "file_id": "FILE_00001985",
+   "input": 41,
+   "staged": 41,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_7_2039.json",
+   "file_id": "FILE_00001986",
+   "input": 55,
+   "staged": 55,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_80_1165.json",
+   "file_id": "FILE_00001987",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_80_1423.json",
+   "file_id": "FILE_00001988",
+   "input": 81,
+   "staged": 81,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_80_1560.json",
+   "file_id": "FILE_00001989",
+   "input": 78,
+   "staged": 78,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_80_1743.json",
+   "file_id": "FILE_00001990",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_80_2027.json",
+   "file_id": "FILE_00001991",
+   "input": 10,
+   "staged": 10,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_80_2028.json",
+   "file_id": "FILE_00001992",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_80_2029.json",
+   "file_id": "FILE_00001993",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_81_1116.json",
+   "file_id": "FILE_00001994",
+   "input": 51,
+   "staged": 51,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_81_1292.json",
+   "file_id": "FILE_00001995",
+   "input": 166,
+   "staged": 166,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_81_1730.json",
+   "file_id": "FILE_00001996",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_81_1784.json",
+   "file_id": "FILE_00001997",
+   "input": 26,
+   "staged": 26,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_81_1794.json",
+   "file_id": "FILE_00001998",
+   "input": 31,
+   "staged": 31,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_81_1905.json",
+   "file_id": "FILE_00001999",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_81_2017.json",
+   "file_id": "FILE_00002000",
+   "input": 24,
+   "staged": 24,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_81_2031.json",
+   "file_id": "FILE_00002001",
+   "input": 27,
+   "staged": 27,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_8_1145.json",
+   "file_id": "FILE_00002002",
+   "input": 50,
+   "staged": 50,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_8_1147.json",
+   "file_id": "FILE_00002003",
+   "input": 37,
+   "staged": 37,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_8_1152.json",
+   "file_id": "FILE_00002004",
+   "input": 43,
+   "staged": 43,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_8_1202.json",
+   "file_id": "FILE_00002005",
+   "input": 46,
+   "staged": 46,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_8_1395.json",
+   "file_id": "FILE_00002006",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_8_1653.json",
+   "file_id": "FILE_00002007",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_8_1736.json",
+   "file_id": "FILE_00002008",
+   "input": 68,
+   "staged": 68,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_8_1828.json",
+   "file_id": "FILE_00002009",
+   "input": 13,
+   "staged": 13,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_8_2105.json",
+   "file_id": "FILE_00002010",
+   "input": 15,
+   "staged": 15,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1206.json",
+   "file_id": "FILE_00002011",
+   "input": 55,
+   "staged": 55,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1256.json",
+   "file_id": "FILE_00002012",
+   "input": 72,
+   "staged": 72,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1348.json",
+   "file_id": "FILE_00002013",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1435.json",
+   "file_id": "FILE_00002014",
+   "input": 38,
+   "staged": 38,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1479.json",
+   "file_id": "FILE_00002015",
+   "input": 52,
+   "staged": 52,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1497.json",
+   "file_id": "FILE_00002016",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1498.json",
+   "file_id": "FILE_00002017",
+   "input": 36,
+   "staged": 36,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1542.json",
+   "file_id": "FILE_00002018",
+   "input": 83,
+   "staged": 83,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1637.json",
+   "file_id": "FILE_00002019",
+   "input": 52,
+   "staged": 52,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1640.json",
+   "file_id": "FILE_00002020",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1724.json",
+   "file_id": "FILE_00002021",
+   "input": 18,
+   "staged": 18,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1781.json",
+   "file_id": "FILE_00002022",
+   "input": 14,
+   "staged": 14,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1807.json",
+   "file_id": "FILE_00002023",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1957.json",
+   "file_id": "FILE_00002024",
+   "input": 23,
+   "staged": 23,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_1968.json",
+   "file_id": "FILE_00002025",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_2000.json",
+   "file_id": "FILE_00002026",
+   "input": 28,
+   "staged": 28,
+   "quarantined": 0,
+   "unaccounted": 0
+  },
+  {
+   "file": "county_9_2076.json",
+   "file_id": "FILE_00002027",
+   "input": 84,
+   "staged": 84,
+   "quarantined": 0,
+   "unaccounted": 0
+  }
+ ]
+}

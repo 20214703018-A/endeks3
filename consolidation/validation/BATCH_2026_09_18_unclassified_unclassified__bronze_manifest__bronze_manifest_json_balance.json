@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__bronze_manifest__bronze_manifest_json",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__bronze_manifest__bronze_manifest_json",
+ "target": "stg_bronze_manifest",
+ "file_id": "FILE_00009787",
+ "input_count": 2529,
+ "successfully_loaded": 2529,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 1327516,
+ "note": "json_records under=assets",
+ "seconds": 0.1,
+ "mode": "apply"
+}

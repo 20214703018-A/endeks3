@@ -1,0 +1,19 @@
+{
+ "source_id": "P_05_price_brea_14_bolge_14_dogu_bati_karadeniz",
+ "batch_id": "BATCH_2026_09_18_price_series_P_05_price_brea_14_bolge_14_dogu_bati_karadeniz",
+ "target": "stg_price_breakdown",
+ "file_id": "FILE_00000403",
+ "input_count": 4420,
+ "successfully_loaded": 4420,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 4421,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_breakdown/part-BATCH_2026_09_18_price_series_P_05_price_brea_14_bolge_14_dogu_bati_karadeniz.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

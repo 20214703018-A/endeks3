@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__iller_listesi__iller_listesi_csv",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__iller_listesi__iller_listesi_csv",
+ "target": "stg_iller_listesi",
+ "file_id": "FILE_00000963",
+ "input_count": 81,
+ "successfully_loaded": 81,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 3,
+ "raw_line_count": 82,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_iller_listesi/part-BATCH_2026_09_18_unclassified_unclassified__iller_listesi__iller_listesi_csv.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

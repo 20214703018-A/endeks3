@@ -1,0 +1,16 @@
+{
+ "source_id": "poi_business__cevre__trafik_saatlik",
+ "batch_id": "BATCH_2026_09_19_poi_business_poi_business__cevre__trafik_saatlik",
+ "target": "stg_cevre__trafik_saatlik",
+ "file_id": "FILE_00019718",
+ "input_count": 117725,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 8,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_cevre__trafik_saatlik/part-BATCH_2026_09_19_poi_business_poi_business__cevre__trafik_saatlik.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

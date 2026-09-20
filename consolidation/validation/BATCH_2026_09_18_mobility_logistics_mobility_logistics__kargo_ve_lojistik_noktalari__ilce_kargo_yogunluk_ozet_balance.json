@@ -1,0 +1,17 @@
+{
+ "source_id": "mobility_logistics__kargo_ve_lojistik_noktalari__ilce_kargo_yogunluk_ozet",
+ "batch_id": "BATCH_2026_09_18_mobility_logistics_mobility_logistics__kargo_ve_lojistik_noktalari__ilce_kargo_yogunluk_ozet",
+ "target": "stg_kargo_ve_lojistik_noktalari__ilce_kargo_yogunluk_ozet",
+ "file_id": "FILE_00005045",
+ "input_count": 1045,
+ "successfully_loaded": 1045,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 8,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/mobility_logistics/stg_kargo_ve_lojistik_noktalari__ilce_kargo_yogunluk_ozet/part-BATCH_2026_09_18_mobility_logistics_mobility_logistics__kargo_ve_lojistik_noktalari__ilce_kargo_yogunluk_ozet.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

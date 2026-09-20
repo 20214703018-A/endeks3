@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__turkiye_arsa_ayrintili__turkiye_arsa_ayrintili_csv_2",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__turkiye_arsa_ayrintili__turkiye_arsa_ayrintili_csv_2",
+ "target": "stg_turkiye_arsa_ayrintili",
+ "file_id": "FILE_00008379",
+ "input_count": 78,
+ "successfully_loaded": 78,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 33,
+ "raw_line_count": 78,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_turkiye_arsa_ayrintili/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__turkiye_arsa_ayrintili__turkiye_arsa_ayrintili_csv_2.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

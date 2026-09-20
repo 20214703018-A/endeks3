@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__koordinat_36_8508_28_2754__koordinat_36_8508_28_2754_csv",
+ "batch_id": "BATCH_2026_09_18_listings_listings__koordinat_36_8508_28_2754__koordinat_36_8508_28_2754_csv",
+ "target": "stg_koordinat_36_8508_28_2754",
+ "file_id": "FILE_00008580",
+ "input_count": 18,
+ "successfully_loaded": 18,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": 19,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_koordinat_36_8508_28_2754/part-BATCH_2026_09_18_listings_listings__koordinat_36_8508_28_2754__koordinat_36_8508_28_2754_csv.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

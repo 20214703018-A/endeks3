@@ -1,0 +1,34 @@
+{
+ "run_id": "RUN_2026_09_19_001",
+ "source_files_deleted": 0,
+ "source_files_modified": 1,
+ "source_files_missing_after_scan": 0,
+ "rows_silently_dropped": 0,
+ "features_silently_dropped": 0,
+ "columns_silently_removed": 0,
+ "unaccounted_records": 0,
+ "note": "Phase 1 salt-okunur; hiçbir kayıt yazılmadı/silinmedi. Parse hataları parse_errors tablosunda ham satırla korunur.",
+ "verify": {
+  "checked": 20177,
+  "changed": 1,
+  "missing": 0,
+  "new_files": 6
+ },
+ "changed_files": [
+  {
+   "file_id": "FILE_00019927",
+   "path": "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/yemeksepeti_menu/2026-09-18/records_YS_MENU_PARSER_V2.jsonl",
+   "old_sha256": "b44c154bb314f77059746bdf03894633562e0f3f3493eed3fb9594f24b939d6a",
+   "new_sha256": "e96ca6ea234704bb8c5d4e0668dc7c0ce7451639a64f969998c310004f4ccf3d"
+  }
+ ],
+ "missing_files": [],
+ "new_files_in_source": [
+  "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/yemeksepeti_menu/2026-09-18/extract/vc1a.meta.json",
+  "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/yemeksepeti_menu/2026-09-18/extract/k5zn.meta.json",
+  "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/yemeksepeti_menu/2026-09-18/extract/oalm.meta.json",
+  "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/yemeksepeti_menu/2026-09-18/extract/oalm.json.gz",
+  "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/yemeksepeti_menu/2026-09-18/extract/k5zn.json.gz",
+  "/Users/acar/Desktop/GEOPROP_RAW_INTAKE/yemeksepeti_menu/2026-09-18/extract/vc1a.json.gz"
+ ]
+}

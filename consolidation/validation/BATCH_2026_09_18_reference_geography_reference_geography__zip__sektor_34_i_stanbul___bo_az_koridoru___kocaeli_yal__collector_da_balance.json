@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__zip__sektor_34_i_stanbul___bo_az_koridoru___kocaeli_yal__collector_da",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_34_i_stanbul___bo_az_koridoru___kocaeli_yal__collector_da",
+ "target": "stg_sektor_34_i_stanbul___bo_az_koridoru___kocaeli_yal",
+ "file_id": "FILE_00000125",
+ "input_count": 38486,
+ "successfully_loaded": 38486,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 12,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_sektor_34_i_stanbul___bo_az_koridoru___kocaeli_yal/part-BATCH_2026_09_18_reference_geography_reference_geography__zip__sektor_34_i_stanbul___bo_az_koridoru___kocaeli_yal__collector_da.parquet zaten var (append-only)",
+ "seconds": 2.5,
+ "mode": "apply"
+}

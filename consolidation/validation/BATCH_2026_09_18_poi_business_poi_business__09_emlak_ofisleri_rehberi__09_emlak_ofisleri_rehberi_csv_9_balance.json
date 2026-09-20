@@ -1,0 +1,16 @@
+{
+ "source_id": "poi_business__09_emlak_ofisleri_rehberi__09_emlak_ofisleri_rehberi_csv_9",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__09_emlak_ofisleri_rehberi__09_emlak_ofisleri_rehberi_csv_9",
+ "target": "stg_09_emlak_ofisleri_rehberi",
+ "file_id": "FILE_00000337",
+ "input_count": 60,
+ "successfully_loaded": 60,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 10,
+ "raw_line_count": 61,
+ "engine": "duckdb",
+ "note": "csv",
+ "seconds": 0.0,
+ "mode": "dry-run"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__2024onayl_raporlar_20240627081342_20250102142646__Table_1",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__2024onayl_raporlar_20240627081342_20250102142646__Table_1",
+ "target": "stg_2024onayl_raporlar_20240627081342_20250102142646__Table_1",
+ "file_id": "FILE_00016251",
+ "input_count": 158,
+ "successfully_loaded": 158,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 3855,
+ "note": "xlsx",
+ "seconds": 0.0,
+ "mode": "apply"
+}

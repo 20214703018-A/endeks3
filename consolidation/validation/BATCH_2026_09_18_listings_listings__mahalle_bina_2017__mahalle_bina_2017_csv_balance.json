@@ -1,0 +1,19 @@
+{
+ "source_id": "listings__mahalle_bina_2017__mahalle_bina_2017_csv",
+ "batch_id": "BATCH_2026_09_18_listings_listings__mahalle_bina_2017__mahalle_bina_2017_csv",
+ "target": "stg_mahalle_bina_2017",
+ "file_id": "FILE_00005074",
+ "input_count": 959,
+ "successfully_loaded": 959,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 9,
+ "geometry_types": [],
+ "review_flags": {
+  "X03": 959
+ },
+ "estimated_bytes": 96401,
+ "note": "csv enc=cp1257",
+ "seconds": 0.0,
+ "mode": "apply"
+}

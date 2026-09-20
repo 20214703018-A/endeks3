@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__piyasa_ortalamalari__piyasa_ortalamalari_csv",
+ "batch_id": "BATCH_2026_09_18_listings_listings__piyasa_ortalamalari__piyasa_ortalamalari_csv",
+ "target": "stg_piyasa_ortalamalari",
+ "file_id": "FILE_00008368",
+ "input_count": 196,
+ "successfully_loaded": 196,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "raw_line_count": 197,
+ "engine": "duckdb",
+ "note": "csv",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_piyasa_ortalamalari/part-BATCH_2026_09_18_listings_listings__piyasa_ortalamalari__piyasa_ortalamalari_csv.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

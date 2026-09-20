@@ -1,0 +1,21 @@
+{
+ "source_id": "P_04_price_tren_09_bolge_09_kuzey_ege",
+ "batch_id": "BATCH_2026_09_18_price_series_P_04_price_tren_09_bolge_09_kuzey_ege",
+ "target": "stg_price_trend_monthly",
+ "file_id": "FILE_00000332",
+ "input_count": 76800,
+ "successfully_loaded": 76800,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 76801,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_trend_monthly/part-BATCH_2026_09_18_price_series_P_04_price_tren_09_bolge_09_kuzey_ege.parquet",
+ "review_flags": {
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 11520
+ },
+ "seconds": 0.3,
+ "mode": "apply"
+}

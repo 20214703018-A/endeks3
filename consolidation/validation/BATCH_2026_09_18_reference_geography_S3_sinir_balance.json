@@ -1,0 +1,22 @@
+{
+ "source_id": "S3_sinir",
+ "batch_id": "BATCH_2026_09_18_reference_geography_S3_sinir",
+ "target": "stg_admin_boundary_alt",
+ "file_id": "FILE_00005043",
+ "input_count": 1086,
+ "successfully_loaded": 1086,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "geometry_types": [
+  "MultiPolygon",
+  "Polygon"
+ ],
+ "review_flags": {
+  "F6_NO_ID_ALT_BOUNDARY": 1086
+ },
+ "estimated_bytes": 11571609,
+ "note": "sqlite",
+ "seconds": 0.8,
+ "mode": "apply"
+}

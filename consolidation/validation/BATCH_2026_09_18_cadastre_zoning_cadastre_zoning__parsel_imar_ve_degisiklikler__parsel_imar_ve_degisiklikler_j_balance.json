@@ -1,0 +1,19 @@
+{
+ "source_id": "cadastre_zoning__parsel_imar_ve_degisiklikler__parsel_imar_ve_degisiklikler_j",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__parsel_imar_ve_degisiklikler__parsel_imar_ve_degisiklikler_j",
+ "target": "stg_parsel_imar_ve_degisiklikler",
+ "file_id": "FILE_00000970",
+ "input_count": 12,
+ "successfully_loaded": 12,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 37,
+ "geometry_types": [],
+ "review_flags": {
+  "Q05": 12
+ },
+ "estimated_bytes": 7353,
+ "note": "json_records under=None",
+ "seconds": 0.0,
+ "mode": "apply"
+}

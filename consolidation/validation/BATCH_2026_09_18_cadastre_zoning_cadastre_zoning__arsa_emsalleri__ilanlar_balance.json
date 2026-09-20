@@ -1,0 +1,21 @@
+{
+ "source_id": "cadastre_zoning__arsa_emsalleri__ilanlar",
+ "batch_id": "BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__arsa_emsalleri__ilanlar",
+ "target": "stg_arsa_emsalleri__ilanlar",
+ "file_id": "FILE_00005030",
+ "input_count": 63082,
+ "successfully_loaded": 63082,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 28,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/cadastre_zoning/stg_arsa_emsalleri__ilanlar/part-BATCH_2026_09_18_cadastre_zoning_cadastre_zoning__arsa_emsalleri__ilanlar.parquet",
+ "review_flags": {
+  "T08": 63082
+ },
+ "seconds": 11.6,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "vehicles__custom__AnalysisImage",
+ "batch_id": "BATCH_2026_09_18_vehicles_vehicles__custom__AnalysisImage",
+ "target": "stg_custom__AnalysisImage",
+ "file_id": "FILE_00017088",
+ "input_count": 12,
+ "successfully_loaded": 12,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/vehicles/stg_custom__AnalysisImage/part-BATCH_2026_09_18_vehicles_vehicles__custom__AnalysisImage.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

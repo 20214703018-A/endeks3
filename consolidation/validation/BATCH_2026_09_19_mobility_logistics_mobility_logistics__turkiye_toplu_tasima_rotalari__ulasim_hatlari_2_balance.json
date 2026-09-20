@@ -1,0 +1,18 @@
+{
+ "source_id": "mobility_logistics__turkiye_toplu_tasima_rotalari__ulasim_hatlari_2",
+ "batch_id": "BATCH_2026_09_19_mobility_logistics_mobility_logistics__turkiye_toplu_tasima_rotalari__ulasim_hatlari_2",
+ "target": "stg_turkiye_toplu_tasima_rotalari__ulasim_hatlari",
+ "file_id": "FILE_00019719",
+ "input_count": 0,
+ "successfully_loaded": 0,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 13,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table EMPTY_SOURCE_TABLE (0 satır; dosya yazılmadı)",
+ "readback_ok": true,
+ "output": null,
+ "seconds": 0.4,
+ "mode": "apply"
+}

@@ -1,0 +1,21 @@
+{
+ "source_id": "P_03_price_summ_10_bolge_10_cukurova",
+ "batch_id": "BATCH_2026_09_18_price_series_P_03_price_summ_10_bolge_10_cukurova",
+ "target": "stg_price_summary",
+ "file_id": "FILE_00000345",
+ "input_count": 1667,
+ "successfully_loaded": 1667,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 19,
+ "raw_line_count": 1668,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_summary/part-BATCH_2026_09_18_price_series_P_03_price_summ_10_bolge_10_cukurova.parquet",
+ "review_flags": {
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 123
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

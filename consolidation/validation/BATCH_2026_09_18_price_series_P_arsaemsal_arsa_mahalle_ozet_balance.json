@@ -1,0 +1,20 @@
+{
+ "source_id": "P_arsaemsal_arsa_mahalle_ozet",
+ "batch_id": "BATCH_2026_09_18_price_series_P_arsaemsal_arsa_mahalle_ozet",
+ "target": "stg_land_summary",
+ "file_id": "FILE_00005030",
+ "input_count": 49776,
+ "successfully_loaded": 49776,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 27,
+ "engine": "sqlite_chunked",
+ "note": "sqlite WITHOUT ROWID",
+ "review_flags": {
+  "PRIOR_PIPELINE_PRODUCT": 49776
+ },
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_land_summary/part-BATCH_2026_09_18_price_series_P_arsaemsal_arsa_mahalle_ozet.parquet",
+ "seconds": 7.8,
+ "mode": "apply"
+}

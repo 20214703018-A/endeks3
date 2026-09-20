@@ -1,0 +1,19 @@
+{
+ "source_id": "unclassified__erisim_denetim__erisim_denetim",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__erisim_denetim__erisim_denetim",
+ "target": "stg_erisim_denetim__erisim_denetim",
+ "file_id": "FILE_00005416",
+ "input_count": 12,
+ "successfully_loaded": 12,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 7,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/unclassified/stg_erisim_denetim__erisim_denetim/part-BATCH_2026_09_18_unclassified_unclassified__erisim_denetim__erisim_denetim.parquet",
+ "review_flags": {},
+ "seconds": 0.1,
+ "mode": "apply"
+}

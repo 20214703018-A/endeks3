@@ -1,0 +1,19 @@
+{
+ "source_id": "poi_business__turkiye_demiryollari_ve_tren_hatlari__turkiye_demiryollari_ve_tren_h",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__turkiye_demiryollari_ve_tren_hatlari__turkiye_demiryollari_ve_tren_h",
+ "target": "stg_turkiye_demiryollari_ve_tren_hatlari",
+ "file_id": "FILE_00008603",
+ "input_count": 1457,
+ "successfully_loaded": 1457,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 11,
+ "raw_line_count": 1458,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/poi_business/stg_turkiye_demiryollari_ve_tren_hatlari/part-BATCH_2026_09_18_poi_business_poi_business__turkiye_demiryollari_ve_tren_hatlari__turkiye_demiryollari_ve_tren_h.parquet",
+ "review_flags": {},
+ "seconds": 0.0,
+ "mode": "apply"
+}

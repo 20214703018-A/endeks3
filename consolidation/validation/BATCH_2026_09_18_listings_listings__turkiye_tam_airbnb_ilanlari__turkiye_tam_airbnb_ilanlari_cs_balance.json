@@ -1,0 +1,17 @@
+{
+ "source_id": "listings__turkiye_tam_airbnb_ilanlari__turkiye_tam_airbnb_ilanlari_cs",
+ "batch_id": "BATCH_2026_09_18_listings_listings__turkiye_tam_airbnb_ilanlari__turkiye_tam_airbnb_ilanlari_cs",
+ "target": "stg_turkiye_tam_airbnb_ilanlari",
+ "file_id": "FILE_00000933",
+ "input_count": 1536,
+ "successfully_loaded": 1536,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 1579,
+ "engine": "duckdb",
+ "note": "csv LINE_COUNT_MISMATCH raw_lines=1579 accounted=1537 (çok satırlı alan olabilir)",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/listings/stg_turkiye_tam_airbnb_ilanlari/part-BATCH_2026_09_18_listings_listings__turkiye_tam_airbnb_ilanlari__turkiye_tam_airbnb_ilanlari_cs.parquet zaten var (append-only)",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__neighborhood_sfm_3dgs__neighborhood_sfm_3dgs_ipynb",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__neighborhood_sfm_3dgs__neighborhood_sfm_3dgs_ipynb",
+ "target": "stg_neighborhood_sfm_3dgs",
+ "file_id": "FILE_00015615",
+ "input_count": 8,
+ "successfully_loaded": 8,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 5,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 3143,
+ "note": "json_records under=cells",
+ "seconds": 0.0,
+ "mode": "apply"
+}

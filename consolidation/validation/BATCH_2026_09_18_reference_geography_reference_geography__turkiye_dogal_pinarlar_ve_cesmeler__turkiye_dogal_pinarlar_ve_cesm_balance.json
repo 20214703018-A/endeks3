@@ -1,0 +1,16 @@
+{
+ "source_id": "reference_geography__turkiye_dogal_pinarlar_ve_cesmeler__turkiye_dogal_pinarlar_ve_cesm",
+ "batch_id": "BATCH_2026_09_18_reference_geography_reference_geography__turkiye_dogal_pinarlar_ve_cesmeler__turkiye_dogal_pinarlar_ve_cesm",
+ "target": "stg_turkiye_dogal_pinarlar_ve_cesmeler",
+ "file_id": "FILE_00008615",
+ "input_count": 1926,
+ "successfully_loaded": 1926,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 7,
+ "engine": "duckdb_geo",
+ "note": "geo layer=None",
+ "error": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/reference_geography/stg_turkiye_dogal_pinarlar_ve_cesmeler/part-BATCH_2026_09_18_reference_geography_reference_geography__turkiye_dogal_pinarlar_ve_cesmeler__turkiye_dogal_pinarlar_ve_cesm.parquet zaten var (append-only)",
+ "seconds": 0.1,
+ "mode": "apply"
+}

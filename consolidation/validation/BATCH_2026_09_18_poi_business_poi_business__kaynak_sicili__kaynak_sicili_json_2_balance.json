@@ -1,0 +1,17 @@
+{
+ "source_id": "poi_business__kaynak_sicili__kaynak_sicili_json_2",
+ "batch_id": "BATCH_2026_09_18_poi_business_poi_business__kaynak_sicili__kaynak_sicili_json_2",
+ "target": "stg_kaynak_sicili",
+ "file_id": "FILE_00009763",
+ "input_count": 2890,
+ "successfully_loaded": 2890,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 24,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 1663796,
+ "note": "json_records under=mappings",
+ "seconds": 0.1,
+ "mode": "apply"
+}

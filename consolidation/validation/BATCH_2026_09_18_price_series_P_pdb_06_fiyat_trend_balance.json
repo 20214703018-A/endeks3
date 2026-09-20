@@ -1,0 +1,21 @@
+{
+ "source_id": "P_pdb_06_fiyat_trend",
+ "batch_id": "BATCH_2026_09_18_price_series_P_pdb_06_fiyat_trend",
+ "target": "stg_price_trend_monthly",
+ "file_id": "FILE_00000747",
+ "input_count": 10320,
+ "successfully_loaded": 10320,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": null,
+ "engine": "duckdb",
+ "note": "sqlite_table",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_trend_monthly/part-BATCH_2026_09_18_price_series_P_pdb_06_fiyat_trend.parquet",
+ "review_flags": {
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 1548
+ },
+ "seconds": 0.1,
+ "mode": "apply"
+}

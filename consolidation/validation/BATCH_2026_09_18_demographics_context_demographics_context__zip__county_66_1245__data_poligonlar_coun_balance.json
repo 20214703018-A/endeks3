@@ -1,0 +1,17 @@
+{
+ "source_id": "demographics_context__zip__county_66_1245__data_poligonlar_coun",
+ "batch_id": "BATCH_2026_09_18_demographics_context_demographics_context__zip__county_66_1245__data_poligonlar_coun",
+ "target": "stg_county_66_1245",
+ "file_id": "FILE_00000691",
+ "input_count": 49,
+ "successfully_loaded": 49,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 3,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 299097,
+ "note": "json_records under=polygons",
+ "seconds": 0.0,
+ "mode": "apply"
+}

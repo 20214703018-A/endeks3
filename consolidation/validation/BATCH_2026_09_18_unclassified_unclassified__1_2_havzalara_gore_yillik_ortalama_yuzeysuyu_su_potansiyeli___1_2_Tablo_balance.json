@@ -1,0 +1,17 @@
+{
+ "source_id": "unclassified__1_2_havzalara_gore_yillik_ortalama_yuzeysuyu_su_potansiyeli___1_2_Tablo",
+ "batch_id": "BATCH_2026_09_18_unclassified_unclassified__1_2_havzalara_gore_yillik_ortalama_yuzeysuyu_su_potansiyeli___1_2_Tablo",
+ "target": "stg_1_2_havzalara_gore_yillik_ortalama_yuzeysuyu_su_potansiyeli___1_2_Tablo",
+ "file_id": "FILE_00016243",
+ "input_count": 65,
+ "successfully_loaded": 65,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 51,
+ "geometry_types": [],
+ "review_flags": {},
+ "estimated_bytes": 292,
+ "note": "xlsx",
+ "seconds": 0.0,
+ "mode": "apply"
+}

@@ -1,0 +1,21 @@
+{
+ "source_id": "P_04_price_tren_02_bolge_02_ankara",
+ "batch_id": "BATCH_2026_09_18_price_series_P_04_price_tren_02_bolge_02_ankara",
+ "target": "stg_price_trend_monthly",
+ "file_id": "FILE_00000234",
+ "input_count": 64720,
+ "successfully_loaded": 64720,
+ "quarantined": 0,
+ "unaccounted": 0,
+ "columns": 15,
+ "raw_line_count": 64721,
+ "engine": "duckdb",
+ "note": "csv",
+ "readback_ok": true,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_price_trend_monthly/part-BATCH_2026_09_18_price_series_P_04_price_tren_02_bolge_02_ankara.parquet",
+ "review_flags": {
+  "C03_PERIOD_AFTER_CUTOFF_2026-08": 9708
+ },
+ "seconds": 0.2,
+ "mode": "apply"
+}
