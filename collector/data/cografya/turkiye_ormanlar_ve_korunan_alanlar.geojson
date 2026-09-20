@@ -690,8 +690,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.68509,
-          36.88403
+          30.66956,
+          36.88362
         ]
       },
       "properties": {
@@ -699,7 +699,7 @@
         "ad": "Atatürk Kültür Parkı",
         "tur": "Milli Park / Tabiat Parkı",
         "kategori": "ORMAN_VE_KORUMA_ALANI",
-        "rakim_metre": 29,
+        "rakim_metre": 75,
         "il_plaka": "07"
       }
     },
@@ -726,8 +726,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.70549,
-          36.88005
+          30.70511,
+          36.88001
         ]
       },
       "properties": {
@@ -3022,6 +3022,42 @@
         "tur": "Orman",
         "kategori": "ORMAN_VE_KORUMA_ALANI",
         "rakim_metre": 101,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.72722,
+          36.96493
+        ]
+      },
+      "properties": {
+        "id": 13709874,
+        "ad": "Düdenbaşı Piknik Yeri",
+        "tur": "Milli Park / Tabiat Parkı",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 115,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.55391,
+          36.64174
+        ]
+      },
+      "properties": {
+        "id": 13711371,
+        "ad": "Zübeyde Hanım Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 1,
         "il_plaka": "07"
       }
     }
