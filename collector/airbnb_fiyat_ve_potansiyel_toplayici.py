@@ -50,6 +50,7 @@ class AirbnbIlani:
     gecelik_fiyat_tl: float
     fiyat_1_gun_tl: Optional[float] = None
     fiyat_1_hafta_tl: Optional[float] = None
+    fiyat_2_hafta_tl: Optional[float] = None
     fiyat_1_ay_tl: Optional[float] = None
     fiyat_3_ay_tl: Optional[float] = None
     fiyat_6_ay_tl: Optional[float] = None
@@ -668,36 +669,343 @@ def birlestir_tum_sonuclari(data_dir: str = DATA_DIR):
             print(f"[✔] Master Airbnb Pazar Özeti yazıldı: {master_summary_path}")
     print("=" * 70)
 
-def init_airbnb_db():
-    db_path = os.path.join("warehouse", "product", "airbnb_fiyat_ve_potansiyel.sqlite")
-    os.makedirs(os.path.dirname(db_path), exist_ok=True)
+DEFAULT_DB = os.path.join("warehouse", "product", "airbnb_fiyat_ve_potansiyel.sqlite")
+
+def init_airbnb_db(db_path: str = DEFAULT_DB):
+    os.makedirs(os.path.dirname(os.path.abspath(db_path)), exist_ok=True)
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
+    # NOT: Eski şemadaki AUTOINCREMENT `id` sütunu kaldırıldı. 40 shard'ın çıktıları
+    # birleştirilirken her shard'ın kendi 1,2,3... id'leri çakışıyor ve INSERT OR REPLACE
+    # başka shard'ın ilanını siliyordu. Tekil anahtar artık doğrudan ilan_id.
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS airbnb_ilanlar (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            ilan_id TEXT UNIQUE,
+            ilan_id TEXT PRIMARY KEY,
             baslik TEXT,
             bolge TEXT,
             il TEXT,
+            ilce TEXT,
             fiyat_gecelik REAL,
-            fiyat_haftalik REAL,
-            fiyat_aylik REAL,
+            fiyat_1_gun REAL,
+            fiyat_1_hafta REAL,
+            fiyat_2_hafta REAL,
+            fiyat_1_ay REAL,
+            fiyat_3_ay REAL,
+            fiyat_6_ay REAL,
             oda_tipi TEXT,
-            yatak_sayisi INTEGER,
             puan REAL,
             yorum_sayisi INTEGER,
             lat REAL,
             lon REAL,
             url TEXT,
+            ilk_gorulme TEXT,
             guncellenme_tarihi TEXT
+        )
+    """)
+    # İlçe başına Airbnb arzı (toplam aktif ilan). Arzı düşük ilçeler 90 gün yeniden sorgulanmaz.
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS airbnb_ilce_arz (
+            il TEXT NOT NULL,
+            ilce TEXT NOT NULL,
+            arz INTEGER,
+            durum TEXT,
+            bbox TEXT,
+            son_kontrol TEXT,
+            PRIMARY KEY (il, ilce)
+        )
+    """)
+    # Günlük doluluk & fiyat endeksi: ilçe x vade x tarama günü
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS airbnb_doluluk_endeksi (
+            il TEXT NOT NULL,
+            ilce TEXT NOT NULL,
+            ufuk TEXT NOT NULL,
+            tarama_gunu TEXT NOT NULL,
+            checkin TEXT,
+            checkout TEXT,
+            arz INTEGER,
+            musait INTEGER,
+            doluluk_orani REAL,
+            ornek_ilan INTEGER,
+            medyan_fiyat REAL,
+            p25_fiyat REAL,
+            p75_fiyat REAL,
+            min_fiyat REAL,
+            max_fiyat REAL,
+            kayit_zamani TEXT,
+            PRIMARY KEY (il, ilce, ufuk, tarama_gunu)
         )
     """)
     conn.commit()
     return conn
 
 
+# ---------------------------------------------------------------------------
+# İLÇE BAZLI DOLULUK & FİYAT ENDEKSİ (GitHub Actions 40-shard modu)
+# ---------------------------------------------------------------------------
+# Mantık:
+#  1. Her ilçenin sınır kutusu (bbox) mahalle/köy koordinatlarından türetilir.
+#  2. Tarihsiz kutu araması -> Airbnb'nin döndürdüğü resultCount = ilçedeki toplam aktif ilan (ARZ).
+#     Arz < MIN_ARZ ise ilçe "Airbnb değeri yok" sayılır, 90 gün boyunca tekrar sorgulanmaz
+#     (Çankırı, köy ilçeleri vb. tek istekle elenir).
+#  3. Arzı olan ilçelerde 6 vade için tarihli kutu araması yapılır:
+#       musait = o tarihte kiralanabilir ilan sayısı  ->  doluluk = 1 - musait / arz
+#     Aynı istekten gelen ilan listesi (18/sayfa) fiyat örneklemi olur; yoğun ilçelerde
+#     ek sayfalar çekilerek örneklem büyütülür (1 hafta vadesinde 15 sayfaya kadar).
+UFUKLAR = [
+    # (kod, gün sonra, konaklama gecesi)
+    ("1_gun", 1, 2),
+    ("1_hafta", 7, 2),
+    ("2_hafta", 14, 2),
+    ("1_ay", 30, 2),
+    ("3_ay", 90, 2),
+    ("6_ay", 180, 2),
+]
+UFUK_SAYFA_LIMITI = {"1_gun": 3, "1_hafta": 15, "2_hafta": 3, "1_ay": 3, "3_ay": 3, "6_ay": 2}
+SAYFA_BOYU = 18
+MIN_ARZ = 10             # bu sayının altında aktif ilanı olan ilçe endekse girmez
+ARZ_YOK_TTL_GUN = 90     # arzı olmayan ilçe kaç gün sonra yeniden kontrol edilir
+BBOX_PAY_KM = 1.0
+
+MAHALLE_JSON = os.path.join(os.path.dirname(__file__), "mahalle_koordinatlari.json")
+REHBER_JSON = os.path.join(os.path.dirname(__file__), "turkiye_il_ilce_rehberi.json")
+
+
+def ilce_kutulari() -> List[dict]:
+    """Her ilçe için {il, ilce, key, sw_lat, sw_lng, ne_lat, ne_lng, nokta} listesi (sabit sırada)."""
+    if not os.path.exists(MAHALLE_JSON):
+        return []
+    with open(MAHALLE_JSON, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    il_map, ilce_map = {}, {}
+    if os.path.exists(REHBER_JSON):
+        with open(REHBER_JSON, "r", encoding="utf-8") as f:
+            rehber = json.load(f)
+        for v in rehber.values():
+            il_map[v["city_slug"]] = v["city_name"]
+            for c in v.get("ilceler", []):
+                ilce_map[(v["city_slug"], c["county_slug"])] = c["county_name"]
+    gruplar: Dict[Tuple[str, str], List[Tuple[float, float]]] = {}
+    for k, v in data.items():
+        parts = k.split("_")
+        if len(parts) < 2 or v.get("lat") is None or v.get("lon") is None:
+            continue
+        gruplar.setdefault((parts[0], parts[1]), []).append((float(v["lat"]), float(v["lon"])))
+    out = []
+    for (il_slug, ilce_slug), pts in sorted(gruplar.items()):
+        lats = [p[0] for p in pts]
+        lons = [p[1] for p in pts]
+        mid_lat = (min(lats) + max(lats)) / 2
+        d_lat = BBOX_PAY_KM / 111.0
+        d_lon = BBOX_PAY_KM / (111.0 * max(0.2, math.cos(math.radians(mid_lat))))
+        out.append({
+            "key": f"{il_slug}_{ilce_slug}",
+            "il": il_map.get(il_slug, il_slug.capitalize()),
+            "ilce": ilce_map.get((il_slug, ilce_slug), ilce_slug.capitalize()),
+            "sw_lat": round(min(lats) - d_lat, 5), "sw_lng": round(min(lons) - d_lon, 5),
+            "ne_lat": round(max(lats) + d_lat, 5), "ne_lng": round(max(lons) + d_lon, 5),
+            "nokta": len(pts),
+        })
+    return out
+
+
+class AirbnbIlceEndeksi:
+    """İlçe bazlı arz / doluluk / fiyat endeksi üreticisi."""
+
+    def __init__(self, toplayici: AirbnbToplayici, conn: sqlite3.Connection,
+                 hist_conn: Optional[sqlite3.Connection] = None, max_seconds: int = 2400,
+                 ilce_istek_limiti: int = 60):
+        self.t = toplayici
+        self.conn = conn
+        self.hist = hist_conn
+        self.max_seconds = max_seconds
+        self.ilce_istek_limiti = ilce_istek_limiti
+        self.start = time.time()
+        self.istek = 0
+
+    # --- yardımcılar -------------------------------------------------------
+    def _sure_doldu(self) -> bool:
+        return self.max_seconds and (time.time() - self.start) >= self.max_seconds
+
+    def _bbox_url(self, kutu: dict, checkin: Optional[str] = None, checkout: Optional[str] = None,
+                  cursor: Optional[str] = None) -> str:
+        url = (f"https://www.airbnb.com.tr/s/homes?ne_lat={kutu['ne_lat']}&ne_lng={kutu['ne_lng']}"
+               f"&sw_lat={kutu['sw_lat']}&sw_lng={kutu['sw_lng']}&search_by_map=true")
+        if checkin and checkout:
+            url += f"&checkin={checkin}&checkout={checkout}"
+        if cursor:
+            url += f"&pagination_search=true&cursor={urllib.parse.quote(cursor)}"
+        return url
+
+    def _ara(self, url: str) -> Tuple[Optional[int], List[AirbnbIlani], List[str]]:
+        """(resultCount, ilanlar, sayfa cursor'ları). Geçici boş sayfalarda bir kez yeniden dener."""
+        for deneme in range(2):
+            self.istek += 1
+            try:
+                html = self.t._fetch_html(url)
+            except Exception as e:
+                print(f"    [!] istek hatası ({e})")
+                time.sleep(2.0)
+                continue
+            m = re.search(r'"resultCount"\s*:\s*(\d+)', html)
+            count = int(m.group(1)) if m else None
+            ilanlar = self.t._parse_search_results(html)
+            cursors: List[str] = []
+            mc = re.search(r'"pageCursors"\s*:\s*(\[[^\]]*\])', html)
+            if mc:
+                try:
+                    cursors = json.loads(mc.group(1))
+                except Exception:
+                    cursors = []
+            # Sayaç okunamadıysa ya da sayaç dolu olduğu hâlde liste boş geldiyse (geçici bot sayfası) bir kez daha dene
+            if deneme == 0 and not ilanlar and (count is None or count > 0):
+                time.sleep(2.0)
+                continue
+            return count, ilanlar, cursors
+        return None, [], []
+
+    def _arz_gecmisi(self, il: str, ilce: str):
+        """(arz, durum, gün_önce) — önce yerel, sonra ana ambar."""
+        best = None
+        for c in (self.conn, self.hist):
+            if c is None:
+                continue
+            try:
+                row = c.execute(
+                    "SELECT arz, durum, julianday('now')-julianday(son_kontrol) FROM airbnb_ilce_arz WHERE il=? AND ilce=?",
+                    (il, ilce)).fetchone()
+            except Exception:
+                row = None
+            if row and (best is None or (row[2] is not None and row[2] < best[2])):
+                best = row
+        return best
+
+    # --- ana akış ----------------------------------------------------------
+    def ilce_tara(self, kutu: dict) -> None:
+        il, ilce = kutu["il"], kutu["ilce"]
+        now = datetime.now()
+        now_iso = now.isoformat()
+        gun = now.strftime("%Y-%m-%d")
+
+        gecmis = self._arz_gecmisi(il, ilce)
+        if gecmis and gecmis[1] == "ARZ_YOK" and gecmis[2] is not None and gecmis[2] < ARZ_YOK_TTL_GUN:
+            print(f"  ⏭  {ilce}/{il}: Airbnb arzı yok (son kontrol {gecmis[2]:.0f} gün önce, {gecmis[0]} ilan) — atlandı.")
+            return
+
+        # 1) ARZ: tarihsiz kutu araması
+        arz, _, _ = self._ara(self._bbox_url(kutu))
+        time.sleep(1.0)
+        if arz is None:
+            print(f"  [!] {ilce}/{il}: arz okunamadı, atlandı.")
+            return
+        durum = "AKTIF" if arz >= MIN_ARZ else "ARZ_YOK"
+        self.conn.execute(
+            "INSERT OR REPLACE INTO airbnb_ilce_arz (il, ilce, arz, durum, bbox, son_kontrol) VALUES (?,?,?,?,?,?)",
+            (il, ilce, arz, durum, json.dumps({k: kutu[k] for k in ("sw_lat", "sw_lng", "ne_lat", "ne_lng")}), now_iso))
+        self.conn.commit()
+        if durum == "ARZ_YOK":
+            print(f"  ✖  {ilce}/{il}: {arz} aktif ilan (< {MIN_ARZ}) — endekse alınmadı, {ARZ_YOK_TTL_GUN} gün sonra tekrar bakılacak.")
+            return
+        print(f"  ✔  {ilce}/{il}: {arz} aktif ilan — 6 vade taranıyor...")
+
+        # 2) VADELER: doluluk + fiyat örneklemi
+        ilan_map: Dict[str, AirbnbIlani] = {}
+        ilce_istek_baslangic = self.istek
+        for kod, gun_sonra, gece in UFUKLAR:
+            if self._sure_doldu():
+                print("  ⏰ süre sınırı — kalan vadeler bir sonraki koşuya bırakıldı.")
+                break
+            cin = (now + timedelta(days=gun_sonra)).strftime("%Y-%m-%d")
+            cout = (now + timedelta(days=gun_sonra + gece)).strftime("%Y-%m-%d")
+            musait, ilanlar, cursors = self._ara(self._bbox_url(kutu, cin, cout))
+            time.sleep(1.0)
+            if musait is None:
+                print(f"    [!] {kod}: okunamadı")
+                continue
+            fiyatlar: List[float] = []
+            gorulen = set()
+
+            def _isle(liste):
+                for ilan in liste:
+                    if ilan.id in gorulen:
+                        continue
+                    gorulen.add(ilan.id)
+                    fiyatlar.append(ilan.gecelik_fiyat_tl)
+                    mevcut = ilan_map.setdefault(ilan.id, ilan)
+                    setattr(mevcut, f"fiyat_{kod}_tl", ilan.gecelik_fiyat_tl)
+
+            _isle(ilanlar)
+            # Ek sayfalar: yoğun ilçede örneklemi büyüt (istek bütçesi dahilinde)
+            hedef_sayfa = min(UFUK_SAYFA_LIMITI.get(kod, 2), len(cursors), math.ceil(max(musait, 1) / SAYFA_BOYU))
+            for cur in cursors[1:hedef_sayfa]:
+                if self._sure_doldu() or (self.istek - ilce_istek_baslangic) >= self.ilce_istek_limiti:
+                    break
+                _, ek, _ = self._ara(self._bbox_url(kutu, cin, cout, cursor=cur))
+                if not ek:
+                    break
+                _isle(ek)
+                time.sleep(0.8)
+
+            fiyatlar.sort()
+            n = len(fiyatlar)
+            def q(p):
+                return fiyatlar[min(n - 1, int(n * p))] if n else None
+            doluluk = round(max(0.0, 1.0 - musait / arz), 4) if arz else None
+            self.conn.execute("""
+                INSERT OR REPLACE INTO airbnb_doluluk_endeksi
+                (il, ilce, ufuk, tarama_gunu, checkin, checkout, arz, musait, doluluk_orani, ornek_ilan,
+                 medyan_fiyat, p25_fiyat, p75_fiyat, min_fiyat, max_fiyat, kayit_zamani)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """, (il, ilce, kod, gun, cin, cout, arz, musait, doluluk, n,
+                  q(0.5), q(0.25), q(0.75), fiyatlar[0] if n else None, fiyatlar[-1] if n else None, now_iso))
+            self.conn.commit()
+            med = f"{q(0.5):,.0f} TL" if n else "-"
+            print(f"    {kod:<8} {cin}: müsait {musait:>4}/{arz} → doluluk %{(doluluk or 0)*100:.0f} | medyan {med} ({n} ilan)")
+
+        # 3) İlanları yaz
+        for ilan in ilan_map.values():
+            fl = [getattr(ilan, f"fiyat_{k}_tl", None) for k, _, _ in UFUKLAR]
+            fl = [f for f in fl if f]
+            ort = round(sum(fl) / len(fl)) if fl else ilan.gecelik_fiyat_tl
+            self.conn.execute("""
+                INSERT INTO airbnb_ilanlar (ilan_id, baslik, bolge, il, ilce, fiyat_gecelik,
+                    fiyat_1_gun, fiyat_1_hafta, fiyat_2_hafta, fiyat_1_ay, fiyat_3_ay, fiyat_6_ay,
+                    oda_tipi, puan, yorum_sayisi, lat, lon, url, ilk_gorulme, guncellenme_tarihi)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                ON CONFLICT(ilan_id) DO UPDATE SET
+                    baslik=excluded.baslik, il=excluded.il, ilce=excluded.ilce, fiyat_gecelik=excluded.fiyat_gecelik,
+                    fiyat_1_gun=COALESCE(excluded.fiyat_1_gun, fiyat_1_gun),
+                    fiyat_1_hafta=COALESCE(excluded.fiyat_1_hafta, fiyat_1_hafta),
+                    fiyat_2_hafta=COALESCE(excluded.fiyat_2_hafta, fiyat_2_hafta),
+                    fiyat_1_ay=COALESCE(excluded.fiyat_1_ay, fiyat_1_ay),
+                    fiyat_3_ay=COALESCE(excluded.fiyat_3_ay, fiyat_3_ay),
+                    fiyat_6_ay=COALESCE(excluded.fiyat_6_ay, fiyat_6_ay),
+                    oda_tipi=excluded.oda_tipi, puan=excluded.puan, yorum_sayisi=excluded.yorum_sayisi,
+                    lat=excluded.lat, lon=excluded.lon, url=excluded.url, guncellenme_tarihi=excluded.guncellenme_tarihi
+            """, (ilan.id, ilan.baslik, f"{ilce}, {il}", il, ilce, ort,
+                  getattr(ilan, "fiyat_1_gun_tl", None), getattr(ilan, "fiyat_1_hafta_tl", None),
+                  getattr(ilan, "fiyat_2_hafta_tl", None), getattr(ilan, "fiyat_1_ay_tl", None),
+                  getattr(ilan, "fiyat_3_ay_tl", None), getattr(ilan, "fiyat_6_ay_tl", None),
+                  ilan.oda_tipi, ilan.puan, ilan.yorum_sayisi, ilan.enlem, ilan.boylam, ilan.url, now_iso, now_iso))
+        self.conn.commit()
+        print(f"    → {len(ilan_map)} tekil ilan yazıldı ({self.istek - ilce_istek_baslangic} istek).")
+
+    def calistir(self, kutular: List[dict]) -> None:
+        print(f"🏙  İlçe endeksi: {len(kutular)} ilçe, süre sınırı {self.max_seconds/60:.0f} dk, ilçe başına ≤{self.ilce_istek_limiti} istek")
+        for i, kutu in enumerate(kutular, 1):
+            if self._sure_doldu():
+                print(f"⏰ Süre sınırı: {i-1}/{len(kutular)} ilçe işlendi, kalan ilçeler bir sonraki koşuda.")
+                break
+            print(f"[{i}/{len(kutular)}] {kutu['ilce']} / {kutu['il']} ({kutu['nokta']} mahalle-köy noktası)")
+            try:
+                self.ilce_tara(kutu)
+            except Exception as e:
+                print(f"  [!] {kutu['ilce']}/{kutu['il']} hata: {e}")
+        print(f"✅ Airbnb ilçe endeksi tamamlandı: {self.istek} istek, {time.time()-self.start:.0f} sn.")
+
+
 def main():
+    global MIN_ARZ
     parser = argparse.ArgumentParser(description="Doğrudan Python Airbnb Pazar & Çoklu Vade Potansiyel Toplayıcı")
     parser.add_argument("--shard", type=int, default=1)
     parser.add_argument("--num-shards", type=int, default=1)
@@ -712,6 +1020,14 @@ def main():
     parser.add_argument("--tek-tarih", action="store_true", help="4 vade yerine tek tarihli standart arama yap")
     parser.add_argument("--klasik-kira", type=float, help="Bölgedeki ortalama aylık klasik kira (TL)")
     parser.add_argument("--export", action="store_true", help="Sonuçları CSV ve GeoJSON olarak dışa aktar")
+    parser.add_argument("--out", type=str, default=DEFAULT_DB, help="Çıktı sqlite veritabanı")
+    parser.add_argument("--gecmis-db", type=str, default=None,
+                        help="Önceki koşuların birleşik ana ambarı (salt okunur); arzı olmayan ilçeler oradan atlanır")
+    parser.add_argument("--max-seconds", type=int, default=2400, help="İlçe endeksi modunda azami çalışma süresi (sn)")
+    parser.add_argument("--ilce-istek-limiti", type=int, default=60, help="İlçe başına azami Airbnb isteği")
+    parser.add_argument("--min-arz", type=int, default=MIN_ARZ, help="Endekse girmek için ilçedeki asgari aktif ilan")
+    parser.add_argument("--ilce-limit", type=int, default=None, help="(Test) shard'daki ilk N ilçeyi tara")
+    parser.add_argument("--il-modu", action="store_true", help="Eski davranış: ilçe yerine 81 il adıyla arama")
 
     args = parser.parse_args()
 
@@ -720,6 +1036,36 @@ def main():
         return
 
     toplayici = AirbnbToplayici()
+
+    # ---- Varsayılan (GitHub Actions) modu: İLÇE BAZLI DOLULUK & FİYAT ENDEKSİ ----
+    if not (args.iller or args.bolge or (args.lat is not None and args.lon is not None) or args.il_modu):
+        MIN_ARZ = args.min_arz
+        kutular = ilce_kutulari()
+        if args.num_shards and args.num_shards > 1 and args.shard:
+            kutular = [k for i, k in enumerate(kutular) if i % args.num_shards == (args.shard - 1)]
+            print(f"[SHARD {args.shard}/{args.num_shards}] {len(kutular)} ilçe atandı.")
+        if args.ilce_limit:
+            kutular = kutular[:args.ilce_limit]
+        if not kutular:
+            print("Bu shard'a ilçe düşmedi, çıkılıyor.")
+            return
+        hist_conn = None
+        if args.gecmis_db and os.path.exists(args.gecmis_db) and os.path.abspath(args.gecmis_db) != os.path.abspath(args.out):
+            try:
+                hist_conn = sqlite3.connect(f"file:{os.path.abspath(args.gecmis_db)}?mode=ro", uri=True)
+                n = hist_conn.execute("SELECT COUNT(*) FROM airbnb_ilce_arz").fetchone()[0]
+                print(f"📚 Geçmiş ambar bağlandı: {args.gecmis_db} ({n} ilçe arz kaydı)")
+            except Exception as e:
+                print(f"[!] Geçmiş ambar okunamadı ({e}); ilçeler yeniden kontrol edilecek.")
+                hist_conn = None
+        conn = init_airbnb_db(args.out)
+        endeks = AirbnbIlceEndeksi(toplayici, conn, hist_conn, max_seconds=args.max_seconds,
+                                   ilce_istek_limiti=args.ilce_istek_limiti)
+        endeks.calistir(kutular)
+        conn.close()
+        if hist_conn is not None:
+            hist_conn.close()
+        return
 
     if args.iller:
         bolge_list = [x.strip() for x in args.iller.split(",") if x.strip()]
@@ -735,9 +1081,7 @@ def main():
         else:
             ilanlar = toplayici.sorgula_bolge_vadeli(bolge_adi, limit_per_vade=args.limit)
     else:
-        # GEOPROP Sharding Logic (Tüm Türkiye 81 İl)
-        import json
-        import os
+        # Eski il-adı modu (--il-modu): 81 il adıyla arama
         rehber_path = os.path.join(os.path.dirname(__file__), 'turkiye_il_ilce_rehberi.json')
         with open(rehber_path, "r", encoding="utf-8") as f:
             rehber = json.load(f)
@@ -798,20 +1142,20 @@ def main():
     print("=" * 65)
 
     if ilanlar:
-        conn = init_airbnb_db()
+        conn = init_airbnb_db(args.out)
         cursor = conn.cursor()
         now_str = datetime.now().isoformat()
         for ilan in ilanlar:
-            il = bolge_adi # Fallback or use regex later if needed
             cursor.execute("""
-                INSERT OR REPLACE INTO airbnb_ilanlar 
-                (ilan_id, baslik, bolge, il, fiyat_gecelik, fiyat_haftalik, fiyat_aylik, oda_tipi, yatak_sayisi, puan, yorum_sayisi, lat, lon, url, guncellenme_tarihi)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT OR REPLACE INTO airbnb_ilanlar
+                (ilan_id, baslik, bolge, il, ilce, fiyat_gecelik, fiyat_1_gun, fiyat_1_hafta, fiyat_1_ay, fiyat_3_ay,
+                 oda_tipi, puan, yorum_sayisi, lat, lon, url, ilk_gorulme, guncellenme_tarihi)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                ilan.id, ilan.baslik, bolge_adi, il, 
-                ilan.gecelik_fiyat_tl, ilan.fiyat_1_hafta_tl, ilan.fiyat_1_ay_tl,
-                ilan.oda_tipi, 0, ilan.puan, ilan.yorum_sayisi, 
-                ilan.enlem, ilan.boylam, ilan.url, now_str
+                ilan.id, ilan.baslik, bolge_adi, bolge_adi, None,
+                ilan.gecelik_fiyat_tl, ilan.fiyat_1_gun_tl, ilan.fiyat_1_hafta_tl, ilan.fiyat_1_ay_tl, ilan.fiyat_3_ay_tl,
+                ilan.oda_tipi, ilan.puan, ilan.yorum_sayisi,
+                ilan.enlem, ilan.boylam, ilan.url, now_str, now_str
             ))
         conn.commit()
         conn.close()

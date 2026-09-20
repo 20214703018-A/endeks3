@@ -1,21 +1,42 @@
 name: "GEOPROP Global Veri Madencisi (40x Paralel Matris)"
 
+# Kalıcılık modeli:
+#   Her koşu, önceki koşuların birleşik ambarını "warehouse-latest" adlı GitHub Release'in
+#   asset'lerinden indirir (sqlite'lar git'e commit EDİLMEZ; .gitignore'da ve repo şişer).
+#   Shard'lar bu ambara "daha önce tarandı mı?" diye bakar ve yalnızca yeni/eskimiş sorguları
+#   çalıştırır (artımlı tarama). Merge işi shard çıktılarını ambara ekler ve release asset'ini
+#   günceller (--clobber). Böylece her koşu bir öncekinin üstüne koyar.
+
 on:
   schedule:
     # Günde iki kez çalıştır (Gece ve Öğlen)
     - cron: '0 2,14 * * *'
   workflow_dispatch:
     inputs:
-      hedef_kapsam:
-        description: 'Çalıştırılacak modüller (Tümü, Finans, Mekan, Emlak)'
-        required: true
-        default: 'all'
+      google_max_saniye:
+        description: 'Google Places adımı için azami süre (saniye)'
+        required: false
+        default: '12000'
+      airbnb_max_saniye:
+        description: 'Airbnb ilçe endeksi adımı için azami süre (saniye)'
+        required: false
+        default: '2400'
+
+permissions:
+  contents: write   # release asset yükleme/indirme için
+
+env:
+  AMBAR_RELEASE: warehouse-latest
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
-  # 1. Aşama: Tekil / Resmi Veri Çekimleri (TÜİK, ETBİS, SEGE, BDDK, TOBB)
+  # 1. Aşama: 40 shard paralel madencilik
   heavy_data_mining_shards:
     name: "Derin Madencilik Shard ${{ matrix.shard }}/40"
     runs-on: ubuntu-latest
+    # GitHub'ın sert sınırı 6 saat. Adımlar kendi emniyet sürelerinde (Google 3s20d + Airbnb 40d)
+    # DB'yi kapatıp çıkar; bu değer yalnızca takılma durumunda artifact'in kaybolmasını önler.
+    timeout-minutes: 330
     strategy:
       fail-fast: false
       matrix:
@@ -29,27 +50,41 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          
+
       - name: Bağımlılıkları Yükle
         run: pip install -r requirements.txt
 
+      - name: Önceki Koşuların Ambarını İndir (artımlı tarama için)
+        run: |
+          mkdir -p warehouse/master warehouse/product
+          if gh release download "$AMBAR_RELEASE" --pattern '*.sqlite' --dir warehouse/master --repo "$GITHUB_REPOSITORY" 2>/dev/null; then
+            ls -la warehouse/master
+          else
+            echo "ℹ️ '$AMBAR_RELEASE' release'i yok ya da boş — ilk koşu, sıfırdan taranacak."
+          fi
 
-
-      - name: Google Places, Yoğunluk ve İşletme Gözlemi
-        run: mkdir -p warehouse/product && python collector/google_places_ve_yogunluk_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
+      - name: Google Places, Yoğunluk ve İşletme Gözlemi (katmanlı, sayfalı, artımlı)
+        run: |
+          python collector/google_places_ve_yogunluk_toplayici.py \
+            --shard ${{ matrix.shard }} --num-shards 40 \
+            --gecmis-db warehouse/master/google_places_ve_yogunluk.sqlite \
+            --max-seconds "${{ github.event.inputs.google_max_saniye || '12000' }}"
 
       - name: Restoran Menü, Fiyat ve Google Places (QR Dahil) Taraması
-        run: python collector/google_qr_toplayici.py --shard ${{ matrix.shard }} --num-shards 40
+        run: python collector/google_qr_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
 
       - name: Emlak İlanları ve Gerçek Devren İlan Yoğunluğu
         run: python collector/ilan_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
 
       - name: Kargo, Lojistik, Gel-Al PUDO ve Darkstore Ağı
-        # Trendyol API vb. çok yoğun olduğu için shard bazlı bölünmesi gerek
         run: python collector/kargo_darkstore_teslimat_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
 
-      - name: Airbnb 81 İl ve Çok Vadeli Doluluk (Arbitraj) Taraması
-        run: python collector/airbnb_fiyat_ve_potansiyel_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
+      - name: Airbnb İlçe Bazlı Doluluk ve Fiyat Endeksi (6 vade)
+        run: |
+          python collector/airbnb_fiyat_ve_potansiyel_toplayici.py \
+            --shard ${{ matrix.shard }} --num-shards 40 \
+            --gecmis-db warehouse/master/airbnb_fiyat_ve_potansiyel.sqlite \
+            --max-seconds "${{ github.event.inputs.airbnb_max_saniye || '2400' }}" || true
 
       - name: Shard Çıktılarını Artifact Olarak Yükle
         uses: actions/upload-artifact@v4
@@ -59,30 +94,49 @@ jobs:
           overwrite: true
           retention-days: 1
 
-  # 3. Aşama: Altyapı ve Hareketlilik (Cron)
-  # 4. Aşama: Veri Ambarı Birleştirme (Merge)
-  merge_and_commit:
-    name: "Bütün Shard'ları Birleştir ve Ana Ambara Aktar"
+  # 2. Aşama: Birleştir ve kalıcı ambarı güncelle
+  merge_and_publish:
+    name: "Bütün Shard'ları Birleştir ve Ana Ambarı Güncelle"
     needs: [heavy_data_mining_shards]
+    if: always()   # bazı shard'lar zaman aşımına uğrasa da başarılı olanların verisi ambara girsin
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Repoyu Klonla
         uses: actions/checkout@v4
 
-      - name: Tüm Artifact'leri İndir
+      - name: Önceki Ambarı İndir
+        run: |
+          mkdir -p warehouse/product
+          gh release download "$AMBAR_RELEASE" --pattern '*.sqlite' --dir warehouse/product --repo "$GITHUB_REPOSITORY" 2>/dev/null \
+            || echo "ℹ️ Önceki ambar yok; shard'lardan sıfırdan oluşturulacak."
+
+      - name: Tüm Shard Artifact'lerini İndir
         uses: actions/download-artifact@v4
         with:
+          pattern: shard-db-*
           path: temp_dbs/
 
       - name: Veritabanlarını Birleştir (Merge)
         run: |
-          echo "40 Shard'dan gelen SQLite dosyaları tek bir master ambara birleştiriliyor..."
+          echo "Shard SQLite dosyaları ana ambara ekleniyor..."
           python geoprop/db_merger.py temp_dbs/ warehouse/product/
+          ls -la warehouse/product
 
-      - name: Değişiklikleri Ana Repoya Commit Et (Data Dökümü)
+      - name: Ambarı Release Asset Olarak Yayınla (warehouse-latest)
         run: |
-          git config --global user.name 'geoprop-bot'
-          git config --global user.email 'bot@geoprop.ai'
-          git add warehouse/product/*.sqlite
-          git commit -m "🤖 [Veri Madencisi] Günlük 40-Node Veri Sentezi Tamamlandı."
-          git push origin main
+          if ! gh release view "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release create "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" \
+              --title "GEOPROP Kalıcı Veri Ambarı (son koşu)" \
+              --notes "40-node madencinin birleşik SQLite ambarı. Her koşuda üzerine yazılır; geçmiş için Actions artifact'lerine bakın."
+          fi
+          gh release upload "$AMBAR_RELEASE" warehouse/product/*.sqlite --clobber --repo "$GITHUB_REPOSITORY"
+          gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" \
+            --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — koşu ${{ github.run_id }}"
+
+      - name: Birleşik Ambarı Artifact Olarak da Sakla (30 gün geçmiş)
+        uses: actions/upload-artifact@v4
+        with:
+          name: warehouse-merged-${{ github.run_number }}
+          path: warehouse/product/*.sqlite
+          retention-days: 30

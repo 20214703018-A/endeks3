@@ -15,8 +15,10 @@ on:
         description: "Shard başına sokak tohumu limiti (her sokak 5 sektör sorgusu üretir)"
         required: false
         default: ""
-  schedule:
-    - cron: "0 4 * * 2" # Her Salı sabaha karşı haftalık güncelleme
+  # Zamanlama kapatıldı: aynı toplayıcıyı geoprop_global_collector_40_nodes.yml günde iki kez
+  # artımlı olarak çalıştırıyor; ikisi birlikte Google'a çift yük bindiriyordu. Elle (workflow_dispatch) çalıştırılabilir.
+  # schedule:
+  #   - cron: "0 4 * * 2"
 
 jobs:
   madencilik:
