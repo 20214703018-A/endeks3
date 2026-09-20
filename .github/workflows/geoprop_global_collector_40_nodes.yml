@@ -1,4 +1,4 @@
-name: "GEOPROP Global Veri Madencisi (40x Paralel Matris)"
+name: "GEOPROP Google Places + Airbnb Madencisi (40x Paralel Matris)"
 
 # Kalıcılık modeli:
 #   Her koşu, önceki koşuların birleşik ambarını "warehouse-latest" adlı GitHub Release'in
@@ -77,11 +77,11 @@ jobs:
             --gecmis-db warehouse/master/google_places_ve_yogunluk.sqlite \
             --max-seconds "${{ github.event.inputs.google_max_saniye || '16200' }}"
 
-      - name: Restoran Menü, Fiyat ve Google Places (QR Dahil) Taraması
-        run: python collector/google_qr_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
-
-      # Emlak ilanları bu koşudan çıkarıldı: kendi workflow'u var (ilan_toplayici.yml, elle tetiklenir).
-      # Kargo/darkstore adımı da çıkarıldı: 0 kayıt üretiyordu (Trendyol API erişilemiyor, Amazon/PTT entegre değil).
+      # NOT (2026-09-20): Bu koşu yalnızca Google Places + Airbnb toplar.
+      #  - Emlak ilanları (Emlakjet, collector/ilan_toplayici.py) buradan ÇIKARILDI; ayrı bir yerde/koşuda yapılacak.
+      #    Elle: gh workflow run ilan_toplayici.yml
+      #  - Restoran menü/QR (google_qr_toplayici.py) ve kargo/darkstore adımları da çıkarıldı
+      #    (kargo 0 kayıt üretiyordu: Trendyol API erişilemiyor, Amazon/PTT entegre değil).
 
       - name: Airbnb İlçe Bazlı Doluluk ve Fiyat Endeksi (6 vade)
         run: |
