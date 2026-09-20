@@ -4,6 +4,7 @@ import os
 import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import urllib.parse
+import csv
 
 DB_MENU = "warehouse/product/restoran_ve_kafe_menuleri.sqlite"
 DB_PLACES = "warehouse/product/google_places_ve_yogunluk.sqlite"
@@ -18,14 +19,14 @@ def load_venues():
     if not os.path.exists(DB_PLACES):
         print("Uyarı: DB bulunamadı, test mekanları yükleniyor...")
         venues = [
-            {"id": "T1", "adi": "Lara Aspava", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Şirinyalı"},
-            {"id": "T2", "adi": "Marje Mantı", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Fener"}
+            {"id": "T1", "adi": "Lara Aspava", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Şirinyalı", "tam_adres": "", "lat": 0.0, "lon": 0.0},
+            {"id": "T2", "adi": "Marje Mantı", "ilce": "Muratpaşa", "il": "Antalya", "mahalle": "Fener", "tam_adres": "", "lat": 0.0, "lon": 0.0}
         ]
         return
         
     conn = sqlite3.connect(DB_PLACES)
     cur = conn.cursor()
-cur.execute(f"""
+    cur.execute(f"""
         SELECT google_place_id, isim, ilce, il, mahalle, tam_adres, lat, lon
         FROM google_places_ticari_yogunluk
         WHERE il IN ({','.join(['?']*len(TARGET_CITIES))})
@@ -36,13 +37,6 @@ cur.execute(f"""
         venues.append({
             "id": row[0], "adi": row[1], "ilce": row[2], "il": row[3], "mahalle": row[4],
             "tam_adres": row[5] or "", "lat": row[6] or 0.0, "lon": row[7] or 0.0
-        })
-          AND (ana_kategori LIKE '%Restoran%' OR ana_kategori LIKE '%Kafe%')
-        ORDER BY yorum_sayisi DESC
-    """, (*TARGET_CITIES,))
-    for row in cur.fetchall():
-        venues.append({
-            "id": row[0], "adi": row[1], "ilce": row[2], "il": row[3], "mahalle": row[4]
         })
     conn.close()
     print(f"{len(venues)} mekan başarıyla yüklendi.")
@@ -71,19 +65,34 @@ def save_data(data):
     cur.execute("""
         CREATE TABLE IF NOT EXISTS mekan_menu_kalemleri_ve_fiyat_tarihcesi (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            mekan_id TEXT,
-            mekan_adi TEXT,
-            donem TEXT,
-            tarih TEXT,
-            fiyat_turu TEXT,
-            platform TEXT,
-            kategori TEXT,
-            urun_adi TEXT,
-            fiyat REAL,
-            ilce TEXT,
-            il TEXT,
+            mekan_id TEXT NOT NULL,
+            mekan_adi TEXT NOT NULL,
+            donem TEXT NOT NULL,
+            tarih TEXT NOT NULL,
+            fiyat_turu TEXT NOT NULL,
+            platform TEXT NOT NULL,
+            kategori TEXT NOT NULL,
+            urun_adi TEXT NOT NULL,
+            aciklama TEXT,
+            fiyat REAL NOT NULL,
+            orijinal_fiyat REAL,
+            para_birimi TEXT DEFAULT 'TRY',
+            komisyon_aciklamasi TEXT,
+            fiyat_segmenti TEXT,
+            puan REAL,
+            degerlendirme_sayisi INTEGER,
+            yorum_sayisi INTEGER,
+            stokta_var_mi INTEGER DEFAULT 1,
+            gorsel_url TEXT,
+            kaynak_url TEXT,
+            tam_adres TEXT NOT NULL,
             mahalle TEXT,
-            guncellenme_tarihi TEXT
+            ilce TEXT NOT NULL,
+            il TEXT NOT NULL,
+            lat REAL NOT NULL,
+            lon REAL NOT NULL,
+            guncellenme_tarihi TEXT NOT NULL,
+            UNIQUE(mekan_id, urun_adi, donem, fiyat_turu)
         )
     """)
     
@@ -99,28 +108,50 @@ def save_data(data):
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (data['id'], data['adi'], gorsel, "GoogleKnowledgePanel", "Menü/Öne Çıkanlar", now, data['il'], data['ilce'], data['mahalle']))
             if cur.rowcount > 0: g_say += 1
-        except: pass
+        except Exception as e:
+            print(f"Görsel DB Hatası: {e}")
         
     f_say = 0
     for fiyat in data.get("fiyatlar", []):
         try:
-cur.execute("""
+            cur.execute("""
                 INSERT INTO mekan_menu_kalemleri_ve_fiyat_tarihcesi 
                 (mekan_id, mekan_adi, donem, tarih, fiyat_turu, platform, kategori, urun_adi, fiyat, ilce, il, mahalle, guncellenme_tarihi, tam_adres, lat, lon)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (data['id'], data['adi'], donem, now, "BilgiPanosu", fiyat['platform'], "Menü", fiyat['urun'], fiyat['fiyat'], data['ilce'], data['il'], data['mahalle'], now, data.get('tam_adres', ''), data.get('lat', 0.0), data.get('lon', 0.0)))
             f_say += 1
-        except: pass
+        except Exception as e:
+            print(f"Fiyat DB Hatası: {e}")
         
     conn.commit()
     conn.close()
     
-    # YERELE YEDEKLEME
+    # YERELE YEDEKLEME (JSONL ve CSV)
     backup_file = "collector/data/menuler_acik_kayit.jsonl"
     os.makedirs(os.path.dirname(backup_file), exist_ok=True)
     with open(backup_file, "a", encoding="utf-8") as bf:
         bf.write(json.dumps(data, ensure_ascii=False) + "\n")
         
+    prices_csv = "collector/data/menu_fiyatlari.csv"
+    file_exists = os.path.exists(prices_csv)
+    if data.get("fiyatlar"):
+        with open(prices_csv, "a", encoding="utf-8", newline="") as cf:
+            writer = csv.writer(cf)
+            if not file_exists:
+                writer.writerow(["Mekan ID", "Mekan Adı", "İl", "İlçe", "Mahalle", "Ürün Adı", "Fiyat", "Platform"])
+            for p in data["fiyatlar"]:
+                writer.writerow([data.get("id"), data.get("adi"), data.get("il"), data.get("ilce"), data.get("mahalle"), p.get("urun"), p.get("fiyat"), p.get("platform")])
+                
+    images_csv = "collector/data/menu_gorselleri.csv"
+    img_exists = os.path.exists(images_csv)
+    if data.get("gorseller"):
+        with open(images_csv, "a", encoding="utf-8", newline="") as cf:
+            writer = csv.writer(cf)
+            if not img_exists:
+                writer.writerow(["Mekan ID", "Mekan Adı", "İl", "İlçe", "Mahalle", "Görsel URL"])
+            for img in data["gorseller"]:
+                writer.writerow([data.get("id"), data.get("adi"), data.get("il"), data.get("ilce"), data.get("mahalle"), img])
+                
     print(f"✅ {data['adi']} -> {g_say} Görsel, {f_say} Fiyat Kaydedildi.")
 
 class RequestHandler(BaseHTTPRequestHandler):
