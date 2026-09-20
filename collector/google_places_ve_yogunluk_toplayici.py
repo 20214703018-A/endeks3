@@ -144,18 +144,46 @@ def init_db(db_path):
     conn.commit()
     conn.close()
 
+# Önceki koşulardan gelen (salt okunur) ana ambar bağlantısı. GitHub Actions'ta her shard
+# sıfır bir DB'ye yazar; "bu sorgu daha önce tarandı mı?" sorusu hem yerel DB'ye hem de
+# --gecmis-db ile verilen ana ambara sorulur. Böylece koşular artımlı (incremental) olur.
+HIST_CONN = None
+# Dolu sonuç veren sorgu bu kadar gün boyunca yenilenmez; boş sonuç verenler daha uzun süre
+# tekrar sorgulanmaz (kırsal mahallelerin her koşuda yeniden dövülmesini engeller).
+REFRESH_DAYS_BASARILI = 6.5
+REFRESH_DAYS_BOS = 45.0
+
+def get_query_history(conn, query):
+    """Sorgunun son kaydını (bulunan_adet, durum, gün_önce) döndürür; yoksa None.
+    Önce yerel shard DB'sine, sonra varsa ana ambara bakar; en yeni kayıt kazanır."""
+    best = None
+    for c in (conn, HIST_CONN):
+        if c is None:
+            continue
+        try:
+            row = c.execute(
+                "SELECT bulunan_adet, durum, julianday('now')-julianday(son_tarama_tarihi) "
+                "FROM google_places_arama_gecmisi WHERE arama_terimi=?",
+                (query,),
+            ).fetchone()
+        except Exception:
+            row = None
+        if row and (best is None or (row[2] is not None and row[2] < best[2])):
+            best = row
+    return best
+
 def is_query_done(conn, query):
-    try:
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT 1 FROM google_places_arama_gecmisi "
-            "WHERE arama_terimi=? AND durum='BASARILI' AND bulunan_adet>0 "
-            "AND julianday('now')-julianday(son_tarama_tarihi)<6.5",
-            (query,),
-        )
-        return cur.fetchone() is not None
-    except Exception:
+    row = get_query_history(conn, query)
+    if not row:
         return False
+    count, status, age = row
+    if age is None:
+        return False
+    if status == "BASARILI" and (count or 0) > 0:
+        return age < REFRESH_DAYS_BASARILI
+    if status == "BOS_SONUC":
+        return age < REFRESH_DAYS_BOS
+    return False
 
 def record_query(conn, query, count, status=None, error_code=None, error_detail=None):
     try:
@@ -568,13 +596,20 @@ def parse_pb_venue_dict(v, query, now_utc):
         "ornek_yorum": comment
     }
 
-def fetch_google_places(query):
-    """Google Maps üzerinden tekil değil, sorguda dönen TÜM ticari işletmeleri zengin liste halinde çeker."""
+PAGE_SIZE = 20
+
+def fetch_google_places(query, offset=0):
+    """Google Maps üzerinden tekil değil, sorguda dönen TÜM ticari işletmeleri zengin liste halinde çeker.
+
+    offset: sayfalama (0, 20, 40 ...). pb parametresindeki `!7i20` sayfa boyu, `!8iN` ise
+    atlanacak sonuç sayısıdır. (Eski sürümde `!8i20` sabitti; yani her sorgunun ilk 20 —
+    en alakalı — sonucu atlanıyor, 20'den az sonucu olan mahalleler "boş" görünüyordu.)
+    """
     encoded_q = urllib.parse.quote(query)
     pb_param = (
         "!4m12!1m3!1d150000!2d35.0!3d39.0"
         "!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1"
-        "!7i20!8i20!10b1!12m8!1m1!18b1!2m3!5m1!6e2!20e3!10b1!16b1"
+        f"!7i{PAGE_SIZE}!8i{int(offset)}!10b1!12m8!1m1!18b1!2m3!5m1!6e2!20e3!10b1!16b1"
         "!19m4!2m3!1i360!2i120!4i8"
         "!20m57!2m2!1i203!2i100!3m2!2i4!5b1!6m6!1m2!1i86!2i86!1m2!1i408!2i240"
         "!7m42!1m3!1e1!2b0!3e3!1m3!1e2!2b1!3e2!1m3!1e2!2b0!3e3!1m3!1e8!2b0!3e3"
@@ -586,8 +621,10 @@ def fetch_google_places(query):
 
     urls = [
         f"https://www.google.com/search?tbm=map&hl=tr&gl=tr&q={encoded_q}&pb={pb_param}",
-        f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}"
     ]
+    if offset == 0:
+        # Yedek uç nokta sayfalama bilmez; yalnızca ilk sayfa için kullanılır.
+        urls.append(f"https://www.google.com/search?tbm=map&tch=1&hl=tr&q={encoded_q}")
 
     headers = {
         "User-Agent": random.choice(USER_AGENTS),
@@ -936,36 +973,139 @@ def get_all_commercial_corridor_queries():
     return queries
 
 MAHALLE_JSON = os.path.join(BASE_DIR, "collector/mahalle_koordinatlari.json")
+REHBER_JSON = os.path.join(BASE_DIR, "collector/turkiye_il_ilce_rehberi.json")
+
+# 6360 sayılı kanun kapsamındaki 30 büyükşehir (slug). Bu illerde köyler "mahalle" olarak
+# listelendiği için isimden köy ayıklamak mümkün değildir; ayrım yoğunluk üzerinden yapılır.
+BUYUKSEHIR_SLUGS = {
+    "istanbul", "ankara", "izmir", "bursa", "antalya", "adana", "konya", "gaziantep", "mersin",
+    "kocaeli", "diyarbakir", "hatay", "manisa", "kayseri", "samsun", "balikesir", "kahramanmaras",
+    "van", "aydin", "denizli", "sakarya", "tekirdag", "mugla", "eskisehir", "mardin", "malatya",
+    "trabzon", "erzurum", "ordu", "sanliurfa",
+}
+
+# Katman (tier) tanımları:
+#  1 = büyükşehirde kentsel mahalle  -> tam derinlik, sayfalama, ek kategoriler
+#  2 = diğer illerde kentsel mahalle -> standart derinlik
+#  3 = kırsal mahalle / eski köy     -> tek sorgu, derinleşme yok
+TIER_PROFILE = {
+    1: {"temel": ("dükkanlar", "restoranlar"), "derin_esik": 3, "max_sayfa": 6, "derin_sayfa": 4, "ek_kategori": True},
+    2: {"temel": ("dükkanlar", "restoranlar"), "derin_esik": 3, "max_sayfa": 3, "derin_sayfa": 2, "ek_kategori": False},
+    3: {"temel": ("dükkanlar",), "derin_esik": None, "max_sayfa": 1, "derin_sayfa": 1, "ek_kategori": False},
+}
+KENTSEL_KOMSU_YARICAP_KM = 2.0   # bu yarıçapta ...
+KENTSEL_KOMSU_ESIK = 2           # ... en az bu kadar başka mahalle varsa "kentsel" sayılır
+
+DEEP_SUBCATEGORIES = [
+    "restoranlar", "kafeler", "pastaneler fırınlar", "marketler bakkallar",
+    "manavlar kuruyemişçiler kasaplar", "giyim mağazaları", "elektronikçiler",
+    "sağlık medikal", "kuaför güzellik", "yapı tesisat", "otomotiv servisleri",
+]
+DEEP_SUBCATEGORIES_EXTRA = [
+    "eczaneler", "oteller pansiyonlar", "spor salonları", "mobilya dekorasyon mağazaları",
+    "emlak ofisleri", "eğitim kursları dershaneler",
+]
+
+# sorgu metni -> {"tier": 1|2|3, "tip": "temel"|"derin"|"koridor"}  (main döngüsü buradan okur)
+QUERY_META = {}
+
+_MAHALLE_CACHE = None
+
+def _load_rehber_names():
+    """slug -> gerçek isim eşlemesi (kandira -> Kandıra, 19mayis -> 19 Mayıs)."""
+    il_map, ilce_map = {}, {}
+    if os.path.exists(REHBER_JSON):
+        try:
+            with open(REHBER_JSON, "r", encoding="utf-8") as f:
+                rehber = json.load(f)
+            for v in rehber.values():
+                il_map[v["city_slug"]] = v["city_name"]
+                for c in v.get("ilceler", []):
+                    ilce_map[(v["city_slug"], c["county_slug"])] = c["county_name"]
+        except Exception:
+            pass
+    return il_map, ilce_map
+
+def load_mahalle_tiers():
+    """Tüm mahalleleri okur, kentsel/kırsal yoğunluk analizini yapar ve
+    [(key, il_adi, ilce_adi, mahalle_adi, tier), ...] listesini (sabit sırayla) döndürür."""
+    global _MAHALLE_CACHE
+    if _MAHALLE_CACHE is not None:
+        return _MAHALLE_CACHE
+    if not os.path.exists(MAHALLE_JSON):
+        _MAHALLE_CACHE = []
+        return _MAHALLE_CACHE
+    import math
+    with open(MAHALLE_JSON, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    il_map, ilce_map = _load_rehber_names()
+    # İsmi "Köyü"/"Mezra" olanlar zaten kırsaldır; geri kalan için yoğunluk ölçülür.
+    keys = [k for k, v in data.items()
+            if "Köyü" not in v.get("name", "") and "Mezra" not in v.get("name", "")
+            and v.get("lat") is not None and v.get("lon") is not None]
+    pts = {k: (float(data[k]["lat"]), float(data[k]["lon"])) for k in keys}
+    cell_lat, cell_lon = 0.02, 0.025   # ~2.2 km hücreler
+    grid = {}
+    for k, (la, lo) in pts.items():
+        grid.setdefault((int(la / cell_lat), int(lo / cell_lon)), []).append(k)
+
+    def komsu_sayisi(k):
+        la, lo = pts[k]
+        gi, gj = int(la / cell_lat), int(lo / cell_lon)
+        n = 0
+        cos_la = math.cos(math.radians(la))
+        for i in (gi - 1, gi, gi + 1):
+            for j in (gj - 1, gj, gj + 1):
+                for o in grid.get((i, j), ()):
+                    if o == k:
+                        continue
+                    dl = (pts[o][0] - la) * 111.0
+                    dn = (pts[o][1] - lo) * 111.0 * cos_la
+                    if dl * dl + dn * dn <= KENTSEL_KOMSU_YARICAP_KM ** 2:
+                        n += 1
+        return n
+
+    out = []
+    for k in keys:
+        parts = k.split("_")
+        il_slug = parts[0]
+        ilce_slug = parts[1] if len(parts) > 1 else ""
+        il = il_map.get(il_slug, il_slug.capitalize())
+        ilce = ilce_map.get((il_slug, ilce_slug), ilce_slug.capitalize())
+        mah = data[k].get("name", "").replace("Mahallesi", "").strip()
+        kentsel = komsu_sayisi(k) >= KENTSEL_KOMSU_ESIK
+        tier = 1 if (kentsel and il_slug in BUYUKSEHIR_SLUGS) else (2 if kentsel else 3)
+        out.append((k, il, ilce, mah, tier))
+    _MAHALLE_CACHE = out
+    return out
+
+def build_mahalle_queries(mah_entries):
+    """Mahalle kayıtlarından katmana göre temel sorguları üretir ve QUERY_META'yı doldurur."""
+    queries = []
+    for _key, il, ilce, mah, tier in mah_entries:
+        prefix = f"{mah} Mahallesi {ilce} {il}".replace("  ", " ").strip()
+        for suffix in TIER_PROFILE[tier]["temel"]:
+            q = f"{prefix} {suffix}"
+            QUERY_META[q] = {"tier": tier, "tip": "temel"}
+            queries.append(q)
+    return queries
 
 def get_mahalle_queries_by_shard(shard_id, total_shards=40, limit=None):
-    """Her shard için Türkiye'nin 32.973 kentsel mahallesinden dengeli bir dilim seçer."""
-    if not os.path.exists(MAHALLE_JSON):
-        return []
+    """Her shard için mahalleleri sırayla dağıtır (i % total == shard-1). Ardışık dilimleme
+    yerine serpiştirme kullanılır ki her shard'a büyükşehir ve kırsal karışık düşsün
+    (koşu süreleri dengelenir)."""
     try:
-        with open(MAHALLE_JSON, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        # Kentsel / ticari mahalleleri köy ve mezralardan ayır
-        urban_keys = [
-            k for k, v in data.items() 
-            if "Köyü" not in v.get("name", "") and "Mezra" not in v.get("name", "")
-        ]
-        step = max(1, len(urban_keys) // total_shards)
-        start = (shard_id - 1) * step
-        end = start + step if shard_id < total_shards else len(urban_keys)
-        shard_keys = urban_keys[start:end]
+        entries = [e for i, e in enumerate(load_mahalle_tiers()) if i % total_shards == shard_id - 1]
         if limit and limit > 0:
-            shard_keys = shard_keys[:limit]
-        
-        queries = []
-        for k in shard_keys:
-            parts = k.split("_")
-            il = parts[0].capitalize()
-            ilce = parts[1].capitalize() if len(parts) > 1 else ""
-            mah = data[k].get("name", "").replace("Mahallesi", "").strip()
-            queries.append(f"{mah} Mahallesi {ilce} {il} dükkanlar")
-            queries.append(f"{mah} Mahallesi {ilce} {il} restoranlar")
-        return queries
-    except Exception:
+            entries = entries[:limit]
+        counts = {1: 0, 2: 0, 3: 0}
+        for e in entries:
+            counts[e[4]] += 1
+        print(f"Shard {shard_id}/{total_shards} mahalle katmanları: "
+              f"büyükşehir-kentsel={counts[1]} kentsel={counts[2]} kırsal={counts[3]}")
+        return build_mahalle_queries(entries)
+    except Exception as e:
+        print(f"[!] Mahalle sorguları üretilemedi: {e}")
         return []
 
 
@@ -1032,7 +1172,9 @@ def get_commercial_corridors_by_shard(shard_id, total_shards=40, mahalle_limit=N
     start = (shard_id - 1) * step
     end = start + step if shard_id < total_shards else len(all_corridors)
     corridor_slice = all_corridors[start:end]
-    
+    for q in corridor_slice:
+        QUERY_META[q] = {"tier": 1, "tip": "koridor"}
+
     # Mahalle Mahalle detaylı aramaları ekle (mahalle_limit None ise shard'daki TÜM kentsel mahalleleri alır)
     mahalle_slice = get_mahalle_queries_by_shard(shard_id, total_shards, limit=mahalle_limit)
     street_slice = get_street_queries_by_shard(shard_id, total_shards, limit=street_limit)
@@ -1067,6 +1209,7 @@ def sync_to_bati_warehouse(venue):
         pass
 
 def main():
+    global HIST_CONN, REFRESH_DAYS_BASARILI, REFRESH_DAYS_BOS
     parser = argparse.ArgumentParser(description="GEOPROP Google Places & Ticari Yoğunluk Toplayıcı (81 İl & 40 Shard)")
     parser.add_argument("--num-shards", type=int, default=40, help="Total shards")
     parser.add_argument("--shard", type=str, help="Shard numarası (örn: 1/40)")
@@ -1078,7 +1221,26 @@ def main():
     parser.add_argument("--no-deep", action="store_true", help="Yoğun ticari mahallelerde otonom derinleştirmeyi devre dışı bırakır")
     parser.add_argument("--force", action="store_true", help="Daha önce taranmış sorguları atlamadan yeniden tara")
     parser.add_argument("--all", action="store_true", help="Tüm 81 il sorgularını tek seferde çalıştır")
+    parser.add_argument("--gecmis-db", type=str, default=None,
+                        help="Önceki koşuların birleşik ana ambarı (salt okunur). Orada yakın tarihte taranmış sorgular atlanır.")
+    parser.add_argument("--yenileme-gunu", type=float, default=REFRESH_DAYS_BASARILI,
+                        help="Dolu sonuç veren sorgunun kaç gün sonra yeniden taranacağı (varsayılan 6.5)")
+    parser.add_argument("--bos-yenileme-gunu", type=float, default=REFRESH_DAYS_BOS,
+                        help="Boş sonuç veren sorgunun kaç gün sonra yeniden denenceği (varsayılan 45)")
     args = parser.parse_args()
+
+    REFRESH_DAYS_BASARILI = args.yenileme_gunu
+    REFRESH_DAYS_BOS = args.bos_yenileme_gunu
+    if args.gecmis_db and os.path.exists(args.gecmis_db) and os.path.abspath(args.gecmis_db) != os.path.abspath(args.out):
+        try:
+            HIST_CONN = sqlite3.connect(f"file:{os.path.abspath(args.gecmis_db)}?mode=ro", uri=True)
+            n_hist = HIST_CONN.execute("SELECT COUNT(*) FROM google_places_arama_gecmisi").fetchone()[0]
+            print(f"📚 Geçmiş ambar bağlandı: {args.gecmis_db} ({n_hist:,} sorgu kaydı) — yakın tarihli sorgular atlanacak.")
+        except Exception as e:
+            print(f"[!] Geçmiş ambar açılamadı ({e}); sıfırdan taranacak.")
+            HIST_CONN = None
+    elif args.gecmis_db:
+        print(f"ℹ️ Geçmiş ambar bulunamadı ({args.gecmis_db}); ilk koşu gibi sıfırdan taranacak.")
 
     init_db(args.out)
     conn = sqlite3.connect(args.out)
@@ -1113,8 +1275,32 @@ def main():
 
     success = 0
     processed = 0
+    skipped = 0
+    pages_fetched = 0
     start_time = time.time()
     deep_enabled = not args.no_deep
+
+    def enqueue_deep(q, found_count):
+        """'dükkanlar' sorgusunda yeterli işletme bulunduysa mahallenin alt kategori
+        sorgularını kuyruğa ekler. Katman 3 (kırsal) hiç derinleşmez."""
+        if not deep_enabled or " dükkanlar" not in q:
+            return
+        meta = QUERY_META.get(q, {"tier": 2, "tip": "temel"})
+        profile = TIER_PROFILE[meta["tier"]]
+        if profile["derin_esik"] is None or found_count < profile["derin_esik"]:
+            return
+        base_prefix = q.replace(" dükkanlar", "").strip()
+        cats = list(DEEP_SUBCATEGORIES) + (DEEP_SUBCATEGORIES_EXTRA if profile["ek_kategori"] else [])
+        for sub_cat in cats:
+            sub_q = f"{base_prefix} {sub_cat}"
+            if sub_q in seen_queries:
+                continue
+            seen_queries.add(sub_q)
+            QUERY_META[sub_q] = {"tier": meta["tier"], "tip": "derin"}
+            if not args.force and is_query_done(conn, sub_q):
+                continue
+            work_queue.append(sub_q)
+        print(f"  [⚡ Otonom Derinleştirme] Katman {meta['tier']} ticari aks -> {len(cats)} alt kategori kuyruğa eklendi: '{base_prefix}'", flush=True)
 
     while work_queue:
         if args.max_seconds and (time.time() - start_time) >= args.max_seconds:
@@ -1124,16 +1310,45 @@ def main():
 
         q = work_queue.popleft()
 
-        # Önceden işlenmişse ve force yoksa hızlıca atla (otonom kaldığı yerden devam)
+        # Önceden işlenmişse ve force yoksa hızlıca atla (otonom kaldığı yerden devam).
+        # Atlanan bir temel sorgunun geçmişteki sonucu yeterliyse derinleşme yine kuyruğa girer;
+        # böylece önceki koşuda süre yetmediği için yarım kalan alt kategoriler tamamlanır.
         if not args.force and is_query_done(conn, q):
+            skipped += 1
+            hist = get_query_history(conn, q)
+            if hist:
+                enqueue_deep(q, hist[0] or 0)
             continue
 
         processed += 1
         elapsed = time.time() - start_time
         rate = processed / elapsed if elapsed > 0 else 0
-        print(f"[{processed}] (Kuyrukta: {len(work_queue)} | Hız: {rate:.1f} sorgu/sn) Sorgu: '{q}'...", flush=True)
+        print(f"[{processed}] (Kuyrukta: {len(work_queue)} | Atlanan: {skipped} | Hız: {rate:.1f} sorgu/sn) Sorgu: '{q}'...", flush=True)
 
-        venues = fetch_google_places(q)
+        meta = QUERY_META.get(q, {"tier": 2, "tip": "temel"})
+        profile = TIER_PROFILE[meta["tier"]]
+        max_pages = profile["derin_sayfa"] if meta["tip"] == "derin" else profile["max_sayfa"]
+
+        # Sayfalama: sayfa doluysa (20 sonuç) ve katman izin veriyorsa bir sonraki sayfayı da çek.
+        venues = []
+        seen_ids = set()
+        for page in range(max_pages):
+            page_venues = fetch_google_places(q, offset=page * PAGE_SIZE)
+            pages_fetched += 1
+            new_in_page = 0
+            for v in page_venues:
+                identity = v.get("google_place_id") or (v["isim"], v["lat"], v["lon"])
+                if identity in seen_ids:
+                    continue
+                seen_ids.add(identity)
+                venues.append(v)
+                new_in_page += 1
+            if len(page_venues) < PAGE_SIZE or new_in_page == 0:
+                break
+            time.sleep(random.uniform(0.3, 0.6))
+        if len(venues) > PAGE_SIZE:
+            print(f"  [📄 Sayfalama] {q} -> {len(venues)} sonuç ({min(max_pages, (len(venues) + PAGE_SIZE - 1) // PAGE_SIZE)} sayfa)", flush=True)
+
         if venues:
             for res in venues:
                 save_venue(conn, res)
@@ -1152,22 +1367,9 @@ def main():
                     metrics_str = "(0 değerlendirme)"
                 print(f"  -> Bulundu: {res['isim']} | Kat: {res['ana_kategori']} | {puan_str} {metrics_str} | ({res['lat']:.4f}, {res['lon']:.4f})", flush=True)
 
-            # OTONOM DERİNLEŞTİRME:
-            # Eğer bir mahallenin 'dükkanlar' sorgusunda >= 3 işletme bulunduysa,
-            # o mahallenin ticari bir çarşısı olduğu kesindir.
-            # Otonom olarak kafeler, marketler ve mağazalar için derinleşme sorgularını kuyruğa ekle!
-            if deep_enabled and len(venues) >= 3 and " dükkanlar" in q:
-                base_prefix = q.replace(" dükkanlar", "").strip()
-                for sub_cat in [
-                    "restoranlar", "kafeler", "pastaneler fırınlar", "marketler bakkallar",
-                    "manavlar kuruyemişçiler kasaplar", "giyim mağazaları", "elektronikçiler",
-                    "sağlık medikal", "kuaför güzellik", "yapı tesisat", "otomotiv servisleri",
-                ]:
-                    sub_q = f"{base_prefix} {sub_cat}"
-                    if sub_q not in seen_queries and not is_query_done(conn, sub_q):
-                        seen_queries.add(sub_q)
-                        work_queue.append(sub_q)
-                        print(f"  [⚡ Otonom Derinleştirme] Yoğun ticari aks tespit edildi -> Kuyruğa eklendi: '{sub_q}'", flush=True)
+            # OTONOM DERİNLEŞTİRME (katmana göre): 'dükkanlar' sorgusunda yeterli işletme
+            # bulunan mahallede alt kategori sorguları kuyruğa eklenir; kırsal katman derinleşmez.
+            enqueue_deep(q, len(venues))
         else:
             print(f"  -> Sonuç alınamadı: {q}", flush=True)
 
@@ -1175,7 +1377,10 @@ def main():
         time.sleep(random.uniform(0.4, 0.8))
 
     conn.close()
-    print(f"\nİşlem tamamlandı. Toplam {processed} sorgudan {success} mekan ambarlandı.", flush=True)
+    if HIST_CONN is not None:
+        HIST_CONN.close()
+    print(f"\nİşlem tamamlandı. Toplam {processed} sorgu ({pages_fetched} sayfa isteği) işlendi, "
+          f"{skipped} sorgu geçmişten atlandı, {success} mekan ambarlandı.", flush=True)
     print(f"Çıktı DB: {args.out}", flush=True)
 
 if __name__ == "__main__":
