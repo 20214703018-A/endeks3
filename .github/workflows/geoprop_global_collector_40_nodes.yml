@@ -80,11 +80,8 @@ jobs:
       - name: Restoran Menü, Fiyat ve Google Places (QR Dahil) Taraması
         run: python collector/google_qr_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
 
-      - name: Emlak İlanları ve Gerçek Devren İlan Yoğunluğu
-        run: python collector/ilan_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
-
-      - name: Kargo, Lojistik, Gel-Al PUDO ve Darkstore Ağı
-        run: python collector/kargo_darkstore_teslimat_toplayici.py --shard ${{ matrix.shard }} --num-shards 40 || true
+      # Emlak ilanları bu koşudan çıkarıldı: kendi workflow'u var (ilan_toplayici.yml, elle tetiklenir).
+      # Kargo/darkstore adımı da çıkarıldı: 0 kayıt üretiyordu (Trendyol API erişilemiyor, Amazon/PTT entegre değil).
 
       - name: Airbnb İlçe Bazlı Doluluk ve Fiyat Endeksi (6 vade)
         run: |
