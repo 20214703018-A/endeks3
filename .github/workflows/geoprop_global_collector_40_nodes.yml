@@ -9,8 +9,9 @@ name: "GEOPROP Global Veri Madencisi (40x Paralel Matris)"
 
 on:
   schedule:
-    # Günde iki kez çalıştır (Gece ve Öğlen)
-    - cron: '0 2,14 * * *'
+    # Haftada bir: Cumartesi 02:00 UTC (05:00 TR). Tam geçiş ~4 saat sürer; 6.5 günlük
+    # yenileme süresi haftalık ritimle örtüşür (her koşu tüm sorguları tazeler).
+    - cron: '0 2 * * 6'
   workflow_dispatch:
     inputs:
       google_max_saniye:
@@ -24,6 +25,12 @@ on:
 
 permissions:
   contents: write   # release asset yükleme/indirme için
+
+# Aynı anda tek koşu: elle tetiklenen koşu sürerken zamanlanmış koşu gelirse kuyrukta bekler
+# (iptal edilmez); iki koşunun merge/release adımı birbiriyle yarışmaz.
+concurrency:
+  group: geoprop-40-node
+  cancel-in-progress: false
 
 env:
   AMBAR_RELEASE: warehouse-latest
