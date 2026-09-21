@@ -79,3 +79,19 @@ Eşleştirme (poi_matcher kanıt modeli, 250 m, ad+mesafe+kategori): very_high 1
 Yeni tablolar: `venue_delivery_observation` 513 (puan, puan sayısı, min sepet, teslimat süresi alt/üst, ücret toplam/orijinal, sağlayıcı, saatler; not: platformun varsayılan konum tahmini) · `menu_item_observation` 29.340 (29.332 fiyatlı; başlık, açıklama, kategori, indirimli fiyat, tükendi). Hepsi poi_id'ye bağlı (bağsız 0).
 Kapsam etiketi artık çoklu: google_only 575.165 · osm_only 68.144 · google+osm 9.171 · yemeksepeti_only 457 · google+yemeksepeti 21 · osm+yemeksepeti 7. Bütünlük: poi_id tekil ✅ · YS muhasebesi 485 = 28 + 457 ✅ · yetim bağ 0.
 Yorum: YS restoranlarının çoğu Google koleksiyonunda yok (sanal mutfak / kategori aramasına girmeyen işletmeler) — kapsam farkı, §6.4 gereği açılış olarak yorumlanmaz.
+
+## v1.5 — Resmî bağlam serileri + POI güncellemeleri (2026-09-21)
+`indicator_observation` (yeni, uzun biçim): **332.363 gözlem**, hepsi resmî (official_public, öncelik 100), kaynaklar arası birleştirme yok:
+| Alan | Gözlem | Kaynak | Doğrulama |
+|---|---|---|---|
+| housing_sales | 159.312 | TÜİK MEDAS ilçe×ay 2013→2026-07 (revize seri) + TÜİK bülten xls ilçe yıllık 2015–2025 (revizyon öncesi, ayrı series_version) | 2025 Oca–Ağu toplamı **1.020.207 = bülten** ✅ |
+| construction_permit | 124.466 | yapı izin il (çeyrek + yıl satırları, period_kind ayrı) · ilçe yıl · ruhsat kullanım amacı m² | 2019–2025 ulusal + 81 il birebir ✅ |
+| banking | 26.244 | BDDK FinTürk il × dönem (4 tablo) | Adana 2024-12 birebir ✅ |
+| card_spending | 8.970 | BKM Türkiye geneli sektör × ay/yıl (geo_id GEO_TR) | 2024-11 birebir ✅ |
+| migration | 6.885 | TÜİK iller arası göç (il, 2008–2024) | 2024 toplam + 13 il birebir ✅ |
+| socio_economic | 6.324 | TÜİK SES 2023 (il + ilçe) | yapısal |
+| household | 162 | TÜİK NKS 2021 hanehalkı | yapısal |
+Bağlanamayan: yapı izin ilçe 84 + ruhsat amacı 351 satır (bizim 973 ilçe listesinde olmayan TÜİK kodları — kapatılmış/birleşmiş ilçeler; raporda muhasebeleşti).
+POI: `source_id_kind` (collector_hash 568.072 · google_place_id 16.178 · osm_ref 68.151 · yemeksepeti 457) · v3 kategori high bandı uygulandı (2.156; review adayları `poi_category_candidate` 4.932) · sektör ipucu 33.330 kayıtta · koordinat kurtarma 0 (kimlik ad+koordinattan türetildiği için aynı kimliğin başka gözlemi de aynı bozuk koordinatı taşıyor — beklenen).
+Analitik: `analytics.ilce_intelligence` (nüfus, konut satış 2024/2025/son 12 ay, yapı ruhsatı & kullanma izni 2025, SES, POI/restoran sayıları — il düzeyi güvenilir atamayla) · `ilce_poi_stats` · mahalle_poi_stats'a `poi_type_unknown_count`.
+Örnek — Kadıköy: nüfus 458.573 · konut satışı 2025: 12.188 · son 12 ay 11.197 · yapı ruhsatı 2025: 8.661 daire · SES 176,2 · 4.889 işletme (649 restoran).
