@@ -79,7 +79,8 @@ def init_db(db_path):
         guncellenme_tarihi TEXT NOT NULL
     )
     """)
-    for col_def in [("sektor", "TEXT"), ("alt_kategoriler", "TEXT"), ("degerlendirme_sayisi", "INTEGER"), ("yildiz_dagilimi", "TEXT")]:
+    for col_def in [("sektor", "TEXT"), ("alt_kategoriler", "TEXT"), ("degerlendirme_sayisi", "INTEGER"), ("yildiz_dagilimi", "TEXT"),
+                    ("feature_id", "TEXT"), ("gcid_kategoriler", "TEXT"), ("posta_kodu", "TEXT"), ("web_sitesi", "TEXT")]:
         try:
             cur.execute(f"ALTER TABLE google_places_ticari_yogunluk ADD COLUMN {col_def[0]} {col_def[1]}")
         except sqlite3.OperationalError:
@@ -137,6 +138,7 @@ def init_db(db_path):
     )
     """)
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gp_yorum_place ON google_places_yorumlar_ve_niyet(google_place_id)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_gp_gozlem_place ON google_places_gozlem(google_place_id, observed_at)")
     try:
         cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN ornek_yorum TEXT")
     except sqlite3.OperationalError:
@@ -563,34 +565,101 @@ def parse_pb_venue_dict(v, query, now_utc):
     if not lat or not lon:
         return None
 
-    place_id = hashlib.sha256(f"{name}_{lat}_{lon}".encode("utf-8")).hexdigest()[:24]
-    cid = str(abs(hash(place_id)) % (10**18))
+    # --- Kimlik: Google'ın gerçek CID'si (1205891[0] = [ftid_ust, cid]). Eski sürüm
+    # isim+koordinat hash'i ve Python hash() kullanıyordu (hash() her süreçte farklı sonuç verir).
+    cid = None
+    feature_id = None
+    try:
+        ids = v["1205891"][0]
+        if isinstance(ids, list) and len(ids) >= 2 and str(ids[1]).isdigit():
+            cid = str(ids[1])
+            feature_id = f"0x{int(ids[0]):x}:0x{int(ids[1]):x}"
+    except Exception:
+        pass
+    if not feature_id:
+        try:
+            feature_id = v["328137525"][2][0] or None
+        except Exception:
+            pass
+    place_id = cid or hashlib.sha256(f"{name}_{lat}_{lon}".encode("utf-8")).hexdigest()[:24]
 
-    parts = query.split()
-    il = parts[-2] if len(parts) >= 2 else ""
-    ilce = parts[-3] if len(parts) >= 3 else ""
+    # --- Yapılandırılmış adres: 1205891[4][0][1] = [[tip, null, [[metin, dil, ...]], id], ...]
+    # Bileşenler özelden genele sıralı: ... sokak, mahalle, ilçe, il, "TR", posta kodu.
+    adres_parcalari = []
+    try:
+        for comp in v["1205891"][4][0][1]:
+            try:
+                txt = comp[2][0][0]
+            except Exception:
+                txt = None
+            if isinstance(txt, str) and txt.strip():
+                adres_parcalari.append(txt.strip())
+    except Exception:
+        pass
+    il = ilce = mahalle = posta_kodu = None
+    sokak_parcalari = adres_parcalari
+    if "TR" in adres_parcalari:
+        i_tr = adres_parcalari.index("TR")
+        il = adres_parcalari[i_tr - 1] if i_tr >= 1 else None
+        ilce = adres_parcalari[i_tr - 2] if i_tr >= 2 else None
+        mahalle = adres_parcalari[i_tr - 3] if i_tr >= 3 else None
+        posta_kodu = adres_parcalari[i_tr + 1] if len(adres_parcalari) > i_tr + 1 else None
+        sokak_parcalari = adres_parcalari[:max(0, i_tr - 3)]
+    if il and il not in IL_ADLARI:
+        # "TR-10" gibi bölge kodu ya da eksik bileşenli adres: bir kaydırıp tekrar dene
+        if re.fullmatch(r"TR-\d+", il) and "TR" in adres_parcalari:
+            i_tr = adres_parcalari.index("TR")
+            il = adres_parcalari[i_tr - 2] if i_tr >= 2 else None
+            ilce = adres_parcalari[i_tr - 3] if i_tr >= 3 else None
+            mahalle = adres_parcalari[i_tr - 4] if i_tr >= 4 else None
+            sokak_parcalari = adres_parcalari[:max(0, i_tr - 4)]
+        if il not in IL_ADLARI:
+            il = None
+    if not il:
+        # Adres yoksa/ayrıştırılamadıysa sorgu meta verisinden (mahalle/ilçe/il) al
+        meta = QUERY_META.get(query) or {}
+        il, ilce, mahalle = meta.get("il"), meta.get("ilce"), meta.get("mahalle")
+    tam_adres = ", ".join(x for x in [", ".join(sokak_parcalari) if sokak_parcalari else None,
+                                       f"{mahalle} Mahallesi" if mahalle else None,
+                                       f"{posta_kodu} {ilce}/{il}" if (ilce and il) else None] if x) or None
+
+    web_sitesi = None
+    try:
+        web_sitesi = v["1205891"][68][0][0] or None
+    except Exception:
+        pass
+    gcid = None
+    try:
+        gcid = json.dumps([g[0][0] for g in v["1205891"][69][0] if g and g[0] and isinstance(g[0][0], str)], ensure_ascii=False) or None
+    except Exception:
+        pass
 
     return {
         "google_place_id": place_id,
         "cid": cid,
+        "feature_id": feature_id,
         "isim": name,
         "arama_terimi": query,
         "ana_kategori": categories[0] if categories else "Ticari Mekan",
         "alt_kategoriler": json.dumps(categories[1:], ensure_ascii=False) if len(categories) > 1 else None,
         "tum_kategoriler": json.dumps(categories, ensure_ascii=False) if categories else None,
+        "gcid_kategoriler": gcid,
         "puan": rating,
         "yorum_sayisi": reviews_count,
         "degerlendirme_sayisi": reviews_count,
         "yildiz_dagilimi": None,
-        "tam_adres": f"{query.replace('restoranlar', '').replace('dükkanlar', '').strip()}",
-        "mahalle": parts[0] if len(parts) > 0 else None,
+        "tam_adres": tam_adres,
+        "mahalle": mahalle,
         "ilce": ilce,
         "il": il,
+        "posta_kodu": posta_kodu,
         "lat": lat,
         "lon": lon,
         "telefon": None,
         "calisma_saatleri": None,
-        "maps_url": f"https://www.google.com/maps/search/?api=1&query={lat},{lon}",
+        "web_sitesi": web_sitesi,
+        "maps_url": (f"https://maps.google.com/?cid={cid}" if cid
+                     else f"https://www.google.com/maps/search/?api=1&query={lat},{lon}"),
         "kaynak": "Google Maps PB",
         "guncellenme_tarihi": now_utc,
         "ornek_yorum": comment
@@ -686,6 +755,28 @@ def fetch_google_places(query, offset=0):
 
     return venues
 
+_SON_GOZLEM_CACHE = {}
+
+def _son_gozlem_hash(conn, place_id):
+    """Bu işletme için kayıtlı son gözlemin payload_sha256'sı (önce yerel, sonra ana ambar)."""
+    if place_id in _SON_GOZLEM_CACHE:
+        return _SON_GOZLEM_CACHE[place_id]
+    h = None
+    for c in (conn, HIST_CONN):
+        if c is None:
+            continue
+        try:
+            row = c.execute(
+                "SELECT payload_sha256 FROM google_places_gozlem WHERE google_place_id=? ORDER BY observed_at DESC LIMIT 1",
+                (place_id,)).fetchone()
+        except Exception:
+            row = None
+        if row:
+            h = row[0]
+            break
+    _SON_GOZLEM_CACHE[place_id] = h
+    return h
+
 def save_venue(conn, venue):
 
     # KURAL: Koordinatsız işletme kaydedilmez
@@ -703,12 +794,21 @@ def save_venue(conn, venue):
     if not venue.get("ana_kategori") or venue.get("ana_kategori") == "Ticari Mekan":
         venue["ana_kategori"] = canonical_category
     observed_at = venue["guncellenme_tarihi"]
-    payload = json.dumps(venue, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    # Gözlem (zaman serisi) satırı yalnızca izlenen alanlar değiştiyse yazılır. Eskiden her
+    # görülüşte tam satır yazılıyordu: haftada ~3 milyon satır (~1 GB) şişme demekti.
+    # payload_sha256 = sadece değişmesi anlamlı alanların özeti; son gözlemle aynıysa atlanır.
+    izlenen = {k: venue.get(k) for k in ("puan", "yorum_sayisi", "degerlendirme_sayisi", "ana_kategori", "isim", "calisma_saatleri")}
+    payload = json.dumps(izlenen, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     payload_hash = hashlib.sha256(payload.encode("utf-8")).hexdigest()
     observation_id = hashlib.sha256(
         f"google_places|{venue['google_place_id']}|{observed_at}|{payload_hash}".encode("utf-8")
     ).hexdigest()
-    cur.execute("""
+    if _son_gozlem_hash(conn, venue["google_place_id"]) == payload_hash:
+        gozlem_yaz = False
+    else:
+        gozlem_yaz = True
+    if gozlem_yaz:
+      cur.execute("""
     INSERT OR IGNORE INTO google_places_gozlem (
         observation_id, google_place_id, observed_at, arama_terimi, isim,
         ana_kategori, tum_kategoriler, puan, yorum_sayisi, degerlendirme_sayisi,
@@ -723,12 +823,14 @@ def save_venue(conn, venue):
         venue["lat"], venue["lon"], venue.get("telefon"), venue.get("calisma_saatleri"),
         venue.get("maps_url"), venue.get("kaynak") or "Google Places", payload_hash,
     ))
+      _SON_GOZLEM_CACHE[venue["google_place_id"]] = payload_hash
     cur.execute("""
     INSERT OR REPLACE INTO google_places_ticari_yogunluk (
         google_place_id, cid, isim, arama_terimi, sektor, ana_kategori, alt_kategoriler, tum_kategoriler,
         puan, yorum_sayisi, degerlendirme_sayisi, yildiz_dagilimi, tam_adres, mahalle, ilce, il,
-        lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi, ornek_yorum
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        lat, lon, telefon, calisma_saatleri, maps_url, kaynak, guncellenme_tarihi, ornek_yorum,
+        feature_id, gcid_kategoriler, posta_kodu, web_sitesi
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         venue["google_place_id"],
         venue["cid"],
@@ -753,7 +855,11 @@ def save_venue(conn, venue):
         venue["maps_url"],
         venue["kaynak"],
         venue["guncellenme_tarihi"],
-        venue.get("ornek_yorum")
+        venue.get("ornek_yorum"),
+        venue.get("feature_id"),
+        venue.get("gcid_kategoriler"),
+        venue.get("posta_kodu"),
+        venue.get("web_sitesi"),
     ))
     if venue.get("ornek_yorum"):
         try:
@@ -1009,6 +1115,14 @@ DEEP_SUBCATEGORIES_EXTRA = [
 # sorgu metni -> {"tier": 1|2|3, "tip": "temel"|"derin"|"koridor"}  (main döngüsü buradan okur)
 QUERY_META = {}
 
+def _il_adlari():
+    try:
+        with open(REHBER_JSON, "r", encoding="utf-8") as f:
+            return {v["city_name"] for v in json.load(f).values()}
+    except Exception:
+        return set()
+IL_ADLARI = _il_adlari()
+
 _MAHALLE_CACHE = None
 
 def _load_rehber_names():
@@ -1086,7 +1200,7 @@ def build_mahalle_queries(mah_entries):
         prefix = f"{mah} Mahallesi {ilce} {il}".replace("  ", " ").strip()
         for suffix in TIER_PROFILE[tier]["temel"]:
             q = f"{prefix} {suffix}"
-            QUERY_META[q] = {"tier": tier, "tip": "temel"}
+            QUERY_META[q] = {"tier": tier, "tip": "temel", "il": il, "ilce": ilce, "mahalle": mah}
             queries.append(q)
     return queries
 
@@ -1296,7 +1410,8 @@ def main():
             if sub_q in seen_queries:
                 continue
             seen_queries.add(sub_q)
-            QUERY_META[sub_q] = {"tier": meta["tier"], "tip": "derin"}
+            QUERY_META[sub_q] = {"tier": meta["tier"], "tip": "derin",
+                                 "il": meta.get("il"), "ilce": meta.get("ilce"), "mahalle": meta.get("mahalle")}
             if not args.force and is_query_done(conn, sub_q):
                 continue
             work_queue.append(sub_q)

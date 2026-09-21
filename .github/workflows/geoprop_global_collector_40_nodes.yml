@@ -64,7 +64,9 @@ jobs:
       - name: Önceki Koşuların Ambarını İndir (artımlı tarama için)
         run: |
           mkdir -p warehouse/master warehouse/product
-          if gh release download "$AMBAR_RELEASE" --pattern '*.sqlite' --dir warehouse/master --repo "$GITHUB_REPOSITORY" 2>/dev/null; then
+          # Ambar dosyaları release'te gzip'li durur (GitHub asset sınırı 2 GB; ham SQLite bunu aşar).
+          if gh release download "$AMBAR_RELEASE" --pattern '*.sqlite.gz' --dir warehouse/master --repo "$GITHUB_REPOSITORY" 2>/dev/null; then
+            gunzip -f warehouse/master/*.sqlite.gz
             ls -la warehouse/master
           else
             echo "ℹ️ '$AMBAR_RELEASE' release'i yok ya da boş — ilk koşu, sıfırdan taranacak."
@@ -102,9 +104,10 @@ jobs:
   merge_and_publish:
     name: "Bütün Shard'ları Birleştir ve Ana Ambarı Güncelle"
     needs: [heavy_data_mining_shards]
-    if: always()   # bazı shard'lar zaman aşımına uğrasa da başarılı olanların verisi ambara girsin
+    # Bazı shard'lar zaman aşımına uğrasa da başarılı olanların verisi ambara girsin; koşu iptal edildiyse çalışma.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - name: Repoyu Klonla
         uses: actions/checkout@v4
@@ -112,8 +115,11 @@ jobs:
       - name: Önceki Ambarı İndir
         run: |
           mkdir -p warehouse/product
-          gh release download "$AMBAR_RELEASE" --pattern '*.sqlite' --dir warehouse/product --repo "$GITHUB_REPOSITORY" 2>/dev/null \
-            || echo "ℹ️ Önceki ambar yok; shard'lardan sıfırdan oluşturulacak."
+          if gh release download "$AMBAR_RELEASE" --pattern '*.sqlite.gz' --dir warehouse/product --repo "$GITHUB_REPOSITORY" 2>/dev/null; then
+            gunzip -f warehouse/product/*.sqlite.gz
+          else
+            echo "ℹ️ Önceki ambar yok; shard'lardan sıfırdan oluşturulacak."
+          fi
 
       - name: Tüm Shard Artifact'lerini İndir
         uses: actions/download-artifact@v4
@@ -134,7 +140,21 @@ jobs:
               --title "GEOPROP Kalıcı Veri Ambarı (son koşu)" \
               --notes "40-node madencinin birleşik SQLite ambarı. Her koşuda üzerine yazılır; geçmiş için Actions artifact'lerine bakın."
           fi
-          gh release upload "$AMBAR_RELEASE" warehouse/product/*.sqlite --clobber --repo "$GITHUB_REPOSITORY"
+          mkdir -p release_out
+          for f in warehouse/product/*.sqlite; do
+            gzip -1 -c "$f" > "release_out/$(basename "$f").gz"
+          done
+          ls -la release_out
+          # GitHub asset sınırı 2 GB (2147483648 bayt): aşan dosya yüklenmez, koşu hata verir.
+          for f in release_out/*.gz; do
+            sz=$(stat -c %s "$f")
+            if [ "$sz" -ge 2147483648 ]; then echo "::error::$f 2 GB sınırını aşıyor ($sz bayt)"; exit 1; fi
+          done
+          # Eski sürümden kalan ham .sqlite asset'leri varsa kaldır (artık .gz kullanılıyor)
+          for a in $(gh release view "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' | grep -E '\.sqlite$' || true); do
+            gh release delete-asset "$AMBAR_RELEASE" "$a" --yes --repo "$GITHUB_REPOSITORY" || true
+          done
+          gh release upload "$AMBAR_RELEASE" release_out/*.gz --clobber --repo "$GITHUB_REPOSITORY"
           gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" \
             --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — koşu ${{ github.run_id }}"
 
