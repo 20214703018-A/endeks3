@@ -231,7 +231,7 @@ def secilecek_isletmeler(master_path, shard, num_shards, hist_conn, yenileme_gun
         if pid in taranmis:
             continue
         oncelik = (1 if il in BUYUKSEHIR else 0, yorum)
-        secim.append((oncelik, pid, ftid, isim, lat, lon))
+        secim.append((oncelik, pid, ftid, isim, lat, lon, yorum))
     secim.sort(key=lambda x: x[0], reverse=True)
     if limit:
         secim = secim[:limit]
@@ -266,7 +266,7 @@ def main():
     t0 = time.time()
     n_ok = n_kismi = n_hata = n_yorum = 0
     ardisik_kismi = 0
-    for i, (pid, ftid, isim, lat, lon) in enumerate(hedef, 1):
+    for i, (pid, ftid, isim, lat, lon, master_yorum) in enumerate(hedef, 1):
         if args.max_seconds and time.time() - t0 >= args.max_seconds:
             print(f"⏰ Süre sınırı ({args.max_seconds} sn): {i-1}/{len(hedef)} işlendi.")
             break
@@ -274,6 +274,18 @@ def main():
         try:
             raw = fetch_detail(ftid, lat, lon)
             detay, yorumlar = parse_detail(raw, ftid)
+            # Google bazen yorum bloğunu kırpılmış (küçük) yanıt döndürüyor; liste ambarına göre
+            # işletmenin yorumu varsa kısa aralıkla en fazla 2 kez daha dene.
+            deneme = 0
+            while detay is not None and not yorumlar and master_yorum > 0 and deneme < 2:
+                deneme += 1
+                time.sleep(random.uniform(3.0, 6.0))
+                raw2 = fetch_detail(ftid, lat, lon)
+                detay2, yorumlar2 = parse_detail(raw2, ftid)
+                if detay2 is not None and yorumlar2:
+                    raw, detay, yorumlar = raw2, detay2, yorumlar2
+                    n_tekrar_basari = globals().get("N_TEKRAR_BASARI", 0) + 1
+                    globals()["N_TEKRAR_BASARI"] = n_tekrar_basari
         except Exception as e:
             n_hata += 1
             cur.execute("INSERT OR REPLACE INTO google_places_detay (google_place_id, feature_id, isim, durum, tarama_tarihi) VALUES (?,?,?,?,?)",
@@ -325,7 +337,8 @@ def main():
     conn.close()
     if hist is not None:
         hist.close()
-    print(f"\n✅ Detay bitti: tam={n_ok} kısmi={n_kismi} hata={n_hata} yorum={n_yorum} ({time.time()-t0:.0f} sn). Çıktı: {args.out}")
+    print(f"\n✅ Detay bitti: tam={n_ok} kısmi={n_kismi} hata={n_hata} yorum={n_yorum} "
+          f"(tekrar denemeyle kurtarılan: {globals().get('N_TEKRAR_BASARI', 0)}) ({time.time()-t0:.0f} sn). Çıktı: {args.out}")
 
 
 if __name__ == "__main__":
