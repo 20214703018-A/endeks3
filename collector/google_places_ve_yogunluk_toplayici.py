@@ -181,10 +181,11 @@ def is_query_done(conn, query):
     count, status, age = row
     if age is None:
         return False
+    karo = query.startswith("karo:")
     if status == "BASARILI" and (count or 0) > 0:
-        return age < REFRESH_DAYS_BASARILI
+        return age < (REFRESH_DAYS_KARO_BASARILI if karo else REFRESH_DAYS_BASARILI)
     if status == "BOS_SONUC":
-        return age < REFRESH_DAYS_BOS
+        return age < (REFRESH_DAYS_KARO_BOS if karo else REFRESH_DAYS_BOS)
     return False
 
 def record_query(conn, query, count, status=None, error_code=None, error_detail=None):
@@ -667,7 +668,7 @@ def parse_pb_venue_dict(v, query, now_utc):
 
 PAGE_SIZE = 20
 
-def fetch_google_places(query, offset=0):
+def fetch_google_places(query, offset=0, viewport=None):
     """Google Maps üzerinden tekil değil, sorguda dönen TÜM ticari işletmeleri zengin liste halinde çeker.
 
     offset: sayfalama (0, 20, 40 ...). pb parametresindeki `!7i20` sayfa boyu, `!8iN` ise
@@ -675,8 +676,14 @@ def fetch_google_places(query, offset=0):
     en alakalı — sonucu atlanıyor, 20'den az sonucu olan mahalleler "boş" görünüyordu.)
     """
     encoded_q = urllib.parse.quote(query)
-    pb_param = (
-        "!4m12!1m3!1d150000!2d35.0!3d39.0"
+    # viewport=(lat, lon, olcek): sonuçlar bu görüş alanına göre sıralanır (karo taraması).
+    # olcek ~1200 ≈ 500 m'lik karo, ~600 ≈ 250 m. Varsayılan: Türkiye geneli.
+    if viewport:
+        vp_lat, vp_lon, vp_scale = viewport
+        vp = f"!4m12!1m3!1d{vp_scale}!2d{vp_lon}!3d{vp_lat}"
+    else:
+        vp = "!4m12!1m3!1d150000!2d35.0!3d39.0"
+    pb_param = vp + (
         "!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1"
         f"!7i{PAGE_SIZE}!8i{int(offset)}!10b1!12m8!1m1!18b1!2m3!5m1!6e2!20e3!10b1!16b1"
         "!19m4!2m3!1i360!2i120!4i8"
@@ -1114,6 +1121,7 @@ DEEP_SUBCATEGORIES_EXTRA = [
 
 # sorgu metni -> {"tier": 1|2|3, "tip": "temel"|"derin"|"koridor"}  (main döngüsü buradan okur)
 QUERY_META = {}
+_KARO_YENI_GORULEN = set()
 
 def _il_adlari():
     try:
@@ -1279,6 +1287,88 @@ def get_street_queries_by_shard(shard_id, total_shards=40, limit=None):
         for group in category_groups
     ]
 
+# ---------------------------------------------------------------------------
+# FAZ 2 — KARO (VIEWPORT) TARAMASI
+# Metin sorgusu ("X Mahallesi ... restoranlar") Google'dan en fazla ~160 sonuç alır; yoğun
+# mahallelerde bu, işletmelerin ~%40'ıdır (Caferağa ölçümü). Karo taramasında büyükşehir
+# kentsel mahallelerin çevresi ~500 m'lik karelere bölünür ve her karede koordinat-sınırlı genel
+# kategori sorguları çalıştırılır. 8 sayfa dolarsa (160 sonuç) karo 4'e bölünür (250 m).
+# Sorgu anahtarı: "karo:{lat:.4f},{lon:.4f},{olcek}|{kategori}" — geçmiş tablosunda saklanır.
+KARO_KATEGORILER = [
+    "restoran", "lokanta", "kebap pide", "kafe", "pastane", "fırın", "büfe tost", "tatlıcı", "kahvaltı",
+    "market", "bakkal", "manav", "kasap", "şarküteri", "kuruyemiş", "tekel", "eczane", "medikal",
+    "kuaför", "berber", "güzellik salonu", "giyim mağazası", "ayakkabı", "çanta aksesuar", "kuyumcu",
+    "optik", "elektronik", "telefon", "bilgisayar", "beyaz eşya", "mobilya", "ev tekstili", "züccaciye",
+    "nalbur", "yapı market", "boya", "tesisat", "oto tamir", "oto yıkama", "lastik", "oto galeri",
+    "emlak ofisi", "muhasebeci", "avukat", "diş kliniği", "veteriner", "spor salonu", "kurs",
+    "anaokulu", "otel", "kırtasiye", "çiçekçi", "terzi", "çilingir", "matbaa", "nakliyat", "pet shop",
+]
+KARO_BOYUT_DERECE_LAT = 0.0045          # ~500 m
+KARO_YARICAP_KM = 0.7                    # mahalle merkezine bu mesafedeki karolar taranır
+KARO_OLCEK = {0: 1200, 1: 600}           # derinlik -> viewport ölçeği (500 m, 250 m)
+KARO_MAX_SAYFA = 8
+KARO_MAX_DERINLIK = 1
+REFRESH_DAYS_KARO_BASARILI = 30.0
+REFRESH_DAYS_KARO_BOS = 90.0
+
+def karo_anahtar(lat, lon, derinlik, kategori):
+    return f"karo:{lat:.4f},{lon:.4f},{derinlik}|{kategori}"
+
+def karo_coz(q):
+    """'karo:lat,lon,derinlik|kategori' -> (lat, lon, derinlik, kategori) ya da None."""
+    if not q.startswith("karo:"):
+        return None
+    try:
+        konum, kategori = q[5:].split("|", 1)
+        lat, lon, d = konum.split(",")
+        return float(lat), float(lon), int(d), kategori
+    except Exception:
+        return None
+
+def get_karo_queries_by_shard(shard_id, total_shards=40, kategoriler=None, limit=None):
+    """Büyükşehir kentsel (tier 1) mahalle merkezlerinin çevresindeki 500 m karolar × kategori."""
+    import math
+    kategoriler = kategoriler or KARO_KATEGORILER
+    hucreler = {}   # (i, j) -> (lat, lon, il, ilce, mah)
+    for _key, il, ilce, mah, tier in load_mahalle_tiers():
+        if tier != 1:
+            continue
+        # merkez koordinatını JSON'dan al (load_mahalle_tiers koordinat döndürmüyor)
+        hucreler.setdefault("_pending", []).append((il, ilce, mah, _key))
+    with open(MAHALLE_JSON, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    pending = hucreler.pop("_pending", [])
+    for il, ilce, mah, key in pending:
+        v = data.get(key)
+        if not v:
+            continue
+        la, lo = float(v["lat"]), float(v["lon"])
+        d_lat = KARO_BOYUT_DERECE_LAT
+        d_lon = d_lat / max(0.2, math.cos(math.radians(la)))
+        n = int(KARO_YARICAP_KM / 0.5) + 1
+        gi, gj = int(round(la / d_lat)), int(round(lo / d_lon))
+        for i in range(gi - n, gi + n + 1):
+            for j in range(gj - n, gj + n + 1):
+                c_lat, c_lon = i * d_lat, j * d_lon
+                dist = math.sqrt(((c_lat - la) * 111.0) ** 2 + ((c_lon - lo) * 111.0 * math.cos(math.radians(la))) ** 2)
+                if dist <= KARO_YARICAP_KM and (i, j) not in hucreler:
+                    hucreler[(i, j)] = (c_lat, c_lon, il, ilce, mah)
+    secilen = []
+    for (i, j), (c_lat, c_lon, il, ilce, mah) in sorted(hucreler.items()):
+        digest = int(hashlib.sha256(f"{i},{j}".encode("utf-8")).hexdigest()[:8], 16)
+        if digest % total_shards == shard_id - 1:
+            secilen.append((c_lat, c_lon, il, ilce, mah))
+    if limit:
+        secilen = secilen[:limit]
+    queries = []
+    for c_lat, c_lon, il, ilce, mah in secilen:
+        for kat in kategoriler:
+            q = karo_anahtar(c_lat, c_lon, 0, kat)
+            QUERY_META[q] = {"tier": 1, "tip": "karo", "il": il, "ilce": ilce, "mahalle": mah}
+            queries.append(q)
+    print(f"Shard {shard_id}/{total_shards}: toplam {len(hucreler):,} karo, bu shard'a {len(secilen):,} karo × {len(kategoriler)} kategori = {len(queries):,} sorgu")
+    return queries
+
 def get_commercial_corridors_by_shard(shard_id, total_shards=40, mahalle_limit=None, street_limit=None):
     """40 Shard için dengeli 81 il, ilçe ve MAHALLE MAHALLE detaylı ticari sorgu havuzu oluşturur."""
     all_corridors = get_all_commercial_corridor_queries()
@@ -1335,6 +1425,9 @@ def main():
     parser.add_argument("--no-deep", action="store_true", help="Yoğun ticari mahallelerde otonom derinleştirmeyi devre dışı bırakır")
     parser.add_argument("--force", action="store_true", help="Daha önce taranmış sorguları atlamadan yeniden tara")
     parser.add_argument("--all", action="store_true", help="Tüm 81 il sorgularını tek seferde çalıştır")
+    parser.add_argument("--mod", choices=["liste", "karo", "hepsi"], default="liste",
+                        help="liste: mahalle metin sorguları (varsayılan); karo: büyükşehir 500 m karo taraması; hepsi: ikisi")
+    parser.add_argument("--karo-limit", type=int, default=None, help="(Test) shard başına en fazla N karo")
     parser.add_argument("--gecmis-db", type=str, default=None,
                         help="Önceki koşuların birleşik ana ambarı (salt okunur). Orada yakın tarihte taranmış sorgular atlanır.")
     parser.add_argument("--yenileme-gunu", type=float, default=REFRESH_DAYS_BASARILI,
@@ -1369,10 +1462,14 @@ def main():
         else:
             shard_id = int(args.shard)
             total = int(args.num_shards)
-        initial_queries = get_commercial_corridors_by_shard(
-            shard_id, total, mahalle_limit=args.mahalle_limit, street_limit=args.sokak_limit
-        )
-        print(f"Shard {shard_id}/{total}: {len(initial_queries)} temel ticari & mahalle sorgusu yüklendi...")
+        initial_queries = []
+        if args.mod in ("liste", "hepsi"):
+            initial_queries = get_commercial_corridors_by_shard(
+                shard_id, total, mahalle_limit=args.mahalle_limit, street_limit=args.sokak_limit
+            )
+            print(f"Shard {shard_id}/{total}: {len(initial_queries)} temel ticari & mahalle sorgusu yüklendi...")
+        if args.mod in ("karo", "hepsi"):
+            initial_queries += get_karo_queries_by_shard(shard_id, total, limit=args.karo_limit)
     else:
         initial_queries = get_all_commercial_corridor_queries()
         print(f"Varsayılan Mod: {len(initial_queries)} ticari aks sorgulanıyor...")
@@ -1391,6 +1488,8 @@ def main():
     processed = 0
     skipped = 0
     pages_fetched = 0
+    global _KARO_YENI_GORULEN
+    _KARO_YENI_GORULEN = set()
     start_time = time.time()
     deep_enabled = not args.no_deep
 
@@ -1443,12 +1542,20 @@ def main():
         meta = QUERY_META.get(q, {"tier": 2, "tip": "temel"})
         profile = TIER_PROFILE[meta["tier"]]
         max_pages = profile["derin_sayfa"] if meta["tip"] == "derin" else profile["max_sayfa"]
+        karo = karo_coz(q)
+        viewport = None
+        fetch_text = q
+        if karo:
+            k_lat, k_lon, k_derinlik, k_kategori = karo
+            viewport = (k_lat, k_lon, KARO_OLCEK.get(k_derinlik, 600))
+            fetch_text = k_kategori
+            max_pages = KARO_MAX_SAYFA
 
         # Sayfalama: sayfa doluysa (20 sonuç) ve katman izin veriyorsa bir sonraki sayfayı da çek.
         venues = []
         seen_ids = set()
         for page in range(max_pages):
-            page_venues = fetch_google_places(q, offset=page * PAGE_SIZE)
+            page_venues = fetch_google_places(fetch_text, offset=page * PAGE_SIZE, viewport=viewport)
             pages_fetched += 1
             new_in_page = 0
             for v in page_venues:
@@ -1458,11 +1565,49 @@ def main():
                 seen_ids.add(identity)
                 venues.append(v)
                 new_in_page += 1
-            if len(page_venues) < PAGE_SIZE or new_in_page == 0:
+            # Sayfa 'dolu' sayılır: ticari-olmayan filtresi 1-2 kaydı eleyebilir (20 yerine 18-19 gelir)
+            if len(page_venues) < PAGE_SIZE - 2 or new_in_page == 0:
                 break
             time.sleep(random.uniform(0.3, 0.6))
         if len(venues) > PAGE_SIZE:
             print(f"  [📄 Sayfalama] {q} -> {len(venues)} sonuç ({min(max_pages, (len(venues) + PAGE_SIZE - 1) // PAGE_SIZE)} sayfa)", flush=True)
+        if karo:
+            # Tüm sonuçlar saklanır (uzaktakiler de gerçek işletmedir; CID ile tekilleşir). Karonun
+            # "yoğun mu, bölünsün mü" kararı ise yalnızca karo içindeki sonuçlara göre verilir.
+            import math as _m
+            yaricap_km = 0.45 if k_derinlik == 0 else 0.25
+            cos_la = _m.cos(_m.radians(k_lat))
+            ic_karo = [v for v in venues if v.get("lat") and v.get("lon") and
+                       _m.sqrt(((v["lat"] - k_lat) * 111.0) ** 2 + ((v["lon"] - k_lon) * 111.0 * cos_la) ** 2) <= yaricap_km * 1.6]
+            for v in venues:
+                v["arama_terimi"] = q
+            if len(venues) > 0:
+                print(f"  [📍 Karo] {len(ic_karo)}/{len(venues)} sonuç karo içinde", flush=True)
+            # 8 sayfa dolduysa ve sonuçların çoğu karo içindeyse karo yoğun: 4 alt karoya böl
+            if len(venues) >= KARO_MAX_SAYFA * PAGE_SIZE * 0.9 and len(ic_karo) >= len(venues) * 0.5 and k_derinlik < KARO_MAX_DERINLIK:
+                d_lat = KARO_BOYUT_DERECE_LAT / 4
+                d_lon = d_lat / max(0.2, cos_la)
+                for dy in (-d_lat, d_lat):
+                    for dx in (-d_lon, d_lon):
+                        sub_q = karo_anahtar(k_lat + dy, k_lon + dx, k_derinlik + 1, k_kategori)
+                        if sub_q not in seen_queries:
+                            seen_queries.add(sub_q)
+                            QUERY_META[sub_q] = dict(meta)
+                            if args.force or not is_query_done(conn, sub_q):
+                                work_queue.append(sub_q)
+                print(f"  [🔬 Karo bölündü] {q}: {len(venues)} sonuç → 4 alt karo kuyruğa eklendi", flush=True)
+            # Ölçüm: bu karoda bulunan işletmelerden kaçı ana ambarda yoktu?
+            if HIST_CONN is not None:
+                for v in venues:
+                    pid = v.get("google_place_id")
+                    if pid and pid not in _KARO_YENI_GORULEN:
+                        _KARO_YENI_GORULEN.add(pid)
+                        try:
+                            if HIST_CONN.execute("SELECT 1 FROM google_places_ticari_yogunluk WHERE google_place_id=?", (pid,)).fetchone() is None:
+                                globals()["KARO_YENI_ISLETME"] = globals().get("KARO_YENI_ISLETME", 0) + 1
+                        except Exception:
+                            pass
+                globals()["KARO_GORULEN_ISLETME"] = len(_KARO_YENI_GORULEN)
 
         if venues:
             for res in venues:
@@ -1491,6 +1636,10 @@ def main():
         HIST_CONN.close()
     print(f"\nİşlem tamamlandı. Toplam {processed} sorgu ({pages_fetched} sayfa isteği) işlendi, "
           f"{skipped} sorgu geçmişten atlandı, {success} mekan ambarlandı.", flush=True)
+    if args.mod in ("karo", "hepsi"):
+        g = globals().get("KARO_GORULEN_ISLETME", 0)
+        y = globals().get("KARO_YENI_ISLETME", 0)
+        print(f"📐 KARO ÖLÇÜMÜ: karolarda {g:,} tekil işletme görüldü; {y:,} tanesi ({(100.0*y/g if g else 0):.1f}%) ana ambarda YOKTU.", flush=True)
     print(f"Çıktı DB: {args.out}", flush=True)
 
 if __name__ == "__main__":

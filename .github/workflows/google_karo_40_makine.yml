@@ -1,0 +1,107 @@
+name: "GEOPROP Google KARO Taraması — büyükşehir 500 m karolar (40x)"
+
+# Faz 2: metin sorgusu yoğun mahallede işletmelerin ~%40'ını görür (Google sorgu başına ~160 sonuç).
+# Bu koşu büyükşehir kentsel mahallelerin çevresini 500 m karolara böler (~35 bin karo) ve her
+# karoda 57 genel kategoriyi koordinat-sınırlı sorgular; 8 sayfa dolarsa karo 250 m'ye bölünür.
+# Aynı toplayıcı (--mod karo), aynı geçmiş tablosu: 30 gün yenileme, boş karo 90 gün. Artımlı.
+# Zamanlama: Pzt/Sal/Per/Cum 02:00 UTC (liste Cmt, detay Paz+Çar). ~2 milyon sorgu, koşu başına ~500 bin.
+
+on:
+  schedule:
+    - cron: '0 2 * * 1,2,4,5'
+  workflow_dispatch:
+    inputs:
+      max_saniye:
+        description: 'Shard başına azami süre (saniye)'
+        required: false
+        default: '16200'
+      karo_limit:
+        description: '(Test) shard başına en fazla N karo'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: geoprop-40-node
+  cancel-in-progress: false
+
+env:
+  AMBAR_RELEASE: warehouse-latest
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  karo_shards:
+    name: "Karo Shard ${{ matrix.shard }}/40"
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+
+      - name: Ana ambarı indir (artımlı tarama + ölçüm için)
+        run: |
+          mkdir -p warehouse/master warehouse/product
+          gh release download "$AMBAR_RELEASE" --pattern 'google_places_ve_yogunluk.sqlite.gz' --dir warehouse/master --repo "$GITHUB_REPOSITORY"
+          gunzip -f warehouse/master/*.sqlite.gz
+
+      - name: Karo taraması
+        run: |
+          LIMIT_ARG=""
+          if [ -n "${{ github.event.inputs.karo_limit }}" ]; then LIMIT_ARG="--karo-limit ${{ github.event.inputs.karo_limit }}"; fi
+          python collector/google_places_ve_yogunluk_toplayici.py \
+            --shard ${{ matrix.shard }} --num-shards 40 --mod karo \
+            --gecmis-db warehouse/master/google_places_ve_yogunluk.sqlite \
+            --max-seconds "${{ github.event.inputs.max_saniye || '16200' }}" $LIMIT_ARG
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shard-db-${{ matrix.shard }}
+          path: warehouse/product/*.sqlite
+          retention-days: 3
+          compression-level: 1
+
+  merge_and_publish:
+    name: "Karo shard'larını ana ambara ekle ve release'e yaz"
+    needs: [karo_shards]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Önceki ambarı indir
+        run: |
+          mkdir -p warehouse/product
+          gh release download "$AMBAR_RELEASE" --pattern 'google_places_ve_yogunluk.sqlite.gz' --dir warehouse/product --repo "$GITHUB_REPOSITORY"
+          gunzip -f warehouse/product/*.sqlite.gz
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: shard-db-*
+          path: temp_dbs/
+      - name: Birleştir
+        run: |
+          python geoprop/db_merger.py temp_dbs/ warehouse/product/
+          python -c "import sqlite3; c=sqlite3.connect('warehouse/product/google_places_ve_yogunluk.sqlite'); print('ana ambar işletme:', c.execute('select count(*) from google_places_ticari_yogunluk').fetchone()[0])"
+      - name: Release'e yaz (gz)
+        run: |
+          mkdir -p release_out
+          gzip -1 -c warehouse/product/google_places_ve_yogunluk.sqlite > release_out/google_places_ve_yogunluk.sqlite.gz
+          sz=$(stat -c %s release_out/google_places_ve_yogunluk.sqlite.gz)
+          [ "$sz" -ge 2147483648 ] && { echo "::error::2 GB sınırı aşıldı ($sz)"; exit 1; }
+          gh release upload "$AMBAR_RELEASE" release_out/google_places_ve_yogunluk.sqlite.gz --clobber --repo "$GITHUB_REPOSITORY"
+          gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — karo koşusu ${{ github.run_id }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: warehouse-karo-${{ github.run_number }}
+          path: warehouse/product/google_places_ve_yogunluk.sqlite
+          retention-days: 14
+          compression-level: 1
