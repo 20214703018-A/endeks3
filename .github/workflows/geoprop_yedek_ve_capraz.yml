@@ -1,0 +1,106 @@
+name: "GEOPROP Yedekleme ve Çaprazlama (tek seferlik araçlar)"
+
+# İki mod:
+#   yedekle : Verilen koşunun shard artifact'lerini (1 günlük saklama) indirip 30 günlük tek bir
+#             artifact'e kopyalar. (Bir koşunun verisi yayınlanamadıysa kaybolmasın diye.)
+#   caprazla: Yedek artifact'teki eski shard verisini release'teki güncel ambarla çaprazlar:
+#             ambarda olmayan işletmeler koordinattan il/ilçe/mahalle atanarak eklenir
+#             (geoprop/capraz_birlestir.py). Sonuç release'e geri yazılır.
+
+on:
+  workflow_dispatch:
+    inputs:
+      mod:
+        description: 'yedekle | caprazla'
+        required: true
+        default: 'yedekle'
+      kaynak_kosu_id:
+        description: 'yedekle: shard artifactleri alınacak koşu id'
+        required: false
+        default: ''
+      yedek_artifact:
+        description: 'caprazla: kullanılacak yedek artifact adı'
+        required: false
+        default: 'eski-shardlar-2026-09-20'
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: geoprop-40-node   # ana madenci koşusuyla aynı anda release'e yazmasın
+  cancel-in-progress: false
+
+env:
+  AMBAR_RELEASE: warehouse-latest
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  yedekle:
+    if: ${{ github.event.inputs.mod == 'yedekle' }}
+    name: "Shard artifact'lerini 30 günlük yedeğe kopyala"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Kaynak koşunun shard artifact'lerini indir
+        run: |
+          mkdir -p yedek
+          gh run download "${{ github.event.inputs.kaynak_kosu_id }}" --repo "$GITHUB_REPOSITORY" -p 'shard-db-*' -D yedek
+          du -sh yedek; ls yedek | wc -l
+      - name: Tek artifact olarak 30 gün sakla
+        uses: actions/upload-artifact@v4
+        with:
+          name: eski-shardlar-2026-09-20
+          path: yedek/
+          retention-days: 30
+          compression-level: 1
+
+  caprazla:
+    if: ${{ github.event.inputs.mod == 'caprazla' }}
+    name: "Eski shard verisini güncel ambarla çaprazla"
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Güncel ambarı indir
+        run: |
+          mkdir -p warehouse/product
+          gh release download "$AMBAR_RELEASE" --pattern 'google_places_ve_yogunluk.sqlite.gz' --dir warehouse/product --repo "$GITHUB_REPOSITORY"
+          gunzip -f warehouse/product/google_places_ve_yogunluk.sqlite.gz
+          ls -la warehouse/product
+      - name: Yedek shard'ları indir
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.event.inputs.yedek_artifact }}
+          path: eski_shardlar/
+          run-id: ${{ github.run_id }}
+        continue-on-error: true
+      - name: Yedek artifact başka koşudansa gh ile indir
+        run: |
+          if [ -z "$(ls -A eski_shardlar 2>/dev/null)" ]; then
+            RID=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=${{ github.event.inputs.yedek_artifact }}&per_page=1" --jq '.artifacts[0].workflow_run.id')
+            echo "Yedek artifact koşusu: $RID"
+            gh run download "$RID" --repo "$GITHUB_REPOSITORY" -n "${{ github.event.inputs.yedek_artifact }}" -D eski_shardlar
+          fi
+          find eski_shardlar -name '*.sqlite' | wc -l
+      - name: Çaprazla
+        run: |
+          python geoprop/capraz_birlestir.py eski_shardlar/ warehouse/product/google_places_ve_yogunluk.sqlite
+      - name: Release'e geri yaz
+        run: |
+          mkdir -p release_out
+          gzip -1 -c warehouse/product/google_places_ve_yogunluk.sqlite > release_out/google_places_ve_yogunluk.sqlite.gz
+          sz=$(stat -c %s release_out/google_places_ve_yogunluk.sqlite.gz)
+          [ "$sz" -ge 2147483648 ] && { echo "::error::2 GB sınırı aşıldı ($sz)"; exit 1; }
+          gh release upload "$AMBAR_RELEASE" release_out/google_places_ve_yogunluk.sqlite.gz --clobber --repo "$GITHUB_REPOSITORY"
+          gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — çaprazlama koşusu ${{ github.run_id }}"
+      - name: Çaprazlanmış ambarı artifact olarak da sakla
+        uses: actions/upload-artifact@v4
+        with:
+          name: warehouse-capraz-${{ github.run_number }}
+          path: warehouse/product/google_places_ve_yogunluk.sqlite
+          retention-days: 30
+          compression-level: 1
