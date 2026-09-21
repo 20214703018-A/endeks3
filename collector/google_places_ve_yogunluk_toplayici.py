@@ -139,6 +139,7 @@ def init_db(db_path):
     """)
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gp_yorum_place ON google_places_yorumlar_ve_niyet(google_place_id)")
     cur.execute("CREATE INDEX IF NOT EXISTS idx_gp_gozlem_place ON google_places_gozlem(google_place_id, observed_at)")
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_gp_latlon ON google_places_ticari_yogunluk(lat, lon)")
     try:
         cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN ornek_yorum TEXT")
     except sqlite3.OperationalError:
@@ -1358,6 +1359,24 @@ def get_karo_queries_by_shard(shard_id, total_shards=40, kategoriler=None, limit
         digest = int(hashlib.sha256(f"{i},{j}".encode("utf-8")).hexdigest()[:8], 16)
         if digest % total_shards == shard_id - 1:
             secilen.append((c_lat, c_lon, il, ilce, mah))
+    # Yoğunluk sıralaması: ana ambarda karonun çevresinde (±1 karo) kaç işletme var? Yoğun karolar
+    # önce taranır; süre biterse seyrek (çoğu eski köy) karolar sonraki koşulara kalır.
+    if HIST_CONN is not None and secilen:
+        try:
+            HIST_CONN.execute("SELECT 1 FROM google_places_ticari_yogunluk WHERE lat BETWEEN 0 AND 1 AND lon BETWEEN 0 AND 1 LIMIT 1")
+            yogunluk = []
+            for c_lat, c_lon, il, ilce, mah in secilen:
+                d_lat = KARO_BOYUT_DERECE_LAT * 1.5
+                d_lon = d_lat / max(0.2, math.cos(math.radians(c_lat)))
+                n = HIST_CONN.execute(
+                    "SELECT COUNT(*) FROM google_places_ticari_yogunluk WHERE lat BETWEEN ? AND ? AND lon BETWEEN ? AND ?",
+                    (c_lat - d_lat, c_lat + d_lat, c_lon - d_lon, c_lon + d_lon)).fetchone()[0]
+                yogunluk.append((n, (c_lat, c_lon, il, ilce, mah)))
+            yogunluk.sort(key=lambda x: -x[0])
+            secilen = [k for _n, k in yogunluk]
+            print(f"  karo yoğunluk sıralaması: en yoğun {yogunluk[0][0]} işletme, medyan {yogunluk[len(yogunluk)//2][0]}, sıfır olan {sum(1 for n,_ in yogunluk if n==0)}")
+        except Exception as e:
+            print(f"  [!] yoğunluk sıralaması yapılamadı: {e}")
     if limit:
         secilen = secilen[:limit]
     queries = []
@@ -1597,8 +1616,9 @@ def main():
                                 work_queue.append(sub_q)
                 print(f"  [🔬 Karo bölündü] {q}: {len(venues)} sonuç → 4 alt karo kuyruğa eklendi", flush=True)
             # Ölçüm: bu karoda bulunan işletmelerden kaçı ana ambarda yoktu?
+            globals()["KARO_DISI_SONUC"] = globals().get("KARO_DISI_SONUC", 0) + (len(venues) - len(ic_karo))
             if HIST_CONN is not None:
-                for v in venues:
+                for v in ic_karo:
                     pid = v.get("google_place_id")
                     if pid and pid not in _KARO_YENI_GORULEN:
                         _KARO_YENI_GORULEN.add(pid)
@@ -1639,7 +1659,9 @@ def main():
     if args.mod in ("karo", "hepsi"):
         g = globals().get("KARO_GORULEN_ISLETME", 0)
         y = globals().get("KARO_YENI_ISLETME", 0)
-        print(f"📐 KARO ÖLÇÜMÜ: karolarda {g:,} tekil işletme görüldü; {y:,} tanesi ({(100.0*y/g if g else 0):.1f}%) ana ambarda YOKTU.", flush=True)
+        print(f"📐 KARO ÖLÇÜMÜ (bu shard, yalnızca karo içi sonuçlar): {g:,} tekil işletme görüldü; {y:,} tanesi "
+              f"({(100.0*y/g if g else 0):.1f}%) ana ambarda yoktu. Karo dışı (uzak doldurma) sonuç: {globals().get('KARO_DISI_SONUC', 0):,}. "
+              f"Kesin artış merge işinde raporlanır.", flush=True)
     print(f"Çıktı DB: {args.out}", flush=True)
 
 if __name__ == "__main__":

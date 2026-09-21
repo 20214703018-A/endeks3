@@ -87,10 +87,20 @@ jobs:
         with:
           pattern: shard-db-*
           path: temp_dbs/
-      - name: Birleştir
+      - name: Birleştir ve gerçek artışı ölç
         run: |
+          ONCE=$(python -c "import sqlite3; c=sqlite3.connect('warehouse/product/google_places_ve_yogunluk.sqlite'); print(c.execute('select count(*) from google_places_ticari_yogunluk').fetchone()[0])")
           python geoprop/db_merger.py temp_dbs/ warehouse/product/
-          python -c "import sqlite3; c=sqlite3.connect('warehouse/product/google_places_ve_yogunluk.sqlite'); print('ana ambar işletme:', c.execute('select count(*) from google_places_ticari_yogunluk').fetchone()[0])"
+          python - <<'EOF'
+          import sqlite3
+          c = sqlite3.connect("warehouse/product/google_places_ve_yogunluk.sqlite")
+          c.execute("CREATE INDEX IF NOT EXISTS idx_gp_latlon ON google_places_ticari_yogunluk(lat, lon)")
+          c.commit()
+          print("ana ambar işletme:", c.execute("select count(*) from google_places_ticari_yogunluk").fetchone()[0])
+          EOF
+          SONRA=$(python -c "import sqlite3; c=sqlite3.connect('warehouse/product/google_places_ve_yogunluk.sqlite'); print(c.execute('select count(*) from google_places_ticari_yogunluk').fetchone()[0])")
+          echo "📐 KARO KOŞUSU GERÇEK ARTIŞ: $ONCE -> $SONRA (+$((SONRA-ONCE)) işletme)"
+          echo "### Karo koşusu: $ONCE → $SONRA (+$((SONRA-ONCE)) işletme)" >> "$GITHUB_STEP_SUMMARY"
       - name: Release'e yaz (gz)
         run: |
           mkdir -p release_out
