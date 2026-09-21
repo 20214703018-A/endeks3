@@ -27,10 +27,6 @@ permissions:
   contents: write
   actions: read
 
-concurrency:
-  group: geoprop-40-node   # ana madenci koşusuyla aynı anda release'e yazmasın
-  cancel-in-progress: false
-
 env:
   AMBAR_RELEASE: warehouse-latest
   GH_TOKEN: ${{ github.token }}
@@ -59,6 +55,9 @@ jobs:
     if: ${{ github.event.inputs.mod == 'caprazla' }}
     name: "Eski shard verisini güncel ambarla çaprazla"
     runs-on: ubuntu-latest
+    concurrency:
+      group: geoprop-40-node   # ana madenci koşusuyla aynı anda release'e yazmasın
+      cancel-in-progress: false
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
