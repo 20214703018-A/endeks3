@@ -54,10 +54,8 @@ jobs:
       - name: Liste ve detay ambarlarını indir
         run: |
           mkdir -p warehouse/master warehouse/product
-          gh release download "$AMBAR_RELEASE" --pattern 'google_places_ve_yogunluk.sqlite.gz' --dir warehouse/master --repo "$GITHUB_REPOSITORY"
-          gh release download "$AMBAR_RELEASE" --pattern 'google_places_detay.sqlite.gz' --dir warehouse/master --repo "$GITHUB_REPOSITORY" 2>/dev/null || echo "ℹ️ detay ambarı henüz yok (ilk koşu)"
-          gunzip -f warehouse/master/*.sqlite.gz
-          ls -la warehouse/master
+          ops/ambar_indir.sh google_places_ve_yogunluk.sqlite warehouse/master
+          ops/ambar_indir.sh google_places_detay.sqlite warehouse/master || echo "ℹ️ detay ambarı henüz yok (ilk koşu)"
 
       - name: Detay topla
         run: |
@@ -89,11 +87,7 @@ jobs:
       - name: Önceki detay ambarını indir
         run: |
           mkdir -p warehouse/product
-          if gh release download "$AMBAR_RELEASE" --pattern 'google_places_detay.sqlite.gz' --dir warehouse/product --repo "$GITHUB_REPOSITORY" 2>/dev/null; then
-            gunzip -f warehouse/product/google_places_detay.sqlite.gz
-          else
-            echo "ℹ️ Önceki detay ambarı yok; sıfırdan oluşturulacak."
-          fi
+          ops/ambar_indir.sh google_places_detay.sqlite warehouse/product || echo "ℹ️ Önceki detay ambarı yok; sıfırdan oluşturulacak."
       - uses: actions/download-artifact@v4
         with:
           pattern: detay-shard-*
@@ -110,11 +104,7 @@ jobs:
           EOF
       - name: Release'e yaz (gz)
         run: |
-          mkdir -p release_out
-          gzip -1 -c warehouse/product/google_places_detay.sqlite > release_out/google_places_detay.sqlite.gz
-          sz=$(stat -c %s release_out/google_places_detay.sqlite.gz)
-          [ "$sz" -ge 2147483648 ] && { echo "::error::2 GB sınırı aşıldı ($sz)"; exit 1; }
-          gh release upload "$AMBAR_RELEASE" release_out/google_places_detay.sqlite.gz --clobber --repo "$GITHUB_REPOSITORY"
+          ops/ambar_yukle.sh warehouse/product/google_places_detay.sqlite
       - uses: actions/upload-artifact@v4
         with:
           name: detay-merged-${{ github.run_number }}

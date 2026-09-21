@@ -51,8 +51,7 @@ jobs:
       - name: Ana ambarı indir (artımlı tarama + ölçüm için)
         run: |
           mkdir -p warehouse/master warehouse/product
-          gh release download "$AMBAR_RELEASE" --pattern 'google_places_ve_yogunluk.sqlite.gz' --dir warehouse/master --repo "$GITHUB_REPOSITORY"
-          gunzip -f warehouse/master/*.sqlite.gz
+          ops/ambar_indir.sh google_places_ve_yogunluk.sqlite warehouse/master
 
       - name: Karo taraması
         run: |
@@ -81,8 +80,7 @@ jobs:
       - name: Önceki ambarı indir
         run: |
           mkdir -p warehouse/product
-          gh release download "$AMBAR_RELEASE" --pattern 'google_places_ve_yogunluk.sqlite.gz' --dir warehouse/product --repo "$GITHUB_REPOSITORY"
-          gunzip -f warehouse/product/*.sqlite.gz
+          ops/ambar_indir.sh google_places_ve_yogunluk.sqlite warehouse/product
       - uses: actions/download-artifact@v4
         with:
           pattern: shard-db-*
@@ -103,11 +101,7 @@ jobs:
           echo "### Karo koşusu: $ONCE → $SONRA (+$((SONRA-ONCE)) işletme)" >> "$GITHUB_STEP_SUMMARY"
       - name: Release'e yaz (gz)
         run: |
-          mkdir -p release_out
-          gzip -1 -c warehouse/product/google_places_ve_yogunluk.sqlite > release_out/google_places_ve_yogunluk.sqlite.gz
-          sz=$(stat -c %s release_out/google_places_ve_yogunluk.sqlite.gz)
-          [ "$sz" -ge 2147483648 ] && { echo "::error::2 GB sınırı aşıldı ($sz)"; exit 1; }
-          gh release upload "$AMBAR_RELEASE" release_out/google_places_ve_yogunluk.sqlite.gz --clobber --repo "$GITHUB_REPOSITORY"
+          ops/ambar_yukle.sh warehouse/product/google_places_ve_yogunluk.sqlite
           gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — karo koşusu ${{ github.run_id }}"
       - uses: actions/upload-artifact@v4
         with:

@@ -64,13 +64,10 @@ jobs:
       - name: Önceki Koşuların Ambarını İndir (artımlı tarama için)
         run: |
           mkdir -p warehouse/master warehouse/product
-          # Ambar dosyaları release'te gzip'li durur (GitHub asset sınırı 2 GB; ham SQLite bunu aşar).
-          if gh release download "$AMBAR_RELEASE" --pattern '*.sqlite.gz' --dir warehouse/master --repo "$GITHUB_REPOSITORY" 2>/dev/null; then
-            gunzip -f warehouse/master/*.sqlite.gz
-            ls -la warehouse/master
-          else
-            echo "ℹ️ '$AMBAR_RELEASE' release'i yok ya da boş — ilk koşu, sıfırdan taranacak."
-          fi
+          # Ambar dosyaları release'te gzip'li (gerekirse parçalı) durur; ops/ambar_indir.sh birleştirip açar.
+          for f in google_places_ve_yogunluk.sqlite airbnb_fiyat_ve_potansiyel.sqlite; do
+            ops/ambar_indir.sh "$f" warehouse/master || echo "ℹ️ $f yok — ilk koşu gibi sıfırdan taranacak."
+          done
 
       - name: Google Places, Yoğunluk ve İşletme Gözlemi (katmanlı, sayfalı, artımlı)
         run: |
@@ -115,11 +112,9 @@ jobs:
       - name: Önceki Ambarı İndir
         run: |
           mkdir -p warehouse/product
-          if gh release download "$AMBAR_RELEASE" --pattern '*.sqlite.gz' --dir warehouse/product --repo "$GITHUB_REPOSITORY" 2>/dev/null; then
-            gunzip -f warehouse/product/*.sqlite.gz
-          else
-            echo "ℹ️ Önceki ambar yok; shard'lardan sıfırdan oluşturulacak."
-          fi
+          for f in google_places_ve_yogunluk.sqlite airbnb_fiyat_ve_potansiyel.sqlite; do
+            ops/ambar_indir.sh "$f" warehouse/product || echo "ℹ️ $f yok; shard'lardan sıfırdan oluşturulacak."
+          done
 
       - name: Tüm Shard Artifact'lerini İndir
         uses: actions/download-artifact@v4
@@ -140,21 +135,10 @@ jobs:
               --title "GEOPROP Kalıcı Veri Ambarı (son koşu)" \
               --notes "40-node madencinin birleşik SQLite ambarı. Her koşuda üzerine yazılır; geçmiş için Actions artifact'lerine bakın."
           fi
-          mkdir -p release_out
+          # gzip + gerekirse parçalama (2 GB asset sınırı) ops/ambar_yukle.sh içinde
           for f in warehouse/product/*.sqlite; do
-            gzip -1 -c "$f" > "release_out/$(basename "$f").gz"
+            ops/ambar_yukle.sh "$f"
           done
-          ls -la release_out
-          # GitHub asset sınırı 2 GB (2147483648 bayt): aşan dosya yüklenmez, koşu hata verir.
-          for f in release_out/*.gz; do
-            sz=$(stat -c %s "$f")
-            if [ "$sz" -ge 2147483648 ]; then echo "::error::$f 2 GB sınırını aşıyor ($sz bayt)"; exit 1; fi
-          done
-          # Eski sürümden kalan ham .sqlite asset'leri varsa kaldır (artık .gz kullanılıyor)
-          for a in $(gh release view "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' | grep -E '\.sqlite$' || true); do
-            gh release delete-asset "$AMBAR_RELEASE" "$a" --yes --repo "$GITHUB_REPOSITORY" || true
-          done
-          gh release upload "$AMBAR_RELEASE" release_out/*.gz --clobber --repo "$GITHUB_REPOSITORY"
           gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" \
             --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — koşu ${{ github.run_id }}"
 

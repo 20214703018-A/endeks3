@@ -75,9 +75,7 @@ jobs:
       - name: Güncel ambarı indir
         run: |
           mkdir -p warehouse/product
-          gh release download "$AMBAR_RELEASE" --pattern 'google_places_ve_yogunluk.sqlite.gz' --dir warehouse/product --repo "$GITHUB_REPOSITORY"
-          gunzip -f warehouse/product/google_places_ve_yogunluk.sqlite.gz
-          ls -la warehouse/product
+          ops/ambar_indir.sh google_places_ve_yogunluk.sqlite warehouse/product
       - name: Yedek shard'ları indir
         uses: actions/download-artifact@v4
         with:
@@ -98,11 +96,7 @@ jobs:
           python geoprop/capraz_birlestir.py eski_shardlar/ warehouse/product/google_places_ve_yogunluk.sqlite
       - name: Release'e geri yaz
         run: |
-          mkdir -p release_out
-          gzip -1 -c warehouse/product/google_places_ve_yogunluk.sqlite > release_out/google_places_ve_yogunluk.sqlite.gz
-          sz=$(stat -c %s release_out/google_places_ve_yogunluk.sqlite.gz)
-          [ "$sz" -ge 2147483648 ] && { echo "::error::2 GB sınırı aşıldı ($sz)"; exit 1; }
-          gh release upload "$AMBAR_RELEASE" release_out/google_places_ve_yogunluk.sqlite.gz --clobber --repo "$GITHUB_REPOSITORY"
+          ops/ambar_yukle.sh warehouse/product/google_places_ve_yogunluk.sqlite
           gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — çaprazlama koşusu ${{ github.run_id }}"
       - name: Çaprazlanmış ambarı artifact olarak da sakla
         uses: actions/upload-artifact@v4
@@ -118,11 +112,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
+      - uses: actions/checkout@v4
       - name: Ambarı indir
         run: |
-          mkdir -p w
-          gh release download "$AMBAR_RELEASE" --pattern 'google_places_ve_yogunluk.sqlite.gz' --dir w --repo "$GITHUB_REPOSITORY"
-          gunzip -f w/*.gz
+          ops/ambar_indir.sh google_places_ve_yogunluk.sqlite w
       - name: Ek artifact'i indir
         if: ${{ github.event.inputs.ek_artifact != '' }}
         run: |
