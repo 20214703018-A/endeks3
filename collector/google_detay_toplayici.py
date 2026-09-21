@@ -249,7 +249,7 @@ def main():
     ap.add_argument("--min-yorum", type=int, default=0, help="Bu sayının altında yorumu olan işletmeleri atla")
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--max-seconds", type=int, default=16200)
-    ap.add_argument("--bekleme", type=float, default=0.8, help="İstekler arası ortalama bekleme (sn)")
+    ap.add_argument("--bekleme", type=float, default=0.5, help="İstekler arası ortalama bekleme (sn)")
     args = ap.parse_args()
 
     if not os.path.exists(args.master):
@@ -279,7 +279,7 @@ def main():
             deneme = 0
             while detay is not None and not yorumlar and master_yorum > 0 and deneme < 2:
                 deneme += 1
-                time.sleep(random.uniform(3.0, 6.0))
+                time.sleep(random.uniform(2.0, 4.0))
                 raw2 = fetch_detail(ftid, lat, lon)
                 detay2, yorumlar2 = parse_detail(raw2, ftid)
                 if detay2 is not None and yorumlar2:

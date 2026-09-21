@@ -8,7 +8,8 @@ name: "GEOPROP Google Places DETAY Madencisi (telefon, saatler, yorumlar — 40x
 
 on:
   schedule:
-    - cron: '0 2 * * 0'
+    # Pazar ve Çarşamba 02:00 UTC (ilk geçiş ~900 bin işletme; koşu başına ~200 bin)
+    - cron: '0 2 * * 0,3'
   workflow_dispatch:
     inputs:
       max_saniye:
