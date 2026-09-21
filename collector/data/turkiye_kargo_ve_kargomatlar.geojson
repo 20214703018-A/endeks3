@@ -5838,24 +5838,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.147799637,
-          39.568884705
-        ]
-      },
-      "properties": {
-        "tip": "PTT_SUBE",
-        "ad": "ADLİYE  ŞUBESİ",
-        "adres": "ŞENTEPE MAHALLESİ MEVLANA CADDE No: 31 POLATLI ANKARA",
-        "il": "ANKARA",
-        "telefon": "03126241099",
-        "calisma_saati": "08:30-12:30/13:30-17:00"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           32.604795,
           39.947238
         ]
@@ -5866,6 +5848,24 @@
         "adres": "OĞUZLAR MAHALLESİ PROF.DR.NECMETTİN ERBAKAN CADDE No: 52 ETİMESGUT ANKARA",
         "il": "ANKARA",
         "telefon": "03122617752",
+        "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.147799637,
+          39.568884705
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ADLİYE  ŞUBESİ",
+        "adres": "ŞENTEPE MAHALLESİ MEVLANA CADDE No: 31 POLATLI ANKARA",
+        "il": "ANKARA",
+        "telefon": "03126241099",
         "calisma_saati": "08:30-12:30/13:30-17:00"
       }
     },
@@ -10464,24 +10464,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          31.08027,
-          36.90748
-        ]
-      },
-      "properties": {
-        "tip": "PTT_SUBE",
-        "ad": "ADALET SARAYI  ŞUBESİ",
-        "adres": "ORTA MAHALLESİ BELEK CADDE No: 1 SERİK ANTALYA",
-        "il": "ANTALYA",
-        "telefon": "02427222530",
-        "calisma_saati": "08:30-12:30/13:30-17:00"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           31.434700186,
           36.787465693
         ]
@@ -10492,6 +10474,24 @@
         "adres": "BAHÇELİEVLER MAHALLESİ ANTALYA CADDE No: 85 MANAVGAT ANTALYA",
         "il": "ANTALYA",
         "telefon": "02427432363",
+        "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.08027,
+          36.90748
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ADALET SARAYI  ŞUBESİ",
+        "adres": "ORTA MAHALLESİ BELEK CADDE No: 1 SERİK ANTALYA",
+        "il": "ANTALYA",
+        "telefon": "02427222530",
         "calisma_saati": "08:30-12:30/13:30-17:00"
       }
     },
@@ -24774,6 +24774,42 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          37.40019516,
+          37.06527897
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "29 EKİM ŞUBESİ",
+        "adres": "ÇIKSORUT MAHALLESİ MAAŞKUYU CADDE No:161 ŞEHİTKAMİL GAZİANTEP",
+        "il": "GAZİANTEP",
+        "telefon": "0",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.34757216,
+          37.09269999
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "5. ZIRHLI TUGAY ŞUBESİ",
+        "adres": "KAYAÖNÜ MAHALLESİ SANİ KONUKOĞLU BULVAR No:1 ŞEHİTKAMİL GAZİANTEP",
+        "il": "GAZİANTEP",
+        "telefon": "03423210490",
+        "calisma_saati": "08:30-12:30 / 00:00-00:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           37.38972588,
           37.1234497
         ]
@@ -24846,6 +24882,42 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          37.79399988,
+          36.99612
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ADLİYE SARAYI ŞUBESİ",
+        "adres": "YUNUS EMRE MAHALLESİ ALAATTİN SOKAK No:1 NİZİP GAZİANTEP",
+        "il": "GAZİANTEP",
+        "telefon": "03425199982",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.352555,
+          37.089922
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ADLİYE ŞUBE ŞEFLİĞİ",
+        "adres": "KAYAÖNÜ MAHALLESİ TURGUT ÖZAL.... BULVAR No:1 ŞEHİTKAMİL GAZİANTEP",
+        "il": "GAZİANTEP",
+        "telefon": "03423214771",
+        "calisma_saati": "08:00-12:00 / 13:00-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           37.362114,
           37.01554704
         ]
@@ -24893,6 +24965,24 @@
         "il": "GAZİANTEP",
         "telefon": "03426112001",
         "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.680394,
+          37.419921
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ARABAN PTT MÜDÜRLÜĞÜ",
+        "adres": "TURGUT ÖZAL MAHALLESİ BABUŞOĞLU BULVAR No:40 ARABAN GAZİANTEP",
+        "il": "GAZİANTEP",
+        "telefon": "03426112001",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
       }
     },
     {
@@ -25062,6 +25152,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          37.35275112,
+          37.08123201
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "FEVZİÇAKMAK MOBİL ŞUBESİ",
+        "adres": "MÜCAHİTLER MAHALLESİ MARAŞAL FEVZİ ÇAKMAK. BULVAR No:106 ŞEHİTKAMİL GAZİANTEP",
+        "il": "GAZİANTEP",
+        "telefon": "03423220845",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           37.352751,
           37.081232
         ]
@@ -25181,6 +25289,42 @@
         "il": "GAZİANTEP",
         "telefon": "03425172303",
         "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.79752,
+          37.010361
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "HÜKÜMET KONAĞI ŞUBESİ",
+        "adres": "MİMAR SİNAN MAHALLESİ MUSTAFA KÖKMEN BULVAR No:3 A NİZİP GAZİANTEP",
+        "il": "GAZİANTEP",
+        "telefon": "03425172303",
+        "calisma_saati": "08:00-12:00 / 13:00-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.797394,
+          37.010474
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "HÜKÜMET KONAĞI ŞUBESİ",
+        "adres": "MİMAR SİNAN MAHALLESİ MUSTAFA KÖKMEN BULVAR No:1 A NİZİP GAZİANTEP",
+        "il": "GAZİANTEP",
+        "telefon": "03425199982",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
       }
     },
     {
@@ -25577,6 +25721,24 @@
         "il": "GAZİANTEP",
         "telefon": "03423200362",
         "calisma_saati": "08:30-12:30"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.35275112,
+          37.08123201
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ŞEHİTKAMİL POSTA KARGO DAĞITIM MÜDÜRLÜĞÜ",
+        "adres": "MÜCAHİTLER MAHALLESİ MARAŞAL FEVZİ ÇAKMAK. BULVAR No:106 ŞEHİTKAMİL GAZİANTEP",
+        "il": "GAZİANTEP",
+        "telefon": "03423200362",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
       }
     },
     {
@@ -28500,6 +28662,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          36.832311,
+          37.59950997
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "KAHRAMANMARAŞ DAĞITIM VE TOPLAMA MÜDÜRLÜĞÜ",
+        "adres": "ÜNGÜT MAHALLESİ PROF.DR.NECMEDDİN ERBAKAN BULVAR No:149 A ONİKİŞUBAT KAHRAMANMARAŞ",
+        "il": "KAHRAMANMARAŞ",
+        "telefon": "03442234515",
+        "calisma_saati": "08:30-17:30 / 13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           36.892778,
           37.584488
         ]
@@ -28788,24 +28968,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.621757673,
-          41.19619721
-        ]
-      },
-      "properties": {
-        "tip": "PTT_SUBE",
-        "ad": "ADLİYE SARAYI  ŞUBESİ",
-        "adres": "ERGENEKON MAHALLESİ MİMARSİNAN CADDE No: 9 MERKEZ KARABÜK",
-        "il": "KARABÜK",
-        "telefon": "03704241721",
-        "calisma_saati": "08:30-12:30/13:30-17:00"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           32.68017,
           41.24389
         ]
@@ -28816,6 +28978,24 @@
         "adres": "BARIŞ MAHALLESİ ARAPHACI CADDE No: 50 SAFRANBOLU KARABÜK",
         "il": "KARABÜK",
         "telefon": "03707126730",
+        "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.621757673,
+          41.19619721
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ADLİYE SARAYI  ŞUBESİ",
+        "adres": "ERGENEKON MAHALLESİ MİMARSİNAN CADDE No: 9 MERKEZ KARABÜK",
+        "il": "KARABÜK",
+        "telefon": "03704241721",
         "calisma_saati": "08:30-12:30/13:30-17:00"
       }
     },
@@ -31524,24 +31704,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          27.205476,
-          41.737941
-        ]
-      },
-      "properties": {
-        "tip": "PTT_SUBE",
-        "ad": "ADLİYE  ŞUBESİ",
-        "adres": "BADEMLİK MAHALLESİ MAHMUT ESAT BOZKURT CADDE No: 66 MERKEZ KIRKLARELİ",
-        "il": "KIRKLARELİ",
-        "telefon": "02885020155",
-        "calisma_saati": "08:30-12:30/13:30-17:00"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           27.35044,
           41.39687
         ]
@@ -31552,6 +31714,24 @@
         "adres": "GENÇLİK MAHALLESİ GÜNEŞ SOKAK No: 1 LÜLEBURGAZ KIRKLARELİ",
         "il": "KIRKLARELİ",
         "telefon": "02884153452",
+        "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.205476,
+          41.737941
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ADLİYE  ŞUBESİ",
+        "adres": "BADEMLİK MAHALLESİ MAHMUT ESAT BOZKURT CADDE No: 66 MERKEZ KIRKLARELİ",
+        "il": "KIRKLARELİ",
+        "telefon": "02885020155",
         "calisma_saati": "08:30-12:30/13:30-17:00"
       }
     },
@@ -36366,6 +36546,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          37.129556,
+          36.712875
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "KİLİS DAĞITIM VE TOPLAMA MÜDÜRLÜĞÜ",
+        "adres": "YAŞAR AKTÜRK MAHALLESİ POSTANE CADDE No:1 MERKEZ KİLİS",
+        "il": "KİLİS",
+        "telefon": "03480000000",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           37.129488096,
           36.712831175
         ]
@@ -36377,6 +36575,24 @@
         "il": "KİLİS",
         "telefon": "03488224060",
         "calisma_saati": "08:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.1294880961497,
+          36.7128311751652
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "KİLİS PTT MÜDÜRLÜĞÜ",
+        "adres": "YAŞAR AKTÜRK MAHALLESİ İNÖNÜ BULVAR No:7 A MERKEZ KİLİS",
+        "il": "KİLİS",
+        "telefon": "03488224060",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
       }
     },
     {
@@ -39390,6 +39606,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          29.121644253,
+          36.651888822
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ADLİYE SARAYI  ŞUBESİ",
+        "adres": "AKARCA MAHALLESİ MUSTAFA KEMAL (AKR) BULVAR No: 210 FETHİYE MUĞLA",
+        "il": "MUĞLA",
+        "telefon": "02526131463",
+        "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           27.783661,
           37.32693
         ]
@@ -39418,24 +39652,6 @@
         "adres": "BİTEZ MAHALLESİ ATATÜRK (BİTEZ) BULVAR No: 2 BODRUM MUĞLA",
         "il": "MUĞLA",
         "telefon": "02523637425",
-        "calisma_saati": "08:30-12:30/13:30-17:00"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          29.121644253,
-          36.651888822
-        ]
-      },
-      "properties": {
-        "tip": "PTT_SUBE",
-        "ad": "ADLİYE SARAYI  ŞUBESİ",
-        "adres": "AKARCA MAHALLESİ MUSTAFA KEMAL (AKR) BULVAR No: 210 FETHİYE MUĞLA",
-        "il": "MUĞLA",
-        "telefon": "02526131463",
         "calisma_saati": "08:30-12:30/13:30-17:00"
       }
     },
@@ -50370,24 +50586,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          31.406827,
-          41.291921
-        ]
-      },
-      "properties": {
-        "tip": "PTT_SUBE",
-        "ad": "ADLİYE  ŞUBESİ",
-        "adres": "SÜLEYMANLAR MAHALLESİ HASTANE CADDE No: 22 EREĞLİ ZONGULDAK",
-        "il": "ZONGULDAK",
-        "telefon": "03723160252",
-        "calisma_saati": "08:30-12:30/13:30-17:00"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           31.7884,
           41.46079
         ]
@@ -50398,6 +50596,24 @@
         "adres": "YAYLA MAHALLESİ LİMAN CADDE No: 22 MERKEZ ZONGULDAK",
         "il": "ZONGULDAK",
         "telefon": "03722512432",
+        "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.406827,
+          41.291921
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ADLİYE  ŞUBESİ",
+        "adres": "SÜLEYMANLAR MAHALLESİ HASTANE CADDE No: 22 EREĞLİ ZONGULDAK",
+        "il": "ZONGULDAK",
+        "telefon": "03723160252",
         "calisma_saati": "08:30-12:30/13:30-17:00"
       }
     },
@@ -52178,6 +52394,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "AKTEL RESİDENCE",
         "adres": "ADNAN KAHVECİ MAHALLESİ AVRUPA CADDE No: 84 BEYLİKDÜZÜ İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.922660174,
+          41.084393897
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "AKŞEMSETTİN",
+        "adres": "AKŞEMSETTİN MAHALLESİ ALPEREN CADDE No: 41 EYÜPSULTAN İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -54500,6 +54734,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "İSTANBUL 216 SİTESİ 2.ETAP",
         "adres": "DUMLUPINAR MAHALLESİ BARIŞ SOKAK No: 7  KADIKÖY İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.864355,
+          40.997107
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "İSTANBUL BAHÇELİEVLER KARGOMAT",
+        "adres": "BAHÇELİEVLER MAHALLESİ MEHMETÇİK SOKAK No: 7 BAHÇELİEVLER İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -57048,24 +57300,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          28.846021,
-          41.050191
-        ]
-      },
-      "properties": {
-        "tip": "PTT_SUBE",
-        "ad": "FATİH MAHALLESİ  ŞUBESİ",
-        "adres": "FATİH MAHALLESİ PAZAR CADDE No: 31 BAĞCILAR İSTANBUL",
-        "il": "İSTANBUL",
-        "telefon": "02120000000",
-        "calisma_saati": "08:30-12:30/13:30-17:00"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           28.866898,
           41.042463
         ]
@@ -57076,6 +57310,24 @@
         "adres": "FATİH MAHALLESİ HAMİDİYE CADDE No: 32 ESENLER İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "02125690644",
+        "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.846021,
+          41.050191
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "FATİH MAHALLESİ  ŞUBESİ",
+        "adres": "FATİH MAHALLESİ PAZAR CADDE No: 31 BAĞCILAR İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "02120000000",
         "calisma_saati": "08:30-12:30/13:30-17:00"
       }
     },
@@ -58326,24 +58578,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          28.934147,
-          41.02183
-        ]
-      },
-      "properties": {
-        "tip": "PTT_SUBE",
-        "ad": "KAYMAKAMLIK  ŞUBESİ",
-        "adres": "KARAGÜMRÜK MAHALLESİ ADNAN MENDERES VATAN BULVAR No: 66 FATİH İSTANBUL",
-        "il": "İSTANBUL",
-        "telefon": "02125346041",
-        "calisma_saati": "08:30-12:30/13:30-17:00"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           28.930000544,
           41.048385838
         ]
@@ -58354,6 +58588,24 @@
         "adres": "İSLAMBEY MAHALLESİ HZ. HALİD BULVAR No: 26 /1 EYÜPSULTAN İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "02124181356",
+        "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.934147,
+          41.02183
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "KAYMAKAMLIK  ŞUBESİ",
+        "adres": "KARAGÜMRÜK MAHALLESİ ADNAN MENDERES VATAN BULVAR No: 66 FATİH İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "02125346041",
         "calisma_saati": "08:30-12:30/13:30-17:00"
       }
     },
@@ -59154,24 +59406,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          28.912429,
-          41.085609
-        ]
-      },
-      "properties": {
-        "tip": "PTT_SUBE",
-        "ad": "MEVLANA  ŞUBESİ",
-        "adres": "MEVLANA MAHALLESİ SEFA CADDE No: 51 A GAZİOSMANPAŞA İSTANBUL",
-        "il": "İSTANBUL",
-        "telefon": "02126505064",
-        "calisma_saati": "08:30-12:30/13:30-17:00"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           29.258902,
           41.011756
         ]
@@ -59182,6 +59416,24 @@
         "adres": "MEVLANA MAHALLESİ VEYSEL KARANİ CADDE No: 228 A SANCAKTEPE İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "02163120238",
+        "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.912429,
+          41.085609
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "MEVLANA  ŞUBESİ",
+        "adres": "MEVLANA MAHALLESİ SEFA CADDE No: 51 A GAZİOSMANPAŞA İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "02126505064",
         "calisma_saati": "08:30-12:30/13:30-17:00"
       }
     },
@@ -62178,6 +62430,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          26.962978,
+          38.799433
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "ALİAĞA KARGOMAT",
+        "adres": "ATATÜRK MAHALLESİ 395 SOKAK NO: 1 C ALİAĞA İZMİR",
+        "il": "İZMİR",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           27.10311,
           38.3983
         ]
@@ -62250,6 +62520,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          27.17065,
+          38.385718
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "BUCA EĞİTİM FAKÜLTESİ KARGOMAT",
+        "adres": "DUMLUPINAR MAHALLESİ UĞUR MUMCU CADDE No: 39 BUCA İZMİR",
+        "il": "İZMİR",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           27.180355,
           38.386391
         ]
@@ -62276,6 +62564,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "DİKİLİ KARGOMAT",
         "adres": "İSMETPAŞA MAHALLESİ 9 SOKAK No: 1 DİKİLİ İZMİR",
+        "il": "İZMİR",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.22659,
+          38.46123
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "EGE ÜNİVERSİTESİ KARGOMAT",
+        "adres": "ERZENE MAHALLESİ ANKARA CADDE NO: 172 /17 BORNOVA İZMİR",
         "il": "İZMİR",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -62726,6 +63032,42 @@
         "tip": "PTT_KARGOMAT",
         "ad": "İNCİRALTI ÖĞRENCİ YURDU",
         "adres": "İNCİRALTI MAHALLESİ İNCİRALTI CADDE No: 69 BALÇOVA İZMİR",
+        "il": "İZMİR",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.179409,
+          38.449232
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "İPKİM PTT",
+        "adres": "ÇINARLI MAHALLESİ MANAS BULVAR No: 1 KONAK İZMİR",
+        "il": "İZMİR",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          27.120259,
+          38.456371
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "İZMİR KARŞIYAKA KARGOMAT",
+        "adres": "TUNA MAHALLESİ İSMAİL ÖZKUNT SOKAK No: 3 KARŞIYAKA İZMİR",
         "il": "İZMİR",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
