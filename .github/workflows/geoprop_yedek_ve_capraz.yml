@@ -11,11 +11,19 @@ on:
   workflow_dispatch:
     inputs:
       mod:
-        description: 'yedekle | caprazla'
+        description: 'yedekle | caprazla | sorgu'
         required: true
         default: 'yedekle'
       kaynak_kosu_id:
         description: 'yedekle: shard artifactleri alınacak koşu id'
+        required: false
+        default: ''
+      sql:
+        description: 'sorgu: ana Google ambarında çalıştırılacak SQL (birden çok ; ile)'
+        required: false
+        default: ''
+      ek_artifact:
+        description: 'sorgu: ayrıca indirilip ek olarak iliştirilecek artifact adı (shard_db şeması)'
         required: false
         default: ''
       yedek_artifact:
@@ -103,3 +111,39 @@ jobs:
           path: warehouse/product/google_places_ve_yogunluk.sqlite
           retention-days: 30
           compression-level: 1
+
+  sorgu:
+    if: ${{ github.event.inputs.mod == 'sorgu' }}
+    name: "Ana ambarda SQL çalıştır (araç)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Ambarı indir
+        run: |
+          mkdir -p w
+          gh release download "$AMBAR_RELEASE" --pattern 'google_places_ve_yogunluk.sqlite.gz' --dir w --repo "$GITHUB_REPOSITORY"
+          gunzip -f w/*.gz
+      - name: Ek artifact'i indir
+        if: ${{ github.event.inputs.ek_artifact != '' }}
+        run: |
+          mkdir -p ek
+          RID=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=${{ github.event.inputs.ek_artifact }}&per_page=1" --jq '.artifacts[0].workflow_run.id')
+          gh run download "$RID" --repo "$GITHUB_REPOSITORY" -n "${{ github.event.inputs.ek_artifact }}" -D ek
+          ls -la ek
+      - name: SQL
+        env:
+          SQL: ${{ github.event.inputs.sql }}
+        run: |
+          python - <<'EOF'
+          import os, sqlite3, glob
+          c = sqlite3.connect("w/google_places_ve_yogunluk.sqlite")
+          ek = glob.glob("ek/**/*.sqlite", recursive=True)
+          if ek:
+              c.execute("ATTACH DATABASE ? AS shard_db", (ek[0],)); print("ek iliştirildi:", ek[0])
+          for q in [x.strip() for x in os.environ["SQL"].split(";") if x.strip()]:
+              print("\n>>", q)
+              try:
+                  for row in c.execute(q).fetchmany(50): print("  ", row)
+              except Exception as e:
+                  print("  HATA:", e)
+          EOF
