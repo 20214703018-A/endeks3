@@ -58,6 +58,26 @@ SITES = {
                   "https://www.sgk.gov.tr/Istatistik/Devredilen/eb4b6b6f-f41a-4d49-8690-797141bfdc8d/"],
         "follow": r"[Ii]statistik/(Yillik|Aylik|Devredilen)", "depth": 2, "pdf_max": 10e6, "save_pages": True,
     },
+    "dhmi": {
+        "domain": "dhmi_havalimani_istatistik",
+        "roots": ["https://www.dhmi.gov.tr/Sayfalar/Istatistikler.aspx"],
+        "follow": r"[Ii]statistik|Istatistik", "depth": 2, "pdf_max": 20e6, "save_pages": True,
+    },
+    "tcdd": {
+        "domain": "tcdd_demiryolu_istatistik",
+        "roots": ["https://www.tcdd.gov.tr/kurumsal/istatistikler", "https://www.tcddtasimacilik.gov.tr/"],
+        "follow": r"istatist|faaliyet-rapor|yuk|lojistik", "depth": 2, "pdf_max": 30e6, "save_pages": True,
+    },
+    "tkygm": {
+        "domain": "uab_tkygm_kiyi_istatistik",
+        "roots": ["https://tkygmistatistikleri.uab.gov.tr/"],
+        "follow": r"istatist|liman|kiyi|tersane", "depth": 2, "pdf_max": 20e6, "save_pages": True,
+    },
+    "btk": {
+        "domain": "btk_iletisim_istatistik",
+        "roots": ["https://www.btk.gov.tr/iletisim-hizmetleri-istatistikleri", "https://www.btk.gov.tr/pazar-verileri"],
+        "follow": r"istatist|pazar-veri|rapor", "depth": 2, "pdf_max": 20e6, "save_pages": True,
+    },
     "ticaret_bakanligi": {
         "domain": "ticaret_bakanligi_istatistik",
         "roots": ["https://ticaret.gov.tr/istatistikler/bakanlik-istatistikleri",

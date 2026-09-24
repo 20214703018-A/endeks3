@@ -37,6 +37,10 @@ def main():
     for key in sys.argv[1:] or list(PORTALS):
         base = PORTALS[key]
         it = Intake(f"acikveri_ckan_{key}", rate=0.5)
+        if key in ("denizli", "gaziantep"):  # sunucu sertifika zinciri eksik (requests SSLError)
+            import urllib3
+            urllib3.disable_warnings()
+            it.s.verify = False
         # 1) katalog
         pkgs, start = [], 0
         while True:
