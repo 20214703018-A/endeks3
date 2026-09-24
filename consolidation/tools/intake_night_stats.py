@@ -160,7 +160,12 @@ def tga():
 def etbis():
     L = jl(R / "etbis_eticaret_siteleri" / D / "list_rows.jsonl")
     sites = {r["siteId"]: d["city"] for d in L for r in d["rows"] if r.get("siteId")}
-    return {"liste_sayfasi": len(L), "site": len(sites), "il_sayisi": len(set(sites.values())),
+    allp = set()
+    for f in (R / "etbis_eticaret_siteleri" / D).glob("all_rows*.jsonl"):
+        for d in jl(f):
+            allp |= {r["siteId"] for r in d["rows"] if r.get("siteId")}
+    union = len(set(sites) | allp)
+    return {"liste_sayfasi": len(L), "site": len(sites), "birlesik_site": union, "il_sayisi": len(set(sites.values())),
             "ilk_iller": Counter(sites.values()).most_common(10),
             "profil": len(jl(R / "etbis_eticaret_siteleri" / D / "profiles.jsonl"))}
 

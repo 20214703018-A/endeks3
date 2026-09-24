@@ -52,7 +52,7 @@ def osm_trend(layer):
 TOPICS = [
     ("E-ticaret siteleri, şirketleri, adresleri", "Kayıtlı siteler, işletme unvanları, adresler, pazaryeri satıcıları", [
         ("Ticaret Bakanlığı ETBİS — Kayıtlı Site Sorgula", "Liste il filtresiyle sayfa sayfa (10'arlı); sonra her sitenin profili",
-         f"{n(g('etbis.site'))} site / {n(g('etbis.il_sayisi'))} il şimdiye kadar (hedef ~60 bin). Unvan, site adresi, mobil uygulama, il. Profil (kayıt tarihi, işletme türü, KEP, mal/hizmet, ödeme türleri) liste bitince. Sitenin ilçe servisi bozuk.", "run"),
+         f"{n(g('etbis.birlesik_site'))} benzersiz site (sitenin gösterdiği ~60.200; sayfalama kararsız olduğundan tekrar turları sürüyor), {n(g('etbis.site'))} tanesinin ili belli. Unvan, site adresi, mobil uygulama, il. Profil: {n(g('etbis.profil'))} site (kayıt tarihi, işletme türü, KEP, mal/hizmet, ödeme türleri). Sitenin ilçe ve sektör filtreleri bozuk.", "run"),
         ("Şirket adresleri — sitelerin kendi künye/iletişim/mesafeli satış sayfaları", "6563 sayılı Kanun gereği yayımlanan künye; robots.txt'ye uyularak; yalnız çıkarılan alanlar",
          f"{n(g('adres.site'))} site tarandı: {n(g('adres.canli'))} canlı, {n(g('adres.adresli'))} açık adresli, {n(g('adres.mersisli'))} MERSİS'li, {n(g('adres.kepli'))} KEP'li. ETBİS listesi büyüdükçe devam ediyor.", "run"),
         ("Cimri — pazaryeri teklifleri + fiyat geçmişi", "Sitemap'teki ürünler; sayfadaki yapılandırılmış teklifler ve '3 aylık fiyat değişimi' tablosu (yasaklı /api/ kullanılmadan)",
@@ -230,7 +230,7 @@ footer{{margin-top:40px;color:var(--muted);font-size:13px}}
 <div class="facts">
 <div><b>{n(g("tuik.gozlem"))}</b><span>TÜİK gözlemi (432 veri akışı)</span></div>
 <div><b>{n(sum(osm26.values()) if osm26 else 0)}</b><span>OSM nesnesi, 2026 kesiti (il/ilçe/mahalle atanmış)</span></div>
-<div><b>{n((g("hal.hks_satir", 0) or 0) + (g("hal.izmir.sebzemeyve.satir", 0) or 0))}</b><span>hal fiyatı satırı (2008 →)</span></div>
+<div><b>{n(sum((g("hal.parquet", {}) or {}).values()))}</b><span>hal fiyatı satırı (HKS 2017→, İzmir 2008→)</span></div>
 <div><b>{n(g("sarj.soket"))}</b><span>şarj soketi, anlık durumuyla</span></div>
 <div><b>{n(g("tga.tesis"))}</b><span>belgeli konaklama tesisi</span></div>
 <div><b>{total_disk / 1e9:.1f} GB</b><span>diske yazılan (sıkıştırılmış)</span></div>
