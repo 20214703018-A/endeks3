@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.geoprop.track.hourly</string>
+  <key>ProgramArguments</key><array><string>/bin/bash</string><string>/Users/acar/Desktop/endeks3/consolidation/tools/schedule/track_hourly.sh</string></array>
+  <key>StartInterval</key><integer>3600</integer>
+  <key>StandardErrorPath</key><string>/Users/acar/Desktop/GEOPROP_CONSOLIDATION/logs/launchd_track_hourly.err</string>
+</dict></plist>
