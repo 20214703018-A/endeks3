@@ -144,9 +144,10 @@ def lists(it: Intake, workers: int):
                note="her satır bir liste sayfası (≤10 site); il/ilçe filtre değerleriyle")
 
 
-def allpages(it: Intake):
-    """Filtresiz tam liste (il bilgisi girilmemiş siteler dahil); il turuyla karşılaştırmak için."""
-    out = it.dir / "all_rows.jsonl"
+def allpages(it: Intake, pass_no: int = 1):
+    """Filtresiz tam liste (il bilgisi girilmemiş siteler dahil). Sitenin sıralaması kararsız (sayfalar arası
+    tekrar/eksik) olduğundan birden çok tur yapılır; her tur ayrı dosyaya yazılır, birleşimleri kullanılır."""
+    out = it.dir / ("all_rows.jsonl" if pass_no == 1 else f"all_rows_pass{pass_no}.jsonl")
     done = set()
     if out.exists():
         for l in out.read_text().splitlines():
@@ -236,8 +237,7 @@ def profiles(it: Intake, workers: int):
             for r in d["rows"]:
                 if r.get("siteId") and r["siteId"] not in seen:
                     seen.add(r["siteId"]); order.append(r["siteId"])
-    extra = it.dir / "all_rows.jsonl"  # il bilgisi olmayanlar
-    if extra.exists():
+    for extra in sorted(it.dir.glob("all_rows*.jsonl")):  # il bilgisi olmayanlar (tüm turlar)
         for l in extra.read_text().splitlines():
             try:
                 for r in json.loads(l)["rows"]:
@@ -277,12 +277,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("phase", choices=["lists", "allpages", "sectors", "profiles", "all"])
     ap.add_argument("--workers", type=int, default=2)
+    ap.add_argument("--pass-no", type=int, default=1)
     a = ap.parse_args()
     it = Intake("etbis_eticaret_siteleri")
     if a.phase in ("lists", "all"):
         lists(it, a.workers)
     if a.phase in ("allpages", "all"):
-        allpages(it)
+        allpages(it, a.pass_no)
     if a.phase in ("sectors", "all"):
         sectors(it, a.workers)
     if a.phase in ("profiles", "all"):

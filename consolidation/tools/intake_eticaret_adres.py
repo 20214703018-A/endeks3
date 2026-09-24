@@ -144,7 +144,10 @@ def do_site(site):
 def main():
     it = Intake("eticaret_sirket_adresleri")
     sites, meta = [], {}
-    for l in SRC.read_text().splitlines():
+    lines = SRC.read_text().splitlines()
+    for extra in sorted(SRC.parent.glob("all_rows*.jsonl")):  # il bilgisi olmayan siteler (tam liste turları)
+        lines += extra.read_text().splitlines()
+    for l in lines:
         try:
             d = json.loads(l)
         except ValueError:
