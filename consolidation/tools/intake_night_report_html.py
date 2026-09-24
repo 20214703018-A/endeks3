@@ -106,7 +106,7 @@ TOPICS = [
         ("Hollanda CBS — Hollandalıların tatilleri", "OData; 40 tablo, 1969→2025 (varış ülkesi, harcama, süre, konaklama, ulaşım, kişi özellikleri)",
          f"{n(g('inbound.cbs_tablo'))} tablo, {n(g('inbound.cbs_satir'))} satır.", "run"),
         ("TÜİK — Çıkış Yapan Ziyaretçi Anketi ve tüm istatistik tabloları", "Veri portalı tablo indirme servisi (SDMX'te olmayan turizm tabloları dahil)",
-         f"{n(g('inbound.tuik_portal_dosya'))} tablo indirildi; milliyet, yaş, cinsiyet, eğitim, çalışma durumu, geliş amacı, konaklama türü, harcama türü kırılımları.", "run"),
+         f"{n(g('inbound.tuik_portal_dosya'))} tablo indirildi (53'ü turizm: milliyet, ikamet ülkesi, geliş nedeni, eğitim, harcama türü, aylık gelir/kişi başı harcama, geceleme). ~3.200 indirmeden sonra TÜİK tüm alan adlarında bağlantımızı reddetmeye başladı; toplayıcı durduruldu, kalan ~1.400 dosya engel kalkınca yavaş hızla denenecek.", "part"),
         ("81 il kültür ve turizm müdürlüğü", "Her il müdürlüğü sitesinin istatistik ekleri (milliyete göre gelen turist, konaklama)",
          f"{n(g('inbound.ktb_il_dosya'))} dosya şimdiye kadar.", "run"),
         ("KTB sınır istatistikleri", "Milliyet × sınır kapısı, aylık ve yıllık bültenler 2015–2024+", "151 dosya (turizm bölümündeki KTB satırına dahil).", "ok"),

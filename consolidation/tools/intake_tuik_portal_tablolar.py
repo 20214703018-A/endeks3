@@ -62,8 +62,9 @@ def main():
     press = [x for x in items.values() if x["type"] == 1]
     direct = [x for x in items.values() if x["type"] != 1]
 
-    def download(files):
+    def download(files, timeout=90, tries=2):
         n = 0
+        failed = []
         skipped = [x for x in files if not str(x.get("url", "")).startswith("/api/")]
         files = [x for x in files if str(x.get("url", "")).startswith("/api/")]
         it.log(f"{len(files)} dosya; {len(skipped)} öğe veri tarayıcısı bağlantısı (SDMX ile zaten çekildi) — atlandı")
@@ -72,9 +73,10 @@ def main():
             if url in have:
                 continue
             try:
-                r = it.get(url, timeout=300)
+                r = it.get(url, timeout=timeout, tries=tries)
             except Exception as e:  # noqa: BLE001
-                it.log(f"indirme hata {x.get('title')}: {e}")
+                it.log(f"indirme hata {x.get('title')}: {str(e)[-120:]}")
+                failed.append(x)
                 continue
             if r.status_code != 200:
                 continue
@@ -92,9 +94,11 @@ def main():
             time.sleep(0.3)
             if n % 200 == 0:
                 it.log(f"{n} dosya indirildi")
+        download.failed = failed
         return n
 
     n = download(direct)
+    retry = list(download.failed)
     # bülten sayfalarındaki indirme bağlantıları
     att = []
     for p in press:
@@ -106,6 +110,9 @@ def main():
             att.append({"type": "press_attachment", "title": p["title"], "url": u.replace("&amp;", "&"), "press": p["url"]})
     it.log(f"bülten ekleri: {len(att)}")
     n += download(att)
+    retry += download.failed
+    it.log(f"zaman aşımına uğrayan {len(retry)} dosya uzun süreyle yeniden deneniyor")
+    n += download(retry, timeout=600, tries=1)
     it.log(f"{n} dosya indirildi")
 
 
