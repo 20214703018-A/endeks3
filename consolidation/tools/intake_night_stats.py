@@ -186,7 +186,25 @@ def cimri():
             "engel_403": sum(1 for x in L if x.get("status") == 403)}
 
 
+def inbound():
+    es = [x for x in man("eurostat_turkiye_turizm_havayolu") if x.get("dataset")]
+    ons = R / "ons_travelpac_uk" / D / "travelpac_turkiye.parquet"
+    ec = [x for x in man("eurocontrol_havalimani_trafik") if x["file"].endswith(".parquet")]
+    cbs = [x for x in man("cbs_nl_tatil_istatistikleri") if "TypedDataSet" in x["file"]]
+    tp = man("tuik_portal_tablolar")
+    il = man("turizm_ktb_il_mudurlukleri")
+    return {"eurostat_kume": len(es), "eurostat_tr_satir": sum(x.get("rows") or 0 for x in es),
+            "eurostat_tour_kume": sum(1 for x in es if x["dataset"].startswith("tour_")),
+            "eurostat_avia_kume": sum(1 for x in es if x["dataset"].startswith("avia_")),
+            "ons_tr_satir": int(len(pd.read_parquet(ons, columns=None))) if ons.exists() else None,
+            "eurocontrol_tr_satir": sum(x.get("rows") or 0 for x in ec),
+            "cbs_tablo": len(cbs), "cbs_satir": sum(x.get("rows") or 0 for x in cbs),
+            "tuik_portal_dosya": sum(1 for x in tp if x.get("method") == "rest_get_download"),
+            "ktb_il_dosya": len(il)}
+
+
 def main():
+    S["inbound"] = safe(inbound)
     S["etbis"] = safe(etbis)
     S["adres"] = safe(adres)
     S["cimri"] = safe(cimri)

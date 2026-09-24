@@ -96,6 +96,22 @@ TOPICS = [
         ("OpenStreetMap — turizm ve tarihî noktalar", "osmium katmanı", f"{osm_trend('turizm_poi')} nesne (2021 → 2026).", "ok"),
         ("BKM — yabancı kartların yurt içi kullanımı", "Aylık tablo", "BKM toplamasının parçası.", "run"),
     ]),
+    ("Yurtdışından gelen turist — Avrupa odaklı", "Kaynak pazarların talep tarafı: kim, ne zaman, nereden, ne amaçla, ne kadar harcıyor", [
+        ("Eurostat — AB'de yaşayanların seyahatleri + havayolu", "Tüm tour_* ve avia_* kümeleri toplu indirilip Türkiye satırları süzüldü",
+         f"{n(g('inbound.eurostat_kume'))} kümede Türkiye satırı ({n(g('inbound.eurostat_tour_kume'))} turizm, {n(g('inbound.eurostat_avia_kume'))} havayolu), {n(g('inbound.eurostat_tr_satir'))} satır: varış ülkesi TR seyahat/geceleme/harcama; Avrupa havalimanı ↔ Türk havalimanı aylık yolcu/uçuş/yük; Türkiye'nin kendi bildirdiği hat verileri.", "run"),
+        ("Birleşik Krallık ONS Travelpac 1994–2023", "Yıllık/çeyreklik IPS veri paketleri (ham zip saklandı)",
+         f"{n(g('inbound.ons_tr_satir'))} Türkiye ziyaret grubu satırı: çeyrek, amaç, ulaşım, paket tur, yaş grubu, cinsiyet, süre bandı + ziyaret, geceleme, harcama.", "ok"),
+        ("Eurocontrol — havalimanı bazında günlük uçuşlar 2016→Ağu 2026", "ANS Performance açık verisi",
+         f"Türk havalimanları: {n(g('inbound.eurocontrol_tr_satir'))} havalimanı-gün satırı (varış/kalkış); ham dosyada tüm Avrupa (978 bin satır).", "ok"),
+        ("Hollanda CBS — Hollandalıların tatilleri", "OData; 40 tablo, 1969→2025 (varış ülkesi, harcama, süre, konaklama, ulaşım, kişi özellikleri)",
+         f"{n(g('inbound.cbs_tablo'))} tablo, {n(g('inbound.cbs_satir'))} satır.", "run"),
+        ("TÜİK — Çıkış Yapan Ziyaretçi Anketi ve tüm istatistik tabloları", "Veri portalı tablo indirme servisi (SDMX'te olmayan turizm tabloları dahil)",
+         f"{n(g('inbound.tuik_portal_dosya'))} tablo indirildi; milliyet, yaş, cinsiyet, eğitim, çalışma durumu, geliş amacı, konaklama türü, harcama türü kırılımları.", "run"),
+        ("81 il kültür ve turizm müdürlüğü", "Her il müdürlüğü sitesinin istatistik ekleri (milliyete göre gelen turist, konaklama)",
+         f"{n(g('inbound.ktb_il_dosya'))} dosya şimdiye kadar.", "run"),
+        ("KTB sınır istatistikleri", "Milliyet × sınır kapısı, aylık ve yıllık bültenler 2015–2024+", "151 dosya (turizm bölümündeki KTB satırına dahil).", "ok"),
+        ("Rusya Rosstat · Almanya Destatis", "Ulusal çıkış istatistikleri", "Rosstat yurtdışından erişime kapalı; Destatis GENESIS servis hesabı istiyor (hesap açmıyorum). Almanya için Eurostat verisi kullanılıyor.", "block"),
+    ]),
     ("Şarj istasyonları — tüm Türkiye", "Koordinat, soket, güç, fiyat, anlık cihaz durumu", [
         ("EPDK Şarj@TR", "Uygulamanın açık servisi: istasyon listesi + her istasyon detayı",
          f"{n(g('sarj.sarjtr_istasyon_detay'))} istasyon, {n(g('sarj.soket'))} soket, {n(g('sarj.operator_sayisi'))} operatör şirket. Anlık durum: boş {n(g('sarj.soket_durum.FREE'))}, kullanımda {n(g('sarj.soket_durum.IN_USE'))}, bakımda {n(g('sarj.soket_durum.MAINTENANCE'))}, arızalı {n(g('sarj.soket_durum.FAULT'))}.", "ok"),
@@ -226,7 +242,7 @@ footer{{margin-top:40px;color:var(--muted);font-size:13px}}
 <pre>cp ~/Desktop/endeks3/consolidation/tools/schedule/com.geoprop.track.*.plist ~/Library/LaunchAgents/
 launchctl load ~/Library/LaunchAgents/com.geoprop.track.daily.plist
 launchctl load ~/Library/LaunchAgents/com.geoprop.track.hourly.plist</pre></div>
-<div class="box"><h3>3 · Disk</h3><p>Boş alan ~7 GB. En büyük yeni kalemler: KGM trafik haritaları (PDF, 1,9 GB) ve belediye dosyaları. Ayrıca indirdiğim güncel OSM dosyası (650 MB) yerelde zaten olan tarihçe dosyasının 8 gün yenisi — isterseniz silerim.</p></div>
+<div class="box"><h3>3 · Disk</h3><p>Sabah disk 811 MB boşa düştü (asıl büyüme Codex önbelleğinden). Onayınızla yinelenen OSM dosyası (618 MB) silindi, pip/uv/Homebrew önbellekleri temizlendi → ~5 GB boş. Toplayıcılar 1,5 GB altında büyük dosya yazmayı otomatik durduruyor; bu sürede yazma hatası olmadı.</p></div>
 <div class="box"><h3>4 · Engelli kaynaklar</h3><p>Captcha (EPDK lisans sorgu, EPDK il/ilçe akaryakıt bülteni) ve bot koruması (Trendyol, Hepsiburada, n11, PTTAVM, obilet) olan sitelerde korumayı aşmadım. Bu veriler için resmî API/ücretli erişim veya veri paylaşım anlaşması gerekir.</p></div>
 </div></section>
 <section class="topic"><header><h2>Dosyalar nerede</h2></header>

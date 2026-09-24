@@ -90,6 +90,24 @@ SITES = {
 }
 
 
+IL_SLUG = ["antalya", "istanbul", "mugla", "izmir", "aydin", "nevsehir", "denizli", "bursa", "balikesir", "canakkale",
+           "trabzon", "rize", "konya", "gaziantep", "sanliurfa", "mardin", "hatay", "mersin", "adana", "ankara",
+           "edirne", "tekirdag", "kocaeli", "sakarya", "bolu", "eskisehir", "kayseri", "erzurum", "kars", "van",
+           "artvin", "samsun", "sinop", "kastamonu", "bartin", "zonguldak", "duzce", "yalova", "bilecik", "kutahya",
+           "afyonkarahisar", "isparta", "burdur", "usak", "manisa", "karaman", "aksaray", "nigde", "kirsehir",
+           "yozgat", "corum", "amasya", "tokat", "ordu", "giresun", "gumushane", "bayburt", "erzincan", "sivas",
+           "malatya", "elazig", "tunceli", "bingol", "mus", "bitlis", "siirt", "batman", "diyarbakir", "adiyaman",
+           "kahramanmaras", "osmaniye", "kilis", "sirnak", "hakkari", "agri", "igdir", "ardahan", "karabuk",
+           "kirikkale", "cankiri", "kirklareli"]
+for _il in IL_SLUG:
+    SITES[f"ktb_il_{_il}"] = {
+        "domain": "turizm_ktb_il_mudurlukleri", "roots": [f"https://{_il}.ktb.gov.tr/"],
+        "follow": r"istatist|turizm|konaklama|ziyaret|sinir|sınır|belgeli|tesis|rakam|veri|bulten|bülten|20\d\d",
+        "depth": 2, "pdf_max": 12e6, "save_pages": False,
+        "att_filter": r"istatist|turist|ziyaret|konaklama|geceleme|doluluk|sinir|sınır|milliyet|yolcu|tesis|belgeli|rakam|20\d\d",
+    }
+
+
 def main():
     for key in sys.argv[1:] or list(SITES):
         cfg = SITES[key]
