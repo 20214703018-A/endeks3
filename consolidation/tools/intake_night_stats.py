@@ -203,7 +203,13 @@ def inbound():
             "ktb_il_dosya": len(il)}
 
 
+def opet():
+    L = jl(R / "akaryakit_opet_fiyat_arsivi" / D / "prices_compact.jsonl.gz")
+    return {"ilce_donem": len(L), "ilce": len({x["district"] for x in L}), "satir": sum(len(x.get("rows") or []) for x in L)}
+
+
 def main():
+    S["opet"] = safe(opet)
     S["inbound"] = safe(inbound)
     S["etbis"] = safe(etbis)
     S["adres"] = safe(adres)

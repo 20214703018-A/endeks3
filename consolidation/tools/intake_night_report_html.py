@@ -160,7 +160,9 @@ TOPICS = [
         ("Daha eski geçmiş", "GitHub/Kaggle arşiv araması", "Kamuya açık, güvenilir bir arşiv bulunamadı; geçmiş bundan sonra izleme ile birikecek.", "part"),
     ]),
     ("Seçtiğim ek değerli veriler", "", [
-        ("EPDK akaryakıt ve LPG günlük bülteni", "Resmî servis, 2015 → bugün", "Kota nedeniyle yavaş; kota açıldıkça ilerler.", "run"),
+        ("Opet fiyat arşivi — ilçe bazında günlük pompa fiyatı", "Opet'in açık arşiv servisi; 926 ilçe × 2015→bugün, tüm ürünler",
+         f"{n(g('opet.ilce'))} ilçe, {n(g('opet.ilce_donem'))} ilçe-dönem, {n(g('opet.satir'))} fiyat satırı şimdiye kadar.", "run"),
+        ("EPDK akaryakıt ve LPG günlük bülteni (Türkiye ortalaması)", "Resmî servis, 2015 → bugün", "Kota çok dar (2 saatte 15 gün); arka planda yavaşça ilerliyor. Petrol Ofisi/BP arşivi captcha istediği için kullanılmadı.", "run"),
         ("OpenStreetMap yıllık kesitler 2021–2025", "Yerel PBF dosyalarından 12 katman × 5 yıl", "İlçe/mahalle bazında 'haritada var olma' değişimi için taban.", "ok"),
         ("OSM enerji, eğitim/sağlık/kamu, otopark, pazar yerleri", "osmium katmanları",
          f"Enerji {n(osm26.get('enerji_altyapi'))}, eğitim-sağlık-kamu {n(osm26.get('egitim_saglik_kamu'))}, otopark {n(osm26.get('otoparklar'))}, pazar yeri {n(osm26.get('pazar_hal'))}.", "ok"),
