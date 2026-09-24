@@ -144,10 +144,11 @@ def lists(it: Intake, workers: int):
                note="her satır bir liste sayfası (≤10 site); il/ilçe filtre değerleriyle")
 
 
-def allpages(it: Intake, pass_no: int = 1):
+def allpages(it: Intake, pass_no: int = 1, url_filter: str = ""):
     """Filtresiz tam liste (il bilgisi girilmemiş siteler dahil). Sitenin sıralaması kararsız (sayfalar arası
     tekrar/eksik) olduğundan birden çok tur yapılır; her tur ayrı dosyaya yazılır, birleşimleri kullanılır."""
-    out = it.dir / ("all_rows.jsonl" if pass_no == 1 else f"all_rows_pass{pass_no}.jsonl")
+    tag = f"_url{re.sub(r'[^A-Za-z0-9]+', '_', url_filter)}" if url_filter else ""
+    out = it.dir / ("all_rows.jsonl" if pass_no == 1 and not tag else f"all_rows_pass{pass_no}{tag}.jsonl")
     done = set()
     if out.exists():
         for l in out.read_text().splitlines():
@@ -155,9 +156,9 @@ def allpages(it: Intake, pass_no: int = 1):
                 done.add(json.loads(l)["page"])
             except ValueError:
                 pass
-    params = {"page": 1, "url": "", "cityId": "", "districtId": "", "sector": "", "isItCrossBorder": ""}
+    params = {"page": 1, "url": url_filter, "cityId": "", "districtId": "", "sector": "", "isItCrossBorder": ""}
     rows, maxp = parse_list(get(LIST, params).text)
-    it.log(f"tam liste: {maxp} sayfa, {len(done)} tamam")
+    it.log(f"tam liste (url='{url_filter}'): {maxp} sayfa, {len(done)} tamam")
     for pg in range(1, maxp + 1):
         if pg in done:
             continue
@@ -278,12 +279,13 @@ def main():
     ap.add_argument("phase", choices=["lists", "allpages", "sectors", "profiles", "all"])
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--pass-no", type=int, default=1)
+    ap.add_argument("--url-filter", default="")
     a = ap.parse_args()
     it = Intake("etbis_eticaret_siteleri")
     if a.phase in ("lists", "all"):
         lists(it, a.workers)
     if a.phase in ("allpages", "all"):
-        allpages(it, a.pass_no)
+        allpages(it, a.pass_no, a.url_filter)
     if a.phase in ("sectors", "all"):
         sectors(it, a.workers)
     if a.phase in ("profiles", "all"):
