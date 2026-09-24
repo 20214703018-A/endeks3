@@ -157,7 +157,11 @@ def main():
     out = it.dir / "sites.jsonl"
     done = set()
     if out.exists():
-        done = {json.loads(l)["site"] for l in out.read_text().splitlines() if l.strip()}
+        for l in out.read_text().splitlines():
+            try:
+                done.add(json.loads(l)["site"])
+            except ValueError:  # yarım kalmış satır
+                pass
     todo = [s for s in sites if s not in done]
     it.log(f"{len(sites)} site (ETBİS listesinden), {len(todo)} kaldı")
     lock = threading.Lock()

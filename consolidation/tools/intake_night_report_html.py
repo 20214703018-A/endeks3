@@ -56,7 +56,7 @@ TOPICS = [
         ("Şirket adresleri — sitelerin kendi künye/iletişim/mesafeli satış sayfaları", "6563 sayılı Kanun gereği yayımlanan künye; robots.txt'ye uyularak; yalnız çıkarılan alanlar",
          f"{n(g('adres.site'))} site tarandı: {n(g('adres.canli'))} canlı, {n(g('adres.adresli'))} açık adresli, {n(g('adres.mersisli'))} MERSİS'li, {n(g('adres.kepli'))} KEP'li. ETBİS listesi büyüdükçe devam ediyor.", "run"),
         ("Cimri — pazaryeri teklifleri + fiyat geçmişi", "Sitemap'teki ürünler; sayfadaki yapılandırılmış teklifler ve '3 aylık fiyat değişimi' tablosu (yasaklı /api/ kullanılmadan)",
-         f"Katalog: {n(g('cimri.katalog_url'))} ürün URL'si. Ürün sayfaları: {n(g('cimri.urun_sayfasi'))} ({n(g('cimri.teklif'))} teklif, {n(g('cimri.gecmis_noktasi'))} fiyat-geçmişi noktası). Site şu an 403 (Cloudflare) veriyor; bekleyip yeniden deniyor.", "part"),
+         f"Katalog: {n(g('cimri.katalog_url'))} ürün URL'si. Ürün sayfaları: {n(g('cimri.urun_sayfasi'))} ({n(g('cimri.teklif'))} teklif, {n(g('cimri.gecmis_noktasi'))} fiyat-geçmişi noktası). Site 1 saattir 403 (Cloudflare) verdi; toplayıcı durduruldu, koruma aşılmadı. Katalog elimizde.", "block"),
         ("Pazarama (20.351 mağaza)", "Mağaza sayfasındaki satıcı bloğu",
          "Kişisel veri içerdiği için oturumun güvenlik denetimi istekleri durdurdu; toplanmadı.", "wait"),
         ("Trendyol · Hepsiburada · n11 · PTTAVM · Google Alışveriş", "Açık sitemap/API arandı",

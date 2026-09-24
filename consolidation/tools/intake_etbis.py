@@ -144,6 +144,30 @@ def lists(it: Intake, workers: int):
                note="her satır bir liste sayfası (≤10 site); il/ilçe filtre değerleriyle")
 
 
+def allpages(it: Intake):
+    """Filtresiz tam liste (il bilgisi girilmemiş siteler dahil); il turuyla karşılaştırmak için."""
+    out = it.dir / "all_rows.jsonl"
+    done = set()
+    if out.exists():
+        for l in out.read_text().splitlines():
+            try:
+                done.add(json.loads(l)["page"])
+            except ValueError:
+                pass
+    params = {"page": 1, "url": "", "cityId": "", "districtId": "", "sector": "", "isItCrossBorder": ""}
+    rows, maxp = parse_list(get(LIST, params).text)
+    it.log(f"tam liste: {maxp} sayfa, {len(done)} tamam")
+    for pg in range(1, maxp + 1):
+        if pg in done:
+            continue
+        rs = rows if pg == 1 else parse_list(get(LIST, {**params, "page": pg}).text)[0]
+        with lock, out.open("a") as f:
+            f.write(json.dumps({"page": pg, "maxPage": maxp, "rows": rs, "at": now_iso()}, ensure_ascii=False) + "\n")
+        if pg % 500 == 0:
+            it.log(f"tam liste: {pg}/{maxp}")
+    it._record(out, source_url=LIST, method="html_paginated_unfiltered", rows=sum(1 for _ in out.open()))
+
+
 def sectors(it: Intake, workers: int):
     s = BeautifulSoup(get(LIST).text, "html.parser")
     secs = [(o.get("value"), o.text.strip()) for o in s.select("select[name=sector] option") if o.get("value")]
@@ -212,6 +236,15 @@ def profiles(it: Intake, workers: int):
             for r in d["rows"]:
                 if r.get("siteId") and r["siteId"] not in seen:
                     seen.add(r["siteId"]); order.append(r["siteId"])
+    extra = it.dir / "all_rows.jsonl"  # il bilgisi olmayanlar
+    if extra.exists():
+        for l in extra.read_text().splitlines():
+            try:
+                for r in json.loads(l)["rows"]:
+                    if r.get("siteId") and r["siteId"] not in seen:
+                        seen.add(r["siteId"]); order.append(r["siteId"])
+            except ValueError:
+                pass
     out = it.dir / "profiles.jsonl"
     done = set()
     if out.exists():
@@ -242,12 +275,14 @@ def profiles(it: Intake, workers: int):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("phase", choices=["lists", "sectors", "profiles", "all"])
+    ap.add_argument("phase", choices=["lists", "allpages", "sectors", "profiles", "all"])
     ap.add_argument("--workers", type=int, default=2)
     a = ap.parse_args()
     it = Intake("etbis_eticaret_siteleri")
     if a.phase in ("lists", "all"):
         lists(it, a.workers)
+    if a.phase in ("allpages", "all"):
+        allpages(it)
     if a.phase in ("sectors", "all"):
         sectors(it, a.workers)
     if a.phase in ("profiles", "all"):

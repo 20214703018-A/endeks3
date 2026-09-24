@@ -34,7 +34,12 @@ def search(it, type_ids, archive, page):
 def main():
     it = Intake("tuik_portal_tablolar", rate=0.8)
     items = {}
-    for tids in ([2], [5], [6], [4], [1]):
+    cached = it.dir / "items.json.gz"
+    if cached.exists():
+        import gzip as _gz
+        items = {x["url"]: x for x in json.loads(_gz.open(cached).read())}
+        it.log(f"önceki arama listesi kullanılıyor: {len(items)} öğe")
+    for tids in ([] if items else ([2], [5], [6], [4], [1])):
         for archive in (False, True):
             page = 1
             while True:
@@ -49,44 +54,58 @@ def main():
                     items.setdefault(x["url"], {**x, "archive": archive})
                 page += 1
             it.log(f"tip {tids} arşiv={archive}: toplam {len(items)} öğe")
-    it.save_json("items.json", list(items.values()), source_url=B + "/api/tr/data/search", method="rest_post_paginated")
+    if not cached.exists():
+        it.save_json("items.json", list(items.values()), source_url=B + "/api/tr/data/search", method="rest_post_paginated")
     have = set()
     if it.manifest.exists():
         have = {json.loads(l)["source_url"] for l in it.manifest.read_text().splitlines() if l.strip()}
     press = [x for x in items.values() if x["type"] == 1]
-    files = [x for x in items.values() if x["type"] != 1]
+    direct = [x for x in items.values() if x["type"] != 1]
+
+    def download(files):
+        n = 0
+        skipped = [x for x in files if not str(x.get("url", "")).startswith("/api/")]
+        files = [x for x in files if str(x.get("url", "")).startswith("/api/")]
+        it.log(f"{len(files)} dosya; {len(skipped)} öğe veri tarayıcısı bağlantısı (SDMX ile zaten çekildi) — atlandı")
+        for x in files:
+            url = B + x["url"]
+            if url in have:
+                continue
+            try:
+                r = it.get(url, timeout=300)
+            except Exception as e:  # noqa: BLE001
+                it.log(f"indirme hata {x.get('title')}: {e}")
+                continue
+            if r.status_code != 200:
+                continue
+            cd = r.headers.get("content-disposition", "")
+            m = re.search(r"filename\*?=(?:UTF-8'')?\"?([^\";]+)", cd)
+            fname = unquote(m.group(1)) if m else re.sub(r"[^\w.-]+", "_", x.get("title", "dosya"))[:120]
+            ext = fname.rsplit(".", 1)[-1].lower() if "." in fname else ""
+            safe = re.sub(r"[^\w.,-]+", "_", f"{x['type']}_{fname}")[-180:]
+            it.save_bytes(f"files/{safe}", r.content, source_url=url, method="rest_get_download",
+                          compress=ext not in ("xlsx", "zip", "rar", "docx"),
+                          extra={"title": x.get("title"), "item_type": x["type"], "archive": x.get("archive"),
+                                 "press": x.get("press"), "date": x.get("date")})
+            have.add(url)
+            n += 1
+            time.sleep(0.3)
+            if n % 200 == 0:
+                it.log(f"{n} dosya indirildi")
+        return n
+
+    n = download(direct)
     # bülten sayfalarındaki indirme bağlantıları
+    att = []
     for p in press:
         try:
             r = it.get(B + p["url"], timeout=60)
         except Exception:  # noqa: BLE001
             continue
         for u in set(re.findall(r'(/api/tr/data/downloads\?[^"\'<> ]+)', r.text)):
-            files.append({"type": "press_attachment", "title": p["title"], "url": u.replace("&amp;", "&"), "press": p["url"]})
-    it.log(f"{len(files)} indirilebilir dosya")
-    n = 0
-    for x in files:
-        url = B + x["url"]
-        if url in have:
-            continue
-        try:
-            r = it.get(url, timeout=300)
-        except Exception as e:  # noqa: BLE001
-            it.log(f"indirme hata {x.get('title')}: {e}")
-            continue
-        if r.status_code != 200:
-            continue
-        cd = r.headers.get("content-disposition", "")
-        m = re.search(r"filename\*?=(?:UTF-8'')?\"?([^\";]+)", cd)
-        fname = unquote(m.group(1)) if m else re.sub(r"[^\w.-]+", "_", x.get("title", "dosya"))[:120]
-        ext = fname.rsplit(".", 1)[-1].lower() if "." in fname else ""
-        safe = re.sub(r"[^\w.,-]+", "_", f"{x['type']}_{fname}")[-180:]
-        it.save_bytes(f"files/{safe}", r.content, source_url=url, method="rest_get_download",
-                      compress=ext not in ("xlsx", "zip", "rar", "docx"),
-                      extra={"title": x.get("title"), "item_type": x["type"], "archive": x.get("archive"),
-                             "press": x.get("press"), "date": x.get("date")})
-        n += 1
-        time.sleep(0.3)
+            att.append({"type": "press_attachment", "title": p["title"], "url": u.replace("&amp;", "&"), "press": p["url"]})
+    it.log(f"bülten ekleri: {len(att)}")
+    n += download(att)
     it.log(f"{n} dosya indirildi")
 
 
