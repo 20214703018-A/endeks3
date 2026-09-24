@@ -52,7 +52,7 @@ def osm_trend(layer):
 TOPICS = [
     ("E-ticaret siteleri, şirketleri, adresleri", "Kayıtlı siteler, işletme unvanları, adresler, pazaryeri satıcıları", [
         ("Ticaret Bakanlığı ETBİS — Kayıtlı Site Sorgula", "Liste il filtresiyle sayfa sayfa (10'arlı); sonra her sitenin profili",
-         f"{n(g('etbis.birlesik_site'))} benzersiz site (sitenin gösterdiği ~60.200; sayfalama kararsız olduğundan tekrar turları sürüyor), {n(g('etbis.site'))} tanesinin ili belli. Unvan, site adresi, mobil uygulama, il. Profil: {n(g('etbis.profil'))} site (kayıt tarihi, işletme türü, KEP, mal/hizmet, ödeme türleri). Sitenin ilçe ve sektör filtreleri bozuk.", "run"),
+         f"{n(g('etbis.birlesik_site'))} benzersiz site (sitenin gösterdiği ~60.210'un ~%99,7'si; sayfalama kararsız olduğundan il, tam liste ve site-adresi-uzantısı süzgeçli turların birleşimi), {n(g('etbis.site'))} tanesinin ili belli. Unvan, site adresi, mobil uygulama, il. Profil: {n(g('etbis.profil'))} site (kayıt tarihi, işletme türü, KEP, mal/hizmet, ödeme türleri). Sitenin ilçe ve sektör filtreleri bozuk.", "run"),
         ("Şirket adresleri — sitelerin kendi künye/iletişim/mesafeli satış sayfaları", "6563 sayılı Kanun gereği yayımlanan künye; robots.txt'ye uyularak; yalnız çıkarılan alanlar",
          f"{n(g('adres.site'))} site tarandı: {n(g('adres.canli'))} canlı, {n(g('adres.adresli'))} açık adresli, {n(g('adres.mersisli'))} MERSİS'li, {n(g('adres.kepli'))} KEP'li. ETBİS listesi büyüdükçe devam ediyor.", "run"),
         ("Cimri — pazaryeri teklifleri + fiyat geçmişi", "Sitemap'teki ürünler; sayfadaki yapılandırılmış teklifler ve '3 aylık fiyat değişimi' tablosu (yasaklı /api/ kullanılmadan)",
