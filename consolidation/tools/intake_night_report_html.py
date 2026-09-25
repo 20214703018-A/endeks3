@@ -106,7 +106,7 @@ TOPICS = [
         ("Hollanda CBS — Hollandalıların tatilleri", "OData; 40 tablo, 1969→2025 (varış ülkesi, harcama, süre, konaklama, ulaşım, kişi özellikleri)",
          f"{n(g('inbound.cbs_tablo'))} tablo, {n(g('inbound.cbs_satir'))} satır.", "run"),
         ("TÜİK — Çıkış Yapan Ziyaretçi Anketi ve tüm istatistik tabloları", "Veri portalı tablo indirme servisi (SDMX'te olmayan turizm tabloları dahil)",
-         f"{n(g('inbound.tuik_portal_dosya'))} tablo indirildi (53'ü turizm: milliyet, ikamet ülkesi, geliş nedeni, eğitim, harcama türü, aylık gelir/kişi başı harcama, geceleme). ~3.200 indirmeden sonra TÜİK tüm alan adlarında bağlantımızı reddetmeye başladı; toplayıcı durduruldu, kalan ~1.400 dosya engel kalkınca yavaş hızla denenecek.", "part"),
+         f"{n(g('inbound.tuik_portal_dosya'))} tablo indirildi (53'ü turizm: milliyet, ikamet ülkesi, geliş nedeni, eğitim, harcama türü, aylık gelir/kişi başı harcama, geceleme). ~3.200 indirmeden sonra TÜİK bağlantımızı geçici olarak reddetti; ertesi gün engel kalktı, kalan dosyalar istekler arası 3 sn ile iniyor.", "run"),
         ("81 il kültür ve turizm müdürlüğü", "Her il müdürlüğü sitesinin istatistik ekleri (milliyete göre gelen turist, konaklama)",
          f"{n(g('inbound.ktb_il_dosya'))} dosya şimdiye kadar.", "run"),
         ("KTB sınır istatistikleri", "Milliyet × sınır kapısı, aylık ve yıllık bültenler 2015–2024+", "151 dosya (turizm bölümündeki KTB satırına dahil).", "ok"),
@@ -156,7 +156,8 @@ TOPICS = [
     ("Zincir market fiyatları — kalem kalem", "BİM, A101, ŞOK, Migros, CarrefourSA, Tarım Kredi, Hakmar", [
         ("Market Fiyatı (TÜBİTAK / Ticaret Bakanlığı) — güncel", "Her il için zincir başına merkez şube; tüm ürün sayfaları",
          f"{n(g('market.fiyat_il_sayisi'))}/81 il tamamlandı ({n(g('market.fiyat_satiri'))} ürün×şube fiyatı; il başına ~{n(g('market.il_basina_max_urun'))} ürün). Batı büyükşehirleri önce. 1 istek/sn — sürüyor.", "run"),
-        ("Market Fiyatı — geçmiş", "Ürün başına son 90 gün günlük fiyat (zincir bazında)", "İl fiyatları bitince İstanbul, Ankara, İzmir için başlar.", "run"),
+        ("Market Fiyatı — geçmiş", "Ürün başına son 90 gün günlük fiyat (zincir bazında)",
+         f"İstanbul tamamlandı; toplam {n(g('market.gecmis_satir'))} günlük fiyat gözlemi. Ankara ve İzmir sürüyor.", "run"),
         ("Daha eski geçmiş", "GitHub/Kaggle arşiv araması", "Kamuya açık, güvenilir bir arşiv bulunamadı; geçmiş bundan sonra izleme ile birikecek.", "part"),
     ]),
     ("Seçtiğim ek değerli veriler", "", [
