@@ -41,7 +41,8 @@ class DiskFull(RuntimeError):
 class Intake:
     def __init__(self, domain: str, run_date: str | None = None, rate: float = 1.0):
         self.domain = domain
-        self.date = run_date or dt.date.today().isoformat()
+        # INTAKE_RUN_DATE: gece yarısını aşan/yeniden başlatılan turlar aynı tarihli klasöre devam etsin
+        self.date = run_date or os.environ.get("INTAKE_RUN_DATE") or dt.date.today().isoformat()
         self.dir = RAW_ROOT / domain / self.date
         self.dir.mkdir(parents=True, exist_ok=True)
         self.manifest = self.dir / "manifest.jsonl"

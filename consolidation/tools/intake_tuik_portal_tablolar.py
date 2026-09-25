@@ -32,7 +32,7 @@ def search(it, type_ids, archive, page):
 
 
 def main():
-    it = Intake("tuik_portal_tablolar", rate=0.8)
+    it = Intake("tuik_portal_tablolar", rate=3.0)  # 2026-09-24: ~3.200 indirmeden sonra TÜİK IP engeli → yavaş
     items = {}
     cached = it.dir / "items.json.gz"
     if cached.exists():
