@@ -93,7 +93,7 @@ def main():
         out = it.dir / f"{svc}.jsonl"
         done = set()
         if out.exists():
-            done = {json.loads(l)["date"] for l in out.read_text().splitlines() if l.strip()}
+            done = {json.loads(l)["date"] for l in out.read_text().split("\n") if l.strip()}
         d = dt.date.today()
         while d >= start:
             if d.isoformat() not in done:
@@ -107,7 +107,9 @@ def main():
                     it.log(f"{svc}: {d} HTTP {r.status_code}")
             d -= dt.timedelta(days=1)
         recs = []
-        for l in out.read_text().splitlines():
+        for l in out.read_text().split("\n"):
+            if not l.strip():
+                continue
             x = json.loads(l)
             for row in x.get("data") or []:
                 recs.append({"bulten_tarihi": x["date"], "tarih": row.get("Tarih"), "yakit": row.get("Yakıt"),

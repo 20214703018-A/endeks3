@@ -33,7 +33,7 @@ def main():
     out = it.dir / "responses.jsonl"
     done = set()
     if out.exists():
-        for l in out.read_text().splitlines():
+        for l in out.read_text().split("\n"):
             try:
                 d = json.loads(l)
                 if d.get("ok"):
@@ -71,7 +71,9 @@ def main():
     a = call("A", "api/svt/invokeService", "anaFaaliyetlereGoreUreticiDagilimi", {"ilId": -1, "ilceId": -1, "kod": None}, LZ)
     sectors = []
     if a is None:  # önceden alınmış
-        for l in out.read_text().splitlines():
+        for l in out.read_text().split("\n"):
+            if not l.strip():
+                continue
             d = json.loads(l)
             if d["key"] == "A" and d["ok"]:
                 a = d["res"]

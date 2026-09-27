@@ -144,9 +144,9 @@ def do_site(site):
 def main():
     it = Intake("eticaret_sirket_adresleri")
     sites, meta = [], {}
-    lines = SRC.read_text().splitlines()
+    lines = SRC.read_text().split("\n")
     for extra in sorted(SRC.parent.glob("all_rows*.jsonl")):  # il bilgisi olmayan siteler (tam liste turları)
-        lines += extra.read_text().splitlines()
+        lines += extra.read_text().split("\n")
     for l in lines:
         try:
             d = json.loads(l)
@@ -160,7 +160,7 @@ def main():
     out = it.dir / "sites.jsonl"
     done = set()
     if out.exists():
-        for l in out.read_text().splitlines():
+        for l in out.read_text().split("\n"):
             try:
                 done.add(json.loads(l)["site"])
             except ValueError:  # yarım kalmış satır

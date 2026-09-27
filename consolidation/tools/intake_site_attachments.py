@@ -121,7 +121,7 @@ def main():
         att_filter = re.compile(cfg["att_filter"], re.I) if cfg.get("att_filter") else None
         have = set()
         if it.manifest.exists():
-            have = {json.loads(l)["source_url"] for l in it.manifest.read_text().splitlines() if l.strip()}
+            have = {json.loads(l)["source_url"] for l in it.manifest.read_text().split("\n") if l.strip()}
         queue = [(r, 0) for r in cfg["roots"]]
         visited, atts = set(), {}
         while queue:

@@ -41,7 +41,7 @@ def main():
     have = set()
     if it.manifest.exists():
         import json
-        have = {json.loads(l).get("dataset") for l in it.manifest.read_text().splitlines() if l.strip()}
+        have = {json.loads(l).get("dataset") for l in it.manifest.read_text().split("\n") if l.strip()}
     for code, title in codes:
         if code in have:
             continue

@@ -36,7 +36,7 @@ def main():
     out = it.dir / "pages.jsonl"
     done = set()
     if out.exists():
-        done = {(json.loads(l)["page"], json.loads(l)["y"], json.loads(l)["m"]) for l in out.read_text().splitlines() if l.strip()}
+        done = {(json.loads(l)["page"], json.loads(l)["y"], json.loads(l)["m"]) for l in out.read_text().split("\n") if l.strip()}
     today = dt.date.today()
     tables = []
     for p in pages:

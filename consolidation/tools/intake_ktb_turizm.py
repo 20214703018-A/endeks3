@@ -57,7 +57,7 @@ def main():
     have = set()
     if it.manifest.exists():
         import json as _j
-        have = {_j.loads(l)["source_url"] for l in it.manifest.read_text().splitlines() if l.strip()}
+        have = {_j.loads(l)["source_url"] for l in it.manifest.read_text().split("\n") if l.strip()}
     n = 0
     for h, meta in atts.items():
         if B + h in have:

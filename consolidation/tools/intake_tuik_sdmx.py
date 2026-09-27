@@ -54,7 +54,9 @@ def main():
     it.log(f"katalog: {len(ids)} veri akışı")
     done = set()
     if it.manifest.exists():
-        for l in it.manifest.read_text().splitlines():
+        for l in it.manifest.read_text().split("\n"):
+            if not l.strip():
+                continue
             r = json.loads(l)
             if r.get("dataset_id") and r.get("kind") == "data":
                 done.add(r["dataset_id"])

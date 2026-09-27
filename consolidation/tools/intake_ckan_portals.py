@@ -61,7 +61,7 @@ def main():
         it.log(f"{key}: {len(pkgs)} veri seti, {n_res} kaynak")
         have = set()
         if it.manifest.exists():
-            have = {json.loads(l)["source_url"] for l in it.manifest.read_text().splitlines() if l.strip()}
+            have = {json.loads(l)["source_url"] for l in it.manifest.read_text().split("\n") if l.strip()}
         # 2) dosyalar
         n = skipped = 0
         for p in pkgs:

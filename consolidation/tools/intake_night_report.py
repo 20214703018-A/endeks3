@@ -37,7 +37,7 @@ def main():
         agg = {"kaynak": d.parent.name, "klasor": str(d.relative_to(RAW)), "dosya": 0, "satir": 0, "bayt": 0,
                "yontemler": set(), "alanlar": set(), "ilk": None, "son": None}
         if man.exists():
-            for l in man.read_text().splitlines():
+            for l in man.read_text().split("\n"):
                 try:
                     r = json.loads(l)
                 except ValueError:

@@ -89,7 +89,7 @@ def lists(it: Intake, workers: int):
     out = it.dir / "list_rows.jsonl"
     done = set()
     if out.exists():
-        for l in out.read_text().splitlines():
+        for l in out.read_text().split("\n"):
             try:
                 d = json.loads(l)
                 done.add((d["cityId"], d["districtId"], d["page"]))
@@ -151,7 +151,7 @@ def allpages(it: Intake, pass_no: int = 1, url_filter: str = ""):
     out = it.dir / ("all_rows.jsonl" if pass_no == 1 and not tag else f"all_rows_pass{pass_no}{tag}.jsonl")
     done = set()
     if out.exists():
-        for l in out.read_text().splitlines():
+        for l in out.read_text().split("\n"):
             try:
                 done.add(json.loads(l)["page"])
             except ValueError:
@@ -176,7 +176,7 @@ def sectors(it: Intake, workers: int):
     out = it.dir / "sector_rows.jsonl"
     done = set()
     if out.exists():
-        done = {(json.loads(l)["sectorId"], json.loads(l)["page"]) for l in out.read_text().splitlines() if l.strip()}
+        done = {(json.loads(l)["sectorId"], json.loads(l)["page"]) for l in out.read_text().split("\n") if l.strip()}
 
     def do(sec, sname):
         params = {"page": 1, "url": "", "cityId": "", "districtId": "", "sector": sec, "isItCrossBorder": ""}
@@ -232,14 +232,14 @@ def profiles(it: Intake, workers: int):
     order, seen = [], set()
     src = it.dir / "list_rows.jsonl"
     if src.exists():
-        rows = [json.loads(l) for l in src.read_text().splitlines() if l.strip()]
+        rows = [json.loads(l) for l in src.read_text().split("\n") if l.strip()]
         rows.sort(key=lambda d: (PRI.index(d["city"]) if d["city"] in PRI else 99))
         for d in rows:
             for r in d["rows"]:
                 if r.get("siteId") and r["siteId"] not in seen:
                     seen.add(r["siteId"]); order.append(r["siteId"])
     for extra in sorted(it.dir.glob("all_rows*.jsonl")):  # il bilgisi olmayanlar (tüm turlar)
-        for l in extra.read_text().splitlines():
+        for l in extra.read_text().split("\n"):
             try:
                 for r in json.loads(l)["rows"]:
                     if r.get("siteId") and r["siteId"] not in seen:
@@ -249,7 +249,7 @@ def profiles(it: Intake, workers: int):
     out = it.dir / "profiles.jsonl"
     done = set()
     if out.exists():
-        done = {json.loads(l)["siteId"] for l in out.read_text().splitlines() if l.strip()}
+        done = {json.loads(l)["siteId"] for l in out.read_text().split("\n") if l.strip()}
     todo = [x for x in order if x not in done]
     it.log(f"profil: {len(order)} site, {len(todo)} kaldı")
 

@@ -58,7 +58,7 @@ def main():
         it.save_json("items.json", list(items.values()), source_url=B + "/api/tr/data/search", method="rest_post_paginated")
     have = set()
     if it.manifest.exists():
-        have = {json.loads(l)["source_url"] for l in it.manifest.read_text().splitlines() if l.strip()}
+        have = {json.loads(l)["source_url"] for l in it.manifest.read_text().split("\n") if l.strip()}
     press = [x for x in items.values() if x["type"] == 1]
     direct = [x for x in items.values() if x["type"] != 1]
 

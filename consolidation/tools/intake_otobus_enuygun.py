@@ -53,7 +53,8 @@ def main():
     out = it.dir / "routes.jsonl"
     done = set()
     if out.exists():
-        done = {json.loads(l)["url"] for l in out.read_text().splitlines() if l.strip()}
+        with out.open("rb") as fh:  # 390 MB+ dosya: belleğe tek parça okumadan satır satır
+            done = {json.loads(l)["url"] for l in fh if l.strip()}
     it.log(f"{len(routes)} rota (il-il: {sum(1 for r in routes if r[2])}); {len(done)} tamam")
     n = 0
     for _, u, il_pair in routes:
