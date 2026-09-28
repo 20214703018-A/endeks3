@@ -1,0 +1,55 @@
+name: Market Fiyatı şube katalogları (40 makine)
+
+# Her şubenin tam ürün listesi + fiyatı (api.marketfiyati.org.tr /v3/searchByCategories, tek şubeli sorgu).
+# Ayarlar .github/marketfiyati_run.env dosyasında; dosya değişip marketfiyati-subeler dalına gönderilince çalışır.
+# Her makine şube listesinin i/N payını toplar; sunucu art arda 25 isteği reddederse o makine DURUR
+# (kimlik/adres değiştirerek yeniden denenmez). Çıktı: makine başına artifact (jsonl.gz parçaları);
+# yerelde gh run download → GEOPROP_RAW_INTAKE/marketfiyati/2026-09-24/branches/ → build_branches.
+
+on:
+  push:
+    branches: [marketfiyati-subeler]
+    paths: [".github/marketfiyati_run.env"]
+  workflow_dispatch:
+
+jobs:
+  ayar:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: |
+          set -a; . .github/marketfiyati_run.env; set +a
+          echo "matrix=$(python3 -c "import json; print(json.dumps(list(range(1, $SHARDS + 1))))")" >> "$GITHUB_OUTPUT"
+
+  sube:
+    needs: ayar
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.ayar.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q pandas pyarrow requests
+      - name: topla
+        run: |
+          set -a; . .github/marketfiyati_run.env; set +a
+          SKIP=""; [ -f consolidation/girdi/marketfiyati_branches_done.txt ] && SKIP="--skip-file consolidation/girdi/marketfiyati_branches_done.txt"
+          INTAKE_RUN_DATE=2026-09-24 python -u consolidation/tools/intake_marketfiyati.py branches \
+            --rounds "$ROUNDS" --shard "${{ matrix.shard }}/$SHARDS" --rps "$RPS" --max-minutes "$MAX_MINUTES" \
+            --limit "$LIMIT" --depots-file consolidation/girdi/marketfiyati_depots.parquet $SKIP
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mf_sube_${{ github.run_id }}_${{ matrix.shard }}
+          path: |
+            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/2026-09-24/branches/
+            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/2026-09-24/run.log
+          retention-days: 30
+          if-no-files-found: warn
