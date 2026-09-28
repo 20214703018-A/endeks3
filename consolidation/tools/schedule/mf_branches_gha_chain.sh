@@ -4,7 +4,7 @@
 # ayar dosyasındaki RUN sayacını artırıp marketfiyati-subeler dalına gönder (yeni koşu tetiklenir).
 # Kalan şube kalmayınca build_branches çalıştırır ve çıkar. Mac uyursa bekler, uyanınca kaldığı yerden sürer.
 set -u
-export PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin
+export PATH=/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin  # /usr/local/bin/python3: pandas kurulu olan
 R=20214703018-A/endeks3
 WF=marketfiyati_subeler_40_makine.yml
 W=$HOME/Desktop/GEOPROP_CONSOLIDATION/run/mf_wt
