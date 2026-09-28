@@ -487,18 +487,19 @@ def build_branches(it: Intake):
     out = bdir / "branch_products.parquet"
     w, n, summ = None, 0, []
     ITEM_COLS = {"price": pa.float64(), "unitPrice": pa.string(), "unitPriceValue": pa.float64(), "percentage": pa.float64(),
-                 "indexTime": pa.string(), "discount": pa.bool_(), "discountRatio": pa.float64(), "promotionText": pa.string()}
+                 "indexTime": pa.string(), "discount": pa.bool_(), "discountRatio": pa.float64(), "promotionText": pa.string(),
+                 "discountlessPrice": pa.float64()}  # indirimsiz fiyat (indirim bilgisi burada; discount/promotionText servis tarafında hep boş)
     schema = pa.schema([(c, pa.float64() if c in ("lat", "lon") else pa.string()) for c in
                         ("depot_id", "market", "depot_name", "lat", "lon", "il_geo_id", "il_adi", "ilce_geo_id", "ilce_adi",
                          "mahalle_geo_id", "mahalle_adi", "guncellenme_tarihi", "product_id")]
-                       + list(ITEM_COLS.items()) + [("extra_json", pa.string())])
+                       + list(ITEM_COLS.items()) + [("fiyat_endeks_zamani", pa.string()), ("extra_json", pa.string())])
     got = set()
     for d in read_chunks(bdir, "depot"):
         if d["depot_id"] in got:  # aynı şube birden çok koşuda toplandıysa ilk kayıt
             continue
         got.add(d["depot_id"])
         meta = dep.loc[d["depot_id"]] if d["depot_id"] in dep.index else {}
-        common = {"depot_id": d["depot_id"], "market": d["market"], "depot_name": (d["depot_info"] or {}).get("depotName"),
+        common = {"depot_id": d["depot_id"], "market": d["market"], "depot_name": (d["depot_info"] or {}).get("depotName") or meta.get("depot_name"),
                   "lat": d["lat"], "lon": d["lon"], "il_geo_id": d["il_geo_id"], "il_adi": meta.get("il_adi"),
                   "ilce_geo_id": d["ilce_geo_id"], "ilce_adi": meta.get("ilce_adi"), "mahalle_geo_id": d["mahalle_geo_id"],
                   "mahalle_adi": meta.get("mahalle_adi"), "guncellenme_tarihi": d["at"]}
@@ -511,6 +512,8 @@ def build_branches(it: Intake):
             r = {**common, "product_id": x.pop("id")}
             for c in ITEM_COLS:
                 r[c] = x.pop(c, None)
+            it_ = r["indexTime"] or ""  # "27.09.2026 12:12" (sitenin günlük fiyat güncelleme anı, TR saati) → ISO 8601
+            r["fiyat_endeks_zamani"] = f"{it_[6:10]}-{it_[3:5]}-{it_[0:2]}T{it_[11:16]}:00+03:00" if len(it_) >= 16 else None
             r["extra_json"] = json.dumps(x, ensure_ascii=False) if x else None  # beklenmeyen alan kaybolmasın
             rows.append(r)
         t = pa.Table.from_pylist(rows, schema=schema)
