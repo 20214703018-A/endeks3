@@ -392,9 +392,158 @@ def phase_history(it: Intake, threads: int, rps: float, sets_for=("GEO_IL_34", "
         it.log(f"history {il}: {len(df)} günlük gözlem")
 
 
+# ------------------------------------------------------------------ branches
+DEPOT_CONST = ("depotId", "depotName", "marketAdi", "latitude", "longitude")  # şubeye sabit alanlar (şube kaydında)
+
+
+def branch_order(depots: pd.DataFrame) -> list:
+    """1. tur: her ilçe×zincir için bir temsilci şube (ilçedeki tüm şubelerin ağırlık merkezine en yakın);
+    2. tur: kalan tüm şubeler. Her turda öncelik Batı büyükşehirleri (AGENTS.md §10)."""
+    d = depots.dropna(subset=["lat", "lon"]).copy()
+    d["ilce_key"] = d.ilce_geo_id.fillna("?" + d.il_geo_id.fillna("?"))
+    cen = d.groupby("ilce_key")[["lat", "lon"]].transform("mean")
+    d["dist"] = ((d.lat - cen.lat) ** 2 + ((d.lon - cen.lon) * d.lat.map(lambda x: math.cos(math.radians(x)))) ** 2) ** 0.5
+    rep = d.sort_values("dist").groupby(["ilce_key", "market"]).head(1)
+    d["tur"] = 2
+    d.loc[rep.index, "tur"] = 1
+    pri = {g: i for i, g in enumerate(PRIORITY_ILS)}
+    d["pri"] = d.il_geo_id.map(lambda g: pri.get(g, 99))
+    d = d.sort_values(["tur", "pri", "il_geo_id", "ilce_key", "market", "depot_id"])
+    return d.to_dict("records")
+
+
+def phase_branches(it: Intake, rps: float, rounds=(1, 2), shard=None, max_minutes=0, depots_file=None, skip_file=None,
+                   limit=0):
+    """Her şubenin TAM ürün kataloğu + fiyatı (tek şubeli sorgu; çok şubeli sorguda servis ürün başına
+    yalnız bir şube döndürdüğü için şube farkı ancak böyle görülür). Sayfa boyu servis tarafında 25 ile sınırlı."""
+    depots = pd.read_parquet(depots_file or it.dir / "depots.parquet")
+    order = [r for r in branch_order(depots) if r["tur"] in rounds]
+    if shard:  # GitHub Actions matrisi: "i/N" → sıralı listeden her N'de bir (her makineye öncelik ve zincir karışımı)
+        i, n = (int(x) for x in shard.split("/"))
+        order = order[i - 1::n]
+    bdir = it.dir / "branches"
+    done = {d["depot_id"] for d in read_chunks(bdir, "depot")}
+    if skip_file and Path(skip_file).exists():  # önceki koşularda toplanmış şubeler
+        done |= {x.strip() for x in Path(skip_file).read_text().split("\n") if x.strip()}
+    seen = {p["id"] for p in read_chunks(bdir, "product")}
+    todo = [r for r in order if r["depot_id"] not in done]
+    if limit:
+        todo = todo[:limit]
+    it.log(f"branches{' ' + shard if shard else ''}: {len(order)} şube (tur {rounds}), {len(done)} tamam, {len(todo)} kaldı; bilinen ürün {len(seen)}")
+    cw_d = ChunkWriter(bdir, "depot", every=10)
+    cw_p = ChunkWriter(bdir, "product", every=500)
+    rl = RateLimiter(rps)
+    n_req = 0
+    t0 = time.time()
+    try:
+        for k, r in enumerate(todo, 1):
+            if max_minutes and time.time() - t0 > max_minutes * 60:
+                it.log(f"branches: süre sınırı ({max_minutes} dk) — {k - 1}/{len(todo)} şubede duruldu, kalan sonraki koşuda")
+                break
+            dep = r["depot_id"]
+            body = {"keywords": "", "pages": 0, "size": 25, "depots": [dep], "menuCategory": True}
+            try:
+                first = post(rl, "/v3/searchByCategories", body)
+                total = first.get("numberOfFound", 0)
+                pages = [first] + [post(rl, "/v3/searchByCategories", {**body, "pages": pg})
+                                   for pg in range(1, math.ceil(total / 25))]
+            except Blocked:
+                raise
+            except Exception as e:  # noqa: BLE001 — şube kaydedilmez, sonraki çalıştırmada yeniden denenir
+                it.log(f"branches hata {dep}: {e}")
+                continue
+            n_req += len(pages)
+            items, info = {}, {}
+            for j in pages:
+                for p in j.get("content") or []:
+                    for di in p.get("productDepotInfoList") or []:
+                        if di.get("depotId") != dep:
+                            continue
+                        info = {c: di.get(c) for c in DEPOT_CONST} or info
+                        items[p["id"]] = {"id": p["id"], **{c: v for c, v in di.items() if c not in DEPOT_CONST}}
+                    if p["id"] not in seen:
+                        seen.add(p["id"])
+                        cw_p.add({**{c: v for c, v in p.items() if c != "productDepotInfoList"}, "first_seen_at": now_iso(),
+                                  "first_seen_depot": dep})
+            cw_d.add({"depot_id": dep, "market": r["market"], "tur": r["tur"], "il_geo_id": r["il_geo_id"],
+                      "ilce_geo_id": r["ilce_geo_id"], "mahalle_geo_id": r["mahalle_geo_id"], "lat": r["lat"], "lon": r["lon"],
+                      "numberOfFound": total, "n_items": len(items), "pages": len(pages), "depot_info": info,
+                      "at": now_iso(), "items": list(items.values())})
+            if k % 50 == 0:
+                it.log(f"branches: {k}/{len(todo)} şube, {n_req} istek, bilinen ürün {len(seen)}")
+    except Blocked as e:
+        it.log(f"branches DURDU: {e}")
+    finally:
+        cw_d.close()
+        cw_p.close()
+
+
+def build_branches(it: Intake):
+    """Parçalardan düz tablolar: branch_products (şube×ürün fiyat), branch_summary (şube başına), products (ürün kataloğu)."""
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+    bdir = it.dir / "branches"
+    dep = pd.read_parquet(it.dir / "depots.parquet").set_index("depot_id")
+    out = bdir / "branch_products.parquet"
+    w, n, summ = None, 0, []
+    ITEM_COLS = {"price": pa.float64(), "unitPrice": pa.string(), "unitPriceValue": pa.float64(), "percentage": pa.float64(),
+                 "indexTime": pa.string(), "discount": pa.bool_(), "discountRatio": pa.float64(), "promotionText": pa.string()}
+    schema = pa.schema([(c, pa.float64() if c in ("lat", "lon") else pa.string()) for c in
+                        ("depot_id", "market", "depot_name", "lat", "lon", "il_geo_id", "il_adi", "ilce_geo_id", "ilce_adi",
+                         "mahalle_geo_id", "mahalle_adi", "guncellenme_tarihi", "product_id")]
+                       + list(ITEM_COLS.items()) + [("extra_json", pa.string())])
+    got = set()
+    for d in read_chunks(bdir, "depot"):
+        if d["depot_id"] in got:  # aynı şube birden çok koşuda toplandıysa ilk kayıt
+            continue
+        got.add(d["depot_id"])
+        meta = dep.loc[d["depot_id"]] if d["depot_id"] in dep.index else {}
+        common = {"depot_id": d["depot_id"], "market": d["market"], "depot_name": (d["depot_info"] or {}).get("depotName"),
+                  "lat": d["lat"], "lon": d["lon"], "il_geo_id": d["il_geo_id"], "il_adi": meta.get("il_adi"),
+                  "ilce_geo_id": d["ilce_geo_id"], "ilce_adi": meta.get("ilce_adi"), "mahalle_geo_id": d["mahalle_geo_id"],
+                  "mahalle_adi": meta.get("mahalle_adi"), "guncellenme_tarihi": d["at"]}
+        summ.append({**common, "tur": d["tur"], "numberOfFound": d["numberOfFound"], "n_items": d["n_items"], "pages": d["pages"]})
+        if not d["items"]:
+            continue
+        rows = []
+        for x in d["items"]:
+            x = dict(x)
+            r = {**common, "product_id": x.pop("id")}
+            for c in ITEM_COLS:
+                r[c] = x.pop(c, None)
+            r["extra_json"] = json.dumps(x, ensure_ascii=False) if x else None  # beklenmeyen alan kaybolmasın
+            rows.append(r)
+        t = pa.Table.from_pylist(rows, schema=schema)
+        if w is None:
+            w = pq.ParquetWriter(out, schema, compression="zstd")
+        w.write_table(t)
+        n += len(rows)
+    if w is not None:
+        w.close()
+        it._record(out, source_url=API + "/v3/searchByCategories", method="api_post_paginated_single_depot", rows=n,
+                   note="şube × ürün: her şubenin tam kataloğu ve fiyatı")
+    it.save_parquet("branches/branch_summary", pd.DataFrame(summ), source_url=API + "/v3/searchByCategories",
+                    method="api_post_paginated_single_depot", note="şube başına ürün sayısı (numberOfFound vs toplanan)")
+    prods = pd.DataFrame(list(read_chunks(bdir, "product"))).sort_values("first_seen_at").drop_duplicates("id")
+    for c in prods.columns:
+        if prods[c].map(lambda v: isinstance(v, (list, dict))).any():
+            prods[c] = prods[c].map(lambda v: json.dumps(v, ensure_ascii=False) if isinstance(v, (list, dict)) else v)
+    prods["guncellenme_tarihi"] = prods["first_seen_at"]
+    it.save_parquet("branches/products", prods, source_url=API + "/v3/searchByCategories",
+                    method="api_post_paginated_single_depot", note="şube taramasında görülen tüm ürünler")
+    it.log(f"branches build: {n} şube×ürün satırı, {len(summ)} şube, {len(prods)} ürün")
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("phase", choices=["depots", "build_depots", "prices", "history", "all", "track"])
+    ap.add_argument("phase", choices=["depots", "build_depots", "prices", "history", "all", "track",
+                                      "branches", "build_branches"])
+    ap.add_argument("--rounds", default="1,2", help="branches: 1=ilçe×zincir temsilcisi, 2=kalan tüm şubeler")
+    ap.add_argument("--shard", help="branches: i/N (GitHub Actions matrisi)")
+    ap.add_argument("--max-minutes", type=float, default=0)
+    ap.add_argument("--depots-file")
+    ap.add_argument("--skip-file")
+    ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--threads", type=int, default=5)
     ap.add_argument("--rps", type=float, default=8.0)
     ap.add_argument("--date")
@@ -410,6 +559,11 @@ def main():
         phase_prices(it, a.threads, a.rps)
     if a.phase in ("history", "all"):
         phase_history(it, a.threads, a.rps, tuple(a.history_ils.split(",")))
+    if a.phase == "branches":
+        phase_branches(it, a.rps, tuple(int(x) for x in a.rounds.split(",")), a.shard, a.max_minutes, a.depots_file,
+                       a.skip_file, a.limit)
+    if a.phase == "build_branches":
+        build_branches(it)
 
 
 if __name__ == "__main__":
