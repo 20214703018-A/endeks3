@@ -492,7 +492,11 @@ def build_branches(it: Intake):
                         ("depot_id", "market", "depot_name", "lat", "lon", "il_geo_id", "il_adi", "ilce_geo_id", "ilce_adi",
                          "mahalle_geo_id", "mahalle_adi", "guncellenme_tarihi", "product_id")]
                        + list(ITEM_COLS.items()) + [("extra_json", pa.string())])
+    got = set()
     for d in read_chunks(bdir, "depot"):
+        if d["depot_id"] in got:  # aynı şube birden çok koşuda toplandıysa ilk kayıt
+            continue
+        got.add(d["depot_id"])
         meta = dep.loc[d["depot_id"]] if d["depot_id"] in dep.index else {}
         common = {"depot_id": d["depot_id"], "market": d["market"], "depot_name": (d["depot_info"] or {}).get("depotName"),
                   "lat": d["lat"], "lon": d["lon"], "il_geo_id": d["il_geo_id"], "il_adi": meta.get("il_adi"),
@@ -520,7 +524,7 @@ def build_branches(it: Intake):
                    note="şube × ürün: her şubenin tam kataloğu ve fiyatı")
     it.save_parquet("branches/branch_summary", pd.DataFrame(summ), source_url=API + "/v3/searchByCategories",
                     method="api_post_paginated_single_depot", note="şube başına ürün sayısı (numberOfFound vs toplanan)")
-    prods = pd.DataFrame(list(read_chunks(bdir, "product")))
+    prods = pd.DataFrame(list(read_chunks(bdir, "product"))).sort_values("first_seen_at").drop_duplicates("id")
     for c in prods.columns:
         if prods[c].map(lambda v: isinstance(v, (list, dict))).any():
             prods[c] = prods[c].map(lambda v: json.dumps(v, ensure_ascii=False) if isinstance(v, (list, dict)) else v)
