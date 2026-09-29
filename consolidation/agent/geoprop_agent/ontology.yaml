@@ -1,0 +1,290 @@
+# GEOPROP ONTOLOJİSİ (kavram haritası) — agent'ın bildiği her şeyin tek kaynağı.
+# Kural: agent bu dosyada tanımlı olmayan bir ölçü/kavram/analiz isteyemez; istenirse "veri yok" döner.
+# Sade okuma: "kavramlar" = neler var; "iliskiler" = neyin neye bağlı olduğu; "olculer" = hesaplanabilen sayılar;
+# "kurallar" = yanlış kullanımı engelleyen tuzak kuralları; "analizler" = agent'ın yapabildiği hesap türleri.
+surum: 0.1.0
+kaynak_veritabani: canonical_v1.5   # serving katmanı bu sürümden kurulur
+
+# ---------------------------------------------------------------------------------------------
+kavramlar:
+  Yer:
+    tanim: "İdari birim (ülke, il, ilçe, mahalle/köy). Her yerin tek kimliği (geo_id) vardır."
+    alt_turler: [Ulke, Il, Ilce, Mahalle]
+    tablo: yer
+  Ulke:    {ust: null, seviye: ulke, tanim: "Türkiye"}
+  Il:      {ust: Ulke, seviye: il, tanim: "81 il"}
+  Ilce:    {ust: Il, seviye: ilce, tanim: "973 ilçe"}
+  Mahalle: {ust: Ilce, seviye: mahalle, tanim: "50.638 mahalle/köy (poligonlu)"}
+  Isletme:
+    tanim: "Koordinatlı ticari nokta (Google gözlemi, OSM, Yemeksepeti). Kimlik poi_id bizimdir."
+    tablo: isletme
+    ozellikler: [ad, kategori, sektor, puan, yorum_sayisi, lat, lon, kaynak_kapsami]
+  HaritaNesnesi:
+    tanim: "OSM haritasındaki kamu/altyapı/ticari nesne (okul, durak, eczane, otopark, cami...). Şu an haritada olanlar."
+    tablo: harita_nesnesi
+  Gozlem:
+    tanim: "Bir yere, bir döneme ve bir kaynağa bağlı sayı (fiyat, nüfus, gösterge)."
+    tablo: olcum
+  Donem:
+    tanim: "Ay (YYYY-MM), çeyrek (YYYY-Qn) veya yıl (YYYY)."
+  Kaynak:
+    tanim: "Verinin geldiği yer ve edinim sınıfı: official_public (resmî), web_research (web araştırması)."
+
+iliskiler:
+  - {ad: icinde, kaynak: Mahalle, hedef: Ilce, tur: "N-1", aciklama: "Mahalle bir ilçenin içindedir"}
+  - {ad: icinde, kaynak: Ilce, hedef: Il, tur: "N-1"}
+  - {ad: icinde, kaynak: Il, hedef: Ulke, tur: "N-1"}
+  - {ad: bulunur, kaynak: Isletme, hedef: Mahalle, tur: "N-1", aciklama: "Koordinat mahalle poligonunun içinde (atama güveni ile)"}
+  - {ad: bulunur, kaynak: HaritaNesnesi, hedef: Mahalle, tur: "N-1"}
+  - {ad: olculur, kaynak: Gozlem, hedef: Yer, tur: "N-1"}
+  - {ad: donemine_ait, kaynak: Gozlem, hedef: Donem, tur: "N-1"}
+  - {ad: kaynagi, kaynak: Gozlem, hedef: Kaynak, tur: "N-1"}
+
+# ---------------------------------------------------------------------------------------------
+# ÖLÇÜLER. Alanlar:
+#   ad, esanlam (doğal dil karşılıkları), birim, seviyeler, donem_turu, tema,
+#   toplanabilir: alt seviyelerden toplanarak üst seviye elde edilebilir mi (sayılar evet; fiyat/oran hayır)
+#   yon: 'yuksek_iyi'/'dusuk_iyi' YAZILMAZ — değerlendirme yapmayız (kural 1). Yalnız sıralama yönü kullanıcıdan gelir.
+#   kaynak: serving 'olcum' tablosunu dolduran eşleme (build_serving okur).
+fiyat_sablonlari:
+  # price_observation (category × metric) → olcu. {k} = konut/arsa/tarla
+  kategoriler:
+    konut: {ad: "Konut", esanlam: [konut, ev, daire, konut piyasası]}
+    arsa:  {ad: "Arsa",  esanlam: [arsa, imarlı arsa]}
+    tarla: {ad: "Tarla", esanlam: [tarla, tarım arazisi, arazi]}
+  metrikler:
+    sale_price_m2:      {id: "{k}_satis_m2",        ad: "{K} satılık m² fiyatı (ilan)", birim: "TL/m²", esanlam: ["{k} m2 fiyatı", "{k} metrekare fiyatı", "{k} satılık m2", "{k} fiyatı"], kategoriler: [konut, arsa, tarla]}
+    avg_price:          {id: "{k}_ort_ilan_fiyati",  ad: "{K} ortalama ilan fiyatı",    birim: "TL",    esanlam: ["{k} ortalama fiyat", "ortalama {k} fiyatı"], kategoriler: [konut, arsa, tarla]}
+    listing_count:      {id: "{k}_ilan_sayisi",      ad: "{K} satılık ilan sayısı",     birim: "adet",  esanlam: ["{k} ilan sayısı", "{k} ilan adedi", "satılık {k} ilanı"], kategoriler: [konut, arsa, tarla], toplanabilir: true}
+    avg_area_m2:        {id: "{k}_ort_alan_m2",      ad: "{K} ortalama ilan alanı",     birim: "m²",    esanlam: ["{k} ortalama metrekare", "{k} ortalama büyüklük"], kategoriler: [konut, arsa, tarla]}
+    min_price_m2:       {id: "{k}_min_m2",           ad: "{K} en düşük m² fiyatı",      birim: "TL/m²", esanlam: ["{k} minimum m2"], kategoriler: [konut, arsa, tarla]}
+    max_price_m2:       {id: "{k}_max_m2",           ad: "{K} en yüksek m² fiyatı",     birim: "TL/m²", esanlam: ["{k} maksimum m2"], kategoriler: [konut, arsa, tarla]}
+    monthly_change:     {id: "{k}_aylik_degisim",    ad: "{K} m² fiyatı aylık değişim", birim: "%",     esanlam: ["{k} aylık artış", "{k} aylık değişim"], kategoriler: [konut, arsa, tarla], olcek: degisim}
+    yearly_change:      {id: "{k}_yillik_degisim",   ad: "{K} m² fiyatı yıllık değişim",birim: "%",     esanlam: ["{k} yıllık artış", "{k} yıllık değişim", "{k} fiyat artışı"], kategoriler: [konut, arsa, tarla], olcek: degisim}
+    price_index:        {id: "{k}_fiyat_endeksi",    ad: "{K} fiyat endeksi (kaynak endeksi)", birim: "endeks", esanlam: ["{k} endeksi"], kategoriler: [konut, arsa, tarla]}
+    days_on_market:     {id: "{k}_ilanda_kalma_gun", ad: "{K} ilanda kalma süresi",     birim: "gün",   esanlam: ["{k} satış süresi", "{k} ilan süresi"], kategoriler: [konut, arsa, tarla]}
+    sale_days_on_market: {id: "{k}_satilik_ilanda_kalma_gun", ad: "{K} satılık ilanda kalma süresi", birim: "gün", esanlam: [], kategoriler: [konut, arsa]}
+    rent_price_m2:      {id: "konut_kira_m2",        ad: "Konut kiralık m² fiyatı (aylık)", birim: "TL/m²", esanlam: ["kira m2", "kiralık m2", "metrekare kira", "kira fiyatı m2"], kategoriler: [konut]}
+    rent_price:         {id: "konut_ort_kira",       ad: "Konut ortalama aylık kira (ilan)", birim: "TL", esanlam: ["kira", "ortalama kira", "aylık kira", "ev kirası"], kategoriler: [konut]}
+    rent_listing_count: {id: "konut_kiralik_ilan_sayisi", ad: "Konut kiralık ilan sayısı", birim: "adet", esanlam: ["kiralık ilan sayısı"], kategoriler: [konut], toplanabilir: true}
+    rent_avg_area_m2:   {id: "konut_kiralik_ort_alan_m2", ad: "Kiralık konut ortalama alanı", birim: "m²", esanlam: [], kategoriler: [konut]}
+    rent_yearly_change: {id: "konut_kira_yillik_degisim", ad: "Konut kira yıllık değişim", birim: "%", esanlam: ["kira artışı", "kira yıllık artış"], kategoriler: [konut], olcek: degisim}
+    rent_days_on_market: {id: "konut_kiralik_ilanda_kalma_gun", ad: "Kiralık konut ilanda kalma süresi", birim: "gün", esanlam: [], kategoriler: [konut]}
+    gross_rent_yield:   {id: "konut_brut_kira_getirisi", ad: "Konut brüt kira getirisi (yıllık)", birim: "%", esanlam: ["kira getirisi", "brüt getiri", "kira verimi"], kategoriler: [konut], olcek: yuzde_zaten}
+    amortization_years: {id: "konut_amortisman_yil", ad: "Konut amortisman süresi", birim: "yıl", esanlam: ["amortisman", "kendini amorti etme süresi"], kategoriler: [konut]}
+    avg_building_age:   {id: "konut_ort_bina_yasi",  ad: "Konut ortalama bina yaşı (ilanlar)", birim: "yıl", esanlam: ["bina yaşı", "ortalama bina yaşı"], kategoriler: [konut]}
+  katalog_disi:
+    # Kanonikte var ama anlamı/ölçeği doğrulanamadığı için agent'a açılmaz (uydurma yorumu önlemek için).
+    - {kategori: arsa,  metric: avg_building_age,    neden: "Arsa için bina yaşı kaynakta böyle etiketli; anlamı belirsiz"}
+    - {kategori: arsa,  metric: stock_change_rate,   neden: "Değerlerin tamamına yakını 0; ölçü doğrulanamadı"}
+    - {kategori: tarla, metric: stock_change_rate,   neden: "Değerlerin tamamına yakını 0; ölçü doğrulanamadı"}
+    - {kategori: arsa,  metric: yearly_stock_change, neden: "Ölçek (oran mı yüzde mi) doğrulanamadı"}
+    - {kategori: tarla, metric: yearly_stock_change, neden: "Ölçek (oran mı yüzde mi) doğrulanamadı"}
+
+olcek_kurallari:
+  # KANIT (2026-09-28 ölçümü): aynı ölçü farklı kaynak tablolarda farklı ölçekte yazılmış, birim etiketi hepsinde 'ratio'.
+  #   stg_ej_region_index: yearly_change medyan 27,58 (yüzde puanı); stg_land_trend_monthly: 0,52 (kesir).
+  #   Aynı hücre örneği: GEO_ILCE_000050 konut yearly_change 2026-08 → -0,2148 (stg_price_summary) ve -21,48 (stg_ej_region_index).
+  #   gross_rent_yield tüm tablolarda yüzde (medyan 6,5) ama etiketi 'ratio'.
+  degisim:
+    varsayilan_carpan: 100          # kesir → yüzde
+    tablo_carpani: {stg_ej_region_index: 1}   # zaten yüzde
+  yuzde_zaten:
+    varsayilan_carpan: 1
+
+diger_olculer:
+  nufus:
+    ad: "Nüfus"
+    esanlam: [nüfus, nufus, kişi sayısı, insan sayısı, yaşayan sayısı, population]
+    birim: kişi
+    seviyeler: [mahalle, ilce, il]
+    donem_turu: yil
+    toplanabilir: true
+    tema: demografi
+    not: "İlçe: TÜİK ADNKS 2007–2025 (resmî). Mahalle: TÜİK 2025 (resmî) ve web 2024 (web araştırması, TÜİK ile ilçe düzeyinde 752/973 birebir). İl: TÜİK ilçe toplamı (türetilmiş)."
+  hane_sayisi:        {ad: "Hane sayısı", esanlam: [hane sayısı, hanehalkı sayısı], birim: hane, seviyeler: [il], donem_turu: yil, toplanabilir: true, tema: demografi, kaynak: {domain: household, metric: households}}
+  ort_hane_buyuklugu: {ad: "Ortalama hane büyüklüğü", esanlam: [hane büyüklüğü], birim: kişi, seviyeler: [il], donem_turu: yil, tema: demografi, kaynak: {domain: household, metric: avg_household_size}}
+  ses_skoru:          {ad: "Sosyo-ekonomik statü skoru (TÜİK 2023)", esanlam: [ses, sosyoekonomik skor, gelir düzeyi skoru, ses skoru], birim: endeks, seviyeler: [ilce, il], donem_turu: yil, tema: sosyoekonomi, kaynak: {domain: socio_economic, metric: ses_score}}
+  ses_ust_pay:        {ad: "Üst SES grubu payı", esanlam: [üst gelir payı, a grubu payı], birim: "%", seviyeler: [ilce, il], donem_turu: yil, tema: sosyoekonomi, kaynak: {domain: socio_economic, metric: share_upper}}
+  ses_ust_orta_pay:   {ad: "Üst-orta SES grubu payı", esanlam: [], birim: "%", seviyeler: [ilce, il], donem_turu: yil, tema: sosyoekonomi, kaynak: {domain: socio_economic, metric: share_upper_middle}}
+  ses_orta_pay:       {ad: "Orta SES grubu payı", esanlam: [], birim: "%", seviyeler: [ilce, il], donem_turu: yil, tema: sosyoekonomi, kaynak: {domain: socio_economic, metric: share_middle}}
+  ses_alt_pay:        {ad: "Alt SES grubu payı", esanlam: [], birim: "%", seviyeler: [ilce, il], donem_turu: yil, tema: sosyoekonomi, kaynak: {domain: socio_economic, metric: share_lower}}
+  ses_en_alt_pay:     {ad: "En alt SES grubu payı", esanlam: [], birim: "%", seviyeler: [ilce, il], donem_turu: yil, tema: sosyoekonomi, kaynak: {domain: socio_economic, metric: share_lowest}}
+  konut_satis_adedi:
+    ad: "Konut satış sayısı (TÜİK, 2025 revizyonlu seri)"
+    esanlam: [konut satışı, konut satış sayısı, satılan konut, ev satışı, tapu satışı]
+    birim: adet
+    seviyeler: [ilce, il, ulke]
+    donem_turu: ay
+    toplanabilir: true
+    tema: konut_piyasasi
+    kaynak: {domain: housing_sales, metric: sales_count, series_version: tuik_medas_2025_revision}
+    not: "İl ve ülke değerleri ilçe toplamıdır (türetilmiş). TÜİK 2025'te seriyi revize etti; eski seri ile karıştırılmaz."
+  konut_satis_adedi_eski_seri: {ad: "Konut satış sayısı (TÜİK, revizyon öncesi yıllık seri)", esanlam: [eski seri konut satışı], birim: adet, seviyeler: [ilce], donem_turu: yil, toplanabilir: true, tema: konut_piyasasi, kaynak: {domain: housing_sales, metric: sales_count, series_version: tuik_bulletin_54146_pre_2025_revision}}
+  konut_satis_ilk_el:     {ad: "İlk el konut satışı (revizyon öncesi seri)", esanlam: [ilk el satış, sıfır konut satışı], birim: adet, seviyeler: [ilce], donem_turu: yil, toplanabilir: true, tema: konut_piyasasi, kaynak: {domain: housing_sales, metric: sales_first_hand}}
+  konut_satis_ikinci_el:  {ad: "İkinci el konut satışı (revizyon öncesi seri)", esanlam: [ikinci el satış], birim: adet, seviyeler: [ilce], donem_turu: yil, toplanabilir: true, tema: konut_piyasasi, kaynak: {domain: housing_sales, metric: sales_second_hand}}
+  konut_satis_ipotekli:   {ad: "İpotekli konut satışı (revizyon öncesi seri)", esanlam: [ipotekli satış, kredili satış], birim: adet, seviyeler: [ilce], donem_turu: yil, toplanabilir: true, tema: konut_piyasasi, kaynak: {domain: housing_sales, metric: sales_mortgaged}}
+  konut_satis_diger:      {ad: "Diğer konut satışı (revizyon öncesi seri)", esanlam: [], birim: adet, seviyeler: [ilce], donem_turu: yil, toplanabilir: true, tema: konut_piyasasi, kaynak: {domain: housing_sales, metric: sales_other}}
+  yapi_ruhsati_daire:     {ad: "Yapı ruhsatı verilen daire sayısı", esanlam: [yapı ruhsatı, ruhsat alan daire, inşaat ruhsatı, yeni konut arzı], birim: daire, seviyeler: [ilce, il], donem_turu: [yil, ceyrek], toplanabilir: true, tema: insaat, kaynak: {domain: construction_permit, metric: dwelling_units, dim1: ruhsat}}
+  yapi_kullanma_daire:    {ad: "Yapı kullanma izni verilen daire sayısı", esanlam: [iskan, yapı kullanma izni, tamamlanan konut], birim: daire, seviyeler: [ilce, il], donem_turu: [yil, ceyrek], toplanabilir: true, tema: insaat, kaynak: {domain: construction_permit, metric: dwelling_units, dim1: kullanma}}
+  yapi_ruhsati_alan_m2:   {ad: "Yapı ruhsatı yüzölçümü (bina türüne göre)", esanlam: [ruhsat alanı, inşaat alanı], birim: m², seviyeler: [ilce], donem_turu: yil, toplanabilir: true, tema: insaat, boyut: bina_turu, kaynak: {domain: construction_permit, metric: permit_floor_area_m2, dim1: ruhsat}}
+  goc_gelen:     {ad: "İle gelen göç", esanlam: [gelen göç, göç alan], birim: kişi, seviyeler: [il], donem_turu: yil, toplanabilir: true, tema: demografi, kaynak: {domain: migration, metric: in_migration}}
+  goc_giden:     {ad: "İlden giden göç", esanlam: [giden göç, göç veren], birim: kişi, seviyeler: [il], donem_turu: yil, toplanabilir: true, tema: demografi, kaynak: {domain: migration, metric: out_migration}}
+  goc_net:       {ad: "Net göç", esanlam: [net göç], birim: kişi, seviyeler: [il], donem_turu: yil, toplanabilir: true, tema: demografi, kaynak: {domain: migration, metric: net_migration}}
+  goc_net_hizi:  {ad: "Net göç hızı (binde)", esanlam: [net göç hızı], birim: "‰", seviyeler: [il], donem_turu: yil, tema: demografi, kaynak: {domain: migration, metric: net_migration_rate_per_1000}}
+  kart_harcama_tutari: {ad: "Kartlı harcama tutarı (sektöre göre, ülke)", esanlam: [kart harcaması, kredi kartı harcaması, bkm harcama], birim: "milyon TL", seviyeler: [ulke], donem_turu: [ay, yil], toplanabilir: true, tema: tuketim, boyut: bkm_sektor, kaynak: {domain: card_spending, metric: total_amount}}
+  kart_islem_adedi:    {ad: "Kartlı işlem adedi (sektöre göre, ülke)", esanlam: [kart işlem sayısı], birim: adet, seviyeler: [ulke], donem_turu: [ay, yil], toplanabilir: true, tema: tuketim, boyut: bkm_sektor, kaynak: {domain: card_spending, metric: total_txn_count}}
+  kredi_karti_tutari:  {ad: "Kredi kartı harcama tutarı (sektöre göre)", esanlam: [], birim: "milyon TL", seviyeler: [ulke], donem_turu: ay, toplanabilir: true, tema: tuketim, boyut: bkm_sektor, kaynak: {domain: card_spending, metric: credit_card_amount}}
+  banka_karti_tutari:  {ad: "Banka kartı harcama tutarı (sektöre göre)", esanlam: [], birim: "milyon TL", seviyeler: [ulke], donem_turu: ay, toplanabilir: true, tema: tuketim, boyut: bkm_sektor, kaynak: {domain: card_spending, metric: debit_card_amount}}
+  kart_sektor_payi:    {ad: "Kartlı harcamada sektör payı", esanlam: [sektör payı], birim: "%", seviyeler: [ulke], donem_turu: yil, tema: tuketim, boyut: bkm_sektor, kaynak: {domain: card_spending, metric: sector_share_pct}}
+
+banka_olculeri:
+  # BDDK FinTürk il düzeyi, çeyreklik (ay etiketli). Birim bin TL / TL / kişi.
+  kaynak_domain: banking
+  seviyeler: [il]
+  donem_turu: ay
+  tema: bankacilik
+  liste:
+    branch_count:            {id: banka_sube_sayisi,        ad: "Banka şube sayısı",                  birim: adet,    esanlam: [şube sayısı, banka şubesi], toplanabilir: true}
+    population_per_branch:   {id: banka_sube_basina_nufus,  ad: "Şube başına nüfus",                  birim: kişi,    esanlam: []}
+    cash_loans:              {id: banka_nakdi_kredi,        ad: "Nakdi krediler",                     birim: "bin TL", esanlam: [nakdi kredi], toplanabilir: true}
+    total_cash_loans:        {id: banka_toplam_nakdi_kredi, ad: "Toplam nakdi krediler",              birim: "bin TL", esanlam: [toplam kredi], toplanabilir: true}
+    cash_loans_per_capita:   {id: banka_kisi_basina_kredi,  ad: "Kişi başına nakdi kredi",            birim: TL,      esanlam: [kişi başı kredi]}
+    non_cash_loans:          {id: banka_gayrinakdi_kredi,   ad: "Gayrinakdi krediler",                birim: "bin TL", esanlam: [], toplanabilir: true}
+    housing_loans:           {id: banka_konut_kredisi,      ad: "Konut kredileri",                    birim: "bin TL", esanlam: [konut kredisi, mortgage], toplanabilir: true}
+    vehicle_loans:           {id: banka_tasit_kredisi,      ad: "Taşıt kredileri",                    birim: "bin TL", esanlam: [taşıt kredisi, araç kredisi], toplanabilir: true}
+    other_consumer_loans:    {id: banka_diger_tuketici,     ad: "Diğer tüketici kredileri",           birim: "bin TL", esanlam: [ihtiyaç kredisi], toplanabilir: true}
+    consumer_credit_card:    {id: banka_bireysel_kredi_karti, ad: "Bireysel kredi kartı bakiyesi",    birim: "bin TL", esanlam: [kredi kartı borcu], toplanabilir: true}
+    overdraft:               {id: banka_kmh,                ad: "Kredili mevduat hesabı",             birim: "bin TL", esanlam: [kmh], toplanabilir: true}
+    npl:                     {id: banka_takipteki_alacak,   ad: "Takipteki alacaklar",                birim: "bin TL", esanlam: [takipteki alacak, batık kredi, npl], toplanabilir: true}
+    npl_per_capita:          {id: banka_kisi_basina_takip,  ad: "Kişi başına takipteki alacak",       birim: TL,      esanlam: []}
+    npl_housing_loans:       {id: banka_takip_konut,        ad: "Takipteki konut kredileri",          birim: "bin TL", esanlam: [], toplanabilir: true}
+    npl_credit_card:         {id: banka_takip_kredi_karti,  ad: "Takipteki kredi kartı alacakları",   birim: "bin TL", esanlam: [], toplanabilir: true}
+    savings_deposit_total:   {id: banka_tasarruf_mevduati,  ad: "Tasarruf mevduatı (toplam)",         birim: "bin TL", esanlam: [mevduat, tasarruf], toplanabilir: true}
+    savings_deposit_tl:      {id: banka_tasarruf_tl,        ad: "Tasarruf mevduatı (TL)",             birim: "bin TL", esanlam: [], toplanabilir: true}
+    savings_deposit_fx:      {id: banka_tasarruf_doviz,     ad: "Tasarruf mevduatı (döviz)",          birim: "bin TL", esanlam: [döviz mevduatı], toplanabilir: true}
+    savings_per_capita:      {id: banka_kisi_basina_tasarruf, ad: "Kişi başına tasarruf mevduatı",   birim: TL,      esanlam: [kişi başı mevduat]}
+    deposits_per_capita:     {id: banka_kisi_basina_mevduat, ad: "Kişi başına mevduat",              birim: TL,      esanlam: []}
+    loans_agriculture:       {id: banka_kredi_tarim,        ad: "Tarım kredileri",                    birim: "bin TL", esanlam: [], toplanabilir: true}
+    loans_construction:      {id: banka_kredi_insaat,       ad: "İnşaat kredileri",                   birim: "bin TL", esanlam: [], toplanabilir: true}
+    loans_energy:            {id: banka_kredi_enerji,       ad: "Enerji kredileri",                   birim: "bin TL", esanlam: [], toplanabilir: true}
+    loans_food_beverage:     {id: banka_kredi_gida,         ad: "Gıda-içecek kredileri",              birim: "bin TL", esanlam: [], toplanabilir: true}
+    loans_textile:           {id: banka_kredi_tekstil,      ad: "Tekstil kredileri",                  birim: "bin TL", esanlam: [], toplanabilir: true}
+    loans_tourism:           {id: banka_kredi_turizm,       ad: "Turizm kredileri",                   birim: "bin TL", esanlam: [], toplanabilir: true}
+    loans_wholesale:         {id: banka_kredi_toptan,       ad: "Toptan ticaret kredileri",           birim: "bin TL", esanlam: [], toplanabilir: true}
+
+# Sunum katmanında hesaplanan (türetilmiş) ölçüler — formül açıkça yazılır, gizli hesap yoktur.
+turetilmis_olculer:
+  isletme_sayisi:          {ad: "İşletme sayısı (geçerli koordinatlı)", esanlam: [işletme sayısı, dükkan sayısı, iş yeri sayısı, poi sayısı], birim: adet, seviyeler: [mahalle, ilce, il], formul: "count(isletme) where gecerli_koordinat", toplanabilir: true, tema: ticaret, donem: "2026-09 (tek kesit)"}
+  nufus_yogunlugu:         {ad: "Nüfus yoğunluğu", esanlam: [nüfus yoğunluğu, yoğunluk kişi km2], birim: "kişi/km²", seviyeler: [mahalle, ilce, il], formul: "nufus / alan_km2", tema: demografi}
+  alan_km2:                {ad: "Yüzölçümü (poligondan)", esanlam: [alan, yüzölçümü, büyüklük km2], birim: km², seviyeler: [mahalle, ilce, il], formul: "ST_Area_Spheroid(poligon)/1e6", toplanabilir: true, tema: cografya}
+  bin_kisi_basina_isletme: {ad: "1.000 kişiye düşen işletme", esanlam: [kişi başına işletme, işletme yoğunluğu], birim: "adet/1.000 kişi", seviyeler: [mahalle, ilce, il], formul: "isletme_sayisi / nufus * 1000", tema: ticaret}
+  km2_basina_isletme:      {ad: "km² başına işletme", esanlam: [alan başına işletme], birim: "adet/km²", seviyeler: [mahalle, ilce, il], formul: "isletme_sayisi / alan_km2", tema: ticaret}
+  nufus_degisim_5y:        {ad: "Nüfus değişimi, son 5 yıl (TÜİK)", esanlam: [nüfus artışı, nüfus büyümesi, nüfus değişimi], birim: "%", seviyeler: [ilce, il], formul: "(nüfus[son yıl] / nüfus[son yıl − 5] − 1) × 100; TÜİK ADNKS ilçe (il = ilçe toplamı)", tema: demografi, donem: "2020→2025"}
+  konut_satis_12ay:        {ad: "Konut satış sayısı, son 12 ay toplamı (TÜİK 2025 revizyonlu seri)", esanlam: [yıllık konut satışı, son 12 ay satış], birim: adet, seviyeler: [ilce, il, ulke], formul: "son 12 ayın konut_satis_adedi toplamı (12 ayın tamamı varsa)", toplanabilir: true, tema: konut_piyasasi}
+  turu_belirsiz_isletme:   {ad: "Türü belirsiz işletme sayısı", esanlam: [türü belirsiz işletme, kategorisiz işletme], birim: adet, seviyeler: [mahalle, ilce, il], formul: "count(isletme) where gecerli_koordinat and kategori is null", toplanabilir: true, tema: ticaret, donem: "2026-09 (tek kesit)"}
+  harita_nesnesi_sayisi:   {ad: "OSM harita nesnesi sayısı (türüne göre: okul, durak, eczane...)", esanlam: [okul sayısı, durak sayısı, eczane sayısı, otopark sayısı, cami sayısı, hastane sayısı], birim: adet, seviyeler: [mahalle, ilce, il], formul: "count(harita_nesnesi) where aktif, boyut=osm_kategori", toplanabilir: true, tema: altyapi, donem: "2026-09-13 OSM kesiti"}
+  ortalama_puan:           {ad: "İşletmelerin ortalama Google puanı", esanlam: [ortalama puan, ortalama rating], birim: "puan (1–5)", seviyeler: [mahalle, ilce, il], formul: "avg(puan) where puan is not null", tema: ticaret}
+  harita_eklenen:          {ad: "OSM haritasına eklenen nesne (dönem içinde)", esanlam: [haritaya eklenen, yeni eklenen işletme], birim: adet, seviyeler: [mahalle, ilce, il], tema: hareketlilik, formul: "analytics.mahalle_turnover_osm.added_to_map"}
+  harita_cikan:            {ad: "OSM haritasından çıkan nesne (dönem içinde)", esanlam: [haritadan çıkan], birim: adet, seviyeler: [mahalle, ilce, il], tema: hareketlilik, formul: "removed_from_map"}
+  harita_mevcut:           {ad: "OSM haritasında mevcut nesne", esanlam: [haritadaki işletme], birim: adet, seviyeler: [mahalle, ilce, il], tema: hareketlilik, formul: "present_on_map"}
+  harita_devir_hizi:       {ad: "OSM harita devir hızı", esanlam: [devir hızı, churn], birim: "%", seviyeler: [mahalle, ilce, il], tema: hareketlilik, formul: "(eklenen+çıkan)/önceki mevcut × 100"}
+
+# ---------------------------------------------------------------------------------------------
+# İşletme kategorileri: kanonik v3 sınıflandırıcısının sektör/kategori adları (poi_taxonomy_v2).
+isletme_sektorleri:
+  Yeme-İçme:      [restoran, lokanta, kafe, yeme içme, yemek, fast food, bar, kahveci]
+  Gıda Perakende: [market, süpermarket, bakkal, fırın, kasap, gıda]
+  Otomotiv:       [oto servis, oto, akaryakıt, benzinlik, oto yıkama, galeri]
+  Perakende:      [mağaza, perakende, avm, beyaz eşya]
+  Ev & Yapı:      [yapı market, nalbur, mobilya, inşaat, elektrikçi]
+  Hizmet:         [hizmet, ofis, kargo, emlak, eğitim kursu]
+  Kişisel Bakım:  [kuaför, berber, güzellik salonu, kozmetik]
+  Sanayi & Toptan: [toptan, fabrika, sanayi]
+  Moda:           [giyim, ayakkabı, moda, butik]
+  Sağlık:         [eczane, klinik, muayenehane, sağlık]
+  Elektronik:     [elektronik, telefoncu, bilgisayar]
+
+harita_nesne_esanlam:
+  # OSM kategori → doğal dil. (harita_nesnesi.osm_kategori)
+  okul: [okul]
+  ilkokul: [ilkokul]
+  ortaokul: [ortaokul]
+  lise: [lise]
+  anaokulu: [anaokulu, kreş]
+  universite: [üniversite]
+  eczane: [eczane]
+  hastane: [hastane]
+  saglik_ocagi: [sağlık ocağı, aile sağlığı merkezi, asm]
+  otobus_duragi: [otobüs durağı, durak]
+  metro_istasyonu: [metro, metro istasyonu]
+  tramvay_duragi: [tramvay]
+  tren_istasyonu: [tren istasyonu, gar, istasyon]
+  otopark: [otopark, park yeri]
+  park: [park, yeşil alan]
+  cami: [cami, mescit]
+  banka: [banka]
+  atm: [atm, bankamatik]
+  benzin_istasyonu: [benzin istasyonu, akaryakıt istasyonu]
+  market: [market]
+  avm: [avm, alışveriş merkezi]
+  otel: [otel, konaklama]
+  spor_salonu: [spor salonu, fitness]
+  karakol: [karakol, polis]
+  postane: [postane, ptt]
+  sinema: [sinema]
+  iskele: [iskele, vapur]
+  otogar: [otogar]
+  ofis: [ofis, iş yeri ofisi, plaza]
+
+# ---------------------------------------------------------------------------------------------
+kurallar:
+  - id: projeksiyon_haric
+    tanim: "2026-08 sonrası fiyat ayları kaynağın kendi tahminidir (projeksiyon). Varsayılan olarak dışlanır; yalnız açıkça istenirse 'TAHMİN' etiketiyle gösterilir."
+  - id: osm_semantigi
+    tanim: "OSM hareketliliği 'haritaya ekleme/çıkarma'dır; işletme açılışı/kapanışı DEĞİLDİR. 2021-01 ilk kesit sol-sansürlüdür. Farklı kaynaklar arası fark hareketlilik sayılmaz."
+    yasak_ifadeler: ["açıldı", "kapandı", "açılış", "kapanış", "iflas"]
+  - id: gecerli_koordinat
+    tanim: "Mekânsal analizlerde yalnız koordinatı geçerli işletmeler kullanılır (7.847 bozuk koordinat dışlanır)."
+  - id: kategori_belirsiz
+    tanim: "Türü belirlenemeyen işletmeler kategori sayımlarına eklenmez; alan başına 'türü belirsiz' sayısı ayrıca bildirilir. Sektör ipucu (sector_hint) kesin kategori sayılmaz."
+  - id: eslesme_oneri
+    tanim: "Mahalle eşleşmeleri PROPOSED (insan onayı bekliyor). Bağ bandı 'review_recommended'/'no_auto_merge' olan yerler uyarıyla gösterilir."
+  - id: kisisel_veri
+    tanim: "Telefon, kişi adı, e-posta hiçbir çıktıda verilmez (column_sensitivity_v1)."
+  - id: karantina
+    tanim: "Karantinadaki (qstg) ve sahte olduğu kanıtlı tablolar agent tarafından hiç okunmaz."
+  - id: seri_karistirma
+    tanim: "Revizyon öncesi ve sonrası TÜİK serileri aynı tabloda toplanmaz/karşılaştırılmaz."
+  - id: toplanamaz
+    tanim: "Fiyat, oran, endeks gibi 'toplanabilir: false' ölçüler alt seviyelerden toplanarak/ortalanarak üst seviyeye çıkarılmaz; üst seviye değeri kaynağın kendi üst seviye serisidir. Alt seviyelerin dağılımı (medyan, yüzdelikler) ayrıca istenebilir."
+  - id: yorum_yok
+    tanim: "Çıktı sayı, tablo ve künyedir. 'İyi/kötü/yatırıma uygun' gibi değerlendirme yapılmaz (proje kuralı 1)."
+  - id: uygunluk_skoru
+    tanim: "Uygunluk skoru bir MODEL çıktısıdır: profildeki varsayımsal kriter ve ağırlıklara göre göreli sıralama (0–100). Talep/ciro/kâr ölçümü ya da yatırım tavsiyesi değildir; varsayımlar tabloda açıkça yazılır ve değiştirilebilir."
+  - id: projeksiyon_model
+    tanim: "Projeksiyon bir MODEL çıktısıdır (ölçüm değil): geçmiş eğilimin geriye dönük sınanmış istatistiksel uzantısı; %80 aralık geçmiş gerçek hatalardan. Kırılmaları (faiz, politika, afet) içermez; kaynağın kendi projeksiyonundan ayrı gösterilir."
+  - id: dis_varsayim
+    tanim: "Web/kullanıcı kaynaklı bilgi yalnız kaynak adı, adresi ve erişim tarihiyle girer; hesaba yalnız tanımlı anahtarlar (yıllık enflasyon, nüfus büyüme senaryosu) katılır; plan parmak izine dahildir."
+  - id: tekillestirme
+    tanim: "Aynı yer-ölçü-dönem için birden çok kaynak satırı varsa: değerler eşitse tek değer; farklıysa en güncel kaynak güncelleme zamanı, eşitlikte kaynak tablo adı ve satır parmak izi sırası seçilir; 'çelişki' bayrağı ve min–max aralığı saklanır."
+
+# ---------------------------------------------------------------------------------------------
+# ANALİZ KATALOĞU — agent yalnız bunları çalıştırabilir. Parametre şemaları plan.py'de (pydantic).
+analizler:
+  yer_profili:        "Bir yerin tüm güncel ölçüleri, işletme dağılımı ve üst birim (ilçe/il) değerleriyle yan yana."
+  karsilastir:        "Birden çok yeri seçilen ölçülerde yan yana koyar (güncel değer)."
+  sirala:             "Bir kapsam içinde (ör. İzmir'in mahalleleri) bir ölçüye göre sıralama; en yüksek/en düşük N."
+  zaman_serisi:       "Bir veya birkaç yerin bir ölçüdeki dönemsel seyri + dönem değişimleri (aylık, yıllık, dönem başı–sonu, yıllık bileşik)."
+  dagilim:            "Bir kapsam içindeki alt birimlerin bir ölçüdeki dağılımı: n, min, p10, p25, medyan, p75, p90, max, ortalama."
+  yakin_cevre:        "Bir nokta/yer çevresinde (yarıçap m) işletmeler (sektör/kategori sayıları), harita nesneleri (okul, durak...), alan-ağırlıklı yaklaşık nüfus."
+  yogunluk:           "Bir kapsam içinde alt birimlerin kategori/sektör işletme sayısı, 1.000 kişi ve km² başına."
+  kategori_dagilimi:  "Bir yerin işletmelerinin sektör/kategori kırılımı ve payları."
+  benzer_yerler:      "Seçilen ölçülerde standartlaştırılmış (z-skor) Öklid uzaklığına göre en benzer N yer."
+  harita_hareketliligi: "OSM kesitleri arasında haritaya eklenen/çıkan nesneler (açılış/kapanış değildir)."
+  isletme_listesi:    "Kapsam/nokta çevresindeki işletmelerin koordinatlı listesi (filtre: kategori, sektör, puan)."
+  iliski:             "İki ölçü arasında alt birimler üzerinden Pearson ve Spearman korelasyonu (n ile)."
+  veri_kapsami:       "Bir ölçünün hangi seviyelerde, hangi dönemlerde, kaç yerde bulunduğu."
+  uygun_bolge:        "İşletme/yazılım/ürün için uygun bölgeleri açık ağırlıklı çok kriterli skorla sıralar (profiller.yaml); sağlamlık testi dahil."
+  gelecek_projeksiyonu: "Bir ölçünün geleceğe dönük istatistiksel projeksiyonu (geçmişte sınanmış model topluluğu + ölçülmüş %80 aralık + kaynağın tahmini + dış varsayımlar)."
+  bolge_gelecek_raporu: "Bir bölge için nüfus, fiyat, kira, satış projeksiyonları + öncü göstergeler + dış kaynak bağlamı."

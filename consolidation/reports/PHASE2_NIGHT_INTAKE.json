@@ -1,0 +1,20 @@
+{
+ "at": "2026-09-29T03:27:55+00:00",
+ "report": [
+  {
+   "source": "marketfiyati_branch_items",
+   "status": "OK",
+   "files": 4459,
+   "files_in_output": 4459,
+   "rows_in": 1863713,
+   "rows_written": 1863713,
+   "unaccounted": 0,
+   "columns": 25,
+   "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_marketfiyati_sube_urun/part-NIGHT_marketfiyati_branch_items.parquet",
+   "size_mb": 148.1,
+   "acquisition_class": "web_research",
+   "distribution_class": "internal",
+   "seconds": 135
+  }
+ ]
+}

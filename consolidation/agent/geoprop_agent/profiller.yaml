@@ -1,0 +1,165 @@
+# UYGUN BÖLGE PROFİLLERİ — "nereye açmalı / nerede satmalı / hangi pazara girmeli" skorlamasının VARSAYIMLARI.
+#
+# Sade anlatım: her profil, bir işletme/yazılım/ürün için önemli sayılan ölçülerin listesidir.
+#   yon: arti  → değer yüksekse bölge daha uygun (ör. nüfus yoğunluğu)
+#   yon: eksi  → değer yüksekse bölge daha az uygun (ör. rakip yoğunluğu, kira maliyeti)
+#   agirlik    → ölçünün skordaki payı (göreli; toplamı 1 olmak zorunda değil)
+#   neden      → bu ölçünün neden seçildiği (varsayımın gerekçesi — kullanıcı itiraz edip değiştirebilir)
+# Skor = her ölçüde bölgenin aday küme içindeki yüzdelik sırası (0–100), yönü uygulanmış, ağırlıklı ortalama.
+# Bu bir TALEP veya CİRO ölçümü değildir; seçilen varsayımlara göre göreli sıralamadır. Yatırım tavsiyesi değildir.
+# Bilinen veri boşlukları: işyeri kirası yok (konut kirası vekil kullanılır), yaya trafiği yok (durak/metro vekil),
+# yaş kırılımı ve gelir yok (TÜİK SES skoru ilçe düzeyinde vekil).
+surum: 0.1.0
+
+profiller:
+  # ------------------------------------------------------------------ İŞLETMELER
+  kafe:
+    tur: isletme
+    ad: "Kafe"
+    seviyeler: [mahalle, ilce]
+    kriterler:
+      - {olcu: nufus_yogunlugu, yon: arti, agirlik: 2, neden: "Yürüme mesafesindeki potansiyel müşteri"}
+      - {olcu: bin_kisi_basina_isletme, boyut: "kategori:Kafe", yon: eksi, agirlik: 2, neden: "Kişi başına rakip kafe"}
+      - {olcu: km2_basina_isletme, yon: arti, agirlik: 1, neden: "Ticari canlılık/kümelenme (tüm işletmeler)"}
+      - {olcu: konut_satis_m2, yon: arti, agirlik: 1.5, neden: "Alım gücü vekili (ilan m² fiyatı)"}
+      - {olcu: konut_kira_m2, yon: eksi, agirlik: 1, neden: "Maliyet vekili (işyeri kirası verisi yok; konut kirası)"}
+      - {olcu: harita_nesnesi_sayisi, boyut: universite, yon: arti, agirlik: 1, neden: "Öğrenci talebi"}
+      - {olcu: harita_nesnesi_sayisi, boyut: otobus_duragi, yon: arti, agirlik: 0.5, neden: "Erişilebilirlik / yaya akışı vekili"}
+      - {olcu: harita_nesnesi_sayisi, boyut: ofis, yon: arti, agirlik: 1, neden: "Çalışan (öğle/iş arası) talebi"}
+  restoran:
+    tur: isletme
+    ad: "Restoran / lokanta"
+    seviyeler: [mahalle, ilce]
+    kriterler:
+      - {olcu: nufus_yogunlugu, yon: arti, agirlik: 2, neden: "Yakın çevre talebi"}
+      - {olcu: bin_kisi_basina_isletme, boyut: "kategori:Restoran & Lokanta", yon: eksi, agirlik: 2, neden: "Kişi başına rakip"}
+      - {olcu: km2_basina_isletme, yon: arti, agirlik: 1, neden: "Ticari canlılık"}
+      - {olcu: konut_satis_m2, yon: arti, agirlik: 1, neden: "Alım gücü vekili"}
+      - {olcu: konut_kira_m2, yon: eksi, agirlik: 1, neden: "Maliyet vekili"}
+      - {olcu: harita_nesnesi_sayisi, boyut: ofis, yon: arti, agirlik: 1, neden: "Öğle talebi"}
+      - {olcu: harita_nesnesi_sayisi, boyut: otel, yon: arti, agirlik: 0.5, neden: "Turist/konaklayan talebi"}
+  market:
+    tur: isletme
+    ad: "Market / süpermarket"
+    seviyeler: [mahalle, ilce]
+    kriterler:
+      - {olcu: nufus, yon: arti, agirlik: 2, neden: "Hanelerin günlük alışverişi — mutlak nüfus"}
+      - {olcu: nufus_yogunlugu, yon: arti, agirlik: 1.5, neden: "Yürüme mesafesi"}
+      - {olcu: bin_kisi_basina_isletme, boyut: "sektor:Gıda Perakende", yon: eksi, agirlik: 2, neden: "Kişi başına gıda perakende rakibi"}
+      - {olcu: nufus_degisim_5y, yon: arti, agirlik: 1, neden: "Büyüyen nüfus (ilçe, TÜİK son 5 yıl)"}
+      - {olcu: konut_kira_m2, yon: eksi, agirlik: 0.5, neden: "Maliyet vekili"}
+  eczane:
+    tur: isletme
+    ad: "Eczane"
+    seviyeler: [mahalle, ilce]
+    kriterler:
+      - {olcu: nufus, yon: arti, agirlik: 2, neden: "Reçete talebi nüfusla orantılı"}
+      - {olcu: harita_nesnesi_sayisi, boyut: hastane, yon: arti, agirlik: 2, neden: "Hastane çevresi reçete akışı"}
+      - {olcu: harita_nesnesi_sayisi, boyut: saglik_ocagi, yon: arti, agirlik: 1.5, neden: "Aile sağlığı merkezi yakınlığı"}
+      - {olcu: bin_kisi_basina_isletme, boyut: "kategori:Sağlık Kabini & Eczane", yon: eksi, agirlik: 2, neden: "Kişi başına rakip eczane"}
+  kuafor:
+    tur: isletme
+    ad: "Kuaför / berber / güzellik"
+    seviyeler: [mahalle, ilce]
+    kriterler:
+      - {olcu: nufus_yogunlugu, yon: arti, agirlik: 2, neden: "Yakın çevre müşterisi"}
+      - {olcu: bin_kisi_basina_isletme, boyut: "sektor:Kişisel Bakım", yon: eksi, agirlik: 2, neden: "Kişi başına rakip"}
+      - {olcu: konut_satis_m2, yon: arti, agirlik: 1, neden: "Alım gücü vekili"}
+      - {olcu: konut_kira_m2, yon: eksi, agirlik: 0.5, neden: "Maliyet vekili"}
+  giyim_magazasi:
+    tur: isletme
+    ad: "Giyim / ayakkabı mağazası"
+    seviyeler: [mahalle, ilce]
+    kriterler:
+      - {olcu: km2_basina_isletme, boyut: "sektor:Moda", yon: arti, agirlik: 1.5, neden: "Alışveriş aksı kümelenmesi (müşteri karşılaştırmalı alışveriş yapar)"}
+      - {olcu: km2_basina_isletme, yon: arti, agirlik: 1.5, neden: "Genel ticari yoğunluk"}
+      - {olcu: konut_satis_m2, yon: arti, agirlik: 1.5, neden: "Alım gücü vekili"}
+      - {olcu: harita_nesnesi_sayisi, boyut: avm, yon: arti, agirlik: 1, neden: "AVM çekimi"}
+      - {olcu: harita_nesnesi_sayisi, boyut: metro_istasyonu, yon: arti, agirlik: 1, neden: "Erişilebilirlik"}
+      - {olcu: konut_kira_m2, yon: eksi, agirlik: 1, neden: "Maliyet vekili"}
+  konut_projesi:
+    tur: isletme
+    ad: "Konut geliştirme projesi (arz tarafı)"
+    seviyeler: [ilce, mahalle]
+    kriterler:
+      - {olcu: konut_satis_12ay, yon: arti, agirlik: 2, neden: "Piyasa derinliği (TÜİK, son 12 ay satış)"}
+      - {olcu: nufus_degisim_5y, yon: arti, agirlik: 2, neden: "Nüfus artışı"}
+      - {olcu: konut_yillik_degisim, yon: arti, agirlik: 1, neden: "Fiyat ivmesi (ilan, yıllık)"}
+      - {olcu: konut_brut_kira_getirisi, yon: arti, agirlik: 1, neden: "Yatırımcı alıcı talebi vekili"}
+      - {olcu: yapi_ruhsati_daire, yon: eksi, agirlik: 1.5, neden: "Yeni arz baskısı (ruhsat alan daire)"}
+      - {olcu: konut_ilanda_kalma_gun, yon: eksi, agirlik: 1, neden: "Satış hızı (ilanın kalma süresi kısa = hızlı)"}
+
+  # ------------------------------------------------------------------ YAZILIMLAR (hedef pazar bölgesi)
+  restoran_yazilimi:
+    tur: yazilim
+    ad: "Restoran/kafe yazılımı (adisyon, POS, rezervasyon) — B2B"
+    seviyeler: [ilce, il]
+    kriterler:
+      - {olcu: isletme_sayisi, boyut: "sektor:Yeme-İçme", yon: arti, agirlik: 3, neden: "Hedef müşteri sayısı (pazar büyüklüğü)"}
+      - {olcu: harita_eklenen, boyut: yeme_icme, yon: arti, agirlik: 1.5, neden: "Yeni işletme akışı (OSM haritaya eklenen) = yeni müşteri adayı"}
+      - {olcu: ses_skoru, yon: arti, agirlik: 1, neden: "Ödeme gücü vekili"}
+      - {olcu: ortalama_puan, boyut: "sektor:Yeme-İçme", yon: arti, agirlik: 0.5, neden: "Dijital görünürlüğe önem veren işletme vekili"}
+  perakende_yazilimi:
+    tur: yazilim
+    ad: "Perakende yazılımı (POS, stok, e-ticaret entegrasyonu) — B2B"
+    seviyeler: [ilce, il]
+    kriterler:
+      - {olcu: isletme_sayisi, boyut: "sektor:Gıda Perakende", yon: arti, agirlik: 2, neden: "Hedef müşteri: market/bakkal"}
+      - {olcu: isletme_sayisi, boyut: "sektor:Perakende", yon: arti, agirlik: 2, neden: "Hedef müşteri: mağazalar"}
+      - {olcu: harita_eklenen, boyut: perakende, yon: arti, agirlik: 1, neden: "Yeni perakende akışı"}
+      - {olcu: ses_skoru, yon: arti, agirlik: 1, neden: "Ödeme gücü vekili"}
+  emlak_yazilimi:
+    tur: yazilim
+    ad: "Emlak ofisi / gayrimenkul yazılımı — B2B"
+    seviyeler: [ilce, il]
+    kriterler:
+      - {olcu: konut_satis_12ay, yon: arti, agirlik: 3, neden: "İşlem hacmi (TÜİK, son 12 ay satış)"}
+      - {olcu: konut_ilan_sayisi, yon: arti, agirlik: 2, neden: "Satılık ilan stoku"}
+      - {olcu: konut_kiralik_ilan_sayisi, yon: arti, agirlik: 1, neden: "Kiralık ilan stoku"}
+      - {olcu: arsa_ilan_sayisi, yon: arti, agirlik: 1, neden: "Arsa piyasası"}
+  saglik_yazilimi:
+    tur: yazilim
+    ad: "Klinik / muayenehane yazılımı — B2B"
+    seviyeler: [ilce, il]
+    kriterler:
+      - {olcu: isletme_sayisi, boyut: "sektor:Sağlık", yon: arti, agirlik: 3, neden: "Hedef müşteri sayısı"}
+      - {olcu: harita_nesnesi_sayisi, boyut: hastane, yon: arti, agirlik: 1, neden: "Sağlık kümelenmesi"}
+      - {olcu: ses_skoru, yon: arti, agirlik: 1.5, neden: "Özel sağlık harcaması vekili"}
+  tuketici_uygulamasi:
+    tur: yazilim
+    ad: "Genel tüketici mobil uygulaması (B2C) — lansman/pazarlama bölgesi"
+    seviyeler: [ilce, il]
+    kriterler:
+      - {olcu: nufus, yon: arti, agirlik: 2, neden: "Erişilebilir kullanıcı sayısı"}
+      - {olcu: nufus_yogunlugu, yon: arti, agirlik: 1, neden: "Yoğun kentsel kullanım (ağ etkisi)"}
+      - {olcu: ses_skoru, yon: arti, agirlik: 2, neden: "Ödeme/uygulama içi harcama vekili"}
+      - {olcu: km2_basina_isletme, yon: arti, agirlik: 1, neden: "Kentsel hizmet yoğunluğu"}
+
+  # ------------------------------------------------------------------ ÜRÜNLER (satış / dağıtım bölgesi)
+  premium_urun:
+    tur: urun
+    ad: "Premium tüketici ürünü"
+    seviyeler: [ilce, il, mahalle]
+    kriterler:
+      - {olcu: ses_skoru, yon: arti, agirlik: 3, neden: "Sosyo-ekonomik statü"}
+      - {olcu: ses_ust_pay, yon: arti, agirlik: 2, neden: "Üst SES grubunun payı"}
+      - {olcu: konut_satis_m2, yon: arti, agirlik: 2, neden: "Varlık düzeyi vekili"}
+      - {olcu: nufus, yon: arti, agirlik: 1, neden: "Pazar büyüklüğü"}
+  ekonomik_urun:
+    tur: urun
+    ad: "Ekonomik / yüksek hacimli tüketici ürünü"
+    seviyeler: [ilce, il]
+    kriterler:
+      - {olcu: nufus, yon: arti, agirlik: 3, neden: "Hacim"}
+      - {olcu: nufus_degisim_5y, yon: arti, agirlik: 1, neden: "Büyüyen pazar"}
+      - {olcu: nufus_yogunlugu, yon: arti, agirlik: 1, neden: "Dağıtım verimliliği"}
+      - {olcu: bin_kisi_basina_isletme, boyut: "sektor:Gıda Perakende", yon: arti, agirlik: 1, neden: "Satış noktası yoğunluğu"}
+  yapi_malzemesi:
+    tur: urun
+    ad: "Yapı malzemesi / inşaat ürünü"
+    seviyeler: [ilce, il]
+    kriterler:
+      - {olcu: yapi_ruhsati_daire, yon: arti, agirlik: 3, neden: "Yeni inşaat hacmi (ruhsat alan daire)"}
+      - {olcu: yapi_kullanma_daire, yon: arti, agirlik: 1, neden: "Tamamlanan inşaat (iç mekân/tadilat talebi)"}
+      - {olcu: konut_satis_12ay, yon: arti, agirlik: 1, neden: "Konut el değiştirme (tadilat talebi, son 12 ay)"}
+      - {olcu: isletme_sayisi, boyut: "sektor:Ev & Yapı", yon: eksi, agirlik: 1, neden: "Rakip bayi yoğunluğu"}

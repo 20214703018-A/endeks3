@@ -1,0 +1,992 @@
+[
+ {
+  "kaynak": "acikveri_ckan_balikesir",
+  "klasor": "acikveri_ckan_balikesir/2026-09-24",
+  "dosya": 0,
+  "satir": 0,
+  "bayt": 0,
+  "yontemler": [],
+  "alanlar": [],
+  "ilk": null,
+  "son": null,
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 465
+ },
+ {
+  "kaynak": "acikveri_ckan_bursa",
+  "klasor": "acikveri_ckan_bursa/2026-09-24",
+  "dosya": 51,
+  "satir": 98,
+  "bayt": 4952244,
+  "yontemler": [
+   "ckan_api",
+   "ckan_resource_download"
+  ],
+  "alanlar": [
+   "acikyesil.bursa.bel.tr",
+   "bapi.bursa.bel.tr"
+  ],
+  "ilk": "2026-09-24T07:01:16+03:00",
+  "son": "2026-09-24T07:10:01+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 4975132
+ },
+ {
+  "kaynak": "acikveri_ckan_denizli",
+  "klasor": "acikveri_ckan_denizli/2026-09-24",
+  "dosya": 58,
+  "satir": 39,
+  "bayt": 17633864,
+  "yontemler": [
+   "ckan_api",
+   "ckan_resource_download"
+  ],
+  "alanlar": [
+   "acikveri.denizli.bel.tr"
+  ],
+  "ilk": "2026-09-24T07:38:25+03:00",
+  "son": "2026-09-24T07:39:31+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 17681262
+ },
+ {
+  "kaynak": "acikveri_ckan_gaziantep",
+  "klasor": "acikveri_ckan_gaziantep/2026-09-24",
+  "dosya": 292,
+  "satir": 252,
+  "bayt": 39409901,
+  "yontemler": [
+   "ckan_api",
+   "ckan_resource_download"
+  ],
+  "alanlar": [
+   "acikveri.gaziantep.bel.tr",
+   "acikveriapi.gaziantep.bel.tr"
+  ],
+  "ilk": "2026-09-24T07:39:32+03:00",
+  "son": "2026-09-24T07:43:57+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 39671363
+ },
+ {
+  "kaynak": "acikveri_ckan_ibb",
+  "klasor": "acikveri_ckan_ibb/2026-09-24",
+  "dosya": 863,
+  "satir": 1114,
+  "bayt": 2348978598,
+  "yontemler": [
+   "ckan_api",
+   "ckan_resource_download"
+  ],
+  "alanlar": [
+   "data.ibb.gov.tr"
+  ],
+  "ilk": "2026-09-24T06:49:42+03:00",
+  "son": "2026-09-24T07:27:05+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 2349318642
+ },
+ {
+  "kaynak": "acikveri_ckan_izmir",
+  "klasor": "acikveri_ckan_izmir/2026-09-24",
+  "dosya": 447,
+  "satir": 500,
+  "bayt": 259156613,
+  "yontemler": [
+   "ckan_api",
+   "ckan_resource_download"
+  ],
+  "alanlar": [
+   "acikveri.bizizmir.com",
+   "openfiles.izmir.bel.tr",
+   "www.eshot.gov.tr",
+   "www.izban.com.tr",
+   "www.izdeniz.com.tr",
+   "www.izmirmetro.com.tr",
+   "www.tramizmir.com"
+  ],
+  "ilk": "2026-09-24T06:49:44+03:00",
+  "son": "2026-09-24T07:01:34+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 259315001
+ },
+ {
+  "kaynak": "acikveri_ckan_konya",
+  "klasor": "acikveri_ckan_konya/2026-09-24",
+  "dosya": 603,
+  "satir": 232,
+  "bayt": 84926135,
+  "yontemler": [
+   "ckan_api",
+   "ckan_resource_download"
+  ],
+  "alanlar": [
+   "acikveri.konya.bel.tr"
+  ],
+  "ilk": "2026-09-24T07:08:07+03:00",
+  "son": "2026-09-24T07:17:16+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 85447669
+ },
+ {
+  "kaynak": "acikveri_ckan_manisa",
+  "klasor": "acikveri_ckan_manisa/2026-09-24",
+  "dosya": 1256,
+  "satir": 2370,
+  "bayt": 16615849,
+  "yontemler": [
+   "ckan_api",
+   "ckan_resource_download"
+  ],
+  "alanlar": [
+   "acikveri.manisa.bel.tr"
+  ],
+  "ilk": "2026-09-24T06:49:48+03:00",
+  "son": "2026-09-24T07:02:40+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 17174814
+ },
+ {
+  "kaynak": "acikveri_ckan_sakarya",
+  "klasor": "acikveri_ckan_sakarya/2026-09-24",
+  "dosya": 314,
+  "satir": 307,
+  "bayt": 19124365,
+  "yontemler": [
+   "ckan_api",
+   "ckan_resource_download"
+  ],
+  "alanlar": [
+   "veri.sakarya.bel.tr"
+  ],
+  "ilk": "2026-09-24T07:02:41+03:00",
+  "son": "2026-09-24T07:06:15+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 19424496
+ },
+ {
+  "kaynak": "akaryakit_opet_fiyat_arsivi",
+  "klasor": "akaryakit_opet_fiyat_arsivi/2026-09-24",
+  "dosya": 4,
+  "satir": 9079409,
+  "bayt": 19531023,
+  "yontemler": [
+   "derived",
+   "rest_get",
+   "rest_get_windows"
+  ],
+  "alanlar": [
+   "api.opet.com.tr"
+  ],
+  "ilk": "2026-09-24T09:57:58+03:00",
+  "son": "2026-09-24T11:12:54+03:00",
+  "ilerleme_kayitlari": {
+   "prices_compact.jsonl.gz": 3704
+  },
+  "disk_bayt": 51490788
+ },
+ {
+  "kaynak": "bkm_donemsel",
+  "klasor": "bkm_donemsel/2026-09-24",
+  "dosya": 1,
+  "satir": 4977,
+  "bayt": 87337852,
+  "yontemler": [
+   "http_get_year_month_html_tables"
+  ],
+  "alanlar": [
+   "bkm.com.tr"
+  ],
+  "ilk": "2026-09-24T08:21:37+03:00",
+  "son": "2026-09-24T08:21:37+03:00",
+  "ilerleme_kayitlari": {
+   "pages.jsonl": 4977
+  },
+  "disk_bayt": 87343997
+ },
+ {
+  "kaynak": "btk_iletisim_istatistik",
+  "klasor": "btk_iletisim_istatistik/2026-09-24",
+  "dosya": 338,
+  "satir": 0,
+  "bayt": 786509864,
+  "yontemler": [
+   "http_get_attachment",
+   "http_get_page"
+  ],
+  "alanlar": [
+   "www.btk.gov.tr"
+  ],
+  "ilk": "2026-09-24T07:09:22+03:00",
+  "son": "2026-09-24T07:20:18+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 786727385
+ },
+ {
+  "kaynak": "cbs_nl_tatil_istatistikleri",
+  "klasor": "cbs_nl_tatil_istatistikleri/2026-09-24",
+  "dosya": 179,
+  "satir": 106954,
+  "bayt": 3480835,
+  "yontemler": [
+   "odata",
+   "odata_paged"
+  ],
+  "alanlar": [
+   "opendata.cbs.nl"
+  ],
+  "ilk": "2026-09-24T08:39:54+03:00",
+  "son": "2026-09-24T08:42:13+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 3550049
+ },
+ {
+  "kaynak": "cimri_fiyat_karsilastirma",
+  "klasor": "cimri_fiyat_karsilastirma/2026-09-24",
+  "dosya": 1,
+  "satir": 3124581,
+  "bayt": 59425244,
+  "yontemler": [
+   "sitemap_walk"
+  ],
+  "alanlar": [
+   "www.cimri.com"
+  ],
+  "ilk": "2026-09-24T07:30:00+03:00",
+  "son": "2026-09-24T07:30:00+03:00",
+  "ilerleme_kayitlari": {
+   "catalog_urls.jsonl.gz": 3124581
+  },
+  "disk_bayt": 59434309
+ },
+ {
+  "kaynak": "dhmi_havalimani_istatistik",
+  "klasor": "dhmi_havalimani_istatistik/2026-09-24",
+  "dosya": 54,
+  "satir": 0,
+  "bayt": 5420746,
+  "yontemler": [
+   "http_get_attachment",
+   "http_get_page"
+  ],
+  "alanlar": [
+   "www.dhmi.gov.tr"
+  ],
+  "ilk": "2026-09-24T07:04:23+03:00",
+  "son": "2026-09-24T07:05:22+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 5448135
+ },
+ {
+  "kaynak": "epdk_api",
+  "klasor": "epdk_api/2026-09-24",
+  "dosya": 2,
+  "satir": 33778,
+  "bayt": 3049852,
+  "yontemler": [
+   "rest_get_json_body"
+  ],
+  "alanlar": [
+   "apigateway.epdk.gov.tr"
+  ],
+  "ilk": "2026-09-24T07:46:22+03:00",
+  "son": "2026-09-24T07:46:24+03:00",
+  "ilerleme_kayitlari": {
+   "petrolBayiSatisFiyatBulten.jsonl": 178
+  },
+  "disk_bayt": 3201714
+ },
+ {
+  "kaynak": "etbis_eticaret_siteleri",
+  "klasor": "etbis_eticaret_siteleri/2026-09-24",
+  "dosya": 64,
+  "satir": 86427,
+  "bayt": 86761153,
+  "yontemler": [
+   "html_paginated_city_district",
+   "html_paginated_unfiltered",
+   "html_profile",
+   "html_select"
+  ],
+  "alanlar": [
+   "etbis.ticaret.gov.tr"
+  ],
+  "ilk": "2026-09-24T07:20:34+03:00",
+  "son": "2026-09-27T07:16:58+03:00",
+  "ilerleme_kayitlari": {
+   "all_rows_pass4_urls_com.jsonl": 382,
+   "all_rows_pass4_url_web_tr.jsonl": 4,
+   "all_rows_pass4_urlf_com.jsonl": 27,
+   "all_rows_pass4_url7_com.jsonl": 5,
+   "all_rows_pass4_url_me.jsonl": 71,
+   "all_rows_pass4_urlk_com.jsonl": 378,
+   "all_rows_pass4_url_org.jsonl": 26,
+   "all_rows_pass4_urlu_com.jsonl": 113,
+   "all_rows_pass4_urlm_com.jsonl": 372,
+   "list_rows.jsonl": 5410,
+   "all_rows_pass4_url1_com.jsonl": 7,
+   "all_rows_pass4_urlx_com.jsonl": 61,
+   "all_rows_pass3_url_com_tr.jsonl": 1295,
+   "all_rows_pass4_urlr_com.jsonl": 403,
+   "all_rows_pass4_url_tv.jsonl": 3,
+   "all_rows_pass4_urlg_com.jsonl": 60,
+   "all_rows_pass4_url_online.jsonl": 18,
+   "all_rows.jsonl": 6021,
+   "all_rows_pass4_url6_com.jsonl": 3,
+   "all_rows_pass4_urlj_com.jsonl": 15,
+   "all_rows_pass4_urla_com.jsonl": 599,
+   "all_rows_pass4_url_app.jsonl": 11,
+   "all_rows_pass4_urlt_com.jsonl": 424,
+   "all_rows_pass4_url_info.jsonl": 3,
+   "all_rows_pass4_urll_com.jsonl": 274,
+   "all_rows_pass4_url_biz.jsonl": 10,
+   "all_rows_pass4_url_net.jsonl": 178,
+   "all_rows_pass4_urly_com.jsonl": 170,
+   "all_rows_pass4_url_tr.jsonl": 1372,
+   "all_rows_pass4_url0_com.jsonl": 7,
+   "all_rows_pass4_urld_com.jsonl": 92,
+   "all_rows_pass4_url_gen_tr.jsonl": 3,
+   "all_rows_pass4_url8_com.jsonl": 3,
+   "all_rows_pass4_urlq_com.jsonl": 3,
+   "all_rows_pass4_url_site.jsonl": 4,
+   "all_rows_pass4_urli_com.jsonl": 622,
+   "all_rows_pass4_url_store.jsonl": 19,
+   "all_rows_pass4_url5_com.jsonl": 6,
+   "all_rows_pass2.jsonl": 6022,
+   "all_rows_pass4_url_io.jsonl": 5,
+   "all_rows_pass4_urlw_com.jsonl": 10,
+   "all_rows_pass4_url_xyz.jsonl": 2,
+   "all_rows_pass4_urlb_com.jsonl": 32,
+   "all_rows_pass4_url3_com.jsonl": 2,
+   "all_rows_pass4_urlz_com.jsonl": 65,
+   "all_rows_pass4_urlo_com.jsonl": 199,
+   "all_rows_pass4_urle_com.jsonl": 592,
+   "profiles.jsonl": 60027,
+   "all_rows_pass4_url_biz_tr.jsonl": 2,
+   "all_rows_pass4_urlp_com.jsonl": 184,
+   "all_rows_pass4_url9_com.jsonl": 4,
+   "all_rows_pass4_urlh_com.jsonl": 39,
+   "all_rows_pass4_url4_com.jsonl": 10,
+   "all_rows_pass4_url_shop.jsonl": 32,
+   "all_rows_pass4_urlv_com.jsonl": 31,
+   "all_rows_pass4_url_av_tr.jsonl": 1,
+   "all_rows_pass4_url_de.jsonl": 79,
+   "all_rows_pass4_urlc_com.jsonl": 43,
+   "all_rows_pass4_url_eu.jsonl": 5,
+   "all_rows_pass4_url2_com.jsonl": 5,
+   "all_rows_pass4_url_uk.jsonl": 2,
+   "sector_rows.jsonl": 13832,
+   "all_rows_pass4_urln_com.jsonl": 396,
+   "all_rows_pass4_url_co.jsonl": 243
+  },
+  "disk_bayt": 112542254
+ },
+ {
+  "kaynak": "eticaret_pazarama_satici",
+  "klasor": "eticaret_pazarama_satici/2026-09-24",
+  "dosya": 1,
+  "satir": 20351,
+  "bayt": 128649,
+  "yontemler": [
+   "http_get"
+  ],
+  "alanlar": [
+   "www.pazarama.com"
+  ],
+  "ilk": "2026-09-24T07:34:57+03:00",
+  "son": "2026-09-24T07:34:57+03:00",
+  "ilerleme_kayitlari": {
+   "stores.jsonl": 48
+  },
+  "disk_bayt": 155614
+ },
+ {
+  "kaynak": "eticaret_sirket_adresleri",
+  "klasor": "eticaret_sirket_adresleri/2026-09-24",
+  "dosya": 6,
+  "satir": 287813,
+  "bayt": 249989162,
+  "yontemler": [
+   "site_contact_extraction"
+  ],
+  "alanlar": [],
+  "ilk": "2026-09-24T09:04:20+03:00",
+  "son": "2026-09-27T05:32:08+03:00",
+  "ilerleme_kayitlari": {
+   "sites.jsonl": 59432
+  },
+  "disk_bayt": 51499486
+ },
+ {
+  "kaynak": "eurocontrol_havalimani_trafik",
+  "klasor": "eurocontrol_havalimani_trafik/2026-09-24",
+  "dosya": 2,
+  "satir": 16743,
+  "bayt": 96637829,
+  "yontemler": [
+   "http_get",
+   "xlsx_filter_TR"
+  ],
+  "alanlar": [
+   "www.eurocontrol.int"
+  ],
+  "ilk": "2026-09-24T08:36:36+03:00",
+  "son": "2026-09-24T08:37:32+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 96638629
+ },
+ {
+  "kaynak": "eurostat_turkiye_turizm_havayolu",
+  "klasor": "eurostat_turkiye_turizm_havayolu/2026-09-24",
+  "dosya": 146,
+  "satir": 484463,
+  "bayt": 24096729,
+  "yontemler": [
+   "http_get",
+   "sdmx_tsv_stream_filter_TR"
+  ],
+  "alanlar": [
+   "ec.europa.eu"
+  ],
+  "ilk": "2026-09-24T08:29:48+03:00",
+  "son": "2026-09-24T08:38:04+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 24222975
+ },
+ {
+  "kaynak": "hal_fiyatlari",
+  "klasor": "hal_fiyatlari/2026-09-24",
+  "dosya": 3,
+  "satir": 2245144,
+  "bayt": 17734592,
+  "yontemler": [
+   "aspnet_postback_excel",
+   "rest_get_daily"
+  ],
+  "alanlar": [
+   "openapi.izmir.bel.tr",
+   "www.hal.gov.tr"
+  ],
+  "ilk": "2026-09-24T07:16:18+03:00",
+  "son": "2026-09-24T08:48:48+03:00",
+  "ilerleme_kayitlari": {
+   "hks_parts_2017-01-01.jsonl.gz": 1095,
+   "izmir_sebzemeyve_parts.jsonl.gz": 6842,
+   "izmir_balik_parts.jsonl.gz": 6839,
+   "hks_parts_2020-01-01.jsonl.gz": 1096,
+   "hks_parts_2023-01-01.jsonl.gz": 1363
+  },
+  "disk_bayt": 46438815
+ },
+ {
+  "kaynak": "kgm_karayollari",
+  "klasor": "kgm_karayollari/2026-09-24",
+  "dosya": 385,
+  "satir": 0,
+  "bayt": 1913701001,
+  "yontemler": [
+   "http_get_attachment",
+   "http_get_page"
+  ],
+  "alanlar": [
+   "www.kgm.gov.tr"
+  ],
+  "ilk": "2026-09-24T06:43:25+03:00",
+  "son": "2026-09-24T06:55:11+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 1913961256
+ },
+ {
+  "kaynak": "marketfiyati",
+  "klasor": "marketfiyati/2026-09-24",
+  "dosya": 99,
+  "satir": 13138639,
+  "bayt": 171533686,
+  "yontemler": [
+   "api_post",
+   "api_post_grid",
+   "api_post_paginated",
+   "api_post_paginated_single_depot"
+  ],
+  "alanlar": [
+   "api.marketfiyati.org.tr"
+  ],
+  "ilk": "2026-09-24T06:39:21+03:00",
+  "son": "2026-09-28T13:38:21+03:00",
+  "ilerleme_kayitlari": {
+   "raw_GEO_IL_35/parts": 10065,
+   "raw_GEO_IL_34/parts": 10587,
+   "raw_GEO_IL_06/parts": 9164,
+   "depots_raw/parts": 1686
+  },
+  "disk_bayt": 204664363
+ },
+ {
+  "kaynak": "ons_travelpac_uk",
+  "klasor": "ons_travelpac_uk/2026-09-24",
+  "dosya": 27,
+  "satir": 14685,
+  "bayt": 166790502,
+  "yontemler": [
+   "http_get",
+   "zip_extract_filter_turkey"
+  ],
+  "alanlar": [
+   "www.ons.gov.uk"
+  ],
+  "ilk": "2026-09-24T08:34:32+03:00",
+  "son": "2026-09-24T08:36:48+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 166803551
+ },
+ {
+  "kaynak": "osm_pbf",
+  "klasor": "osm_pbf/2026-09-24",
+  "dosya": 0,
+  "satir": 0,
+  "bayt": 0,
+  "yontemler": [],
+  "alanlar": [],
+  "ilk": null,
+  "son": null,
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 56
+ },
+ {
+  "kaynak": "osm_pbf_katmanlar",
+  "klasor": "osm_pbf_katmanlar/2021-01-01",
+  "dosya": 12,
+  "satir": 379691,
+  "bayt": 40042252,
+  "yontemler": [
+   "osmium_export+duckdb_spatial"
+  ],
+  "alanlar": [],
+  "ilk": "2026-09-24T06:45:43+03:00",
+  "son": "2026-09-24T06:46:25+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 40050576
+ },
+ {
+  "kaynak": "osm_pbf_katmanlar",
+  "klasor": "osm_pbf_katmanlar/2022-01-01",
+  "dosya": 12,
+  "satir": 412433,
+  "bayt": 43578334,
+  "yontemler": [
+   "osmium_export+duckdb_spatial"
+  ],
+  "alanlar": [],
+  "ilk": "2026-09-24T06:46:32+03:00",
+  "son": "2026-09-24T06:47:24+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 43586658
+ },
+ {
+  "kaynak": "osm_pbf_katmanlar",
+  "klasor": "osm_pbf_katmanlar/2023-01-01",
+  "dosya": 12,
+  "satir": 470715,
+  "bayt": 49432562,
+  "yontemler": [
+   "osmium_export+duckdb_spatial"
+  ],
+  "alanlar": [],
+  "ilk": "2026-09-24T06:47:32+03:00",
+  "son": "2026-09-24T06:48:54+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 49440889
+ },
+ {
+  "kaynak": "osm_pbf_katmanlar",
+  "klasor": "osm_pbf_katmanlar/2024-01-01",
+  "dosya": 12,
+  "satir": 529000,
+  "bayt": 55604732,
+  "yontemler": [
+   "osmium_export+duckdb_spatial"
+  ],
+  "alanlar": [],
+  "ilk": "2026-09-24T06:49:08+03:00",
+  "son": "2026-09-24T06:51:11+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 55613061
+ },
+ {
+  "kaynak": "osm_pbf_katmanlar",
+  "klasor": "osm_pbf_katmanlar/2025-01-01",
+  "dosya": 12,
+  "satir": 582451,
+  "bayt": 60786580,
+  "yontemler": [
+   "osmium_export+duckdb_spatial"
+  ],
+  "alanlar": [],
+  "ilk": "2026-09-24T06:51:24+03:00",
+  "son": "2026-09-24T06:54:56+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 60794729
+ },
+ {
+  "kaynak": "osm_pbf_katmanlar",
+  "klasor": "osm_pbf_katmanlar/2026-09-24",
+  "dosya": 39,
+  "satir": 2828572,
+  "bayt": 241111542,
+  "yontemler": [
+   "osmium_export+duckdb_spatial",
+   "osmium_export_geojsonseq",
+   "osmium_tags_filter_opl"
+  ],
+  "alanlar": [
+   "download.geofabrik.de"
+  ],
+  "ilk": "2026-09-24T06:36:22+03:00",
+  "son": "2026-09-24T06:39:16+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 241132499
+ },
+ {
+  "kaynak": "osm_ulasim_lojistik",
+  "klasor": "osm_ulasim_lojistik/2026-09-24",
+  "dosya": 0,
+  "satir": 0,
+  "bayt": 0,
+  "yontemler": [],
+  "alanlar": [],
+  "ilk": null,
+  "son": null,
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 1571
+ },
+ {
+  "kaynak": "otobus_seferleri_enuygun",
+  "klasor": "otobus_seferleri_enuygun/2026-09-24",
+  "dosya": 25,
+  "satir": 201450,
+  "bayt": 464095963,
+  "yontemler": [
+   "http_get",
+   "http_get_jsonld"
+  ],
+  "alanlar": [
+   "www.enuygun.com"
+  ],
+  "ilk": "2026-09-24T06:41:46+03:00",
+  "son": "2026-09-27T06:03:57+03:00",
+  "ilerleme_kayitlari": {
+   "routes.jsonl": 35593
+  },
+  "disk_bayt": 406433509
+ },
+ {
+  "kaynak": "sarj_istasyonlari_epdk",
+  "klasor": "sarj_istasyonlari_epdk/2026-09-24",
+  "dosya": 5,
+  "satir": 88346,
+  "bayt": 3042485,
+  "yontemler": [
+   "rest_get",
+   "rest_get_detail"
+  ],
+  "alanlar": [
+   "sarjtr.epdk.gov.tr"
+  ],
+  "ilk": "2026-09-24T03:30:23+03:00",
+  "son": "2026-09-24T07:20:59+03:00",
+  "ilerleme_kayitlari": {
+   "station_details.jsonl.gz": 13059
+  },
+  "disk_bayt": 3744581
+ },
+ {
+  "kaynak": "sgk_istatistik",
+  "klasor": "sgk_istatistik/2026-09-24",
+  "dosya": 45,
+  "satir": 0,
+  "bayt": 81288524,
+  "yontemler": [
+   "http_get_attachment",
+   "http_get_page"
+  ],
+  "alanlar": [
+   "www.sgk.gov.tr"
+  ],
+  "ilk": "2026-09-24T06:46:33+03:00",
+  "son": "2026-09-24T06:47:29+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 81319358
+ },
+ {
+  "kaynak": "tcdd_demiryolu_istatistik",
+  "klasor": "tcdd_demiryolu_istatistik/2026-09-24",
+  "dosya": 2,
+  "satir": 0,
+  "bayt": 8138,
+  "yontemler": [
+   "http_get_page"
+  ],
+  "alanlar": [
+   "www.tcdd.gov.tr",
+   "www.tcddtasimacilik.gov.tr"
+  ],
+  "ilk": "2026-09-24T07:05:24+03:00",
+  "son": "2026-09-24T07:05:25+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 9066
+ },
+ {
+  "kaynak": "ticaret_bakanligi_istatistik",
+  "klasor": "ticaret_bakanligi_istatistik/2026-09-24",
+  "dosya": 365,
+  "satir": 0,
+  "bayt": 124004198,
+  "yontemler": [
+   "http_get_attachment",
+   "http_get_page"
+  ],
+  "alanlar": [
+   "ticaret.gov.tr"
+  ],
+  "ilk": "2026-09-24T06:43:24+03:00",
+  "son": "2026-09-24T06:50:37+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 120876795
+ },
+ {
+  "kaynak": "tobb_istatistik",
+  "klasor": "tobb_istatistik/2026-09-24",
+  "dosya": 559,
+  "satir": 0,
+  "bayt": 139474041,
+  "yontemler": [
+   "http_get_attachment",
+   "http_get_page"
+  ],
+  "alanlar": [
+   "tobb.org.tr",
+   "www.tobb.org.tr"
+  ],
+  "ilk": "2026-09-24T06:54:54+03:00",
+  "son": "2026-09-24T07:22:15+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 73678187
+ },
+ {
+  "kaynak": "tobb_sanayi_kapasite",
+  "klasor": "tobb_sanayi_kapasite/2026-09-24",
+  "dosya": 1,
+  "satir": 3607,
+  "bayt": 9035521,
+  "yontemler": [
+   "api_post_sequential"
+  ],
+  "alanlar": [
+   "sanayi.org.tr"
+  ],
+  "ilk": "2026-09-24T08:25:06+03:00",
+  "son": "2026-09-24T08:25:06+03:00",
+  "ilerleme_kayitlari": {
+   "responses.jsonl": 3607
+  },
+  "disk_bayt": 9042433
+ },
+ {
+  "kaynak": "tuik_portal_tablolar",
+  "klasor": "tuik_portal_tablolar/2026-09-24",
+  "dosya": 4581,
+  "satir": 6568,
+  "bayt": 474210843,
+  "yontemler": [
+   "rest_get_download",
+   "rest_post_paginated"
+  ],
+  "alanlar": [
+   "veriportali.tuik.gov.tr"
+  ],
+  "ilk": "2026-09-24T08:47:24+03:00",
+  "son": "2026-09-25T16:25:21+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 317178546
+ },
+ {
+  "kaynak": "tuik_sdmx",
+  "klasor": "tuik_sdmx/2026-09-24",
+  "dosya": 867,
+  "satir": 17921552,
+  "bayt": 64032738,
+  "yontemler": [
+   "rest_get",
+   "rest_post_download_jsondata"
+  ],
+  "alanlar": [
+   "databrowser2.tuik.gov.tr"
+  ],
+  "ilk": "2026-09-24T03:54:45+03:00",
+  "son": "2026-09-24T07:07:05+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 64450271
+ },
+ {
+  "kaynak": "turizm_ktb",
+  "klasor": "turizm_ktb/2026-09-24",
+  "dosya": 736,
+  "satir": 0,
+  "bayt": 623426342,
+  "yontemler": [
+   "http_get_attachment"
+  ],
+  "alanlar": [
+   "yigm.ktb.gov.tr"
+  ],
+  "ilk": "2026-09-24T03:44:39+03:00",
+  "son": "2026-09-24T07:28:07+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 623853620
+ },
+ {
+  "kaynak": "turizm_ktb_il_mudurlukleri",
+  "klasor": "turizm_ktb_il_mudurlukleri/2026-09-24",
+  "dosya": 1727,
+  "satir": 0,
+  "bayt": 1915243261,
+  "yontemler": [
+   "http_get_attachment"
+  ],
+  "alanlar": [
+   "adana.ktb.gov.tr",
+   "adiyaman.ktb.gov.tr",
+   "agri.ktb.gov.tr",
+   "aksaray.ktb.gov.tr",
+   "ankara.ktb.gov.tr",
+   "antalya.ktb.gov.tr",
+   "ardahan.ktb.gov.tr",
+   "artvin.ktb.gov.tr",
+   "aydin.ktb.gov.tr",
+   "balikesir.ktb.gov.tr",
+   "bartin.ktb.gov.tr",
+   "batman.ktb.gov.tr",
+   "bayburt.ktb.gov.tr",
+   "bilecik.ktb.gov.tr",
+   "bingol.ktb.gov.tr",
+   "bitlis.ktb.gov.tr",
+   "bolu.ktb.gov.tr",
+   "burdur.ktb.gov.tr",
+   "bursa.ktb.gov.tr",
+   "canakkale.ktb.gov.tr",
+   "cankiri.ktb.gov.tr",
+   "cdn.teknofest.org",
+   "corum.ktb.gov.tr",
+   "denizli.ktb.gov.tr",
+   "diyarbakir.ktb.gov.tr",
+   "duzce.ktb.gov.tr",
+   "edirne.ktb.gov.tr",
+   "elazig.ktb.gov.tr",
+   "erzincan.ktb.gov.tr",
+   "eskisehir.ktb.gov.tr",
+   "giresun.ktb.gov.tr",
+   "gumushane.ktb.gov.tr",
+   "hatay.ktb.gov.tr",
+   "igdir.ktb.gov.tr",
+   "isparta.ktb.gov.tr",
+   "istanbul.ktb.gov.tr",
+   "izmir.ktb.gov.tr",
+   "karabuk.ktb.gov.tr",
+   "karaman.ktb.gov.tr",
+   "kars.ktb.gov.tr",
+   "kastamonu.ktb.gov.tr",
+   "kayseri.ktb.gov.tr",
+   "kirikkale.ktb.gov.tr",
+   "kirklareli.ktb.gov.tr",
+   "kirsehir.ktb.gov.tr",
+   "kocaeli.ktb.gov.tr",
+   "konya.ktb.gov.tr",
+   "konyakultur.gov.tr",
+   "kutahya.ktb.gov.tr",
+   "malatya.ktb.gov.tr",
+   "mardin.ktb.gov.tr",
+   "mugla.ktb.gov.tr",
+   "mus.ktb.gov.tr",
+   "nevsehir.ktb.gov.tr",
+   "nigde.ktb.gov.tr",
+   "ordu.ktb.gov.tr",
+   "pgm.ktb.gov.tr",
+   "rize.ktb.gov.tr",
+   "s3.ktb.gov.tr",
+   "sakarya.ktb.gov.tr",
+   "samsun.ktb.gov.tr",
+   "sanliurfa.ktb.gov.tr",
+   "siirt.ktb.gov.tr",
+   "sinop.ktb.gov.tr",
+   "sirnak.ktb.gov.tr",
+   "sivas.ktb.gov.tr",
+   "tfsfonayliyarismalar.org",
+   "tokat.ktb.gov.tr",
+   "trabzon.ktb.gov.tr",
+   "tunceli.ktb.gov.tr",
+   "usak.ktb.gov.tr",
+   "www.istanbulkulturturizm.gov.tr",
+   "yalova.ktb.gov.tr",
+   "yigm.ktb.gov.tr",
+   "yozgat.ktb.gov.tr",
+   "zonguldak.ktb.gov.tr"
+  ],
+  "ilk": "2026-09-24T08:43:19+03:00",
+  "son": "2026-09-24T15:00:21+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 248107997
+ },
+ {
+  "kaynak": "turizm_tga_belgeli_tesisler",
+  "klasor": "turizm_tga_belgeli_tesisler/2026-09-24",
+  "dosya": 2,
+  "satir": 49446,
+  "bayt": 927802,
+  "yontemler": [
+   "rest_get_paginated"
+  ],
+  "alanlar": [
+   "cms-backend.tga.gov.tr"
+  ],
+  "ilk": "2026-09-24T07:00:47+03:00",
+  "son": "2026-09-24T07:00:47+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 930720
+ },
+ {
+  "kaynak": "uab_denizcilik_istatistik",
+  "klasor": "uab_denizcilik_istatistik/2026-09-24",
+  "dosya": 1905,
+  "satir": 0,
+  "bayt": 31377871,
+  "yontemler": [
+   "http_get_attachment",
+   "http_get_page"
+  ],
+  "alanlar": [
+   "denizcilikistatistikleri.uab.gov.tr"
+  ],
+  "ilk": "2026-09-24T06:43:25+03:00",
+  "son": "2026-09-24T07:18:36+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 30360965
+ },
+ {
+  "kaynak": "uab_tkygm_kiyi_istatistik",
+  "klasor": "uab_tkygm_kiyi_istatistik/2026-09-24",
+  "dosya": 147,
+  "satir": 0,
+  "bayt": 2946527,
+  "yontemler": [
+   "http_get_attachment",
+   "http_get_page"
+  ],
+  "alanlar": [
+   "tkygmistatistikleri.uab.gov.tr"
+  ],
+  "ilk": "2026-09-24T07:05:25+03:00",
+  "son": "2026-09-24T07:08:06+03:00",
+  "ilerleme_kayitlari": {},
+  "disk_bayt": 2222975
+ }
+]

@@ -1,0 +1,18 @@
+{
+ "at": "2026-09-29T03:39:30+00:00",
+ "source": "tuik_sdmx",
+ "status": "OK",
+ "files": 432,
+ "files_failed": 0,
+ "rows_expected": 17921552,
+ "rows_written": 17921552,
+ "unaccounted": 0,
+ "rows_series": 1762120,
+ "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_tuik_sdmx_gozlem/part-NIGHT_tuik_sdmx_gozlem.parquet",
+ "output_series": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/demographics_context/stg_tuik_sdmx_seri/part-NIGHT_tuik_sdmx_seri.parquet",
+ "size_mb": 823.5,
+ "acquisition_class": "official_public",
+ "distribution_class": "public",
+ "seconds": 134,
+ "failed_files": []
+}

@@ -1,0 +1,555 @@
+{
+ "opet": {
+  "ilce_donem": 3704,
+  "ilce": 926,
+  "satir": 9078401
+ },
+ "inbound": {
+  "eurostat_kume": 145,
+  "eurostat_tr_satir": 484463,
+  "eurostat_tour_kume": 49,
+  "eurostat_avia_kume": 96,
+  "ons_tr_satir": 14685,
+  "eurocontrol_tr_satir": 16743,
+  "cbs_tablo": 42,
+  "cbs_satir": 101712,
+  "tuik_portal_dosya": 4580,
+  "ktb_il_dosya": 1727
+ },
+ "etbis": {
+  "liste_sayfasi": 5410,
+  "site": 44658,
+  "birlesik_site": 60027,
+  "il_sayisi": 81,
+  "ilk_iller": [
+   [
+    "İstanbul",
+    19639
+   ],
+   [
+    "Ankara",
+    3601
+   ],
+   [
+    "İzmir",
+    3122
+   ],
+   [
+    "Bursa",
+    1919
+   ],
+   [
+    "Antalya",
+    1893
+   ],
+   [
+    "Kocaeli",
+    1026
+   ],
+   [
+    "Konya",
+    969
+   ],
+   [
+    "Muğla",
+    819
+   ],
+   [
+    "Denizli",
+    761
+   ],
+   [
+    "Kayseri",
+    678
+   ]
+  ],
+  "profil": 50456
+ },
+ "adres": {
+  "site": 59396,
+  "canli": 35600,
+  "adresli": 25554,
+  "mersisli": 4150,
+  "kepli": 2433,
+  "robots_yasak": 681,
+  "erisilemeyen": 20294
+ },
+ "cimri": {
+  "katalog_url": 3124581,
+  "urun_sayfasi": 0,
+  "ayristirilan": 0,
+  "teklif": 0,
+  "gecmis_noktasi": 0,
+  "engel_403": 0
+ },
+ "market": {
+  "subeler": 14791,
+  "sube_zincir": {
+   "a101": 3812,
+   "bim": 3599,
+   "sok": 3259,
+   "migros": 1727,
+   "tarim_kredi": 1710,
+   "carrefour": 436,
+   "hakmar": 248
+  },
+  "sube_ile_atanan": 14779,
+  "fiyat_il_sayisi": 81,
+  "fiyat_iller": [
+   "Adana",
+   "Adıyaman",
+   "Afyonkarahisar",
+   "Ağrı",
+   "Amasya",
+   "Ankara",
+   "Antalya",
+   "Artvin",
+   "Aydın",
+   "Balıkesir",
+   "Bilecik",
+   "Bingöl",
+   "Bitlis",
+   "Bolu",
+   "Burdur",
+   "Bursa",
+   "Çanakkale",
+   "Çankırı",
+   "Çorum",
+   "Denizli",
+   "Diyarbakır",
+   "Edirne",
+   "Elazığ",
+   "Erzincan",
+   "Erzurum",
+   "Eskişehir",
+   "Gaziantep",
+   "Giresun",
+   "Gümüşhane",
+   "Hakkari",
+   "Hatay",
+   "Isparta",
+   "Mersin",
+   "İstanbul",
+   "İzmir",
+   "Kars",
+   "Kastamonu",
+   "Kayseri",
+   "Kırklareli",
+   "Kırşehir",
+   "Kocaeli",
+   "Konya",
+   "Kütahya",
+   "Malatya",
+   "Manisa",
+   "Kahramanmaraş",
+   "Mardin",
+   "Muğla",
+   "Muş",
+   "Nevşehir",
+   "Niğde",
+   "Ordu",
+   "Rize",
+   "Sakarya",
+   "Samsun",
+   "Siirt",
+   "Sinop",
+   "Sivas",
+   "Tekirdağ",
+   "Tokat",
+   "Trabzon",
+   "Tunceli",
+   "Şanlıurfa",
+   "Uşak",
+   "Van",
+   "Yozgat",
+   "Zonguldak",
+   "Aksaray",
+   "Bayburt",
+   "Karaman",
+   "Kırıkkale",
+   "Batman",
+   "Şırnak",
+   "Bartın",
+   "Ardahan",
+   "Iğdır",
+   "Yalova",
+   "Karabük",
+   "Kilis",
+   "Osmaniye",
+   "Düzce"
+  ],
+  "fiyat_satiri": 729632,
+  "il_basina_max_urun": 11826,
+  "gecmis_satir": 1137150,
+  "gecmis_canli_urun": 18587,
+  "disk": 47252461
+ },
+ "hal": {
+  "hks_gun": 3554,
+  "hks_satir": 1388906,
+  "izmir": {
+   "sebzemeyve": {
+    "gun": 6842,
+    "satir": 466070
+   },
+   "balik": {
+    "gun": 6839,
+    "satir": 390183
+   }
+  },
+  "parquet": {
+   "hks_ulusal_gunluk.parquet": 1388906,
+   "izmir_balik_gunluk.parquet": 390169,
+   "izmir_sebzemeyve_gunluk.parquet": 466069
+  },
+  "disk": 46438815
+ },
+ "sarj": {
+  "sarjtr_istasyon_detay": 13059,
+  "soket": 35891,
+  "soket_durum": {
+   "FREE": 35345,
+   "IN_USE": 316,
+   "MAINTENANCE": 124,
+   "NON_BUSINESS_HOURS": 63,
+   "FAULT": 43
+  },
+  "operator_sayisi": 175,
+  "ilk5_operator": [
+   [
+    "ZES DİJİTAL TİCARET ANONİM ŞİRKETİ",
+    1911
+   ],
+   [
+    "TRUGO AKILLI ŞARJ ÇÖZÜMLERİ SANAYİ VE TİCARET ANONİM ŞİRKETİ",
+    1370
+   ],
+   [
+    "EŞARJ ELEKTRİKLİ ARAÇLAR ŞARJ SİSTEMLERİ ANONİM ŞİRKETİ",
+    718
+   ],
+   [
+    "WAT MOBİLİTE ÇÖZÜMLERİ TEKNOLOJİ VE TİCARET ANONİM ŞİRKETİ",
+    548
+   ],
+   [
+    "DİCLE KÖK ENERJİ YATIRIM ANONİM ŞİRKETİ",
+    407
+   ]
+  ],
+  "epdk_resmi_liste": 16889,
+  "disk": 6879077
+ },
+ "tuik": {
+  "veri_akisi": 432,
+  "gozlem": 17921552,
+  "kismi": 0,
+  "il_ilce_duzeyli_ornek": [
+   "TR,DF_BOSANMA_IL_ILCE,1.0",
+   "TR,DF_BR_FAALIYET_BUYUKLUK_GIRISIM_IBBS3_09_13_V1,1.0",
+   "TR,DF_BR_FAALIYET_BUYUKLUK_GIRISIM_IBBS3_14_18_V1,1.0",
+   "TR,DF_BR_FAALIYET_BUYUKLUK_GIRISIM_IBBS3_19_23,1.0",
+   "TR,DF_BR_FAALIYET_BUYUKLUK_GIRISIM_IBBS3_24_28,1.0",
+   "TR,DF_DOGUM_IL_ILCE_C,1.0",
+   "TR,DF_EVLENME_IL_ILCE,1.0",
+   "TR,DF_SATIS_SEKLI_DURUMU_ILILCE_V3,1.0",
+   "TR,DF_UYRUKLARA_GORE_ILILCE_V3,1.0",
+   "TR,DF_YABANCILARA_SATILAR_ILILCE_V3,1.0"
+  ],
+  "il_ilce_duzeyli_sayi": 10,
+  "disk": 64450271
+ },
+ "tobb_svt": {
+  "sorgu": 3607,
+  "basarili": 3607,
+  "tur": {
+   "A": 1,
+   "B": 42,
+   "D": 81,
+   "E": 81,
+   "C": 3402
+  },
+  "disk": 9042433
+ },
+ "osm": {
+  "kesitler": {
+   "2021-01-01": {
+    "akaryakit_istasyonlari": 10844,
+    "egitim_saglik_kamu": 20981,
+    "hizmet_poi": 190018,
+    "ofis_poi": 6417,
+    "otogarlar_duraklar": 16617,
+    "otoparklar": 12676,
+    "pazar_hal": 903,
+    "perakende_poi": 43692,
+    "sanayi_lojistik": 54651,
+    "sarj_istasyonlari_osm": 234,
+    "tir_yol_hizmetleri": 1063,
+    "turizm_poi": 21595
+   },
+   "2022-01-01": {
+    "akaryakit_istasyonlari": 11191,
+    "egitim_saglik_kamu": 22535,
+    "hizmet_poi": 206447,
+    "ofis_poi": 7504,
+    "otogarlar_duraklar": 18575,
+    "otoparklar": 13966,
+    "pazar_hal": 961,
+    "perakende_poi": 48349,
+    "sanayi_lojistik": 57825,
+    "sarj_istasyonlari_osm": 260,
+    "tir_yol_hizmetleri": 1129,
+    "turizm_poi": 23691
+   },
+   "2023-01-01": {
+    "akaryakit_istasyonlari": 11502,
+    "egitim_saglik_kamu": 25348,
+    "hizmet_poi": 239522,
+    "ofis_poi": 8906,
+    "otogarlar_duraklar": 21054,
+    "otoparklar": 17339,
+    "pazar_hal": 1105,
+    "perakende_poi": 56121,
+    "sanayi_lojistik": 61354,
+    "sarj_istasyonlari_osm": 290,
+    "tir_yol_hizmetleri": 1305,
+    "turizm_poi": 26869
+   },
+   "2024-01-01": {
+    "akaryakit_istasyonlari": 11835,
+    "egitim_saglik_kamu": 27893,
+    "hizmet_poi": 270930,
+    "ofis_poi": 10097,
+    "otogarlar_duraklar": 25039,
+    "otoparklar": 19507,
+    "pazar_hal": 1236,
+    "perakende_poi": 65371,
+    "sanayi_lojistik": 65728,
+    "sarj_istasyonlari_osm": 404,
+    "tir_yol_hizmetleri": 1497,
+    "turizm_poi": 29463
+   },
+   "2025-01-01": {
+    "akaryakit_istasyonlari": 11830,
+    "egitim_saglik_kamu": 30294,
+    "hizmet_poi": 298665,
+    "ofis_poi": 11763,
+    "otogarlar_duraklar": 33210,
+    "otoparklar": 22900,
+    "pazar_hal": 1341,
+    "perakende_poi": 71449,
+    "sanayi_lojistik": 68195,
+    "sarj_istasyonlari_osm": 450,
+    "tir_yol_hizmetleri": 1625,
+    "turizm_poi": 30729
+   },
+   "2026-09-24": {
+    "akaryakit_istasyonlari": 12122,
+    "ana_yol_agi": 212425,
+    "demiryolu_hatlari": 45862,
+    "demiryolu_istasyonlari": 9905,
+    "egitim_saglik_kamu": 36984,
+    "enerji_altyapi": 221944,
+    "havalimanlari": 3463,
+    "hizmet_poi": 353667,
+    "limanlar": 4570,
+    "ofis_poi": 16882,
+    "otogarlar_duraklar": 51825,
+    "otoparklar": 27773,
+    "pazar_hal": 1565,
+    "perakende_poi": 91251,
+    "sanayi_lojistik": 86088,
+    "sarj_istasyonlari_osm": 713,
+    "sinir_kapilari": 180,
+    "tir_yol_hizmetleri": 1809,
+    "turizm_poi": 37618
+   }
+  },
+  "disk": 241132555
+ },
+ "otobus": {
+  "rota": 33869,
+  "seferli_rota": 26317,
+  "sefer": 565866,
+  "firma": 354,
+  "durak_terminal": 403,
+  "disk": 386639443
+ },
+ "tga": {
+  "tesis": 24723,
+  "il": 81,
+  "ilce": 675,
+  "belge_turu": {
+   "BASİT KONAKLAMA": 12431,
+   "Turizm İşletmesi Belgesi": 10762,
+   "PLAJ İŞLETMESİ": 939,
+   "Turizm Yatırımı Belgesi": 519,
+   "Kısmi Turizm İşletmesi Belgesi": 72
+  }
+ },
+ "bkm": {
+  "sayfa_ay": 4977,
+  "tablolu": 4681,
+  "sayfa": 25,
+  "disk": 87343997
+ },
+ "ckan": {
+  "balikesir": {
+   "veri_seti": null,
+   "dosya": 0,
+   "disk": 465
+  },
+  "bursa": {
+   "veri_seti": 49,
+   "dosya": 49,
+   "disk": 4975132
+  },
+  "denizli": {
+   "veri_seti": 39,
+   "dosya": 57,
+   "disk": 17681262
+  },
+  "gaziantep": {
+   "veri_seti": 252,
+   "dosya": 291,
+   "disk": 39671363
+  },
+  "ibb": {
+   "veri_seti": 557,
+   "dosya": 861,
+   "disk": 2349318642
+  },
+  "izmir": {
+   "veri_seti": 250,
+   "dosya": 445,
+   "disk": 259315001
+  },
+  "konya": {
+   "veri_seti": 232,
+   "dosya": 602,
+   "disk": 85447669
+  },
+  "manisa": {
+   "veri_seti": 1185,
+   "dosya": 1254,
+   "disk": 17174814
+  },
+  "sakarya": {
+   "veri_seti": 307,
+   "dosya": 313,
+   "disk": 19424496
+  }
+ },
+ "turizm_ktb": {
+  "dosya": 736,
+  "tur": {
+   "xls": 299,
+   "xlsx": 296,
+   "rar": 107,
+   "pdf": 15,
+   "docx": 7,
+   "doc": 7,
+   "zip": 5
+  },
+  "buyuk_atlanan": 0,
+  "disk": 623853620
+ },
+ "kgm_karayollari": {
+  "dosya": 385,
+  "tur": {
+   "pdf": 352,
+   "html": 33
+  },
+  "buyuk_atlanan": 10,
+  "disk": 1913961256
+ },
+ "uab_denizcilik_istatistik": {
+  "dosya": 1905,
+  "tur": {
+   "xls": 1707,
+   "html": 162,
+   "xlsx": 32,
+   "pdf": 4
+  },
+  "buyuk_atlanan": 0,
+  "disk": 30360965
+ },
+ "sgk_istatistik": {
+  "dosya": 45,
+  "tur": {
+   "zip": 37,
+   "html": 3,
+   "xls": 3,
+   "pdf": 2
+  },
+  "buyuk_atlanan": 0,
+  "disk": 81319358
+ },
+ "ticaret_bakanligi_istatistik": {
+  "dosya": 365,
+  "tur": {
+   "pdf": 269,
+   "html": 70,
+   "xlsx": 26
+  },
+  "buyuk_atlanan": 1,
+  "disk": 120876795
+ },
+ "tobb_istatistik": {
+  "dosya": 559,
+  "tur": {
+   "xls": 425,
+   "pdf": 103,
+   "xlsx": 21,
+   "html": 10
+  },
+  "buyuk_atlanan": 0,
+  "disk": 73678187
+ },
+ "dhmi_havalimani_istatistik": {
+  "dosya": 54,
+  "tur": {
+   "pdf": 44,
+   "xlsx": 9,
+   "html": 1
+  },
+  "buyuk_atlanan": 0,
+  "disk": 5448135
+ },
+ "tcdd_demiryolu_istatistik": {
+  "dosya": 2,
+  "tur": {
+   "html": 2
+  },
+  "buyuk_atlanan": 0,
+  "disk": 9066
+ },
+ "uab_tkygm_kiyi_istatistik": {
+  "dosya": 147,
+  "tur": {
+   "xlsx": 76,
+   "html": 68,
+   "pdf": 3
+  },
+  "buyuk_atlanan": 0,
+  "disk": 2222975
+ },
+ "btk_iletisim_istatistik": {
+  "dosya": 338,
+  "tur": {
+   "pdf": 296,
+   "html": 28,
+   "xlsx": 14
+  },
+  "buyuk_atlanan": 24,
+  "disk": 786727385
+ },
+ "bkm_donemsel": {
+  "dosya": 1,
+  "tur": {
+   "jsonl": 1
+  },
+  "buyuk_atlanan": 0,
+  "disk": 87343997
+ }
+}

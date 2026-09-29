@@ -1,0 +1,17 @@
+{
+ "at": "2026-09-29T03:45:57+00:00",
+ "report": [
+  {
+   "source": "opet_urun_katalog",
+   "status": "OK",
+   "rows_expected": 8,
+   "rows_written": 8,
+   "unaccounted": 0,
+   "output": "/Users/acar/Desktop/GEOPROP_CONSOLIDATION/staging/v1.0.0/price_series/stg_opet_urun_katalog/part-NIGHT_opet_urun_katalog.parquet",
+   "size_mb": 0.0,
+   "acquisition_class": "web_research",
+   "distribution_class": "internal",
+   "seconds": 0
+  }
+ ]
+}

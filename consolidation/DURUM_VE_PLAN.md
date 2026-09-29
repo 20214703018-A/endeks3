@@ -128,3 +128,39 @@ Her karantina tablosu için bir kanıt kartı: (a) veriyi üreten betik bulunduy
 3. **OSM tarihçesi önceki otomasyonun türevi.** 6 yıllık kesitleri biz ham PBF'lerden yeniden üretmedik; önceki otomasyonun `osm_degisim` çıktısını kullandık. Ham PBF'ler elimizde; doğrulama için bir yılı yeniden türetmek planda.
 4. **Web nüfusunun yılı çıkarımla (2024) belirlendi** — 752/973 ilçe birebir; kesin ama %100 değil.
 5. **Disk:** 5 GB boş; 11 GB'lık Claude VM dosyası sizin kararınızda.
+
+## 12. Gece verisinin ambara girişi ve birleşik DB v1.6 / v1.7 (2026-09-29)
+
+24 Eylül gece turunda toplanan kaynaklar ambara alındı ve birleşik veritabanı iki adım büyütüldü.
+Her adımda "giren satır = yazılan satır" kontrolü yapıldı; hepsinde fark 0.
+
+**Önce düzeltilen iki sessiz hata**
+- *TÜİK SDMX 0 satır*: 432 dosya okunmaya çalışılırken bellek yetmemiş ve kaynak boş görünmüştü. Bu dosyalar
+  satır satır değil, tek bir büyük JSON belgesi. Ayrı bir okuyucu yazıldı (`tools/phase2_stage_tuik_sdmx.py`):
+  **17.921.552 gözlem + 1.762.120 seri**, kayıp 0.
+- *"Sayfa"yı kayıt sanmak*: ETBİS'te her satır bir arama sayfası (içinde 10 site), Market Fiyatı şube
+  dosyalarında her satır bir şube (içinde ~1.500 ürün fiyatı). Sayfalar kayıt sanıldığı için veri az görünüyordu.
+  `tools/phase2_explode_nested.py` bunları gerçek kayda açtı: ETBİS **402.461 site kaydı + 60.027 site profili**,
+  market **9.409.203 şube×ürün fiyatı**.
+
+**v1.6 — üç yeni işletme kaynağı + ürün fiyatı katmanı**
+- Market şubeleri (14.791): 4.087'si mevcut POI ile birleşti, 10.704'ü yeni POI.
+- EPDK şarj istasyonları (13.059): 157 birleşti, 12.902 yeni POI. Ayrıca 35.891 soket (güç, fiyat) tablosu.
+- KTB belgeli turizm tesisleri (24.723): kaynakta **koordinat yok**; 24.695'i il+ilçe ile eşleşti,
+  1.294'ü ad benzerliğiyle mevcut POI'ye bağlandı, 23.238'i ilçe düzeyinde `coord_validity='MISSING'` ile saklandı.
+  Koordinat uydurulmadı.
+- `product` (31.687 ürün) ve `product_price_observation` (**23.947.278** satır): market şube×ürün, Opet ilçe×gün×akaryakıt
+  (2015→2026), HKS ulusal hal, İzmir hal, market il günlük fiyat geçmişi. Beş kaynağın da coğrafi bağlanma oranı %100.
+- ETBİS: 60.188 e-ticaret sitesi (MERSİS, vergi no, KEP adresi ayrı `restricted_` sütunlarında; ürün paketine girmez).
+
+**v1.7 — TÜİK resmî seri ambarı (SDMX)**
+- 432 akış, 1.762.120 seri, 17.921.552 gözlem. REF_AREA kodlarının **tamamı** (1.093) coğrafyaya bağlandı:
+  ülke 1, NUTS1 12, NUTS2 26, il 81, ilçe 973 — eşleşmeyen 0.
+- `geo_entity`'ye 12 NUTS1 ve 26 NUTS2 bölgesi eklendi; illere NUTS3 kodu (`nuts_code`) yazıldı.
+
+**Birleşik DB şu an**: `canonical_v1.7`, 76,1 milyon kanonik satır (POI 699.809, gayrimenkul fiyatı 29,7 M,
+ürün fiyatı 23,9 M, TÜİK serisi 17,9 M, gösterge 332.363).
+
+**Disk uyarısı**: veritabanı 7,3 GB'a çıktı, diskte 2,5 GB kaldı. 24 milyon satırlık ürün fiyatı tablosunun
+1,4 GB'lık parquet kopyası silindi (veri DB içinde duruyor; gerekirse `BIG_PARQUET=1` ile yeniden üretilir).
+Karar bekleyen: eski `canonical/v1` klasörü (1,3 GB, v1.7 tarafından tamamen kapsanıyor, yeniden üretilebilir) silinsin mi?

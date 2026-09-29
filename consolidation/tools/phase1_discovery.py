@@ -1306,6 +1306,24 @@ def probe_gzip(run: Run, rec: dict):
         sub["detected_format"] = fmt
         sub["encoding"] = detect_encoding(read_head(tmpf, 262144))[0]
         run.zip_members.append({"file_id": fid, "member_name": inner, "member_ext": ext, "compressed_size": rec["size_bytes"], "uncompressed_size": tmpf.stat().st_size, "crc32": None, "member_modified": None, "is_dir": False, "nested_zip": False, "probed": True})
+                # gzip içindeki harita dosyaları (kml/kmz/shp/gpkg) ayrı süreçte ve süre sınırıyla denenir:
+        # GDAL hem çökebiliyor hem de büyük KML'lerde saatlerce sürebiliyor (28 Eyl: 25 MB İBB KML 30+ dk).
+        if fmt in ("kml", "kmz") and os.environ.get("P1_TRY_KML") != "1":
+            run.log_error(fid, "content_probe", "KML_PROBE_DEFERRED", f"gzip içi {ext}: KML/KMZ içerik envanteri ertelendi (DuckDB spatial çökmesi); ham dosya korunuyor", path=str(p))
+            return
+        if fmt in ("shapefile", "gpkg", "geojson"):
+            tl = int(os.environ.get("P1_GEO_TIMEOUT", "120"))
+            try:
+                chk = subprocess.run([sys.executable, "-c",
+                    "import sys,duckdb;c=duckdb.connect();c.execute(\"INSTALL spatial; LOAD spatial\");c.execute(\"SELECT * FROM ST_Read_Meta(?)\",[sys.argv[1]]).fetchall();print('ok')",
+                    str(tmpf)], capture_output=True, timeout=tl)
+                ok = chk.returncode == 0
+                why = f"rc={chk.returncode}: {chk.stderr[-160:]!r}"
+            except subprocess.TimeoutExpired:
+                ok = False; why = f"{tl}s icinde okunamadi (buyuk/patolojik geometri)"
+            if not ok:
+                run.log_error(fid, "content_probe", "GEO_READER_GUARD_GZIP", f"gzip içi {ext}: {why}; içerik envanteri yapılmadı, ham dosya korunuyor", path=str(p))
+                return
         dispatch_probe(run, sub, inner_name=inner)
     finally:
         try:
@@ -1404,6 +1422,27 @@ def content_inventory(run: Run):
             rec["probe_reference_file_id"] = seen_hash[h]
             continue
         try:
+            # çökme (bellek/segfault) hâlinde suçlu dosya bilinsin: her dosyadan önce işaretçi yazılır
+            try: (OUT_ROOT / "tmp" / "p1_current_file.txt").write_text(f"{i}/{len(cands)}\t{rec['detected_format']}\t{rec['size_bytes']}\t{rec['absolute_path']}")
+            except Exception: pass
+            # riskli coğrafi biçimler (kmz/kml/shapefile/gpkg) önce ayrı süreçte denenir: GDAL çökmesi ana koşuyu öldürmesin
+            # KML/KMZ: DuckDB spatial (gdal_meta::Scan) bu biçimlerde çöküyor (29 Eyl çökme raporu, SIGSEGV).
+            # Alt süreç koruması çalışıyor ama her denemede macOS çökme kaydı üretiyor → içerik incelemesi tamamen ertelenir.
+            if rec["detected_format"] in ("kml", "kmz") and os.environ.get("P1_TRY_KML") != "1":
+                run.log_error(rec["file_id"], "content_probe", "KML_PROBE_DEFERRED",
+                              "KML/KMZ içerik envanteri ertelendi (DuckDB spatial çökmesi); dosya korunuyor, Phase 2'de ogr2ogr ile okunacak", path=rec["absolute_path"])
+                continue
+            if rec["detected_format"] in ("shapefile", "gpkg"):
+                chk = subprocess.run([sys.executable, "-c",
+                    "import sys,duckdb;c=duckdb.connect();c.execute(\"INSTALL spatial; LOAD spatial\");c.execute(\"SELECT * FROM ST_Read_Meta(?)\",[sys.argv[1]]).fetchall();print('ok')",
+                    rec["absolute_path"]], capture_output=True, timeout=120)
+                if chk.returncode != 0:
+                    run.log_error(rec["file_id"], "content_probe", "GEO_READER_CRASH_GUARD", f"ayrı süreçte okunamadı (rc={chk.returncode}); içerik envanteri yapılmadı, dosya korunuyor: {chk.stderr[-200:]!r}", path=rec["absolute_path"])
+                    continue
+            lim = int(os.environ.get("P1_MAX_PROBE_BYTES", 0) or 0)
+            if lim and rec["size_bytes"] > lim and rec["detected_format"] in ("xlsx", "json", "geojson", "jsonl", "geojsonseq", "sqlite", "gpkg", "parquet", "zip"):
+                run.log_error(rec["file_id"], "content_probe", "SIZE_GUARD_SKIP", f"{rec['size_bytes']} B > P1_MAX_PROBE_BYTES={lim}; büyük dosya ayrı koşuda incelenecek", path=rec["absolute_path"])
+                continue
             dispatch_probe(run, rec)
             seen_hash[h] = rec["file_id"]
         except Exception as e:

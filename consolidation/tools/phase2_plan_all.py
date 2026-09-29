@@ -71,8 +71,32 @@ def main():
         s = re.sub(r"[^0-9A-Za-z_]", "_", base)[:90]; k = s; i = 1
         while k in seen_ids: i += 1; k = f"{s}_{i}"
         seen_ids.add(k); return k
+    # 2026-09-28: 24 Eylül gece turu kaynakları. Sıra önemlidir (ilk eşleşen kazanır); yol alt dizgisi ile eşleşir.
     INTAKE_FAM = [("tkgm_idari_yapi", "reference_geography"), ("google_places", "poi_business"), ("restoran_ve_kafe", "poi_business"), ("yemeksepeti", "poi_business"),
-                  ("emlak_ilanlari", "listings"), ("airbnb", "listings"), ("lojistik", "mobility_logistics"), ("darkstore", "mobility_logistics"), ("tuik", "demographics_context")]
+                  ("emlak_ilanlari", "listings"), ("airbnb", "listings"), ("darkstore", "mobility_logistics"),
+                  # fiyat serileri
+                  ("marketfiyati", "price_series"), ("hal_fiyatlari", "price_series"), ("cimri_fiyat", "price_series"), ("akaryakit_opet", "price_series"), ("epdk_api", "price_series"),
+                  # işletme / POI
+                  ("sarj_istasyonlari_epdk", "poi_business"), ("turizm_tga_belgeli_tesisler", "poi_business"), ("tobb_sanayi_kapasite", "poi_business"),
+                  ("etbis_eticaret_siteleri", "poi_business"), ("eticaret_sirket_adresleri", "poi_business"), ("eticaret_pazarama_satici", "poi_business"),
+                  # hareketlilik / lojistik
+                  ("otobus_seferleri", "mobility_logistics"), ("kgm_karayollari", "mobility_logistics"), ("tcdd_demiryolu", "mobility_logistics"),
+                  ("uab_denizcilik", "mobility_logistics"), ("uab_tkygm", "mobility_logistics"), ("dhmi_havalimani", "mobility_logistics"),
+                  ("eurocontrol", "mobility_logistics"), ("osm_ulasim_lojistik", "mobility_logistics"), ("osm_pbf_katmanlar", "poi_business"), ("osm_pbf", "poi_business"), ("osm_extract", "poi_business"),
+                  # turizm
+                  ("turizm_ktb", "tourism"), ("ons_travelpac", "tourism"), ("cbs_nl_tatil", "tourism"), ("eurostat_turkiye_turizm", "tourism"),
+                  # ekonomi
+                  ("bkm_donemsel", "economy"), ("ticaret_bakanligi", "economy"), ("tobb_istatistik", "economy"),
+                  # demografi / bağlam
+                  ("tuik_sdmx", "demographics_context"), ("tuik_portal_tablolar", "demographics_context"), ("tuik", "demographics_context"),
+                  ("sgk_istatistik", "demographics_context"), ("btk_iletisim", "demographics_context"),
+                  # belediye açık veri
+                  ("acikveri_ckan", "open_data_municipal"),
+                  ("lojistik", "mobility_logistics")]
+    # resmî kurum / açık veri kaynakları (acquisition_class=official_public); listede olmayan intake yolları web_research sayılır
+    OFFICIAL_INTAKE = ("tkgm_idari_yapi", "tuik_", "epdk_api", "sarj_istasyonlari_epdk", "kgm_karayollari", "sgk_istatistik", "tcdd_demiryolu", "ticaret_bakanligi", "uab_denizcilik", "uab_tkygm",
+                       "btk_iletisim", "dhmi_havalimani", "turizm_ktb", "turizm_tga", "etbis_eticaret_siteleri", "hal_fiyatlari", "acikveri_ckan", "tobb_istatistik", "tobb_sanayi_kapasite",
+                       "bkm_donemsel", "eurostat", "ons_travelpac", "cbs_nl", "eurocontrol", "osm_")
     def fam(fid, path):
         if "/GEOPROP_RAW_INTAKE/" in path:
             for key, f in INTAKE_FAM:
@@ -82,7 +106,7 @@ def main():
     def base(fid, path, target, kind, table=None, **kw):
         r = inv[fid]
         s = {"source_id": None, "kind": kind, "path": path, "target": target, "engine": kw.pop("engine", "duckdb"),
-             "acquisition_class": "official_public" if (("/GEOPROP_RAW_INTAKE/tkgm_idari_yapi/" in path) or re.search(r"(?i)tuik|bddk|kap_|meb_|osm|tkgm", Path(path).name)) else "web_research",
+             "acquisition_class": "official_public" if (("/GEOPROP_RAW_INTAKE/" in path and any(k in path for k in OFFICIAL_INTAKE)) or re.search(r"(?i)tuik|bddk|kap_|meb_|osm|tkgm", Path(path).name)) else "web_research",
              "distribution_class": "public", "review_flags": sorted(qrules.get(fid, set()))}
         if table: s["table"] = table
         if "QUARANTINE" in qstat.get(fid, set()): s["mode"] = "quarantine"

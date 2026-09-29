@@ -1,0 +1,237 @@
+{
+ "run_id": "RUN_2026_09_28_005",
+ "source_files_deleted": 0,
+ "source_files_modified": 35,
+ "source_files_missing_after_scan": 0,
+ "rows_silently_dropped": 0,
+ "features_silently_dropped": 0,
+ "columns_silently_removed": 0,
+ "unaccounted_records": 0,
+ "note": "Phase 1 salt-okunur; hiçbir kayıt yazılmadı/silinmedi. Parse hataları parse_errors tablosunda ham satırla korunur.",
+ "verify": {
+  "checked": 50062,
+  "changed": 35,
+  "missing": 0,
+  "new_files": 5
+ },
+ "changed_files": [
+  {
+   "file_id": "FILE_00016896",
+   "path": "/Users/acar/Downloads/aracrisk-defter/aracrisk-defter.json",
+   "old_sha256": "aa9931abbdb87be4461fe85ae99f11916c87ba8a5b012d8ca61c60230c4441ae",
+   "new_sha256": "329769b02f8ec06f55be2f89b4db2ed655f6de9cfde62d9deb4667abc1cad626"
+  },
+  {
+   "file_id": "FILE_00017028",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/README.md",
+   "old_sha256": "459152f63a903db18dd2077782c3c424ad8b36b7da6d35b30c8d72a6db85e920",
+   "new_sha256": "b9bc3f918bb31241c6da34dd4e61ad42fd23d7429341a68af21a026d4f1585e3"
+  },
+  {
+   "file_id": "FILE_00017030",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/VALIDATION.md",
+   "old_sha256": "3b0dd9302935d3ab5deeb871d57fa525bb32f2c3c39424cfe3a92ad976a3445a",
+   "new_sha256": "98fb2bec6d465d75135109885f0fe3dd2c4640865ab1c3f76a4fd735233b75f9"
+  },
+  {
+   "file_id": "FILE_00017032",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/background.js",
+   "old_sha256": "4c4cb1436c558a6596512aafd30ea6eb32a2f61ca82dd9863d853211da78bd2f",
+   "new_sha256": "b44e08c32da82a327b99bfda476ed23e7855a11bff6e3fa947beae5c0525173d"
+  },
+  {
+   "file_id": "FILE_00017034",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/content.js",
+   "old_sha256": "b49d5e5d52a05216c0051a701d0701b46b16f5e6a312f5f16719ea1e3420f644",
+   "new_sha256": "2f94f93362ebca24608ecf0e48f68b994fd2f108c143d9fa6e1cbf80229cd298"
+  },
+  {
+   "file_id": "FILE_00017036",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/humanize.js",
+   "old_sha256": "4361f0bbd37fae7e9bd740f63fa8208fac55425ba795454d13d766f762b055e2",
+   "new_sha256": "0894a57ef821650df13c55d08d5fb7195cb626095751e27f53a222b9f7c92f13"
+  },
+  {
+   "file_id": "FILE_00017037",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/manifest.json",
+   "old_sha256": "0e9167cc6f0df0498091b765a2904c22faf6830e42de508105337205bd102d54",
+   "new_sha256": "e5cc62427fcde8a101543a1725645a6ad2bb2403c7de37b05c3ff7cba290d6cc"
+  },
+  {
+   "file_id": "FILE_00017038",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/pace.js",
+   "old_sha256": "35af434370ec803891b69109f05fbab88b2a769111075fa0dc1a09f103c663c6",
+   "new_sha256": "e2b0e38e0f01f51a8d9a15b2f7c9525ef7cf1ec1b878217e209f491c5efa63f7"
+  },
+  {
+   "file_id": "FILE_00017041",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/popup.html",
+   "old_sha256": "73911836ae9fe4d974bd1fd1336acb63d4ef8c0f7c5d8ecccef810e0af895665",
+   "new_sha256": "dc6c91e7e299983dd56f8c5e614a4149cae6b8a0f450ce5a9bf8c69b40aaadc7"
+  },
+  {
+   "file_id": "FILE_00017042",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/popup.js",
+   "old_sha256": "dcba4635f00d31fbaa7da609474b7395c8d56e035c8347b1b285980c86e23494",
+   "new_sha256": "3a9e1fba66e84474d531670818ed1ab59af990818472e76621dd0243f7f3e25b"
+  },
+  {
+   "file_id": "FILE_00017051",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/tests/content-flow.test.mjs",
+   "old_sha256": "ca9d2dda24258c5cb24ea2909cbbdab23fe8bdbdd6f2c95d2eb4bcb5f6ce409e",
+   "new_sha256": "df64383f48d7a8466e5b55a505fcaff69f28b0944bf70201bce09e4cbd1e6ce8"
+  },
+  {
+   "file_id": "FILE_00017053",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/tests/humanize.test.mjs",
+   "old_sha256": "9235d2121a177cfe9ce276dba488057a677f59cf2bf54ec80885d4066b3ec6a3",
+   "new_sha256": "3486730891fb542795b89aee82c34e2dd5d7fb1dcffc52920460c539c67b7178"
+  },
+  {
+   "file_id": "FILE_00017054",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/tests/pace.test.mjs",
+   "old_sha256": "fc0b975b483f2aa813951be7397cfba1a590500a7d868b5cbc556fb5c458e8f2",
+   "new_sha256": "84340f3c08ab9f08c7ce931124342784211ba5a60d57b80cdf42b17113701021"
+  },
+  {
+   "file_id": "FILE_00017056",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/browser-extension/aracrisk-emsal-defteri/tests/privacy.test.mjs",
+   "old_sha256": "65ad52b0d3f102944760205b1d09c03b5da709b5c0dddbcac3655fd52f409661",
+   "new_sha256": "79246dfa3f44ce1006f6e1e814452000e9acda450031912cce2988fd4bedb810"
+  },
+  {
+   "file_id": "FILE_00017092",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri.zip",
+   "old_sha256": "b8d9a4c44ce6fc4150c16148169dcd3c6b59191da20e52a0e0b13d52a7d7ce26",
+   "new_sha256": "7642e74217afc401c1fc12ba7c830171ec3610e41b3e708caade6d3fb449c061"
+  },
+  {
+   "file_id": "FILE_00017147",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/README.md",
+   "old_sha256": "6e4c98c5190c4945b3e815fc801415ef2a8bcb9e32fd956447835556185e56f8",
+   "new_sha256": "b9bc3f918bb31241c6da34dd4e61ad42fd23d7429341a68af21a026d4f1585e3"
+  },
+  {
+   "file_id": "FILE_00017149",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/VALIDATION.md",
+   "old_sha256": "c1a390d6e8e6d26a24584582b8854296f750bce688f3c91dd560a37342875f08",
+   "new_sha256": "98fb2bec6d465d75135109885f0fe3dd2c4640865ab1c3f76a4fd735233b75f9"
+  },
+  {
+   "file_id": "FILE_00017150",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/analytics.js",
+   "old_sha256": "5e1ec7d82527033052073b94b8dbb35478e2353fd8463f5b1a1024607513c758",
+   "new_sha256": "2df8ef1fdec98400a8c859bb61e4c320e71e2e9066c1731f6cf5b55ff5d901e1"
+  },
+  {
+   "file_id": "FILE_00017151",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/background.js",
+   "old_sha256": "001f8921963e0eeeda273c585f82801800cc3c94eb50cfa35b3c23c2ec15b3a4",
+   "new_sha256": "b44e08c32da82a327b99bfda476ed23e7855a11bff6e3fa947beae5c0525173d"
+  },
+  {
+   "file_id": "FILE_00017152",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/catalog.js",
+   "old_sha256": "8c7aeb136fa4e34f6bc34f32e64e252a6acaba4fc2f8aa1b592297948a12adca",
+   "new_sha256": "199b822f388ef3e02293f9dd387b2c1ec243dbe3b68192d79eeb8e2d73894ade"
+  },
+  {
+   "file_id": "FILE_00017153",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/content.js",
+   "old_sha256": "67c68af02eae0226d112284145d30200a2516a59a4de23402ff462a915187665",
+   "new_sha256": "2f94f93362ebca24608ecf0e48f68b994fd2f108c143d9fa6e1cbf80229cd298"
+  },
+  {
+   "file_id": "FILE_00017154",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/humanize.js",
+   "old_sha256": "4361f0bbd37fae7e9bd740f63fa8208fac55425ba795454d13d766f762b055e2",
+   "new_sha256": "0894a57ef821650df13c55d08d5fb7195cb626095751e27f53a222b9f7c92f13"
+  },
+  {
+   "file_id": "FILE_00017155",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/manifest.json",
+   "old_sha256": "dec2f67e18a04331ef2a4d8dbf52a7c78a0003126a93d6888fc7b8e3a9f8afbd",
+   "new_sha256": "e5cc62427fcde8a101543a1725645a6ad2bb2403c7de37b05c3ff7cba290d6cc"
+  },
+  {
+   "file_id": "FILE_00017156",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/pace.js",
+   "old_sha256": "47e0afa4f3dedec6566439aa43b8510bbf9eb439597cb1df419fe5b13a8a7b21",
+   "new_sha256": "e2b0e38e0f01f51a8d9a15b2f7c9525ef7cf1ec1b878217e209f491c5efa63f7"
+  },
+  {
+   "file_id": "FILE_00017158",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/popup.css",
+   "old_sha256": "83dc6d84927255f44d74444d6c943e37e565e18f50e7856ab25e33e064ccbfae",
+   "new_sha256": "6eaaaa1c40c60775394595a1d9219493080e039d788c81efe75cc8db75a4fa87"
+  },
+  {
+   "file_id": "FILE_00017159",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/popup.html",
+   "old_sha256": "7dbd8d01fe0fd44528e8188ab7d896c52ea9339b73ace0b84b8e58fddf752d4d",
+   "new_sha256": "dc6c91e7e299983dd56f8c5e614a4149cae6b8a0f450ce5a9bf8c69b40aaadc7"
+  },
+  {
+   "file_id": "FILE_00017160",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/popup.js",
+   "old_sha256": "fbc323b6b1da4af2b1e98b90b6d1ce7c244cc01713e239468acc06f964f73239",
+   "new_sha256": "3a9e1fba66e84474d531670818ed1ab59af990818472e76621dd0243f7f3e25b"
+  },
+  {
+   "file_id": "FILE_00017161",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/report.css",
+   "old_sha256": "4c9c4c2dce40cb49b1befa78a2cd99a9804c2f5f42c1fc1d0122db827bb06499",
+   "new_sha256": "468a0c6d88244caff10b0481a32484d3a5f1fd60b75cfe95ddec3f74a473bc1e"
+  },
+  {
+   "file_id": "FILE_00017162",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/report.html",
+   "old_sha256": "c29e0bd1369a5b899d4c675b043b192a41a3228b13ea818daba3eb9faf61785a",
+   "new_sha256": "5c7fc4be30e457f00af90a4952ebbeb351d43704938a12bc6ed4e1bfb2587be1"
+  },
+  {
+   "file_id": "FILE_00017163",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/report.js",
+   "old_sha256": "6106e746636535b350cf62470517d72dec9cd63c8bf9e12018c8e02ee38825db",
+   "new_sha256": "d029d9b3bef5b393a45f3edaf4e637c013ae3175beb602d2a362eee3ff1b333e"
+  },
+  {
+   "file_id": "FILE_00017166",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/tests/analytics.test.mjs",
+   "old_sha256": "2d674c43befd7cd0ba0f5c40fe86ba008970e38cd4e36396bba64d73b9f4d95f",
+   "new_sha256": "0047cad7a2430516c53f7621f70be51ad4a400387d8a65f9b497332e86351550"
+  },
+  {
+   "file_id": "FILE_00017167",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/tests/catalog.test.mjs",
+   "old_sha256": "75d8b0ced1f0344dee6d2fe260b3e53421f1e9aa3cc0e0759fc597eaeb7f9b74",
+   "new_sha256": "a9ad854b4787c3a86aafdd0866f7e80cb8ad004b5b8875ff0e14c1bc807cb148"
+  },
+  {
+   "file_id": "FILE_00017168",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/tests/humanize.test.mjs",
+   "old_sha256": "9235d2121a177cfe9ce276dba488057a677f59cf2bf54ec80885d4066b3ec6a3",
+   "new_sha256": "3486730891fb542795b89aee82c34e2dd5d7fb1dcffc52920460c539c67b7178"
+  },
+  {
+   "file_id": "FILE_00017169",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/tests/pace.test.mjs",
+   "old_sha256": "48e3e1bb69e0111dab769d043585926c9c43f27fa2bd29b7522598d081b16f59",
+   "new_sha256": "84340f3c08ab9f08c7ce931124342784211ba5a60d57b80cdf42b17113701021"
+  },
+  {
+   "file_id": "FILE_00017171",
+   "path": "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/tests/privacy.test.mjs",
+   "old_sha256": "3942705da8f0b4e9b7f89067ec29a259c328121463d69294193929f1f0570cdf",
+   "new_sha256": "79246dfa3f44ce1006f6e1e814452000e9acda450031912cce2988fd4bedb810"
+  }
+ ],
+ "missing_files": [],
+ "new_files_in_source": [
+  "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/segments.js",
+  "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/districts.js",
+  "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/tests/segments.test.mjs",
+  "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/tests/content-flow.test.mjs",
+  "/Users/acar/Downloads/workspace-8c754c97-38a1-4692-b25e-e359bf96932f (1)/download/aracrisk-emsal-defteri/tests/districts.test.mjs"
+ ]
+}

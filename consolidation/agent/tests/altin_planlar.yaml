@@ -1,0 +1,87 @@
+# ALTIN PLAN SETİ — motorun deterministik davranış testi.
+# Her plan iki kez çalıştırılır: sonuç parmak izi (sonuc_hash) aynı olmalı.
+# 'beklenen' alanları kanonik v1.5 ile elle doğrulanmış değerlerdir; veri sürümü değişince güncellenir.
+- ad: bostanli_profil
+  plan: {analiz: yer_profili, yer: "Bostanlı, Karşıyaka, İzmir"}
+  beklenen: {durum: tamam, plan_yer: GEO_025130}
+- ad: izmir_kira_getirisi_sirala
+  plan: {analiz: sirala, olcu: kira getirisi, seviye: mahalle, kapsam: İzmir, limit: 5, min_ilan: 20}
+  beklenen: {durum: tamam, ilk_geo_id: GEO_025333, donem: "2026-08"}
+- ad: uc_ilce_karsilastir
+  plan: {analiz: karsilastir, yerler: [Kadıköy, Karşıyaka, Çankaya], olculer: [konut m2 fiyatı, kira getirisi, nüfus, ses skoru]}
+  beklenen: {durum: tamam}
+- ad: kadikoy_karsiyaka_seri
+  plan: {analiz: zaman_serisi, yerler: [Kadıköy, Karşıyaka], olcu: konut_satis_m2, baslangic: "2024-08"}
+  beklenen: {durum: tamam}
+- ad: kadikoy_kira_dagilim
+  plan: {analiz: dagilim, olcu: konut_kira_m2, seviye: mahalle, kapsam: Kadıköy}
+  beklenen: {durum: tamam}
+- ad: bostanli_yakin_cevre
+  plan: {analiz: yakin_cevre, merkez: "38.4580, 27.0980", yaricap_m: 500, liste_limiti: 5}
+  beklenen: {durum: tamam}
+- ad: izmir_kafe_yogunluk
+  plan: {analiz: yogunluk, seviye: ilce, kapsam: İzmir, kategori: Kafe, limit: 5}
+  beklenen: {durum: tamam}
+- ad: caferaga_kategori
+  plan: {analiz: kategori_dagilimi, yer: "Caferağa, Kadıköy", duzey: kategori}
+  beklenen: {durum: tamam}
+- ad: kadikoy_benzer
+  plan: {analiz: benzer_yerler, yer: "Kadıköy, İstanbul", n: 5}
+  beklenen: {durum: tamam}
+- ad: karsiyaka_hareket
+  plan: {analiz: harita_hareketliligi, yer: Karşıyaka, kategori_grubu: yeme_icme}
+  beklenen: {durum: tamam}
+- ad: caferaga_kafe_liste
+  plan: {analiz: isletme_listesi, kapsam: "Caferağa, Kadıköy", kategori: Kafe, limit: 10, siralama: ad}
+  beklenen: {durum: tamam}
+- ad: fiyat_ses_iliski
+  plan: {analiz: iliski, olcu_x: konut_satis_m2, olcu_y: ses_skoru, seviye: ilce}
+  beklenen: {durum: tamam}
+- ad: kira_getirisi_kapsam
+  plan: {analiz: veri_kapsami, olcu: kira getirisi}
+  beklenen: {durum: tamam}
+- ad: il_konut_satisi
+  plan: {analiz: sirala, olcu: konut satışı, seviye: il, limit: 3}
+  beklenen: {durum: tamam, ilk_geo_id: GEO_IL_34}
+# --- hata/belirsizlik davranışı: motor TAHMİN ETMEMELİ ---
+- ad: belirsiz_yer
+  plan: {analiz: yer_profili, yer: Bostanlı}
+  beklenen: {durum: belirsiz}
+- ad: belirsiz_olcu
+  plan: {analiz: sirala, olcu: m2 fiyatı, seviye: il}
+  beklenen: {durum: belirsiz}
+- ad: seviyede_olmayan_olcu
+  plan: {analiz: sirala, olcu: ses skoru, seviye: mahalle}
+  beklenen: {durum: hata}
+- ad: gecersiz_plan
+  plan: {analiz: sirala, olcu: nüfus, seviye: sokak}
+  beklenen: {durum: gecersiz_plan}
+- ad: olmayan_donem
+  plan: {analiz: sirala, olcu: nüfus, seviye: il, donem: "1990"}
+  beklenen: {durum: hata}
+# --- ileri modüller (model çıktısı; yine deterministik olmalı) ---
+- ad: karsiyaka_kafe_uygunluk
+  plan: {analiz: uygun_bolge, profil: kafe, seviye: mahalle, kapsam: "Karşıyaka, İzmir", limit: 5}
+  beklenen: {durum: tamam}
+- ad: izmir_restoran_yazilimi
+  plan: {analiz: uygun_bolge, profil: restoran_yazilimi, seviye: ilce, kapsam: İzmir, limit: 5}
+  beklenen: {durum: tamam, ilk_geo_id: GEO_ILCE_000390}
+- ad: ozel_kriter_premium
+  plan: {analiz: uygun_bolge, seviye: il, limit: 5, kriterler: [{olcu: ses_skoru, yon: arti, agirlik: 2}, {olcu: nufus, yon: arti, agirlik: 1}]}
+  beklenen: {durum: tamam}
+- ad: kadikoy_fiyat_projeksiyonu
+  plan: {analiz: gelecek_projeksiyonu, yer: "Kadıköy, İstanbul", olcu: konut_satis_m2, ufuk: 12,
+         dis_varsayimlar: [{anahtar: yillik_enflasyon, deger: 25, donem: "2026", aciklama: test, kaynak_adi: TEST, kaynak_url: "https://example.org", erisim_tarihi: "2026-09-28"}]}
+  beklenen: {durum: tamam}
+- ad: nufus_projeksiyonu_ilce
+  plan: {analiz: gelecek_projeksiyonu, yer: "Karşıyaka, İzmir", olcu: nüfus, ufuk: 5}
+  beklenen: {durum: tamam}
+- ad: bostanli_gelecek_raporu
+  plan: {analiz: bolge_gelecek_raporu, yer: "Bostanlı, Karşıyaka, İzmir", ufuk_ay: 12}
+  beklenen: {durum: tamam}
+- ad: oran_projeksiyonu_reddedilir
+  plan: {analiz: gelecek_projeksiyonu, yer: "Kadıköy, İstanbul", olcu: kira getirisi}
+  beklenen: {durum: hata}
+- ad: olmayan_profil
+  plan: {analiz: uygun_bolge, profil: uzay_istasyonu, seviye: ilce}
+  beklenen: {durum: belirsiz}
