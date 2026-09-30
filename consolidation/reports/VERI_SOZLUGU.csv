@@ -1,0 +1,891 @@
+katman,sema,tablo,satir_sayisi,tablo_aciklama,kolon,tip,kolon_aciklama,hassas
+analitik,analytics,ilce_indicators,973,İlçe düzeyi resmî gösterge özetleri.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,ilce_indicators,973,İlçe düzeyi resmî gösterge özetleri.,konut_satis_son12ay,DOUBLE,Son 12 ayda konut satışı (TÜİK),False
+analitik,analytics,ilce_indicators,973,İlçe düzeyi resmî gösterge özetleri.,konut_satis_2025,DOUBLE,2025 konut satışı (TÜİK),False
+analitik,analytics,ilce_indicators,973,İlçe düzeyi resmî gösterge özetleri.,konut_satis_2024,DOUBLE,2024 konut satışı (TÜİK),False
+analitik,analytics,ilce_indicators,973,İlçe düzeyi resmî gösterge özetleri.,yapi_ruhsati_daire_2025,DOUBLE,2025 yapı ruhsatı daire sayısı,False
+analitik,analytics,ilce_indicators,973,İlçe düzeyi resmî gösterge özetleri.,kullanma_izni_daire_2025,DOUBLE,2025 yapı kullanma izni daire sayısı,False
+analitik,analytics,ilce_indicators,973,İlçe düzeyi resmî gösterge özetleri.,ses_skor_2023,DOUBLE,TÜİK SES 2023 sosyoekonomik skor,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",ilce,VARCHAR,İlçe adı,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",il,VARCHAR,İl adı,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",tuik_kodu,VARCHAR,TÜİK idari birim kodu,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",web_county_id,VARCHAR,Kaynak sitedeki ilçe kimliği,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",pop_2025_tuik,BIGINT,2025 nüfus (TÜİK ADNKS),False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",pop_2024_tuik,BIGINT,2024 nüfus (TÜİK ADNKS),False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",konut_satis_son12ay,DOUBLE,Son 12 ayda konut satışı (TÜİK),False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",konut_satis_2025,DOUBLE,2025 konut satışı (TÜİK),False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",konut_satis_2024,DOUBLE,2024 konut satışı (TÜİK),False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",yapi_ruhsati_daire_2025,DOUBLE,2025 yapı ruhsatı daire sayısı,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",kullanma_izni_daire_2025,DOUBLE,2025 yapı kullanma izni daire sayısı,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",ses_skor_2023,DOUBLE,TÜİK SES 2023 sosyoekonomik skor,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",poi_count,BIGINT,İşletme sayısı,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",restoran_count,BIGINT,Restoran sayısı,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",yeme_icme_count,BIGINT,Yeme-içme işletmesi sayısı,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",poi_type_unknown_count,BIGINT,Türü çözülememiş işletme sayısı,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",poi_avg_rating,DOUBLE,Ortalama işletme puanı,False
+analitik,analytics,ilce_intelligence,973,"İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.",mahalle_sayisi,BIGINT,Mahalle sayısı,False
+analitik,analytics,ilce_poi_stats,967,İlçe başına işletme sayıları ve ortalama puan.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,ilce_poi_stats,967,İlçe başına işletme sayıları ve ortalama puan.,poi_count,BIGINT,İşletme sayısı,False
+analitik,analytics,ilce_poi_stats,967,İlçe başına işletme sayıları ve ortalama puan.,poi_count_coord_verified,BIGINT,Koordinatı poligonla doğrulanmış işletme sayısı,False
+analitik,analytics,ilce_poi_stats,967,İlçe başına işletme sayıları ve ortalama puan.,yeme_icme_count,BIGINT,Yeme-içme işletmesi sayısı,False
+analitik,analytics,ilce_poi_stats,967,İlçe başına işletme sayıları ve ortalama puan.,restoran_count,BIGINT,Restoran sayısı,False
+analitik,analytics,ilce_poi_stats,967,İlçe başına işletme sayıları ve ortalama puan.,poi_type_unknown_count,BIGINT,Türü çözülememiş işletme sayısı,False
+analitik,analytics,ilce_poi_stats,967,İlçe başına işletme sayıları ve ortalama puan.,yeme_icme_hint_count,BIGINT,Sektör ipucuna göre yeme-içme sayılan işletme sayısı,False
+analitik,analytics,ilce_poi_stats,967,İlçe başına işletme sayıları ve ortalama puan.,poi_avg_rating,DOUBLE,Ortalama işletme puanı,False
+analitik,analytics,ilce_urun_fiyat_ozet,6631,İlçe × kaynak × ürün için gözlem sayısı ve ortalama fiyat.,ilce_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,ilce_urun_fiyat_ozet,6631,İlçe × kaynak × ürün için gözlem sayısı ve ortalama fiyat.,source_system,VARCHAR,Kaynak sistem,False
+analitik,analytics,ilce_urun_fiyat_ozet,6631,İlçe × kaynak × ürün için gözlem sayısı ve ortalama fiyat.,product_id,VARCHAR,Ürün kimliği (product.product_id),False
+analitik,analytics,ilce_urun_fiyat_ozet,6631,İlçe × kaynak × ürün için gözlem sayısı ve ortalama fiyat.,gozlem,BIGINT,Gözlem sayısı,False
+analitik,analytics,ilce_urun_fiyat_ozet,6631,İlçe × kaynak × ürün için gözlem sayısı ve ortalama fiyat.,ort_fiyat,DOUBLE,Ortalama fiyat,False
+analitik,analytics,ilce_urun_fiyat_ozet,6631,İlçe × kaynak × ürün için gözlem sayısı ve ortalama fiyat.,ilk_donem,VARCHAR,İlk dönem,False
+analitik,analytics,ilce_urun_fiyat_ozet,6631,İlçe × kaynak × ürün için gözlem sayısı ve ortalama fiyat.,son_donem,VARCHAR,Son dönem,False
+analitik,analytics,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",ilce_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",ilce_adi,VARCHAR,İlçe adı,False
+analitik,analytics,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",il_adi,VARCHAR,İl adı,False
+analitik,analytics,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",market_sube_sayisi,BIGINT,Market şubesi sayısı,False
+analitik,analytics,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",sarj_istasyonu_sayisi,BIGINT,Şarj istasyonu sayısı,False
+analitik,analytics,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",turizm_tesisi_sayisi,BIGINT,Belgeli turizm tesisi sayısı,False
+analitik,analytics,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",google_poi_sayisi,BIGINT,Google kaynaklı işletme sayısı,False
+analitik,analytics,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",toplam_poi,BIGINT,Toplam işletme sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",mahalle,VARCHAR,Mahalle adı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",ilce,VARCHAR,İlçe adı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",il,VARCHAR,İl adı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",tuik_il_kodu,VARCHAR,TÜİK il kodu,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",web_district_id,VARCHAR,Kaynak sitedeki mahalle kimliği,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",tkgm_id,VARCHAR,TKGM (tapu-kadastro) kimliği,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",tuik_kodu,VARCHAR,TÜİK idari birim kodu,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",tkgm_link_band,VARCHAR,TKGM eşleşme bandı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",tuik_link_band,VARCHAR,TÜİK eşleşme bandı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",centroid_lon,DOUBLE,Merkez noktası boylamı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",centroid_lat,DOUBLE,Merkez noktası enlemi,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",pop_2024_web,BIGINT,2024 nüfus (web kaynağı),False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",pop_2025_tuik,BIGINT,2025 nüfus (TÜİK ADNKS),False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",konut_satilik_m2,DOUBLE,Konut satılık m² fiyatı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",konut_kiralik_m2,DOUBLE,Konut kiralık m² fiyatı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",konut_ort_fiyat,DOUBLE,Ortalama konut ilan fiyatı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",konut_ilan_sayisi,DOUBLE,Konut ilan sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",konut_brut_kira_getirisi,DOUBLE,Brüt kira getirisi (%),False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",konut_amortisman_yil,DOUBLE,Amortisman süresi (yıl),False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",konut_ort_bina_yasi,DOUBLE,Ortalama bina yaşı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",konut_satilik_kalma_gun,DOUBLE,İlanın satılana kadar kalma süresi (gün),False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",arsa_satilik_m2,DOUBLE,Arsa satılık m² fiyatı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",arsa_min_m2,DOUBLE,Arsa en düşük m² fiyatı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",arsa_max_m2,DOUBLE,Arsa en yüksek m² fiyatı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",arsa_ilan_sayisi,DOUBLE,Arsa ilan sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",arsa_fiyat_endeksi,DOUBLE,Arsa fiyat endeksi,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",tarla_satilik_m2,DOUBLE,Tarla satılık m² fiyatı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",poi_count,BIGINT,İşletme sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",poi_count_coord_verified,BIGINT,Koordinatı poligonla doğrulanmış işletme sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",yeme_icme_count,BIGINT,Yeme-içme işletmesi sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",kuafor_guzellik_count,BIGINT,Kuaför/güzellik işletmesi sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",market_count,BIGINT,Market sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",poi_avg_rating,DOUBLE,Ortalama işletme puanı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",poi_google_osm_count,BIGINT,Hem Google hem OSM'de görülen işletme sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",poi_osm_only_count,BIGINT,Yalnız OSM'de görülen işletme sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",osm_poi_on_map_2026,BIGINT,2026 OSM anlık görüntüsündeki işletme sayısı,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",osm_added_2025_2026,BIGINT,2025→2026 haritaya eklenen,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",osm_removed_2025_2026,BIGINT,2025→2026 haritadan kalkan,False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",osm_map_churn_2025_2026,DOUBLE,Harita devir oranı (eklenen+kalkan),False
+analitik,analytics,mahalle_intelligence,50638,"Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.",mapping_status,VARCHAR,Eşleme durumu (PROPOSED/APPROVED),False
+analitik,analytics,mahalle_market_fiyat,5583,"Mahalle başına market rafı fiyat gözlemleri: şube sayısı, ürün çeşidi, ortalama fiyat, tarih aralığı.",mahalle_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,mahalle_market_fiyat,5583,"Mahalle başına market rafı fiyat gözlemleri: şube sayısı, ürün çeşidi, ortalama fiyat, tarih aralığı.",gozlem,BIGINT,Gözlem sayısı,False
+analitik,analytics,mahalle_market_fiyat,5583,"Mahalle başına market rafı fiyat gözlemleri: şube sayısı, ürün çeşidi, ortalama fiyat, tarih aralığı.",urun_cesidi,BIGINT,Farklı ürün sayısı,False
+analitik,analytics,mahalle_market_fiyat,5583,"Mahalle başına market rafı fiyat gözlemleri: şube sayısı, ürün çeşidi, ortalama fiyat, tarih aralığı.",sube,BIGINT,Şube sayısı,False
+analitik,analytics,mahalle_market_fiyat,5583,"Mahalle başına market rafı fiyat gözlemleri: şube sayısı, ürün çeşidi, ortalama fiyat, tarih aralığı.",ort_fiyat,DOUBLE,Ortalama fiyat,False
+analitik,analytics,mahalle_market_fiyat,5583,"Mahalle başına market rafı fiyat gözlemleri: şube sayısı, ürün çeşidi, ortalama fiyat, tarih aralığı.",ilk_gun,VARCHAR,İlk gözlem günü,False
+analitik,analytics,mahalle_market_fiyat,5583,"Mahalle başına market rafı fiyat gözlemleri: şube sayısı, ürün çeşidi, ortalama fiyat, tarih aralığı.",son_gun,VARCHAR,Son gözlem günü,False
+analitik,analytics,mahalle_osm_latest,37561,Mahallenin en son OSM anlık görüntüsü özeti.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,mahalle_osm_latest,37561,Mahallenin en son OSM anlık görüntüsü özeti.,osm_poi_on_map_2026,BIGINT,2026 OSM anlık görüntüsündeki işletme sayısı,False
+analitik,analytics,mahalle_osm_latest,37561,Mahallenin en son OSM anlık görüntüsü özeti.,osm_added_2025_2026,BIGINT,2025→2026 haritaya eklenen,False
+analitik,analytics,mahalle_osm_latest,37561,Mahallenin en son OSM anlık görüntüsü özeti.,osm_removed_2025_2026,BIGINT,2025→2026 haritadan kalkan,False
+analitik,analytics,mahalle_osm_latest,37561,Mahallenin en son OSM anlık görüntüsü özeti.,osm_map_churn_2025_2026,DOUBLE,Harita devir oranı (eklenen+kalkan),False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,poi_count,BIGINT,İşletme sayısı,False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,poi_count_coord_verified,BIGINT,Koordinatı poligonla doğrulanmış işletme sayısı,False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,yeme_icme_count,BIGINT,Yeme-içme işletmesi sayısı,False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,kuafor_guzellik_count,BIGINT,Kuaför/güzellik işletmesi sayısı,False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,market_count,BIGINT,Market sayısı,False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,poi_avg_rating,DOUBLE,Ortalama işletme puanı,False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,poi_google_osm_count,BIGINT,Hem Google hem OSM'de görülen işletme sayısı,False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,poi_osm_only_count,BIGINT,Yalnız OSM'de görülen işletme sayısı,False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,poi_yemeksepeti_count,BIGINT,Sipariş platformunda görülen işletme sayısı,False
+analitik,analytics,mahalle_poi_stats,19248,Mahalle başına işletme sayıları ve ortalama puan.,poi_type_unknown_count,BIGINT,Türü çözülememiş işletme sayısı,False
+analitik,analytics,mahalle_pop,50421,Mahalle nüfusu.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,mahalle_pop,50421,Mahalle nüfusu.,pop_2024_web,BIGINT,2024 nüfus (web kaynağı),False
+analitik,analytics,mahalle_pop,50421,Mahalle nüfusu.,pop_2025_tuik,BIGINT,2025 nüfus (TÜİK ADNKS),False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,konut_satilik_m2,DOUBLE,Konut satılık m² fiyatı,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,konut_kiralik_m2,DOUBLE,Konut kiralık m² fiyatı,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,konut_ort_fiyat,DOUBLE,Ortalama konut ilan fiyatı,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,konut_ilan_sayisi,DOUBLE,Konut ilan sayısı,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,konut_brut_kira_getirisi,DOUBLE,Brüt kira getirisi (%),False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,konut_amortisman_yil,DOUBLE,Amortisman süresi (yıl),False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,konut_ort_bina_yasi,DOUBLE,Ortalama bina yaşı,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,konut_satilik_kalma_gun,DOUBLE,İlanın satılana kadar kalma süresi (gün),False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,arsa_satilik_m2,DOUBLE,Arsa satılık m² fiyatı,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,arsa_min_m2,DOUBLE,Arsa en düşük m² fiyatı,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,arsa_max_m2,DOUBLE,Arsa en yüksek m² fiyatı,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,arsa_ilan_sayisi,DOUBLE,Arsa ilan sayısı,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,arsa_fiyat_endeksi,DOUBLE,Arsa fiyat endeksi,False
+analitik,analytics,mahalle_price_wide,33095,Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).,tarla_satilik_m2,DOUBLE,Tarla satılık m² fiyatı,False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,snapshot_date,VARCHAR,Anlık görüntünün tarihi,False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,prev_date,VARCHAR,Karşılaştırılan önceki anlık görüntünün tarihi,False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,category_group,VARCHAR,"Kategori grubu (yeme-içme, perakende…)",False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,present_on_map,BIGINT,O tarihte haritada var mıydı,False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,added_to_map,BIGINT,Haritaya eklenen sayısı,False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,removed_from_map,BIGINT,Haritadan kalkan sayısı,False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,net_change,BIGINT,Net değişim (eklenen − kalkan),False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,map_churn_rate,DOUBLE,Harita devir oranı,False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,with_name_change,BIGINT,Adı değişenlerin sayısı,False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,method,VARCHAR,Kullanılan yöntem,False
+analitik,analytics,mahalle_turnover_osm,690660,OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.,built_at,VARCHAR,Üretim zamanı (UTC),False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,observation_id,VARCHAR,Gözlem kimliği (tekil),False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,level,VARCHAR,Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,category,VARCHAR,Kategori,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,metric,VARCHAR,Ölçülen büyüklük,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,raw_value,VARCHAR,Kaynaktaki değerin ham metni,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,parsed_value,DOUBLE,Sayıya çevrilmiş değer,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,unit,VARCHAR,Ölçü birimi,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,period,VARCHAR,Dönem (gün/ay/çeyrek/yıl),False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,observation_kind,VARCHAR,Gözlem türü,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,source_priority,INTEGER,Kaynak önceliği (çakışmada hangisi üstte),False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,recorded_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,subcategory,VARCHAR,Alt kategori,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,source_updated_at,VARCHAR,Kaynaktaki güncellenme zamanı,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,n_copies,INTEGER,Aynı değerin kaç kaynak kopyasında görüldüğü,False
+analitik,analytics,price_latest_cutoff,834196,Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.,source_table,VARCHAR,Bu satırın türediği ambar tablosu,False
+kanonik,main,_meta,26,Veritabanı sürümü ve yapım bilgileri.,key,VARCHAR,Anahtar,False
+kanonik,main,_meta,26,Veritabanı sürümü ve yapım bilgileri.,value,VARCHAR,Değer,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",socket_id,VARCHAR,Soket kimliği,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",poi_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",station_id,VARCHAR,EPDK istasyon kimliği,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",source_socket_id,VARCHAR,Kaynaktaki soket kimliği,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",socket_type,VARCHAR,Soket tipi,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",socket_sub_type,VARCHAR,Soket alt tipi,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",socket_number,VARCHAR,Soket numarası,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",power_kw,DOUBLE,Güç (kW),False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",price_tl_kwh,DOUBLE,kWh başına fiyat (TL),False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",status,VARCHAR,Durum,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",status_start,VARCHAR,Durumun başlangıcı,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",status_end,VARCHAR,Durumun bitişi,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",prices_json,VARCHAR,Kaynaktaki fiyat listesi,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",observed_at,VARCHAR,Gözlem anı,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",source_path,VARCHAR,Kaynak dosya yolu,False
+kanonik,main,charging_socket,35891,"EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.",created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,site_id,VARCHAR,ETBİS site kimliği,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,unvan,VARCHAR,Ticaret unvanı (tüzel kişi adı),False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,site_url,VARCHAR,Site adresi,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,mobil_uygulama,VARCHAR,Mobil uygulama adı,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,il_adi,VARCHAR,İl adı,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,ilce_adi,VARCHAR,İlçe adı,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,sektor,VARCHAR,Üst sektör,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,sayfa_kaydi,BIGINT,Kaç arama sayfasında görüldüğü,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,ilk_gorulme,VARCHAR,İlk görüldüğü an,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,son_gorulme,VARCHAR,En son görüldüğü an,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,isletme_adi,VARCHAR,İşletme adı (ETBİS profili),False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,isletme_turu,VARCHAR,"İşletme türü (limited, anonim, şahıs…)",False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,etbis_kayit_tarihi,VARCHAR,ETBİS'e kayıt tarihi,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,hakkinda,VARCHAR,Site hakkında metni,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,mal_hizmetler,VARCHAR,Satılan mal/hizmet listesi,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,odeme_turleri,VARCHAR,Kabul edilen ödeme türleri,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,diger_siteler,VARCHAR,Aynı işletmenin diğer siteleri,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,profil_cekim_zamani,VARCHAR,Profilin çekildiği an,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,restricted_mersis_no,VARCHAR,"KISITLI: kimlik/iletişim bilgisi — ürün katmanına çıkmaz, yalnız iç kullanım",True
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,restricted_vergi_no,VARCHAR,"KISITLI: kimlik/iletişim bilgisi — ürün katmanına çıkmaz, yalnız iç kullanım",True
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,restricted_kep_adresleri,VARCHAR,"KISITLI: kimlik/iletişim bilgisi — ürün katmanına çıkmaz, yalnız iç kullanım",True
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,profil_var,BOOLEAN,Profil sayfası çekilebildi mi,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,restricted_column_policy,VARCHAR,Kısıtlı sütun politikası,True
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,source_path,VARCHAR,Kaynak dosya yolu,False
+kanonik,main,etbis_site,60188,ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.,created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",level,VARCHAR,Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",name,VARCHAR,Ad,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",name_norm,VARCHAR,"Adın karşılaştırma için sadeleştirilmiş hâli (küçük harf, aksansız)",False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",parent_geo_id,VARCHAR,Üst coğrafya kimliği,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",il_geo_id,VARCHAR,Bağlı olduğu il kimliği,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",tuik_il_kodu,VARCHAR,TÜİK il kodu,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",web_city_id,VARCHAR,Kaynak sitedeki il kimliği,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",web_county_id,VARCHAR,Kaynak sitedeki ilçe kimliği,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",web_district_id,VARCHAR,Kaynak sitedeki mahalle kimliği,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",tkgm_id,VARCHAR,TKGM (tapu-kadastro) kimliği,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",tuik_kodu,VARCHAR,TÜİK idari birim kodu,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",tkgm_link_band,VARCHAR,TKGM eşleşme bandı,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",tkgm_link_score,DOUBLE,TKGM eşleşme skoru,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",tuik_link_band,VARCHAR,TÜİK eşleşme bandı,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",tuik_link_score,DOUBLE,TÜİK eşleşme skoru,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",link_flags,VARCHAR,Eşleşme uyarıları,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",geometry_source,VARCHAR,Sınır poligonunun kaynağı,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",geometry,GEOMETRY,Sınır/nokta geometrisi (WGS84),False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",centroid_lon,DOUBLE,Merkez noktası boylamı,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",centroid_lat,DOUBLE,Merkez noktası enlemi,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",bbox_xmin,DOUBLE,Sınırlayıcı kutu batı boylamı,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",bbox_ymin,DOUBLE,Sınırlayıcı kutu güney enlemi,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",bbox_xmax,DOUBLE,Sınırlayıcı kutu doğu boylamı,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",bbox_ymax,DOUBLE,Sınırlayıcı kutu kuzey enlemi,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",anchor_source,VARCHAR,Bu coğrafya kaydının çıpa kaynağı,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",mapping_status,VARCHAR,Eşleme durumu (PROPOSED/APPROVED),False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",model_version,VARCHAR,Kaydı üreten model sürümü,False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",tuik_tur,VARCHAR,TÜİK kod uzayı (mahalle/köy ayrımı),False
+kanonik,main,geo_entity,51731,"Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.",nuts_code,VARCHAR,NUTS bölge kodu (TR1 / TR10 / TR100),False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",observation_id,VARCHAR,Gözlem kimliği (tekil),False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",level,VARCHAR,Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",domain,VARCHAR,"Gösterge alanı (konut satış, banka, göç…)",False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",metric,VARCHAR,Ölçülen büyüklük,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",dim1,VARCHAR,Kırılım 1 (kaynağın kendi boyutu),False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",dim2,VARCHAR,Kırılım 2,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",period,VARCHAR,Dönem (gün/ay/çeyrek/yıl),False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",period_kind,VARCHAR,Dönemin türü: day/month/quarter/year,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",raw_value,VARCHAR,Kaynaktaki değerin ham metni,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",parsed_value,DOUBLE,Sayıya çevrilmiş değer,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",unit,VARCHAR,Ölçü birimi,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",series_version,VARCHAR,Seri sürümü (revizyon ayrımı),False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",source_priority,INTEGER,Kaynak önceliği (çakışmada hangisi üstte),False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,indicator_observation,332363,"Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.",recorded_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,indicator_sdmx_observation,17921552,"TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).",series_id,VARCHAR,Seri kimliği (indicator_sdmx_series.series_id),False
+kanonik,main,indicator_sdmx_observation,17921552,"TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).",dataflow_id,VARCHAR,TÜİK veri akışı kimliği,False
+kanonik,main,indicator_sdmx_observation,17921552,"TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).",series_key,VARCHAR,Seri anahtarı (boyut indeksleri),False
+kanonik,main,indicator_sdmx_observation,17921552,"TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).",period,VARCHAR,Dönem (gün/ay/çeyrek/yıl),False
+kanonik,main,indicator_sdmx_observation,17921552,"TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).",period_label,VARCHAR,Dönemin okunur etiketi,False
+kanonik,main,indicator_sdmx_observation,17921552,"TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).",value,DOUBLE,Değer,False
+kanonik,main,indicator_sdmx_observation,17921552,"TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).",raw_value,VARCHAR,Kaynaktaki değerin ham metni,False
+kanonik,main,indicator_sdmx_observation,17921552,"TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).",attributes_json,VARCHAR,Gözlem nitelikleri (kaynağın bayrakları),False
+kanonik,main,indicator_sdmx_observation,17921552,"TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",series_id,VARCHAR,Seri kimliği (indicator_sdmx_series.series_id),False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",dataflow_id,VARCHAR,TÜİK veri akışı kimliği,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",dataflow_name,VARCHAR,Akışın adı,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",dataflow_description,VARCHAR,Akışın açıklaması,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",series_key,VARCHAR,Seri anahtarı (boyut indeksleri),False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",dimensions_json,VARCHAR,Serinin tüm boyutları (kod + TÜİK'in yazdığı ad),False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",ref_area_code,VARCHAR,TÜİK bölge kodu (REF_AREA),False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",ref_area_name,VARCHAR,Bölge adı,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",geo_level,VARCHAR,Bağlandığı coğrafi düzey,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",observation_count,BIGINT,Kaç gözlemden oluştuğu,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",source_prepared_at,VARCHAR,TÜİK'in veriyi hazırladığı an,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",source_path,VARCHAR,Kaynak dosya yolu,False
+kanonik,main,indicator_sdmx_series,1762120,"TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.",created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,google_place_id,VARCHAR,Kaynağın yer kimliği,False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,raw_name,VARCHAR,"Kaynaktan geldiği gibi, dokunulmamış değer",False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,raw_ana_kategori,VARCHAR,"Kaynaktan geldiği gibi, dokunulmamış değer",False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,raw_arama_terimi,VARCHAR,"Kaynaktan geldiği gibi, dokunulmamış değer",False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,has_reviews,BOOLEAN,Yorumu var mı,False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,predicted_sector,VARCHAR,"Üst sektör (Yeme-İçme, Gıda Perakende, …)",False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,predicted_category,VARCHAR,Modelin/kuralın belirlediği kategori,False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,confidence,DOUBLE,Güven 0-1,False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,band,VARCHAR,Güven bandı,False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,method,VARCHAR,Kullanılan yöntem,False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,reasons,VARCHAR,Eşleşme gerekçesi (skor bileşenleri),False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,classifier_version,VARCHAR,Sınıflandırıcı sürümü,False
+kanonik,main,m_cat,329092,Kategori eşleme sözlüğü.,created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,level,VARCHAR,Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,il_n,VARCHAR,İl adı (sadeleştirilmiş),False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,ilce_n,VARCHAR,İlçe adı (sadeleştirilmiş),False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,web_district_id,VARCHAR,Kaynak sitedeki mahalle kimliği,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,web_name,VARCHAR,Kaynak sitedeki ad,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,anchor_source,VARCHAR,Bu coğrafya kaydının çıpa kaynağı,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,tkgm_id,VARCHAR,TKGM (tapu-kadastro) kimliği,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,tkgm_band,VARCHAR,TKGM eşleşme bandı,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,tkgm_score,DOUBLE,TKGM eşleşme skoru,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,tkgm_flags,VARCHAR,TKGM eşleşme uyarıları,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,tuik_kodu,VARCHAR,TÜİK idari birim kodu,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,tuik_band,VARCHAR,TÜİK eşleşme bandı,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,tuik_score,DOUBLE,TÜİK eşleşme skoru,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,tuik_flags,VARCHAR,TÜİK eşleşme uyarıları,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,status,VARCHAR,Durum,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,matcher_version,VARCHAR,Eşleştirici sürümü,False
+kanonik,main,m_geo,50638,Coğrafya eşleme sözlüğü.,created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",observation_id,VARCHAR,Gözlem kimliği (tekil),False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",poi_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",venue_code,VARCHAR,Platform mekân kodu,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",platform,VARCHAR,Platform adı,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",observed_at,VARCHAR,Gözlem anı,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",product_ref,VARCHAR,Platformdaki ürün referansı,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",title,VARCHAR,Başlık,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",description,VARCHAR,Açıklama,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",category_title,VARCHAR,Kategori başlığı,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",category_ref,VARCHAR,Platformdaki kategori referansı,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",raw_original_price,VARCHAR,"Kaynaktan geldiği gibi, dokunulmamış değer",False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",original_price,DOUBLE,Liste fiyatı,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",raw_discounted_price,VARCHAR,"Kaynaktan geldiği gibi, dokunulmamış değer",False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",discounted_price,DOUBLE,İndirimli fiyat,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",is_sold_out,BOOLEAN,Tükendi mi,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",currency,VARCHAR,Para birimi,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",parse_error,VARCHAR,Ayrıştırma hatası notu,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,menu_item_observation,29340,"Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).",created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,meta_kolon,355,Bu veri sözlüğünün sütun açıklamaları.,sema,VARCHAR,Şema,False
+kanonik,main,meta_kolon,355,Bu veri sözlüğünün sütun açıklamaları.,tablo,VARCHAR,Tablo,False
+kanonik,main,meta_kolon,355,Bu veri sözlüğünün sütun açıklamaları.,kolon,VARCHAR,Sütun,False
+kanonik,main,meta_kolon,355,Bu veri sözlüğünün sütun açıklamaları.,sira,INTEGER,Sütun sırası,False
+kanonik,main,meta_kolon,355,Bu veri sözlüğünün sütun açıklamaları.,tip,VARCHAR,Veri tipi,False
+kanonik,main,meta_kolon,355,Bu veri sözlüğünün sütun açıklamaları.,aciklama,VARCHAR,Açıklama,False
+kanonik,main,meta_kolon,355,Bu veri sözlüğünün sütun açıklamaları.,otomatik,BOOLEAN,Açıklama kalıptan mı üretildi,False
+kanonik,main,meta_kolon,355,Bu veri sözlüğünün sütun açıklamaları.,hassas,BOOLEAN,Kısıtlı (kişisel/kimlik) sütun mu,False
+kanonik,main,meta_tablo,24,Bu veri sözlüğünün tablo açıklamaları.,sema,VARCHAR,Şema,False
+kanonik,main,meta_tablo,24,Bu veri sözlüğünün tablo açıklamaları.,tablo,VARCHAR,Tablo,False
+kanonik,main,meta_tablo,24,Bu veri sözlüğünün tablo açıklamaları.,satir_sayisi,BIGINT,Satır sayısı,False
+kanonik,main,meta_tablo,24,Bu veri sözlüğünün tablo açıklamaları.,kolon_sayisi,INTEGER,Sütun sayısı,False
+kanonik,main,meta_tablo,24,Bu veri sözlüğünün tablo açıklamaları.,aciklama,VARCHAR,Açıklama,False
+kanonik,main,meta_tablo,24,Bu veri sözlüğünün tablo açıklamaları.,katman,VARCHAR,Katman,False
+kanonik,main,meta_tablo,24,Bu veri sözlüğünün tablo açıklamaları.,guncellenme,VARCHAR,Sözlüğün üretim zamanı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",poi_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",source_place_id,VARCHAR,Kaynağın kendi kayıt kimliği (bizim kimliğimiz değil; source_id_kind türünü söyler),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",name,VARCHAR,Ad,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",raw_category,VARCHAR,Kaynakta yazan ham kategori metni,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",predicted_category,VARCHAR,Modelin/kuralın belirlediği kategori,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",predicted_sector,VARCHAR,"Üst sektör (Yeme-İçme, Gıda Perakende, …)",False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",category_method,VARCHAR,"Kategori hangi yolla bulundu (kaynak türü, mekânsal eşleşme, ad modeli…)",False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",category_confidence,DOUBLE,Kategori güveni 0-1,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",category_band,VARCHAR,Kategori güven bandı (high/review/low),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",rating,DOUBLE,Puan (kaynağın kendi ölçeği),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",rating_count,BIGINT,Puan veren sayısı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",review_count,BIGINT,Yorum sayısı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",phone,VARCHAR,KISITLI: telefon numarası — ürün katmanına çıkmaz,True
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",address_raw,VARCHAR,Kaynaktaki adres metni,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",lon,DOUBLE,Boylam (WGS84),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",lat,DOUBLE,Enlem (WGS84),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",geometry,GEOMETRY,Sınır/nokta geometrisi (WGS84),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",source_il,VARCHAR,Kaynağın belirttiği il,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",source_il_reliability,VARCHAR,Kaynak il bilgisinin güvenilirliği,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",assigned_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",assignment_method,VARCHAR,"Coğrafyaya hangi yöntemle bağlandı (poligon içi, kaynak geo_id, ad eşleşmesi…)",False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",last_observed_at,VARCHAR,Kaynakta en son görüldüğü an,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",observation_count,BIGINT,Kaç gözlemden oluştuğu,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",coord_validity,VARCHAR,Koordinat geçerliliği: valid / MISSING / OUT_OF_TURKEY / bozuk,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",spatial_geo_id,VARCHAR,Yalnız koordinatın düştüğü poligon,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",context_geo_id,VARCHAR,Yalnız adres metninden bulunan coğrafya,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",context_match,VARCHAR,Kaynağın yazdığı adres ile poligon atamasının uyumu,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",context_il_norm,VARCHAR,Kaynak adresinden çıkan il (sadeleştirilmiş),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",context_ilce_norm,VARCHAR,Kaynak adresinden çıkan ilçe (sadeleştirilmiş),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",context_mahalle_norm,VARCHAR,Kaynak adresinden çıkan mahalle (sadeleştirilmiş),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",assignment_confidence,DOUBLE,Coğrafya atama güveni 0-1,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",assignment_flags,VARCHAR,"Atama uyarıları (koordinat yok, poligon dışı, kaynakla çelişki…)",False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",assigned_ilce_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ilce_assignment_confidence,DOUBLE,İlçe atama güveni 0-1,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",source_coverage,VARCHAR,"Bu kaydı hangi kaynakların gördüğü (google_only, google+osm, marketfiyati_only…)",False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",primary_source,VARCHAR,Kaydın ana kaynağı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_id,VARCHAR,OpenStreetMap nesne kimliği,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_name,VARCHAR,OSM'deki ad,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_amenity,VARCHAR,OSM amenity etiketi,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_shop,VARCHAR,OSM shop etiketi,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_cuisine,VARCHAR,OSM mutfak etiketi,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_phone,VARCHAR,KISITLI: OSM'deki telefon — ürün katmanına çıkmaz,True
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_website,VARCHAR,OSM'deki web sitesi,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_opening_hours,VARCHAR,OSM'deki çalışma saatleri,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_lon,DOUBLE,OSM boylamı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_lat,DOUBLE,OSM enlemi,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_source_row_hash,VARCHAR,Eşleşen OSM satırının içerik özeti,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_match_score,DOUBLE,OSM eşleşme skoru 0-1,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",osm_match_band,VARCHAR,OSM eşleşme bandı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_venue_code,VARCHAR,Sipariş platformundaki mekân kodu,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_name,VARCHAR,Platformdaki ad,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_url,VARCHAR,Platform sayfası,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_cuisine_json,VARCHAR,Platformdaki mutfak listesi,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_price_range,VARCHAR,Platform fiyat aralığı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_lon,DOUBLE,Platform boylamı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_lat,DOUBLE,Platform enlemi,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_match_score,DOUBLE,Platform eşleşme skoru,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_match_band,VARCHAR,Platform eşleşme bandı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",ys_source_row_hash,VARCHAR,Eşleşen platform satırının özeti,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",source_id_kind,VARCHAR,"Kaynak kimliğin türü: gerçek platform kimliği mi, toplayıcının ürettiği yapay kimlik mi",False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",sector_hint,VARCHAR,Arama terimlerinden ölçülmüş sektör ipucu,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",sector_hint_precision,DOUBLE,Sektör ipucunun ölçülmüş isabeti,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",sector_hint_source,VARCHAR,Sektör ipucunun dayandığı kaynak,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",coord_recovery,VARCHAR,Bozuk koordinatın nasıl kurtarıldığı,False
+kanonik,main,poi,699809,"İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.",source_path,VARCHAR,Kaynak dosya yolu,False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,poi_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,category,VARCHAR,Kategori,False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,sector,VARCHAR,Sektör,False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,method,VARCHAR,Kullanılan yöntem,False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,confidence,DOUBLE,Güven 0-1,False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,band,VARCHAR,Güven bandı,False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,evidence,VARCHAR,Kararın dayandığı kanıt,False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,flags,VARCHAR,Uyarı bayrakları,False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,version,VARCHAR,Sürüm,False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,poi_category_candidate,7088,Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).,status,VARCHAR,Durum,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,osm_ref,VARCHAR,OSM nesne referansı (tip+kimlik),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,osm_type,VARCHAR,OSM nesne tipi (node/way/relation),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,osm_id,VARCHAR,OpenStreetMap nesne kimliği,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,osm_category,VARCHAR,OSM kategori etiketi,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,category_group,VARCHAR,"Kategori grubu (yeme-içme, perakende…)",False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,brand,VARCHAR,Marka,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,name,VARCHAR,Ad,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,lon,DOUBLE,Boylam (WGS84),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,lat,DOUBLE,Enlem (WGS84),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,first_seen_map,VARCHAR,Haritada ilk görüldüğü anlık görüntü,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,last_seen_map,VARCHAR,Haritada son görüldüğü anlık görüntü,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,map_status,VARCHAR,Harita durumu (halen var / kalkmış),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,snapshot_count,INTEGER,Kaç anlık görüntüde göründüğü,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,name_change_count,INTEGER,Ad değişikliği sayısı,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,brand_change_count,INTEGER,Marka değişikliği sayısı,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,move_count,INTEGER,Konum değişikliği sayısı,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,history_json,VARCHAR,Anlık görüntü geçmişi (ham),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,left_censored,BOOLEAN,İlk anlık görüntüden önce de var olabilir,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,right_open,BOOLEAN,Son anlık görüntüde hâlâ var (kapanış gözlenmedi),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,event_semantics,VARCHAR,UYARI: bu satır haritadaki değişimi anlatır; işletmenin gerçekten açıldığı/kapandığı anlamına gelmez,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,assigned_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,assigned_ilce_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,poi_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,poi_lifecycle_osm,680481,OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).,created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,snapshot_date,VARCHAR,Anlık görüntünün tarihi,False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,osm_ref,VARCHAR,OSM nesne referansı (tip+kimlik),False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,osm_category,VARCHAR,OSM kategori etiketi,False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,brand,VARCHAR,Marka,False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,name,VARCHAR,Ad,False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,lon,DOUBLE,Boylam (WGS84),False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,lat,DOUBLE,Enlem (WGS84),False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,event_semantics,VARCHAR,UYARI: bu satır haritadaki değişimi anlatır; işletmenin gerçekten açıldığı/kapandığı anlamına gelmez,False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,poi_presence_osm,2844718,OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.,created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,observation_id,VARCHAR,Gözlem kimliği (tekil),False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,poi_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,observed_at,VARCHAR,Gözlem anı,False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,search_term,VARCHAR,Toplamada kullanılan arama terimi,False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,raw_rating,VARCHAR,"Kaynaktan geldiği gibi, dokunulmamış değer",False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,raw_rating_count,VARCHAR,"Kaynaktan geldiği gibi, dokunulmamış değer",False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,raw_review_count,VARCHAR,"Kaynaktan geldiği gibi, dokunulmamış değer",False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,raw_hours,VARCHAR,"Kaynaktan geldiği gibi, dokunulmamış değer",False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,payload_sha256,VARCHAR,Kaynak yanıtının içerik özeti,False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,poi_snapshot,1544193,POI kaynak anlık görüntüleri.,staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",link_id,VARCHAR,Bağlantı kimliği (tekil),False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",poi_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",source_system,VARCHAR,Kaynak sistem,False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",source_record_id,VARCHAR,Kaynaktaki kayıt kimliği,False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",match_score,DOUBLE,Eşleşme skoru 0-1,False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",match_band,VARCHAR,Eşleşme bandı (virtually_certain/very_high/high/review),False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",matcher_version,VARCHAR,Eşleştirici sürümü,False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",link_status,VARCHAR,Bağlantı durumu (merged/review/primary),False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",reasons,VARCHAR,Eşleşme gerekçesi (skor bileşenleri),False
+kanonik,main,poi_source_link,721628,"Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.",created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",observation_id,VARCHAR,Gözlem kimliği (tekil),False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",level,VARCHAR,Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",metric,VARCHAR,Ölçülen büyüklük,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",raw_value,VARCHAR,Kaynaktaki değerin ham metni,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",parsed_value,BIGINT,Sayıya çevrilmiş değer,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",unit,VARCHAR,Ölçü birimi,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",period,VARCHAR,Dönem (gün/ay/çeyrek/yıl),False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",period_assignment,VARCHAR,Dönemin hangi kurala göre atandığı,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",observation_kind,VARCHAR,Gözlem türü,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",source_priority,INTEGER,Kaynak önceliği (çakışmada hangisi üstte),False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,population_observation,114751,"Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).",recorded_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",observation_id,VARCHAR,Gözlem kimliği (tekil),False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",level,VARCHAR,Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",category,VARCHAR,Kategori,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",metric,VARCHAR,Ölçülen büyüklük,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",raw_value,VARCHAR,Kaynaktaki değerin ham metni,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",parsed_value,DOUBLE,Sayıya çevrilmiş değer,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",unit,VARCHAR,Ölçü birimi,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",period,VARCHAR,Dönem (gün/ay/çeyrek/yıl),False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",observation_kind,VARCHAR,Gözlem türü,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",source_priority,INTEGER,Kaynak önceliği (çakışmada hangisi üstte),False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",recorded_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",subcategory,VARCHAR,Alt kategori,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",source_updated_at,VARCHAR,Kaynaktaki güncellenme zamanı,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",n_copies,INTEGER,Aynı değerin kaç kaynak kopyasında görüldüğü,False
+kanonik,main,price_observation,29720106,"GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.",source_table,VARCHAR,Bu satırın türediği ambar tablosu,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",product_id,VARCHAR,Ürün kimliği (product.product_id),False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",source_system,VARCHAR,Kaynak sistem,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",product_code,VARCHAR,Kaynaktaki ürün kodu,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",name,VARCHAR,Ad,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",brand,VARCHAR,Marka,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",unit,VARCHAR,Ölçü birimi,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",quantity_unit,VARCHAR,Miktar birimi,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",category_main,VARCHAR,Ana kategori,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",category_menu,VARCHAR,Menü/alt kategori,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",categories_json,VARCHAR,Kaynaktaki kategori listesi,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",image_url,VARCHAR,Ürün görseli,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",first_seen_at,VARCHAR,İlk görülme zamanı,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,product,32919,"Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.",created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",observation_id,VARCHAR,Gözlem kimliği (tekil),False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",source_system,VARCHAR,Kaynak sistem,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",poi_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",level,VARCHAR,Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",product_id,VARCHAR,Ürün kimliği (product.product_id),False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",product_code,VARCHAR,Kaynaktaki ürün kodu,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",price_kind,VARCHAR,"Fiyat türü: raf (shelf), pompa listesi, hal ortalaması…",False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",price_value,DOUBLE,Fiyat,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",price_min,DOUBLE,Asgari fiyat,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",price_max,DOUBLE,Azami fiyat,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",unit_price_value,DOUBLE,Birim fiyat (kg/lt başına),False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",unit_price_text,VARCHAR,Birim fiyatın kaynaktaki metni,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",volume_value,DOUBLE,İşlem hacmi (hal bültenleri),False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",unit,VARCHAR,Ölçü birimi,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",currency,VARCHAR,Para birimi,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",discount_flag,VARCHAR,İndirimli mi,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",discount_ratio,VARCHAR,İndirim oranı,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",promo_text,VARCHAR,Promosyon metni,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",observed_at,VARCHAR,Gözlem anı,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",period,VARCHAR,Dönem (gün/ay/çeyrek/yıl),False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",period_kind,VARCHAR,Dönemin türü: day/month/quarter/year,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",source_path,VARCHAR,Kaynak dosya yolu,False
+kanonik,main,product_price_observation,36407222,"ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).",recorded_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+kanonik,main,sdmx_geo_map,1093,TÜİK SDMX bölge kodu (REF_AREA) → bizim geo_id eşlemesi ve hangi yöntemle eşlendiği.,ref_area_code,VARCHAR,TÜİK bölge kodu (REF_AREA),False
+kanonik,main,sdmx_geo_map,1093,TÜİK SDMX bölge kodu (REF_AREA) → bizim geo_id eşlemesi ve hangi yöntemle eşlendiği.,ref_area_name,VARCHAR,Bölge adı,False
+kanonik,main,sdmx_geo_map,1093,TÜİK SDMX bölge kodu (REF_AREA) → bizim geo_id eşlemesi ve hangi yöntemle eşlendiği.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+kanonik,main,sdmx_geo_map,1093,TÜİK SDMX bölge kodu (REF_AREA) → bizim geo_id eşlemesi ve hangi yöntemle eşlendiği.,geo_level,VARCHAR,Bağlandığı coğrafi düzey,False
+kanonik,main,sdmx_geo_map,1093,TÜİK SDMX bölge kodu (REF_AREA) → bizim geo_id eşlemesi ve hangi yöntemle eşlendiği.,map_method,VARCHAR,Eşleme yöntemi,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",observation_id,VARCHAR,Gözlem kimliği (tekil),False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",poi_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",venue_code,VARCHAR,Platform mekân kodu,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",platform,VARCHAR,Platform adı,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",observed_at,VARCHAR,Gözlem anı,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",page_kind,VARCHAR,Sayfa türü,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",rating_value,DOUBLE,Puan,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",rating_count,INTEGER,Puan veren sayısı,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",minimum_order_value,DOUBLE,Minimum sepet tutarı,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",delivery_time_lower_min,INTEGER,Teslimat süresi alt sınırı (dk),False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",delivery_time_upper_min,INTEGER,Teslimat süresi üst sınırı (dk),False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",delivery_fee_total,DOUBLE,Teslimat ücreti,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",delivery_fee_original,DOUBLE,İndirimsiz teslimat ücreti,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",delivery_provider,VARCHAR,Teslimatı yapan,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",delivery_hours_json,VARCHAR,Teslimat saatleri,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",metrics_note,VARCHAR,Ölçüm notu (platform varsayılan konumu vb.),False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",jsonld_rating,DOUBLE,Sayfa işaretlemesindeki puan,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",jsonld_rating_count,INTEGER,Sayfa işaretlemesindeki puan sayısı,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",price_range,VARCHAR,Fiyat aralığı,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",cuisine_json,VARCHAR,Mutfak listesi,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",currency,VARCHAR,Para birimi,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",acquisition_class,VARCHAR,Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) ,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",distribution_class,VARCHAR,Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı),False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",source_file_id,VARCHAR,Kaynak dosya kimliği (envanter),False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",source_row_number,BIGINT,Kaynak dosyadaki satır sırası,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",source_row_hash,VARCHAR,Kaynak satırın içerik özeti (sha256) — izlenebilirlik,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",staging_view,VARCHAR,Hangi ambar (staging) tablosundan geldiği,False
+kanonik,main,venue_delivery_observation,513,"Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.",created_at,VARCHAR,Bu satırın veritabanına yazılma zamanı (UTC),False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,duzey,VARCHAR,Coğrafi düzey,False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,ad,VARCHAR,Ad,False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,ust_geo_id,VARCHAR,Üst coğrafya kimliği,False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,il_geo_id,VARCHAR,Bağlı olduğu il kimliği,False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,tuik_kodu,VARCHAR,TÜİK idari birim kodu,False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,nuts_kodu,VARCHAR,NUTS bölge kodu,False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,merkez_enlem,DOUBLE,Merkez noktası enlemi,False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,merkez_boylam,DOUBLE,Merkez noktası boylamı,False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,sinir_poligonu,GEOMETRY,Sınır poligonu (WGS84),False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,sinir_kaynagi,VARCHAR,Sınır poligonunun kaynağı,False
+ürün (satışa dönük),urun,cografya,51731,ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.,eslesme_durumu,VARCHAR,Eşleme durumu,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,site_id,VARCHAR,ETBİS site kimliği,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,unvan,VARCHAR,Ticaret unvanı (tüzel kişi adı),False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,site_adresi,VARCHAR,Site adresi,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,mobil_uygulama,VARCHAR,Mobil uygulama adı,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,il_adi,VARCHAR,İl adı,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,ilce_adi,VARCHAR,İlçe adı,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,sektor,VARCHAR,Üst sektör,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,isletme_adi,VARCHAR,İşletme adı (ETBİS profili),False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,isletme_turu,VARCHAR,"İşletme türü (limited, anonim, şahıs…)",False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,etbis_kayit_tarihi,VARCHAR,ETBİS'e kayıt tarihi,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,hakkinda,VARCHAR,Site hakkında metni,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,mal_hizmetler,VARCHAR,Satılan mal/hizmet listesi,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,odeme_turleri,VARCHAR,Kabul edilen ödeme türleri,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,diger_siteler,VARCHAR,Aynı işletmenin diğer siteleri,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,ilk_gorulme,VARCHAR,İlk görüldüğü an,False
+ürün (satışa dönük),urun,eticaret_sitesi,60188,ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).,son_gorulme,VARCHAR,En son görüldüğü an,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,gozlem_id,VARCHAR,Gözlem kimliği (tekil),False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,duzey,VARCHAR,Coğrafi düzey,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,alan,VARCHAR,Gösterge alanı,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,olcut,VARCHAR,Ölçülen büyüklük,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,kirilim1,VARCHAR,Kırılım 1,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,kirilim2,VARCHAR,Kırılım 2,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,donem,VARCHAR,Dönem,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,donem_turu,VARCHAR,Dönemin türü,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,deger,DOUBLE,Değer,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,birim,VARCHAR,Ölçü birimi,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,seri_surumu,VARCHAR,Seri sürümü,False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,edinim_sinifi,VARCHAR,Veri nasıl edinildi (resmî açık / web),False
+ürün (satışa dönük),urun,gosterge_gozlem,332363,ÜRÜN KATMANI — resmî bağlam göstergeleri.,dagitim_sinifi,VARCHAR,Dağıtım sınıfı (public/internal/restricted),False
+ürün (satışa dönük),urun,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",ilce_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",ilce_adi,VARCHAR,İlçe adı,False
+ürün (satışa dönük),urun,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",il_adi,VARCHAR,İl adı,False
+ürün (satışa dönük),urun,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",market_sube_sayisi,BIGINT,Market şubesi sayısı,False
+ürün (satışa dönük),urun,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",sarj_istasyonu_sayisi,BIGINT,Şarj istasyonu sayısı,False
+ürün (satışa dönük),urun,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",turizm_tesisi_sayisi,BIGINT,Belgeli turizm tesisi sayısı,False
+ürün (satışa dönük),urun,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",google_poi_sayisi,BIGINT,Google kaynaklı işletme sayısı,False
+ürün (satışa dönük),urun,ilce_yeni_kaynaklar,973,"İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.",toplam_poi,BIGINT,Toplam işletme sayısı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,ilce,VARCHAR,İlçe adı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,il,VARCHAR,İl adı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,tuik_kodu,VARCHAR,TÜİK idari birim kodu,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,web_county_id,VARCHAR,Kaynak sitedeki ilçe kimliği,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,pop_2025_tuik,BIGINT,2025 nüfus (TÜİK ADNKS),False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,pop_2024_tuik,BIGINT,2024 nüfus (TÜİK ADNKS),False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,konut_satis_son12ay,DOUBLE,Son 12 ayda konut satışı (TÜİK),False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,konut_satis_2025,DOUBLE,2025 konut satışı (TÜİK),False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,konut_satis_2024,DOUBLE,2024 konut satışı (TÜİK),False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,yapi_ruhsati_daire_2025,DOUBLE,2025 yapı ruhsatı daire sayısı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,kullanma_izni_daire_2025,DOUBLE,2025 yapı kullanma izni daire sayısı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,ses_skor_2023,DOUBLE,TÜİK SES 2023 sosyoekonomik skor,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,poi_count,BIGINT,İşletme sayısı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,restoran_count,BIGINT,Restoran sayısı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,yeme_icme_count,BIGINT,Yeme-içme işletmesi sayısı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,poi_type_unknown_count,BIGINT,Türü çözülememiş işletme sayısı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,poi_avg_rating,DOUBLE,Ortalama işletme puanı,False
+ürün (satışa dönük),urun,ilce_zeka,973,ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.,mahalle_sayisi,BIGINT,Mahalle sayısı,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,isletme_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,ad,VARCHAR,Ad,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,kaynak_kategori,VARCHAR,Kaynakta yazan ham kategori metni,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,kategori,VARCHAR,Kategori (bizim sınıflandırmamız),False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,sektor,VARCHAR,Üst sektör,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,kategori_yontemi,VARCHAR,Kategori hangi yolla bulundu,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,kategori_guven,DOUBLE,Kategori güveni 0-1,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,puan,DOUBLE,Puan,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,puan_sayisi,BIGINT,Puan veren sayısı,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,yorum_sayisi,BIGINT,Yorum sayısı,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,adres,VARCHAR,Adres metni,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,enlem,DOUBLE,Enlem (WGS84),False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,boylam,DOUBLE,Boylam (WGS84),False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,koordinat_gecerliligi,VARCHAR,Koordinat geçerliliği,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,mahalle_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,ilce_geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,atama_yontemi,VARCHAR,Coğrafyaya hangi yöntemle bağlandı,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,atama_guveni,DOUBLE,Coğrafya atama güveni 0-1,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,kaynak_kapsami,VARCHAR,Bu kaydı hangi kaynakların gördüğü,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,ana_kaynak,VARCHAR,Kaydın ana kaynağı,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,osm_tur,VARCHAR,OSM tür etiketi,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,osm_dukkan,VARCHAR,OSM dükkân etiketi,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,osm_mutfak,VARCHAR,OSM mutfak etiketi,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,web_sitesi,VARCHAR,Web sitesi,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,calisma_saatleri,VARCHAR,Çalışma saatleri,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,platform_mutfak,VARCHAR,Platformdaki mutfak listesi,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,platform_fiyat_araligi,VARCHAR,Platform fiyat aralığı,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,sektor_ipucu,VARCHAR,Arama terimlerinden ölçülmüş sektör ipucu,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,son_gorulme,VARCHAR,En son görüldüğü an,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,gozlem_sayisi,BIGINT,Gözlem sayısı,False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,edinim_sinifi,VARCHAR,Veri nasıl edinildi (resmî açık / web),False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,dagitim_sinifi,VARCHAR,Dağıtım sınıfı (public/internal/restricted),False
+ürün (satışa dönük),urun,isletme,699809,ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).,kaynak_satir_ozeti,VARCHAR,Kaynak satırın içerik özeti (sha256),False
+ürün (satışa dönük),urun,isletme_kaynak,721628,ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.,baglanti_id,VARCHAR,Bağlantı kimliği,False
+ürün (satışa dönük),urun,isletme_kaynak,721628,ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.,isletme_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+ürün (satışa dönük),urun,isletme_kaynak,721628,ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.,kaynak_sistem,VARCHAR,Kaynak sistem,False
+ürün (satışa dönük),urun,isletme_kaynak,721628,ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.,kaynak_kayit_id,VARCHAR,Kaynaktaki kayıt kimliği,False
+ürün (satışa dönük),urun,isletme_kaynak,721628,ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.,eslesme_skoru,DOUBLE,Eşleşme skoru 0-1,False
+ürün (satışa dönük),urun,isletme_kaynak,721628,ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.,eslesme_bandi,VARCHAR,Eşleşme bandı,False
+ürün (satışa dönük),urun,isletme_kaynak,721628,ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.,baglanti_durumu,VARCHAR,Bağlantı durumu,False
+ürün (satışa dönük),urun,isletme_kaynak,721628,ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.,gerekce,VARCHAR,Eşleşme gerekçesi,False
+ürün (satışa dönük),urun,isletme_kaynak,721628,ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.,olusturulma,VARCHAR,Kayıt oluşturulma zamanı (UTC),False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,gozlem_id,VARCHAR,Gözlem kimliği (tekil),False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,duzey,VARCHAR,Coğrafi düzey,False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,kategori,VARCHAR,Kategori (bizim sınıflandırmamız),False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,alt_kategori,VARCHAR,Alt kategori,False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,olcut,VARCHAR,Ölçülen büyüklük,False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,deger,DOUBLE,Değer,False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,birim,VARCHAR,Ölçü birimi,False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,donem,VARCHAR,Dönem,False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,gozlem_turu,VARCHAR,Gözlem türü,False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,kaynak_tablo,VARCHAR,Bu satırın türediği ambar tablosu,False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,edinim_sinifi,VARCHAR,Veri nasıl edinildi (resmî açık / web),False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,dagitim_sinifi,VARCHAR,Dağıtım sınıfı (public/internal/restricted),False
+ürün (satışa dönük),urun,konut_fiyat_gozlem,29720106,ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.,kayit_zamani,VARCHAR,Kayıt zamanı (UTC),False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,mahalle,VARCHAR,Mahalle adı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,ilce,VARCHAR,İlçe adı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,il,VARCHAR,İl adı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,tuik_il_kodu,VARCHAR,TÜİK il kodu,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,web_district_id,VARCHAR,Kaynak sitedeki mahalle kimliği,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,tkgm_id,VARCHAR,TKGM (tapu-kadastro) kimliği,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,tuik_kodu,VARCHAR,TÜİK idari birim kodu,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,tkgm_link_band,VARCHAR,TKGM eşleşme bandı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,tuik_link_band,VARCHAR,TÜİK eşleşme bandı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,centroid_lon,DOUBLE,Merkez noktası boylamı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,centroid_lat,DOUBLE,Merkez noktası enlemi,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,pop_2024_web,BIGINT,2024 nüfus (web kaynağı),False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,pop_2025_tuik,BIGINT,2025 nüfus (TÜİK ADNKS),False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,konut_satilik_m2,DOUBLE,Konut satılık m² fiyatı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,konut_kiralik_m2,DOUBLE,Konut kiralık m² fiyatı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,konut_ort_fiyat,DOUBLE,Ortalama konut ilan fiyatı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,konut_ilan_sayisi,DOUBLE,Konut ilan sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,konut_brut_kira_getirisi,DOUBLE,Brüt kira getirisi (%),False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,konut_amortisman_yil,DOUBLE,Amortisman süresi (yıl),False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,konut_ort_bina_yasi,DOUBLE,Ortalama bina yaşı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,konut_satilik_kalma_gun,DOUBLE,İlanın satılana kadar kalma süresi (gün),False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,arsa_satilik_m2,DOUBLE,Arsa satılık m² fiyatı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,arsa_min_m2,DOUBLE,Arsa en düşük m² fiyatı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,arsa_max_m2,DOUBLE,Arsa en yüksek m² fiyatı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,arsa_ilan_sayisi,DOUBLE,Arsa ilan sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,arsa_fiyat_endeksi,DOUBLE,Arsa fiyat endeksi,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,tarla_satilik_m2,DOUBLE,Tarla satılık m² fiyatı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,poi_count,BIGINT,İşletme sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,poi_count_coord_verified,BIGINT,Koordinatı poligonla doğrulanmış işletme sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,yeme_icme_count,BIGINT,Yeme-içme işletmesi sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,kuafor_guzellik_count,BIGINT,Kuaför/güzellik işletmesi sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,market_count,BIGINT,Market sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,poi_avg_rating,DOUBLE,Ortalama işletme puanı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,poi_google_osm_count,BIGINT,Hem Google hem OSM'de görülen işletme sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,poi_osm_only_count,BIGINT,Yalnız OSM'de görülen işletme sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,osm_poi_on_map_2026,BIGINT,2026 OSM anlık görüntüsündeki işletme sayısı,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,osm_added_2025_2026,BIGINT,2025→2026 haritaya eklenen,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,osm_removed_2025_2026,BIGINT,2025→2026 haritadan kalkan,False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,osm_map_churn_2025_2026,DOUBLE,Harita devir oranı (eklenen+kalkan),False
+ürün (satışa dönük),urun,mahalle_zeka,50638,ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.,mapping_status,VARCHAR,Eşleme durumu (PROPOSED/APPROVED),False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,gozlem_id,VARCHAR,Gözlem kimliği (tekil),False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,isletme_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,platform,VARCHAR,Platform adı,False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,urun_adi,VARCHAR,Ürün adı,False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,aciklama,VARCHAR,Açıklama,False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,kategori,VARCHAR,Kategori (bizim sınıflandırmamız),False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,fiyat,DOUBLE,Fiyat,False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,indirimli_fiyat,DOUBLE,İndirimli fiyat,False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,tukendi,BOOLEAN,Tükendi mi,False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,para_birimi,VARCHAR,Para birimi,False
+ürün (satışa dönük),urun,menu_kalemi,29340,ÜRÜN KATMANI — menü kalemleri ve fiyatları.,gozlem_zamani,VARCHAR,Gözlem anı,False
+ürün (satışa dönük),urun,sarj_soketi,35891,ÜRÜN KATMANI — şarj soketleri.,soket_id,VARCHAR,Soket kimliği,False
+ürün (satışa dönük),urun,sarj_soketi,35891,ÜRÜN KATMANI — şarj soketleri.,isletme_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+ürün (satışa dönük),urun,sarj_soketi,35891,ÜRÜN KATMANI — şarj soketleri.,istasyon_id,VARCHAR,EPDK istasyon kimliği,False
+ürün (satışa dönük),urun,sarj_soketi,35891,ÜRÜN KATMANI — şarj soketleri.,soket_tipi,VARCHAR,Soket tipi,False
+ürün (satışa dönük),urun,sarj_soketi,35891,ÜRÜN KATMANI — şarj soketleri.,soket_alt_tipi,VARCHAR,Soket alt tipi,False
+ürün (satışa dönük),urun,sarj_soketi,35891,ÜRÜN KATMANI — şarj soketleri.,guc_kw,DOUBLE,Güç (kW),False
+ürün (satışa dönük),urun,sarj_soketi,35891,ÜRÜN KATMANI — şarj soketleri.,fiyat_tl_kwh,DOUBLE,kWh başına fiyat (TL),False
+ürün (satışa dönük),urun,sarj_soketi,35891,ÜRÜN KATMANI — şarj soketleri.,durum,VARCHAR,Durum,False
+ürün (satışa dönük),urun,sarj_soketi,35891,ÜRÜN KATMANI — şarj soketleri.,gozlem_zamani,VARCHAR,Gözlem anı,False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,gozlem_id,VARCHAR,Gözlem kimliği (tekil),False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,isletme_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,platform,VARCHAR,Platform adı,False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,puan,DOUBLE,Puan,False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,puan_sayisi,INTEGER,Puan veren sayısı,False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,min_sepet,DOUBLE,Minimum sepet tutarı,False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,teslimat_alt_dk,INTEGER,Teslimat süresi alt sınırı (dk),False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,teslimat_ust_dk,INTEGER,Teslimat süresi üst sınırı (dk),False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,teslimat_ucreti,DOUBLE,Teslimat ücreti,False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,fiyat_araligi,VARCHAR,Fiyat aralığı,False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,mutfak,VARCHAR,Mutfak listesi,False
+ürün (satışa dönük),urun,teslimat_gozlem,513,ÜRÜN KATMANI — teslimat ve puan gözlemleri.,gozlem_zamani,VARCHAR,Gözlem anı,False
+ürün (satışa dönük),urun,tuik_gozlem,17921552,ÜRÜN KATMANI — TÜİK SDMX gözlemleri.,seri_id,VARCHAR,Seri kimliği,False
+ürün (satışa dönük),urun,tuik_gozlem,17921552,ÜRÜN KATMANI — TÜİK SDMX gözlemleri.,akis_id,VARCHAR,TÜİK veri akışı kimliği,False
+ürün (satışa dönük),urun,tuik_gozlem,17921552,ÜRÜN KATMANI — TÜİK SDMX gözlemleri.,donem,VARCHAR,Dönem,False
+ürün (satışa dönük),urun,tuik_gozlem,17921552,ÜRÜN KATMANI — TÜİK SDMX gözlemleri.,donem_etiketi,VARCHAR,Dönemin okunur etiketi,False
+ürün (satışa dönük),urun,tuik_gozlem,17921552,ÜRÜN KATMANI — TÜİK SDMX gözlemleri.,deger,DOUBLE,Değer,False
+ürün (satışa dönük),urun,tuik_gozlem,17921552,ÜRÜN KATMANI — TÜİK SDMX gözlemleri.,nitelikler,VARCHAR,Gözlem nitelikleri,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,seri_id,VARCHAR,Seri kimliği,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,akis_id,VARCHAR,TÜİK veri akışı kimliği,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,akis_adi,VARCHAR,Akışın adı,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,akis_aciklama,VARCHAR,Akışın açıklaması,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,seri_anahtari,VARCHAR,Seri anahtarı,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,boyutlar,VARCHAR,Serinin tüm boyutları,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,bolge_kodu,VARCHAR,TÜİK bölge kodu,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,bolge_adi,VARCHAR,Bölge adı,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,geo_duzeyi,VARCHAR,Bağlandığı coğrafi düzey,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,gozlem_sayisi,BIGINT,Gözlem sayısı,False
+ürün (satışa dönük),urun,tuik_seri,1762120,ÜRÜN KATMANI — TÜİK SDMX seri tanımları.,kaynak_hazirlanma,VARCHAR,TÜİK'in veriyi hazırladığı an,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,gozlem_id,VARCHAR,Gözlem kimliği (tekil),False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,kaynak_sistem,VARCHAR,Kaynak sistem,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,isletme_id,VARCHAR,İşletme kimliği (poi.poi_id),False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,geo_id,VARCHAR,Coğrafya kimliği (geo_entity.geo_id),False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,duzey,VARCHAR,Coğrafi düzey,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,urun_id,VARCHAR,Ürün kimliği (product.product_id),False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,urun_kodu,VARCHAR,Kaynaktaki ürün kodu,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,fiyat_turu,VARCHAR,Fiyat türü,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,fiyat,DOUBLE,Fiyat,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,asgari_fiyat,DOUBLE,Asgari fiyat,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,azami_fiyat,DOUBLE,Azami fiyat,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,birim_fiyat,DOUBLE,Birim fiyat (kg/lt başına),False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,birim_fiyat_metni,VARCHAR,Birim fiyatın kaynaktaki metni,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,islem_hacmi,DOUBLE,İşlem hacmi,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,birim,VARCHAR,Ölçü birimi,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,para_birimi,VARCHAR,Para birimi,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,indirim,VARCHAR,İndirimli mi,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,promosyon,VARCHAR,Promosyon metni,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,donem,VARCHAR,Dönem,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,donem_turu,VARCHAR,Dönemin türü,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,gozlem_zamani,VARCHAR,Gözlem anı,False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,edinim_sinifi,VARCHAR,Veri nasıl edinildi (resmî açık / web),False
+ürün (satışa dönük),urun,urun_fiyat_gozlem,36407222,ÜRÜN KATMANI — ürün fiyat gözlemleri.,dagitim_sinifi,VARCHAR,Dağıtım sınıfı (public/internal/restricted),False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,urun_id,VARCHAR,Ürün kimliği (product.product_id),False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,kaynak_sistem,VARCHAR,Kaynak sistem,False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,urun_kodu,VARCHAR,Kaynaktaki ürün kodu,False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,ad,VARCHAR,Ad,False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,marka,VARCHAR,Marka,False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,birim,VARCHAR,Ölçü birimi,False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,miktar_birimi,VARCHAR,Miktar birimi,False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,ana_kategori,VARCHAR,Ana kategori,False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,alt_kategori,VARCHAR,Alt kategori,False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,gorsel,VARCHAR,Ürün görseli,False
+ürün (satışa dönük),urun,urun_katalogu,32919,ÜRÜN KATMANI — ürün sözlüğü.,ilk_gorulme,VARCHAR,İlk görüldüğü an,False

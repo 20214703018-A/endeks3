@@ -50,6 +50,7 @@ def free_bytes(p: Path) -> int:
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--list", action="store_true"); ap.add_argument("--apply", action="store_true")
     ap.add_argument("--dry-run", action="store_true"); ap.add_argument("--only", default=None); ap.add_argument("--max-rows", type=int, default=0)
+    ap.add_argument("--incremental", action="store_true", help="hedefte zaten işlenmiş source_path'leri atla, yalnız yeni dosyaları ek parça olarak yaz")
     a = ap.parse_args()
     names = [n.strip() for n in a.only.split(",")] if a.only else list(SOURCES)
     con = duckdb.connect(); con.execute("SET memory_limit='2GB'"); con.execute("SET threads=3"); con.execute(f"SET temp_directory='{OUT}/tmp/night_stage'")
@@ -63,6 +64,16 @@ def main():
             report.append({"source": name, "status": "DOSYA_YOK", "glob": glob_pat}); print(f"  {name}: dosya yok ({glob_pat})", flush=True); continue
         n_inv = sum(1 for f in files if f in inv)
         out_dir = STG_ROOT / fam / target; out = out_dir / f"part-NIGHT_{name}.parquet"
+        if a.incremental:
+            parts = sorted(str(x) for x in out_dir.glob("part-*.parquet")) if out_dir.exists() else []
+            if parts:
+                plist = "[" + ", ".join("'" + x.replace("'", "''") + "'" for x in parts) + "]"
+                done = {r[0] for r in con.execute(f"SELECT DISTINCT source_path FROM read_parquet({plist}, union_by_name=true)").fetchall()}
+                before = len(files); files = [f for f in files if f not in done]
+                print(f"  {name}: {before:,} dosyanın {before - len(files):,} tanesi zaten ambarda", flush=True)
+            if not files:
+                print(f"  {name}: yeni dosya yok — güncel", flush=True); report.append({"source": name, "status": "GUNCEL"}); continue
+            out = out_dir / f"part-{dt.datetime.now().strftime('%Y%m%dT%H%M%S')}_{name}.parquet"
         if a.list or a.dry_run:
             print(f"  {name:26s} {len(files):>5} dosya (envanterde {n_inv}) → {fam}/{target}  [{reader}]  {note}", flush=True)
             report.append({"source": name, "files": len(files), "in_inventory": n_inv, "target": f"{fam}/{target}", "reader": reader}); continue

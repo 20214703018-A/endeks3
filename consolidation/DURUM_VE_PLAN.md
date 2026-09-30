@@ -164,3 +164,23 @@ Her adımda "giren satır = yazılan satır" kontrolü yapıldı; hepsinde fark 
 **Disk uyarısı**: veritabanı 7,3 GB'a çıktı, diskte 2,5 GB kaldı. 24 milyon satırlık ürün fiyatı tablosunun
 1,4 GB'lık parquet kopyası silindi (veri DB içinde duruyor; gerekirse `BIG_PARQUET=1` ile yeniden üretilir).
 Karar bekleyen: eski `canonical/v1` klasörü (1,3 GB, v1.7 tarafından tamamen kapsanıyor, yeniden üretilebilir) silinsin mi?
+
+## 13. Veritabanı yapılandırma (2026-09-30)
+
+**Market şubelerinin tamamı girdi.** GitHub zinciri 8 koşuda 14.791 şubenin hepsini topladı (10.438 dosya, 722 MB).
+Ambar araçlarına **artımlı mod** eklendi (`--incremental`): daha önce işlenmiş dosyalar atlanıyor, yalnız yeni gelenler
+ek parça olarak yazılıyor — bundan sonra veri geldikçe aynı komut tekrar çalıştırılacak.
+Şube×ürün fiyatı 9,4 M → **21,9 M** satıra çıktı; ürün fiyatı tablosu toplam **36.407.222** satır (muhasebe tam).
+Ayrıca `intake_marketfiyati.py` içindeki tip hatası düzeltildi (eksik değer NaN olarak metin sütununa gidip çöküyordu).
+
+**Yapılandırma (structure_v1)** — `tools/phase5_structure_v1.py`, veri eklemez/silmez, yalnız yapı kurar:
+- **24 indeks**: coğrafya, işletme, ürün, seri tablolarının sık birleştirilen sütunlarına. 17-36 milyon satırlık
+  olgu tablolarına bilerek indeks konmadı; DuckDB sütunlu tarama zaten hızlı, indeks yer harcardı.
+- **`urun` şeması — satışa dönük 16 görünüm** (Türkçe sütun adlarıyla): isletme, isletme_kaynak, cografya,
+  konut_fiyat_gozlem, urun_katalogu, urun_fiyat_gozlem, gosterge_gozlem, tuik_seri, tuik_gozlem, sarj_soketi,
+  eticaret_sitesi, menu_kalemi, teslimat_gozlem, mahalle_zeka, ilce_zeka, ilce_yeni_kaynaklar.
+  **Kişisel/kimlik sütunları bu katmanda yok** (telefon, MERSİS, vergi no, KEP e-postası) — makineyle doğrulandı: 0 sızıntı.
+  Bu sütunlar `main` şemasında durmaya devam ediyor, yalnız bize açık.
+- **Veri sözlüğü**: `meta_tablo` + `meta_kolon` tabloları ve `reports/VERI_SOZLUGU.html` / `.csv`.
+  53 tablo, 890 sütun — **hepsinin açıklaması var** (kısıtlı sütunlar sarı işaretli).
+- **Analitik**: `analytics.mahalle_market_fiyat` (5.583 mahallede şube/ürün/ortalama fiyat) ve ilçe ürün fiyatı özeti yenilendi.

@@ -493,6 +493,11 @@ def build_branches(it: Intake):
                         ("depot_id", "market", "depot_name", "lat", "lon", "il_geo_id", "il_adi", "ilce_geo_id", "ilce_adi",
                          "mahalle_geo_id", "mahalle_adi", "guncellenme_tarihi", "product_id")]
                        + list(ITEM_COLS.items()) + [("fiyat_endeks_zamani", pa.string()), ("extra_json", pa.string())])
+
+    def _s(v):  # pandas'tan gelen eksik değer NaN (float) olur; metin sütununa float gidince pyarrow patlıyordu
+        if v is None or (isinstance(v, float) and v != v): return None
+        return v if isinstance(v, str) else str(v)
+
     got = set()
     for d in read_chunks(bdir, "depot"):
         if d["depot_id"] in got:  # aynı şube birden çok koşuda toplandıysa ilk kayıt
@@ -503,15 +508,17 @@ def build_branches(it: Intake):
                   "lat": d["lat"], "lon": d["lon"], "il_geo_id": d["il_geo_id"], "il_adi": meta.get("il_adi"),
                   "ilce_geo_id": d["ilce_geo_id"], "ilce_adi": meta.get("ilce_adi"), "mahalle_geo_id": d["mahalle_geo_id"],
                   "mahalle_adi": meta.get("mahalle_adi"), "guncellenme_tarihi": d["at"]}
+        common = {k: (_s(v) if k not in ("lat", "lon") else v) for k, v in common.items()}
         summ.append({**common, "tur": d["tur"], "numberOfFound": d["numberOfFound"], "n_items": d["n_items"], "pages": d["pages"]})
         if not d["items"]:
             continue
         rows = []
         for x in d["items"]:
             x = dict(x)
-            r = {**common, "product_id": x.pop("id")}
-            for c in ITEM_COLS:
-                r[c] = x.pop(c, None)
+            r = {**common, "product_id": _s(x.pop("id"))}
+            for c, t in ITEM_COLS.items():
+                v = x.pop(c, None)
+                r[c] = _s(v) if t == pa.string() else v
             it_ = r["indexTime"] or ""  # "27.09.2026 12:12" (sitenin günlük fiyat güncelleme anı, TR saati) → ISO 8601
             r["fiyat_endeks_zamani"] = f"{it_[6:10]}-{it_[3:5]}-{it_[0:2]}T{it_[11:16]}:00+03:00" if len(it_) >= 16 else None
             r["extra_json"] = json.dumps(x, ensure_ascii=False) if x else None  # beklenmeyen alan kaybolmasın

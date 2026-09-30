@@ -77,7 +77,7 @@ def main():
         FROM poi_source_link l JOIN poi p USING (poi_id) WHERE l.source_system='marketfiyati' AND l.link_status IN ('merged','primary')
         QUALIFY row_number() OVER (PARTITION BY l.source_record_id ORDER BY l.link_status) = 1""")
     load("marketfiyati_branch", """INSERT INTO product_price_observation SELECT
-        'OPP_MF_' || md5(concat_ws('|', f.raw_depot_id, f.raw_urun_id, coalesce(f.raw_fiyat_endeks_zamani,''), CAST(f.raw_fiyat AS VARCHAR))),
+        'OPP_MF_' || md5(concat_ws('|', f.raw_depot_id, f.raw_urun_id, coalesce(f.raw_fiyat_endeks_zamani,''), CAST(f.raw_fiyat AS VARCHAR), f.source_row_hash, f.source_path)),
         'marketfiyati_branch', d.poi_id, coalesce(d.geo_id, nullif(trim(CAST(f.raw_mahalle_geo_id AS VARCHAR), '"'), 'null')), 'mahalle', 'PRD_MF_' || f.raw_urun_id, f.raw_urun_id,
         'shelf', f.raw_fiyat, NULL, NULL, f.raw_birim_fiyat, f.raw_birim_fiyat_metin, NULL, 'TL', 'TRY',
         f.raw_indirim, f.raw_indirim_orani, f.raw_promosyon_metni, CAST(f.raw_cekim_zamani AS VARCHAR),

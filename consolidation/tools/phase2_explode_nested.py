@@ -24,7 +24,7 @@ def now(): return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 def free_bytes(p): st = os.statvfs(p); return st.f_bavail * st.f_frsize
 
 
-def sources():
+def sources(mf_extra=""):
     etbis_files = sorted(str(p) for p in INTAKE.glob("etbis_eticaret_siteleri/*/*.jsonl"))
     etbis_list = "[" + ", ".join("'" + f.replace("'", "''") + "'" for f in etbis_files) + "]"
     etbis_rel = (f"read_json({etbis_list}, format='newline_delimited', union_by_name=true, ignore_errors=true, "
@@ -32,7 +32,9 @@ def sources():
     opet_files = sorted(str(x) for x in INTAKE.glob("akaryakit_opet_fiyat_arsivi/*/products.json.gz"))
     opet_list = "[" + ", ".join("'" + f.replace("'", "''") + "'" for f in opet_files) + "]"
     opet_rel = f"read_json({opet_list}, filename=true)"
-    mf_src = STG / "price_series" / "stg_marketfiyati_sube_urun" / "part-NIGHT_marketfiyati_branch_items.parquet"
+    mf_dir = STG / "price_series" / "stg_marketfiyati_sube_urun"
+    mf_parts = sorted(str(x) for x in mf_dir.glob("part-*.parquet"))
+    mf_src = "[" + ", ".join("'" + x.replace("'", "''") + "'" for x in mf_parts) + "]"
     return {
         "etbis_siteler": {
             "family": "poi_business", "target": "stg_etbis_site_kaydi",
@@ -85,8 +87,8 @@ def sources():
             "family": "price_series", "target": "stg_marketfiyati_sube_urun_fiyat",
             "acq": "web_research", "dist": "internal", "sens": "none",
             "note": "şube × ürün fiyatı (depot satırındaki items[] açıldı)",
-            "files": 1 if mf_src.exists() else 0,
-            "expected": f"SELECT sum(raw_n_items) FROM '{mf_src}' WHERE raw_depot_id IS NOT NULL",
+            "files": len(mf_parts),
+            "expected": f"SELECT sum(raw_n_items) FROM read_parquet({mf_src}, union_by_name=true) WHERE raw_depot_id IS NOT NULL{mf_extra}",
             "select": f"""SELECT raw_depot_id, raw_market, raw_tur, raw_il_geo_id, raw_ilce_geo_id, raw_mahalle_geo_id,
                     raw_lat, raw_lon, raw_cekim_zamani,
                     it.id AS raw_urun_id, CAST(it.price AS DOUBLE) AS raw_fiyat, it.unitPrice AS raw_birim_fiyat_metin,
@@ -100,7 +102,7 @@ def sources():
                         raw_mahalle_geo_id, raw_lat, raw_lon, raw_at AS raw_cekim_zamani,
                         source_row_number AS raw_konteyner_satir_no, source_path,
                         unnest(raw_items) AS it, unnest(range(1, len(raw_items) + 1)) AS urun_sira
-                      FROM '{mf_src}' WHERE raw_depot_id IS NOT NULL AND raw_items IS NOT NULL)""",
+                      FROM read_parquet({mf_src}, union_by_name=true, filename=true) WHERE raw_depot_id IS NOT NULL AND raw_items IS NOT NULL{mf_extra})""",
         },
     }
 
@@ -108,8 +110,22 @@ def sources():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--list", action="store_true"); ap.add_argument("--apply", action="store_true"); ap.add_argument("--only", default=None)
+    ap.add_argument("--incremental", action="store_true")
     a = ap.parse_args()
-    S = sources()
+    # artımlı mod: market fiyatı için daha önce açılmış konteyner dosyalarını dışla
+    mf_extra = ""
+    if a.incremental:
+        odir = STG / "price_series" / "stg_marketfiyati_sube_urun_fiyat"
+        oparts = sorted(str(x) for x in odir.glob("part-*.parquet")) if odir.exists() else []
+        if oparts:
+            olist = "[" + ", ".join("'" + x.replace("'", "''") + "'" for x in oparts) + "]"
+            tmp = duckdb.connect(); tmp.execute("SET memory_limit='800MB'")
+            done = [r[0] for r in tmp.execute(f"SELECT DISTINCT source_path FROM read_parquet({olist}, union_by_name=true)").fetchall()]
+            tmp.close()
+            if done:
+                mf_extra = " AND source_path NOT IN (" + ", ".join("'" + d.replace("'", "''") + "'" for d in done) + ")"
+                print(f"  (market: {len(done):,} konteyner dosyası zaten açılmış, atlanıyor)", flush=True)
+    S = sources(mf_extra)
     names = [n.strip() for n in a.only.split(",")] if a.only else list(S)
     con = duckdb.connect(); con.execute("SET memory_limit='1200MB'"); con.execute("SET threads=1")
     (OUT / "tmp" / "explode").mkdir(parents=True, exist_ok=True)
@@ -118,6 +134,8 @@ def main():
     for name in names:
         s = S[name]
         out_dir = STG / s["family"] / s["target"]; out = out_dir / f"part-NIGHT_{name}.parquet"
+        if a.incremental and out.exists():
+            out = out_dir / f"part-{dt.datetime.now().strftime('%Y%m%dT%H%M%S')}_{name}.parquet"
         if a.list or not a.apply:
             print(f"  {name:26s} {s['files']:>4} kaynak dosya → {s['family']}/{s['target']}  {s['note']}"); continue
         if s["files"] == 0:

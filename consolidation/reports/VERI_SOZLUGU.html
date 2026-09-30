@@ -1,0 +1,1057 @@
+<!doctype html><meta charset='utf-8'><title>GEOPROP veri sözlüğü</title>
+<style>body{font:14px/1.5 -apple-system,system-ui,sans-serif;margin:24px;max-width:1100px}
+h1{font-size:22px}h2{font-size:17px;margin-top:28px}table{border-collapse:collapse;width:100%;margin:8px 0}
+th,td{border:1px solid #ddd;padding:5px 7px;text-align:left;vertical-align:top}th{background:#f4f4f4}
+td.n{text-align:right;font-variant-numeric:tabular-nums}.h{background:#fff3cd}small{color:#666}</style>
+<h1>GEOPROP veri sözlüğü</h1><p><small>Üretim: 2026-09-30T17:20:45+00:00 · sürüm canonical_v1.7 / structure_v1 · sarı satır = kısıtlı (kişisel/kimlik) sütun, ürün katmanına çıkmaz</small></p>
+<h2>Tablolar</h2><table><tr><th>Katman</th><th>Tablo</th><th>Satır</th><th>Sütun</th><th>Açıklama</th></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_urun_fiyat_gozlem'>urun.urun_fiyat_gozlem</a></td><td class='n'>36.407.222</td><td class='n'>23</td><td>ÜRÜN KATMANI — ürün fiyat gözlemleri.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_product_price_observation'>main.product_price_observation</a></td><td class='n'>36.407.222</td><td class='n'>29</td><td>ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı. Opet ilçe×gün akaryakıt. HKS ulusal hal. İzmir hal. market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).</td></tr>
+<tr><td>kanonik</td><td><a href='#main_price_observation'>main.price_observation</a></td><td class='n'>29.720.106</td><td class='n'>22</td><td>GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.). uzun biçim.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_konut_fiyat_gozlem'>urun.konut_fiyat_gozlem</a></td><td class='n'>29.720.106</td><td class='n'>14</td><td>ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_indicator_sdmx_observation'>main.indicator_sdmx_observation</a></td><td class='n'>17.921.552</td><td class='n'>9</td><td>TÜİK SDMX serilerinin dönem×değer gözlemleri (17.9 milyon).</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_tuik_gozlem'>urun.tuik_gozlem</a></td><td class='n'>17.921.552</td><td class='n'>6</td><td>ÜRÜN KATMANI — TÜİK SDMX gözlemleri.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_poi_presence_osm'>main.poi_presence_osm</a></td><td class='n'>2.844.718</td><td class='n'>13</td><td>OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_tuik_seri'>urun.tuik_seri</a></td><td class='n'>1.762.120</td><td class='n'>12</td><td>ÜRÜN KATMANI — TÜİK SDMX seri tanımları.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_indicator_sdmx_series'>main.indicator_sdmx_series</a></td><td class='n'>1.762.120</td><td class='n'>18</td><td>TÜİK SDMX serilerinin tanımı: akış. seri anahtarı. boyut sözlüğü ve bağlandığı coğrafya.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_poi_snapshot'>main.poi_snapshot</a></td><td class='n'>1.544.193</td><td class='n'>13</td><td>POI kaynak anlık görüntüleri.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_price_latest_cutoff'>analytics.price_latest_cutoff</a></td><td class='n'>834.196</td><td class='n'>22</td><td>Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_poi_source_link'>main.poi_source_link</a></td><td class='n'>721.628</td><td class='n'>12</td><td>Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru. bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_isletme_kaynak'>urun.isletme_kaynak</a></td><td class='n'>721.628</td><td class='n'>9</td><td>ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_isletme'>urun.isletme</a></td><td class='n'>699.809</td><td class='n'>33</td><td>ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).</td></tr>
+<tr><td>kanonik</td><td><a href='#main_poi'>main.poi</a></td><td class='n'>699.809</td><td class='n'>72</td><td>İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google. OSM. Yemeksepeti. market şubesi. EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_mahalle_turnover_osm'>analytics.mahalle_turnover_osm</a></td><td class='n'>690.660</td><td class='n'>12</td><td>OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_poi_lifecycle_osm'>main.poi_lifecycle_osm</a></td><td class='n'>680.481</td><td class='n'>30</td><td>OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).</td></tr>
+<tr><td>kanonik</td><td><a href='#main_indicator_observation'>main.indicator_observation</a></td><td class='n'>332.363</td><td class='n'>21</td><td>Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES. BKM kart harcaması. BDDK il finans) uzun biçimde.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_gosterge_gozlem'>urun.gosterge_gozlem</a></td><td class='n'>332.363</td><td class='n'>14</td><td>ÜRÜN KATMANI — resmî bağlam göstergeleri.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_m_cat'>main.m_cat</a></td><td class='n'>329.092</td><td class='n'>14</td><td>Kategori eşleme sözlüğü.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_population_observation'>main.population_observation</a></td><td class='n'>114.751</td><td class='n'>18</td><td>Nüfus gözlemleri (TÜİK ADNKS. mahalle/ilçe/il).</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_eticaret_sitesi'>urun.eticaret_sitesi</a></td><td class='n'>60.188</td><td class='n'>16</td><td>ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).</td></tr>
+<tr><td>kanonik</td><td><a href='#main_etbis_site'>main.etbis_site</a></td><td class='n'>60.188</td><td class='n'>28</td><td>ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_geo_entity'>main.geo_entity</a></td><td class='n'>51.731</td><td class='n'>35</td><td>Coğrafya sözlüğü: mahalle. ilçe. il. NUTS2/NUTS1 bölge ve ülke. Sınır poligonları. merkez noktası. TÜİK ve NUTS kodları.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_cografya'>urun.cografya</a></td><td class='n'>51.731</td><td class='n'>12</td><td>ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_mahalle_zeka'>urun.mahalle_zeka</a></td><td class='n'>50.638</td><td class='n'>41</td><td>ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_m_geo'>main.m_geo</a></td><td class='n'>50.638</td><td class='n'>18</td><td>Coğrafya eşleme sözlüğü.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_mahalle_intelligence'>analytics.mahalle_intelligence</a></td><td class='n'>50.638</td><td class='n'>41</td><td>Mahalle düzeyi birleşik gösterge tablosu: nüfus. konut ve arsa fiyatları. işletme sayıları. OSM harita devri.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_mahalle_pop'>analytics.mahalle_pop</a></td><td class='n'>50.421</td><td class='n'>3</td><td>Mahalle nüfusu.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_mahalle_osm_latest'>analytics.mahalle_osm_latest</a></td><td class='n'>37.561</td><td class='n'>5</td><td>Mahallenin en son OSM anlık görüntüsü özeti.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_sarj_soketi'>urun.sarj_soketi</a></td><td class='n'>35.891</td><td class='n'>9</td><td>ÜRÜN KATMANI — şarj soketleri.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_charging_socket'>main.charging_socket</a></td><td class='n'>35.891</td><td class='n'>21</td><td>EPDK şarj istasyonu soketleri: tip. güç. kWh fiyatı. durum. İstasyon POI'sine bağlı.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_mahalle_price_wide'>analytics.mahalle_price_wide</a></td><td class='n'>33.095</td><td class='n'>15</td><td>Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).</td></tr>
+<tr><td>kanonik</td><td><a href='#main_product'>main.product</a></td><td class='n'>32.919</td><td class='n'>17</td><td>Ürün sözlüğü: market ürün kataloğu. akaryakıt ürünleri. hal ürünleri. Fiyat gözlemleri buraya bağlanır.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_urun_katalogu'>urun.urun_katalogu</a></td><td class='n'>32.919</td><td class='n'>11</td><td>ÜRÜN KATMANI — ürün sözlüğü.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_menu_item_observation'>main.menu_item_observation</a></td><td class='n'>29.340</td><td class='n'>24</td><td>Çevrimiçi sipariş platformu menü kalemleri (ad. fiyat. indirimli fiyat. tükendi bilgisi).</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_menu_kalemi'>urun.menu_kalemi</a></td><td class='n'>29.340</td><td class='n'>11</td><td>ÜRÜN KATMANI — menü kalemleri ve fiyatları.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_mahalle_poi_stats'>analytics.mahalle_poi_stats</a></td><td class='n'>19.248</td><td class='n'>11</td><td>Mahalle başına işletme sayıları ve ortalama puan.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_poi_category_candidate'>main.poi_category_candidate</a></td><td class='n'>7.088</td><td class='n'>11</td><td>Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_ilce_urun_fiyat_ozet'>analytics.ilce_urun_fiyat_ozet</a></td><td class='n'>6.631</td><td class='n'>7</td><td>İlçe × kaynak × ürün için gözlem sayısı ve ortalama fiyat.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_mahalle_market_fiyat'>analytics.mahalle_market_fiyat</a></td><td class='n'>5.583</td><td class='n'>7</td><td>Mahalle başına market rafı fiyat gözlemleri: şube sayısı. ürün çeşidi. ortalama fiyat. tarih aralığı.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_sdmx_geo_map'>main.sdmx_geo_map</a></td><td class='n'>1.093</td><td class='n'>5</td><td>TÜİK SDMX bölge kodu (REF_AREA) → bizim geo_id eşlemesi ve hangi yöntemle eşlendiği.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_ilce_yeni_kaynaklar'>urun.ilce_yeni_kaynaklar</a></td><td class='n'>973</td><td class='n'>8</td><td>İlçe başına market şubesi. şarj istasyonu ve turizm tesisi sayıları.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_ilce_zeka'>urun.ilce_zeka</a></td><td class='n'>973</td><td class='n'>19</td><td>ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_ilce_yeni_kaynaklar'>analytics.ilce_yeni_kaynaklar</a></td><td class='n'>973</td><td class='n'>8</td><td>İlçe başına market şubesi. şarj istasyonu ve turizm tesisi sayıları.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_ilce_intelligence'>analytics.ilce_intelligence</a></td><td class='n'>973</td><td class='n'>19</td><td>İlçe düzeyi birleşik gösterge tablosu: nüfus. konut satışı. yapı ruhsatı. SES skoru. işletme sayıları.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_ilce_indicators'>analytics.ilce_indicators</a></td><td class='n'>973</td><td class='n'>7</td><td>İlçe düzeyi resmî gösterge özetleri.</td></tr>
+<tr><td>analitik</td><td><a href='#analytics_ilce_poi_stats'>analytics.ilce_poi_stats</a></td><td class='n'>967</td><td class='n'>8</td><td>İlçe başına işletme sayıları ve ortalama puan.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_venue_delivery_observation'>main.venue_delivery_observation</a></td><td class='n'>513</td><td class='n'>28</td><td>Platform teslimat/puan gözlemleri: puan. minimum sepet. teslimat süresi ve ücreti.</td></tr>
+<tr><td>ürün (satışa dönük)</td><td><a href='#urun_teslimat_gozlem'>urun.teslimat_gozlem</a></td><td class='n'>513</td><td class='n'>12</td><td>ÜRÜN KATMANI — teslimat ve puan gözlemleri.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_meta_kolon'>main.meta_kolon</a></td><td class='n'>355</td><td class='n'>8</td><td>Bu veri sözlüğünün sütun açıklamaları.</td></tr>
+<tr><td>kanonik</td><td><a href='#main__meta'>main._meta</a></td><td class='n'>26</td><td class='n'>2</td><td>Veritabanı sürümü ve yapım bilgileri.</td></tr>
+<tr><td>kanonik</td><td><a href='#main_meta_tablo'>main.meta_tablo</a></td><td class='n'>24</td><td class='n'>7</td><td>Bu veri sözlüğünün tablo açıklamaları.</td></tr>
+</table>
+<h2 id='analytics_ilce_indicators'>analytics.ilce_indicators</h2><p>İlçe düzeyi resmî gösterge özetleri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>konut_satis_son12ay</td><td><small>DOUBLE</small></td><td>Son 12 ayda konut satışı (TÜİK)</td></tr>
+<tr><td>konut_satis_2025</td><td><small>DOUBLE</small></td><td>2025 konut satışı (TÜİK)</td></tr>
+<tr><td>konut_satis_2024</td><td><small>DOUBLE</small></td><td>2024 konut satışı (TÜİK)</td></tr>
+<tr><td>yapi_ruhsati_daire_2025</td><td><small>DOUBLE</small></td><td>2025 yapı ruhsatı daire sayısı</td></tr>
+<tr><td>kullanma_izni_daire_2025</td><td><small>DOUBLE</small></td><td>2025 yapı kullanma izni daire sayısı</td></tr>
+<tr><td>ses_skor_2023</td><td><small>DOUBLE</small></td><td>TÜİK SES 2023 sosyoekonomik skor</td></tr>
+</table>
+<h2 id='analytics_ilce_intelligence'>analytics.ilce_intelligence</h2><p>İlçe düzeyi birleşik gösterge tablosu: nüfus, konut satışı, yapı ruhsatı, SES skoru, işletme sayıları.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>ilce</td><td><small>VARCHAR</small></td><td>İlçe adı</td></tr>
+<tr><td>il</td><td><small>VARCHAR</small></td><td>İl adı</td></tr>
+<tr><td>tuik_kodu</td><td><small>VARCHAR</small></td><td>TÜİK idari birim kodu</td></tr>
+<tr><td>web_county_id</td><td><small>VARCHAR</small></td><td>Kaynak sitedeki ilçe kimliği</td></tr>
+<tr><td>pop_2025_tuik</td><td><small>BIGINT</small></td><td>2025 nüfus (TÜİK ADNKS)</td></tr>
+<tr><td>pop_2024_tuik</td><td><small>BIGINT</small></td><td>2024 nüfus (TÜİK ADNKS)</td></tr>
+<tr><td>konut_satis_son12ay</td><td><small>DOUBLE</small></td><td>Son 12 ayda konut satışı (TÜİK)</td></tr>
+<tr><td>konut_satis_2025</td><td><small>DOUBLE</small></td><td>2025 konut satışı (TÜİK)</td></tr>
+<tr><td>konut_satis_2024</td><td><small>DOUBLE</small></td><td>2024 konut satışı (TÜİK)</td></tr>
+<tr><td>yapi_ruhsati_daire_2025</td><td><small>DOUBLE</small></td><td>2025 yapı ruhsatı daire sayısı</td></tr>
+<tr><td>kullanma_izni_daire_2025</td><td><small>DOUBLE</small></td><td>2025 yapı kullanma izni daire sayısı</td></tr>
+<tr><td>ses_skor_2023</td><td><small>DOUBLE</small></td><td>TÜİK SES 2023 sosyoekonomik skor</td></tr>
+<tr><td>poi_count</td><td><small>BIGINT</small></td><td>İşletme sayısı</td></tr>
+<tr><td>restoran_count</td><td><small>BIGINT</small></td><td>Restoran sayısı</td></tr>
+<tr><td>yeme_icme_count</td><td><small>BIGINT</small></td><td>Yeme-içme işletmesi sayısı</td></tr>
+<tr><td>poi_type_unknown_count</td><td><small>BIGINT</small></td><td>Türü çözülememiş işletme sayısı</td></tr>
+<tr><td>poi_avg_rating</td><td><small>DOUBLE</small></td><td>Ortalama işletme puanı</td></tr>
+<tr><td>mahalle_sayisi</td><td><small>BIGINT</small></td><td>Mahalle sayısı</td></tr>
+</table>
+<h2 id='analytics_ilce_poi_stats'>analytics.ilce_poi_stats</h2><p>İlçe başına işletme sayıları ve ortalama puan.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>poi_count</td><td><small>BIGINT</small></td><td>İşletme sayısı</td></tr>
+<tr><td>poi_count_coord_verified</td><td><small>BIGINT</small></td><td>Koordinatı poligonla doğrulanmış işletme sayısı</td></tr>
+<tr><td>yeme_icme_count</td><td><small>BIGINT</small></td><td>Yeme-içme işletmesi sayısı</td></tr>
+<tr><td>restoran_count</td><td><small>BIGINT</small></td><td>Restoran sayısı</td></tr>
+<tr><td>poi_type_unknown_count</td><td><small>BIGINT</small></td><td>Türü çözülememiş işletme sayısı</td></tr>
+<tr><td>yeme_icme_hint_count</td><td><small>BIGINT</small></td><td>Sektör ipucuna göre yeme-içme sayılan işletme sayısı</td></tr>
+<tr><td>poi_avg_rating</td><td><small>DOUBLE</small></td><td>Ortalama işletme puanı</td></tr>
+</table>
+<h2 id='analytics_ilce_urun_fiyat_ozet'>analytics.ilce_urun_fiyat_ozet</h2><p>İlçe × kaynak × ürün için gözlem sayısı ve ortalama fiyat.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>ilce_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>source_system</td><td><small>VARCHAR</small></td><td>Kaynak sistem</td></tr>
+<tr><td>product_id</td><td><small>VARCHAR</small></td><td>Ürün kimliği (product.product_id)</td></tr>
+<tr><td>gozlem</td><td><small>BIGINT</small></td><td>Gözlem sayısı</td></tr>
+<tr><td>ort_fiyat</td><td><small>DOUBLE</small></td><td>Ortalama fiyat</td></tr>
+<tr><td>ilk_donem</td><td><small>VARCHAR</small></td><td>İlk dönem</td></tr>
+<tr><td>son_donem</td><td><small>VARCHAR</small></td><td>Son dönem</td></tr>
+</table>
+<h2 id='analytics_ilce_yeni_kaynaklar'>analytics.ilce_yeni_kaynaklar</h2><p>İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>ilce_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>ilce_adi</td><td><small>VARCHAR</small></td><td>İlçe adı</td></tr>
+<tr><td>il_adi</td><td><small>VARCHAR</small></td><td>İl adı</td></tr>
+<tr><td>market_sube_sayisi</td><td><small>BIGINT</small></td><td>Market şubesi sayısı</td></tr>
+<tr><td>sarj_istasyonu_sayisi</td><td><small>BIGINT</small></td><td>Şarj istasyonu sayısı</td></tr>
+<tr><td>turizm_tesisi_sayisi</td><td><small>BIGINT</small></td><td>Belgeli turizm tesisi sayısı</td></tr>
+<tr><td>google_poi_sayisi</td><td><small>BIGINT</small></td><td>Google kaynaklı işletme sayısı</td></tr>
+<tr><td>toplam_poi</td><td><small>BIGINT</small></td><td>Toplam işletme sayısı</td></tr>
+</table>
+<h2 id='analytics_mahalle_intelligence'>analytics.mahalle_intelligence</h2><p>Mahalle düzeyi birleşik gösterge tablosu: nüfus, konut ve arsa fiyatları, işletme sayıları, OSM harita devri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>mahalle</td><td><small>VARCHAR</small></td><td>Mahalle adı</td></tr>
+<tr><td>ilce</td><td><small>VARCHAR</small></td><td>İlçe adı</td></tr>
+<tr><td>il</td><td><small>VARCHAR</small></td><td>İl adı</td></tr>
+<tr><td>tuik_il_kodu</td><td><small>VARCHAR</small></td><td>TÜİK il kodu</td></tr>
+<tr><td>web_district_id</td><td><small>VARCHAR</small></td><td>Kaynak sitedeki mahalle kimliği</td></tr>
+<tr><td>tkgm_id</td><td><small>VARCHAR</small></td><td>TKGM (tapu-kadastro) kimliği</td></tr>
+<tr><td>tuik_kodu</td><td><small>VARCHAR</small></td><td>TÜİK idari birim kodu</td></tr>
+<tr><td>tkgm_link_band</td><td><small>VARCHAR</small></td><td>TKGM eşleşme bandı</td></tr>
+<tr><td>tuik_link_band</td><td><small>VARCHAR</small></td><td>TÜİK eşleşme bandı</td></tr>
+<tr><td>centroid_lon</td><td><small>DOUBLE</small></td><td>Merkez noktası boylamı</td></tr>
+<tr><td>centroid_lat</td><td><small>DOUBLE</small></td><td>Merkez noktası enlemi</td></tr>
+<tr><td>pop_2024_web</td><td><small>BIGINT</small></td><td>2024 nüfus (web kaynağı)</td></tr>
+<tr><td>pop_2025_tuik</td><td><small>BIGINT</small></td><td>2025 nüfus (TÜİK ADNKS)</td></tr>
+<tr><td>konut_satilik_m2</td><td><small>DOUBLE</small></td><td>Konut satılık m² fiyatı</td></tr>
+<tr><td>konut_kiralik_m2</td><td><small>DOUBLE</small></td><td>Konut kiralık m² fiyatı</td></tr>
+<tr><td>konut_ort_fiyat</td><td><small>DOUBLE</small></td><td>Ortalama konut ilan fiyatı</td></tr>
+<tr><td>konut_ilan_sayisi</td><td><small>DOUBLE</small></td><td>Konut ilan sayısı</td></tr>
+<tr><td>konut_brut_kira_getirisi</td><td><small>DOUBLE</small></td><td>Brüt kira getirisi (%)</td></tr>
+<tr><td>konut_amortisman_yil</td><td><small>DOUBLE</small></td><td>Amortisman süresi (yıl)</td></tr>
+<tr><td>konut_ort_bina_yasi</td><td><small>DOUBLE</small></td><td>Ortalama bina yaşı</td></tr>
+<tr><td>konut_satilik_kalma_gun</td><td><small>DOUBLE</small></td><td>İlanın satılana kadar kalma süresi (gün)</td></tr>
+<tr><td>arsa_satilik_m2</td><td><small>DOUBLE</small></td><td>Arsa satılık m² fiyatı</td></tr>
+<tr><td>arsa_min_m2</td><td><small>DOUBLE</small></td><td>Arsa en düşük m² fiyatı</td></tr>
+<tr><td>arsa_max_m2</td><td><small>DOUBLE</small></td><td>Arsa en yüksek m² fiyatı</td></tr>
+<tr><td>arsa_ilan_sayisi</td><td><small>DOUBLE</small></td><td>Arsa ilan sayısı</td></tr>
+<tr><td>arsa_fiyat_endeksi</td><td><small>DOUBLE</small></td><td>Arsa fiyat endeksi</td></tr>
+<tr><td>tarla_satilik_m2</td><td><small>DOUBLE</small></td><td>Tarla satılık m² fiyatı</td></tr>
+<tr><td>poi_count</td><td><small>BIGINT</small></td><td>İşletme sayısı</td></tr>
+<tr><td>poi_count_coord_verified</td><td><small>BIGINT</small></td><td>Koordinatı poligonla doğrulanmış işletme sayısı</td></tr>
+<tr><td>yeme_icme_count</td><td><small>BIGINT</small></td><td>Yeme-içme işletmesi sayısı</td></tr>
+<tr><td>kuafor_guzellik_count</td><td><small>BIGINT</small></td><td>Kuaför/güzellik işletmesi sayısı</td></tr>
+<tr><td>market_count</td><td><small>BIGINT</small></td><td>Market sayısı</td></tr>
+<tr><td>poi_avg_rating</td><td><small>DOUBLE</small></td><td>Ortalama işletme puanı</td></tr>
+<tr><td>poi_google_osm_count</td><td><small>BIGINT</small></td><td>Hem Google hem OSM'de görülen işletme sayısı</td></tr>
+<tr><td>poi_osm_only_count</td><td><small>BIGINT</small></td><td>Yalnız OSM'de görülen işletme sayısı</td></tr>
+<tr><td>osm_poi_on_map_2026</td><td><small>BIGINT</small></td><td>2026 OSM anlık görüntüsündeki işletme sayısı</td></tr>
+<tr><td>osm_added_2025_2026</td><td><small>BIGINT</small></td><td>2025→2026 haritaya eklenen</td></tr>
+<tr><td>osm_removed_2025_2026</td><td><small>BIGINT</small></td><td>2025→2026 haritadan kalkan</td></tr>
+<tr><td>osm_map_churn_2025_2026</td><td><small>DOUBLE</small></td><td>Harita devir oranı (eklenen+kalkan)</td></tr>
+<tr><td>mapping_status</td><td><small>VARCHAR</small></td><td>Eşleme durumu (PROPOSED/APPROVED)</td></tr>
+</table>
+<h2 id='analytics_mahalle_market_fiyat'>analytics.mahalle_market_fiyat</h2><p>Mahalle başına market rafı fiyat gözlemleri: şube sayısı, ürün çeşidi, ortalama fiyat, tarih aralığı.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>mahalle_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>gozlem</td><td><small>BIGINT</small></td><td>Gözlem sayısı</td></tr>
+<tr><td>urun_cesidi</td><td><small>BIGINT</small></td><td>Farklı ürün sayısı</td></tr>
+<tr><td>sube</td><td><small>BIGINT</small></td><td>Şube sayısı</td></tr>
+<tr><td>ort_fiyat</td><td><small>DOUBLE</small></td><td>Ortalama fiyat</td></tr>
+<tr><td>ilk_gun</td><td><small>VARCHAR</small></td><td>İlk gözlem günü</td></tr>
+<tr><td>son_gun</td><td><small>VARCHAR</small></td><td>Son gözlem günü</td></tr>
+</table>
+<h2 id='analytics_mahalle_osm_latest'>analytics.mahalle_osm_latest</h2><p>Mahallenin en son OSM anlık görüntüsü özeti.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>osm_poi_on_map_2026</td><td><small>BIGINT</small></td><td>2026 OSM anlık görüntüsündeki işletme sayısı</td></tr>
+<tr><td>osm_added_2025_2026</td><td><small>BIGINT</small></td><td>2025→2026 haritaya eklenen</td></tr>
+<tr><td>osm_removed_2025_2026</td><td><small>BIGINT</small></td><td>2025→2026 haritadan kalkan</td></tr>
+<tr><td>osm_map_churn_2025_2026</td><td><small>DOUBLE</small></td><td>Harita devir oranı (eklenen+kalkan)</td></tr>
+</table>
+<h2 id='analytics_mahalle_poi_stats'>analytics.mahalle_poi_stats</h2><p>Mahalle başına işletme sayıları ve ortalama puan.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>poi_count</td><td><small>BIGINT</small></td><td>İşletme sayısı</td></tr>
+<tr><td>poi_count_coord_verified</td><td><small>BIGINT</small></td><td>Koordinatı poligonla doğrulanmış işletme sayısı</td></tr>
+<tr><td>yeme_icme_count</td><td><small>BIGINT</small></td><td>Yeme-içme işletmesi sayısı</td></tr>
+<tr><td>kuafor_guzellik_count</td><td><small>BIGINT</small></td><td>Kuaför/güzellik işletmesi sayısı</td></tr>
+<tr><td>market_count</td><td><small>BIGINT</small></td><td>Market sayısı</td></tr>
+<tr><td>poi_avg_rating</td><td><small>DOUBLE</small></td><td>Ortalama işletme puanı</td></tr>
+<tr><td>poi_google_osm_count</td><td><small>BIGINT</small></td><td>Hem Google hem OSM'de görülen işletme sayısı</td></tr>
+<tr><td>poi_osm_only_count</td><td><small>BIGINT</small></td><td>Yalnız OSM'de görülen işletme sayısı</td></tr>
+<tr><td>poi_yemeksepeti_count</td><td><small>BIGINT</small></td><td>Sipariş platformunda görülen işletme sayısı</td></tr>
+<tr><td>poi_type_unknown_count</td><td><small>BIGINT</small></td><td>Türü çözülememiş işletme sayısı</td></tr>
+</table>
+<h2 id='analytics_mahalle_pop'>analytics.mahalle_pop</h2><p>Mahalle nüfusu.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>pop_2024_web</td><td><small>BIGINT</small></td><td>2024 nüfus (web kaynağı)</td></tr>
+<tr><td>pop_2025_tuik</td><td><small>BIGINT</small></td><td>2025 nüfus (TÜİK ADNKS)</td></tr>
+</table>
+<h2 id='analytics_mahalle_price_wide'>analytics.mahalle_price_wide</h2><p>Mahalle başına konut/arsa fiyat göstergeleri geniş biçimde (her gösterge bir sütun).</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>konut_satilik_m2</td><td><small>DOUBLE</small></td><td>Konut satılık m² fiyatı</td></tr>
+<tr><td>konut_kiralik_m2</td><td><small>DOUBLE</small></td><td>Konut kiralık m² fiyatı</td></tr>
+<tr><td>konut_ort_fiyat</td><td><small>DOUBLE</small></td><td>Ortalama konut ilan fiyatı</td></tr>
+<tr><td>konut_ilan_sayisi</td><td><small>DOUBLE</small></td><td>Konut ilan sayısı</td></tr>
+<tr><td>konut_brut_kira_getirisi</td><td><small>DOUBLE</small></td><td>Brüt kira getirisi (%)</td></tr>
+<tr><td>konut_amortisman_yil</td><td><small>DOUBLE</small></td><td>Amortisman süresi (yıl)</td></tr>
+<tr><td>konut_ort_bina_yasi</td><td><small>DOUBLE</small></td><td>Ortalama bina yaşı</td></tr>
+<tr><td>konut_satilik_kalma_gun</td><td><small>DOUBLE</small></td><td>İlanın satılana kadar kalma süresi (gün)</td></tr>
+<tr><td>arsa_satilik_m2</td><td><small>DOUBLE</small></td><td>Arsa satılık m² fiyatı</td></tr>
+<tr><td>arsa_min_m2</td><td><small>DOUBLE</small></td><td>Arsa en düşük m² fiyatı</td></tr>
+<tr><td>arsa_max_m2</td><td><small>DOUBLE</small></td><td>Arsa en yüksek m² fiyatı</td></tr>
+<tr><td>arsa_ilan_sayisi</td><td><small>DOUBLE</small></td><td>Arsa ilan sayısı</td></tr>
+<tr><td>arsa_fiyat_endeksi</td><td><small>DOUBLE</small></td><td>Arsa fiyat endeksi</td></tr>
+<tr><td>tarla_satilik_m2</td><td><small>DOUBLE</small></td><td>Tarla satılık m² fiyatı</td></tr>
+</table>
+<h2 id='analytics_mahalle_turnover_osm'>analytics.mahalle_turnover_osm</h2><p>OSM anlık görüntülerinden mahalle bazlı işletme devir (açılış/kapanış) göstergeleri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>snapshot_date</td><td><small>VARCHAR</small></td><td>Anlık görüntünün tarihi</td></tr>
+<tr><td>prev_date</td><td><small>VARCHAR</small></td><td>Karşılaştırılan önceki anlık görüntünün tarihi</td></tr>
+<tr><td>category_group</td><td><small>VARCHAR</small></td><td>Kategori grubu (yeme-içme, perakende…)</td></tr>
+<tr><td>present_on_map</td><td><small>BIGINT</small></td><td>O tarihte haritada var mıydı</td></tr>
+<tr><td>added_to_map</td><td><small>BIGINT</small></td><td>Haritaya eklenen sayısı</td></tr>
+<tr><td>removed_from_map</td><td><small>BIGINT</small></td><td>Haritadan kalkan sayısı</td></tr>
+<tr><td>net_change</td><td><small>BIGINT</small></td><td>Net değişim (eklenen − kalkan)</td></tr>
+<tr><td>map_churn_rate</td><td><small>DOUBLE</small></td><td>Harita devir oranı</td></tr>
+<tr><td>with_name_change</td><td><small>BIGINT</small></td><td>Adı değişenlerin sayısı</td></tr>
+<tr><td>method</td><td><small>VARCHAR</small></td><td>Kullanılan yöntem</td></tr>
+<tr><td>built_at</td><td><small>VARCHAR</small></td><td>Üretim zamanı (UTC)</td></tr>
+</table>
+<h2 id='analytics_price_latest_cutoff'>analytics.price_latest_cutoff</h2><p>Kesim tarihine göre her mahalle-gösterge için en güncel fiyat gözlemi.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>observation_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>level</td><td><small>VARCHAR</small></td><td>Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke</td></tr>
+<tr><td>category</td><td><small>VARCHAR</small></td><td>Kategori</td></tr>
+<tr><td>metric</td><td><small>VARCHAR</small></td><td>Ölçülen büyüklük</td></tr>
+<tr><td>raw_value</td><td><small>VARCHAR</small></td><td>Kaynaktaki değerin ham metni</td></tr>
+<tr><td>parsed_value</td><td><small>DOUBLE</small></td><td>Sayıya çevrilmiş değer</td></tr>
+<tr><td>unit</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>period</td><td><small>VARCHAR</small></td><td>Dönem (gün/ay/çeyrek/yıl)</td></tr>
+<tr><td>observation_kind</td><td><small>VARCHAR</small></td><td>Gözlem türü</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>source_priority</td><td><small>INTEGER</small></td><td>Kaynak önceliği (çakışmada hangisi üstte)</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>recorded_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+<tr><td>subcategory</td><td><small>VARCHAR</small></td><td>Alt kategori</td></tr>
+<tr><td>source_updated_at</td><td><small>VARCHAR</small></td><td>Kaynaktaki güncellenme zamanı</td></tr>
+<tr><td>n_copies</td><td><small>INTEGER</small></td><td>Aynı değerin kaç kaynak kopyasında görüldüğü</td></tr>
+<tr><td>source_table</td><td><small>VARCHAR</small></td><td>Bu satırın türediği ambar tablosu</td></tr>
+</table>
+<h2 id='main__meta'>main._meta</h2><p>Veritabanı sürümü ve yapım bilgileri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>key</td><td><small>VARCHAR</small></td><td>Anahtar</td></tr>
+<tr><td>value</td><td><small>VARCHAR</small></td><td>Değer</td></tr>
+</table>
+<h2 id='main_charging_socket'>main.charging_socket</h2><p>EPDK şarj istasyonu soketleri: tip, güç, kWh fiyatı, durum. İstasyon POI'sine bağlı.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>socket_id</td><td><small>VARCHAR</small></td><td>Soket kimliği</td></tr>
+<tr><td>poi_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>station_id</td><td><small>VARCHAR</small></td><td>EPDK istasyon kimliği</td></tr>
+<tr><td>source_socket_id</td><td><small>VARCHAR</small></td><td>Kaynaktaki soket kimliği</td></tr>
+<tr><td>socket_type</td><td><small>VARCHAR</small></td><td>Soket tipi</td></tr>
+<tr><td>socket_sub_type</td><td><small>VARCHAR</small></td><td>Soket alt tipi</td></tr>
+<tr><td>socket_number</td><td><small>VARCHAR</small></td><td>Soket numarası</td></tr>
+<tr><td>power_kw</td><td><small>DOUBLE</small></td><td>Güç (kW)</td></tr>
+<tr><td>price_tl_kwh</td><td><small>DOUBLE</small></td><td>kWh başına fiyat (TL)</td></tr>
+<tr><td>status</td><td><small>VARCHAR</small></td><td>Durum</td></tr>
+<tr><td>status_start</td><td><small>VARCHAR</small></td><td>Durumun başlangıcı</td></tr>
+<tr><td>status_end</td><td><small>VARCHAR</small></td><td>Durumun bitişi</td></tr>
+<tr><td>prices_json</td><td><small>VARCHAR</small></td><td>Kaynaktaki fiyat listesi</td></tr>
+<tr><td>observed_at</td><td><small>VARCHAR</small></td><td>Gözlem anı</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>source_path</td><td><small>VARCHAR</small></td><td>Kaynak dosya yolu</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_etbis_site'>main.etbis_site</h2><p>ETBİS'e kayıtlı e-ticaret siteleri ve profilleri. MERSİS/vergi no/KEP e-postası restricted_ ön ekli sütunlarda ve ürün katmanına çıkmaz.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>site_id</td><td><small>VARCHAR</small></td><td>ETBİS site kimliği</td></tr>
+<tr><td>unvan</td><td><small>VARCHAR</small></td><td>Ticaret unvanı (tüzel kişi adı)</td></tr>
+<tr><td>site_url</td><td><small>VARCHAR</small></td><td>Site adresi</td></tr>
+<tr><td>mobil_uygulama</td><td><small>VARCHAR</small></td><td>Mobil uygulama adı</td></tr>
+<tr><td>il_adi</td><td><small>VARCHAR</small></td><td>İl adı</td></tr>
+<tr><td>ilce_adi</td><td><small>VARCHAR</small></td><td>İlçe adı</td></tr>
+<tr><td>sektor</td><td><small>VARCHAR</small></td><td>Üst sektör</td></tr>
+<tr><td>sayfa_kaydi</td><td><small>BIGINT</small></td><td>Kaç arama sayfasında görüldüğü</td></tr>
+<tr><td>ilk_gorulme</td><td><small>VARCHAR</small></td><td>İlk görüldüğü an</td></tr>
+<tr><td>son_gorulme</td><td><small>VARCHAR</small></td><td>En son görüldüğü an</td></tr>
+<tr><td>isletme_adi</td><td><small>VARCHAR</small></td><td>İşletme adı (ETBİS profili)</td></tr>
+<tr><td>isletme_turu</td><td><small>VARCHAR</small></td><td>İşletme türü (limited, anonim, şahıs…)</td></tr>
+<tr><td>etbis_kayit_tarihi</td><td><small>VARCHAR</small></td><td>ETBİS'e kayıt tarihi</td></tr>
+<tr><td>hakkinda</td><td><small>VARCHAR</small></td><td>Site hakkında metni</td></tr>
+<tr><td>mal_hizmetler</td><td><small>VARCHAR</small></td><td>Satılan mal/hizmet listesi</td></tr>
+<tr><td>odeme_turleri</td><td><small>VARCHAR</small></td><td>Kabul edilen ödeme türleri</td></tr>
+<tr><td>diger_siteler</td><td><small>VARCHAR</small></td><td>Aynı işletmenin diğer siteleri</td></tr>
+<tr><td>profil_cekim_zamani</td><td><small>VARCHAR</small></td><td>Profilin çekildiği an</td></tr>
+<tr class=h><td>restricted_mersis_no</td><td><small>VARCHAR</small></td><td>KISITLI: kimlik/iletişim bilgisi — ürün katmanına çıkmaz, yalnız iç kullanım</td></tr>
+<tr class=h><td>restricted_vergi_no</td><td><small>VARCHAR</small></td><td>KISITLI: kimlik/iletişim bilgisi — ürün katmanına çıkmaz, yalnız iç kullanım</td></tr>
+<tr class=h><td>restricted_kep_adresleri</td><td><small>VARCHAR</small></td><td>KISITLI: kimlik/iletişim bilgisi — ürün katmanına çıkmaz, yalnız iç kullanım</td></tr>
+<tr><td>profil_var</td><td><small>BOOLEAN</small></td><td>Profil sayfası çekilebildi mi</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr class=h><td>restricted_column_policy</td><td><small>VARCHAR</small></td><td>Kısıtlı sütun politikası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>source_path</td><td><small>VARCHAR</small></td><td>Kaynak dosya yolu</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_geo_entity'>main.geo_entity</h2><p>Coğrafya sözlüğü: mahalle, ilçe, il, NUTS2/NUTS1 bölge ve ülke. Sınır poligonları, merkez noktası, TÜİK ve NUTS kodları.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>level</td><td><small>VARCHAR</small></td><td>Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke</td></tr>
+<tr><td>name</td><td><small>VARCHAR</small></td><td>Ad</td></tr>
+<tr><td>name_norm</td><td><small>VARCHAR</small></td><td>Adın karşılaştırma için sadeleştirilmiş hâli (küçük harf, aksansız)</td></tr>
+<tr><td>parent_geo_id</td><td><small>VARCHAR</small></td><td>Üst coğrafya kimliği</td></tr>
+<tr><td>il_geo_id</td><td><small>VARCHAR</small></td><td>Bağlı olduğu il kimliği</td></tr>
+<tr><td>tuik_il_kodu</td><td><small>VARCHAR</small></td><td>TÜİK il kodu</td></tr>
+<tr><td>web_city_id</td><td><small>VARCHAR</small></td><td>Kaynak sitedeki il kimliği</td></tr>
+<tr><td>web_county_id</td><td><small>VARCHAR</small></td><td>Kaynak sitedeki ilçe kimliği</td></tr>
+<tr><td>web_district_id</td><td><small>VARCHAR</small></td><td>Kaynak sitedeki mahalle kimliği</td></tr>
+<tr><td>tkgm_id</td><td><small>VARCHAR</small></td><td>TKGM (tapu-kadastro) kimliği</td></tr>
+<tr><td>tuik_kodu</td><td><small>VARCHAR</small></td><td>TÜİK idari birim kodu</td></tr>
+<tr><td>tkgm_link_band</td><td><small>VARCHAR</small></td><td>TKGM eşleşme bandı</td></tr>
+<tr><td>tkgm_link_score</td><td><small>DOUBLE</small></td><td>TKGM eşleşme skoru</td></tr>
+<tr><td>tuik_link_band</td><td><small>VARCHAR</small></td><td>TÜİK eşleşme bandı</td></tr>
+<tr><td>tuik_link_score</td><td><small>DOUBLE</small></td><td>TÜİK eşleşme skoru</td></tr>
+<tr><td>link_flags</td><td><small>VARCHAR</small></td><td>Eşleşme uyarıları</td></tr>
+<tr><td>geometry_source</td><td><small>VARCHAR</small></td><td>Sınır poligonunun kaynağı</td></tr>
+<tr><td>geometry</td><td><small>GEOMETRY</small></td><td>Sınır/nokta geometrisi (WGS84)</td></tr>
+<tr><td>centroid_lon</td><td><small>DOUBLE</small></td><td>Merkez noktası boylamı</td></tr>
+<tr><td>centroid_lat</td><td><small>DOUBLE</small></td><td>Merkez noktası enlemi</td></tr>
+<tr><td>bbox_xmin</td><td><small>DOUBLE</small></td><td>Sınırlayıcı kutu batı boylamı</td></tr>
+<tr><td>bbox_ymin</td><td><small>DOUBLE</small></td><td>Sınırlayıcı kutu güney enlemi</td></tr>
+<tr><td>bbox_xmax</td><td><small>DOUBLE</small></td><td>Sınırlayıcı kutu doğu boylamı</td></tr>
+<tr><td>bbox_ymax</td><td><small>DOUBLE</small></td><td>Sınırlayıcı kutu kuzey enlemi</td></tr>
+<tr><td>anchor_source</td><td><small>VARCHAR</small></td><td>Bu coğrafya kaydının çıpa kaynağı</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>mapping_status</td><td><small>VARCHAR</small></td><td>Eşleme durumu (PROPOSED/APPROVED)</td></tr>
+<tr><td>model_version</td><td><small>VARCHAR</small></td><td>Kaydı üreten model sürümü</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+<tr><td>tuik_tur</td><td><small>VARCHAR</small></td><td>TÜİK kod uzayı (mahalle/köy ayrımı)</td></tr>
+<tr><td>nuts_code</td><td><small>VARCHAR</small></td><td>NUTS bölge kodu (TR1 / TR10 / TR100)</td></tr>
+</table>
+<h2 id='main_indicator_observation'>main.indicator_observation</h2><p>Resmî bağlam göstergeleri (TÜİK konut satış/yapı izni/göç/SES, BKM kart harcaması, BDDK il finans) uzun biçimde.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>observation_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>level</td><td><small>VARCHAR</small></td><td>Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke</td></tr>
+<tr><td>domain</td><td><small>VARCHAR</small></td><td>Gösterge alanı (konut satış, banka, göç…)</td></tr>
+<tr><td>metric</td><td><small>VARCHAR</small></td><td>Ölçülen büyüklük</td></tr>
+<tr><td>dim1</td><td><small>VARCHAR</small></td><td>Kırılım 1 (kaynağın kendi boyutu)</td></tr>
+<tr><td>dim2</td><td><small>VARCHAR</small></td><td>Kırılım 2</td></tr>
+<tr><td>period</td><td><small>VARCHAR</small></td><td>Dönem (gün/ay/çeyrek/yıl)</td></tr>
+<tr><td>period_kind</td><td><small>VARCHAR</small></td><td>Dönemin türü: day/month/quarter/year</td></tr>
+<tr><td>raw_value</td><td><small>VARCHAR</small></td><td>Kaynaktaki değerin ham metni</td></tr>
+<tr><td>parsed_value</td><td><small>DOUBLE</small></td><td>Sayıya çevrilmiş değer</td></tr>
+<tr><td>unit</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>series_version</td><td><small>VARCHAR</small></td><td>Seri sürümü (revizyon ayrımı)</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>source_priority</td><td><small>INTEGER</small></td><td>Kaynak önceliği (çakışmada hangisi üstte)</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>recorded_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_indicator_sdmx_observation'>main.indicator_sdmx_observation</h2><p>TÜİK SDMX serilerinin dönem×değer gözlemleri (17,9 milyon).</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>series_id</td><td><small>VARCHAR</small></td><td>Seri kimliği (indicator_sdmx_series.series_id)</td></tr>
+<tr><td>dataflow_id</td><td><small>VARCHAR</small></td><td>TÜİK veri akışı kimliği</td></tr>
+<tr><td>series_key</td><td><small>VARCHAR</small></td><td>Seri anahtarı (boyut indeksleri)</td></tr>
+<tr><td>period</td><td><small>VARCHAR</small></td><td>Dönem (gün/ay/çeyrek/yıl)</td></tr>
+<tr><td>period_label</td><td><small>VARCHAR</small></td><td>Dönemin okunur etiketi</td></tr>
+<tr><td>value</td><td><small>DOUBLE</small></td><td>Değer</td></tr>
+<tr><td>raw_value</td><td><small>VARCHAR</small></td><td>Kaynaktaki değerin ham metni</td></tr>
+<tr><td>attributes_json</td><td><small>VARCHAR</small></td><td>Gözlem nitelikleri (kaynağın bayrakları)</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+</table>
+<h2 id='main_indicator_sdmx_series'>main.indicator_sdmx_series</h2><p>TÜİK SDMX serilerinin tanımı: akış, seri anahtarı, boyut sözlüğü ve bağlandığı coğrafya.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>series_id</td><td><small>VARCHAR</small></td><td>Seri kimliği (indicator_sdmx_series.series_id)</td></tr>
+<tr><td>dataflow_id</td><td><small>VARCHAR</small></td><td>TÜİK veri akışı kimliği</td></tr>
+<tr><td>dataflow_name</td><td><small>VARCHAR</small></td><td>Akışın adı</td></tr>
+<tr><td>dataflow_description</td><td><small>VARCHAR</small></td><td>Akışın açıklaması</td></tr>
+<tr><td>series_key</td><td><small>VARCHAR</small></td><td>Seri anahtarı (boyut indeksleri)</td></tr>
+<tr><td>dimensions_json</td><td><small>VARCHAR</small></td><td>Serinin tüm boyutları (kod + TÜİK'in yazdığı ad)</td></tr>
+<tr><td>ref_area_code</td><td><small>VARCHAR</small></td><td>TÜİK bölge kodu (REF_AREA)</td></tr>
+<tr><td>ref_area_name</td><td><small>VARCHAR</small></td><td>Bölge adı</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>geo_level</td><td><small>VARCHAR</small></td><td>Bağlandığı coğrafi düzey</td></tr>
+<tr><td>observation_count</td><td><small>BIGINT</small></td><td>Kaç gözlemden oluştuğu</td></tr>
+<tr><td>source_prepared_at</td><td><small>VARCHAR</small></td><td>TÜİK'in veriyi hazırladığı an</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>source_path</td><td><small>VARCHAR</small></td><td>Kaynak dosya yolu</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_m_cat'>main.m_cat</h2><p>Kategori eşleme sözlüğü.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>google_place_id</td><td><small>VARCHAR</small></td><td>Kaynağın yer kimliği</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>raw_name</td><td><small>VARCHAR</small></td><td>Kaynaktan geldiği gibi, dokunulmamış değer</td></tr>
+<tr><td>raw_ana_kategori</td><td><small>VARCHAR</small></td><td>Kaynaktan geldiği gibi, dokunulmamış değer</td></tr>
+<tr><td>raw_arama_terimi</td><td><small>VARCHAR</small></td><td>Kaynaktan geldiği gibi, dokunulmamış değer</td></tr>
+<tr><td>has_reviews</td><td><small>BOOLEAN</small></td><td>Yorumu var mı</td></tr>
+<tr><td>predicted_sector</td><td><small>VARCHAR</small></td><td>Üst sektör (Yeme-İçme, Gıda Perakende, …)</td></tr>
+<tr><td>predicted_category</td><td><small>VARCHAR</small></td><td>Modelin/kuralın belirlediği kategori</td></tr>
+<tr><td>confidence</td><td><small>DOUBLE</small></td><td>Güven 0-1</td></tr>
+<tr><td>band</td><td><small>VARCHAR</small></td><td>Güven bandı</td></tr>
+<tr><td>method</td><td><small>VARCHAR</small></td><td>Kullanılan yöntem</td></tr>
+<tr><td>reasons</td><td><small>VARCHAR</small></td><td>Eşleşme gerekçesi (skor bileşenleri)</td></tr>
+<tr><td>classifier_version</td><td><small>VARCHAR</small></td><td>Sınıflandırıcı sürümü</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_m_geo'>main.m_geo</h2><p>Coğrafya eşleme sözlüğü.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>level</td><td><small>VARCHAR</small></td><td>Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke</td></tr>
+<tr><td>il_n</td><td><small>VARCHAR</small></td><td>İl adı (sadeleştirilmiş)</td></tr>
+<tr><td>ilce_n</td><td><small>VARCHAR</small></td><td>İlçe adı (sadeleştirilmiş)</td></tr>
+<tr><td>web_district_id</td><td><small>VARCHAR</small></td><td>Kaynak sitedeki mahalle kimliği</td></tr>
+<tr><td>web_name</td><td><small>VARCHAR</small></td><td>Kaynak sitedeki ad</td></tr>
+<tr><td>anchor_source</td><td><small>VARCHAR</small></td><td>Bu coğrafya kaydının çıpa kaynağı</td></tr>
+<tr><td>tkgm_id</td><td><small>VARCHAR</small></td><td>TKGM (tapu-kadastro) kimliği</td></tr>
+<tr><td>tkgm_band</td><td><small>VARCHAR</small></td><td>TKGM eşleşme bandı</td></tr>
+<tr><td>tkgm_score</td><td><small>DOUBLE</small></td><td>TKGM eşleşme skoru</td></tr>
+<tr><td>tkgm_flags</td><td><small>VARCHAR</small></td><td>TKGM eşleşme uyarıları</td></tr>
+<tr><td>tuik_kodu</td><td><small>VARCHAR</small></td><td>TÜİK idari birim kodu</td></tr>
+<tr><td>tuik_band</td><td><small>VARCHAR</small></td><td>TÜİK eşleşme bandı</td></tr>
+<tr><td>tuik_score</td><td><small>DOUBLE</small></td><td>TÜİK eşleşme skoru</td></tr>
+<tr><td>tuik_flags</td><td><small>VARCHAR</small></td><td>TÜİK eşleşme uyarıları</td></tr>
+<tr><td>status</td><td><small>VARCHAR</small></td><td>Durum</td></tr>
+<tr><td>matcher_version</td><td><small>VARCHAR</small></td><td>Eşleştirici sürümü</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_menu_item_observation'>main.menu_item_observation</h2><p>Çevrimiçi sipariş platformu menü kalemleri (ad, fiyat, indirimli fiyat, tükendi bilgisi).</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>observation_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>poi_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>venue_code</td><td><small>VARCHAR</small></td><td>Platform mekân kodu</td></tr>
+<tr><td>platform</td><td><small>VARCHAR</small></td><td>Platform adı</td></tr>
+<tr><td>observed_at</td><td><small>VARCHAR</small></td><td>Gözlem anı</td></tr>
+<tr><td>product_ref</td><td><small>VARCHAR</small></td><td>Platformdaki ürün referansı</td></tr>
+<tr><td>title</td><td><small>VARCHAR</small></td><td>Başlık</td></tr>
+<tr><td>description</td><td><small>VARCHAR</small></td><td>Açıklama</td></tr>
+<tr><td>category_title</td><td><small>VARCHAR</small></td><td>Kategori başlığı</td></tr>
+<tr><td>category_ref</td><td><small>VARCHAR</small></td><td>Platformdaki kategori referansı</td></tr>
+<tr><td>raw_original_price</td><td><small>VARCHAR</small></td><td>Kaynaktan geldiği gibi, dokunulmamış değer</td></tr>
+<tr><td>original_price</td><td><small>DOUBLE</small></td><td>Liste fiyatı</td></tr>
+<tr><td>raw_discounted_price</td><td><small>VARCHAR</small></td><td>Kaynaktan geldiği gibi, dokunulmamış değer</td></tr>
+<tr><td>discounted_price</td><td><small>DOUBLE</small></td><td>İndirimli fiyat</td></tr>
+<tr><td>is_sold_out</td><td><small>BOOLEAN</small></td><td>Tükendi mi</td></tr>
+<tr><td>currency</td><td><small>VARCHAR</small></td><td>Para birimi</td></tr>
+<tr><td>parse_error</td><td><small>VARCHAR</small></td><td>Ayrıştırma hatası notu</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_meta_kolon'>main.meta_kolon</h2><p>Bu veri sözlüğünün sütun açıklamaları.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>sema</td><td><small>VARCHAR</small></td><td>Şema</td></tr>
+<tr><td>tablo</td><td><small>VARCHAR</small></td><td>Tablo</td></tr>
+<tr><td>kolon</td><td><small>VARCHAR</small></td><td>Sütun</td></tr>
+<tr><td>sira</td><td><small>INTEGER</small></td><td>Sütun sırası</td></tr>
+<tr><td>tip</td><td><small>VARCHAR</small></td><td>Veri tipi</td></tr>
+<tr><td>aciklama</td><td><small>VARCHAR</small></td><td>Açıklama</td></tr>
+<tr><td>otomatik</td><td><small>BOOLEAN</small></td><td>Açıklama kalıptan mı üretildi</td></tr>
+<tr><td>hassas</td><td><small>BOOLEAN</small></td><td>Kısıtlı (kişisel/kimlik) sütun mu</td></tr>
+</table>
+<h2 id='main_meta_tablo'>main.meta_tablo</h2><p>Bu veri sözlüğünün tablo açıklamaları.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>sema</td><td><small>VARCHAR</small></td><td>Şema</td></tr>
+<tr><td>tablo</td><td><small>VARCHAR</small></td><td>Tablo</td></tr>
+<tr><td>satir_sayisi</td><td><small>BIGINT</small></td><td>Satır sayısı</td></tr>
+<tr><td>kolon_sayisi</td><td><small>INTEGER</small></td><td>Sütun sayısı</td></tr>
+<tr><td>aciklama</td><td><small>VARCHAR</small></td><td>Açıklama</td></tr>
+<tr><td>katman</td><td><small>VARCHAR</small></td><td>Katman</td></tr>
+<tr><td>guncellenme</td><td><small>VARCHAR</small></td><td>Sözlüğün üretim zamanı</td></tr>
+</table>
+<h2 id='main_poi'>main.poi</h2><p>İşletme/mekân kayıtları. Kimlik bizim (poi_id); Google, OSM, Yemeksepeti, market şubesi, EPDK şarj ve KTB turizm kaynakları ad+konum ile eşleştirilip tek kayda bağlanır. Kaynaklar arası DEĞER birleştirilmez; her kaynağın kendi sütunları durur.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>poi_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>source_place_id</td><td><small>VARCHAR</small></td><td>Kaynağın kendi kayıt kimliği (bizim kimliğimiz değil; source_id_kind türünü söyler)</td></tr>
+<tr><td>name</td><td><small>VARCHAR</small></td><td>Ad</td></tr>
+<tr><td>raw_category</td><td><small>VARCHAR</small></td><td>Kaynakta yazan ham kategori metni</td></tr>
+<tr><td>predicted_category</td><td><small>VARCHAR</small></td><td>Modelin/kuralın belirlediği kategori</td></tr>
+<tr><td>predicted_sector</td><td><small>VARCHAR</small></td><td>Üst sektör (Yeme-İçme, Gıda Perakende, …)</td></tr>
+<tr><td>category_method</td><td><small>VARCHAR</small></td><td>Kategori hangi yolla bulundu (kaynak türü, mekânsal eşleşme, ad modeli…)</td></tr>
+<tr><td>category_confidence</td><td><small>DOUBLE</small></td><td>Kategori güveni 0-1</td></tr>
+<tr><td>category_band</td><td><small>VARCHAR</small></td><td>Kategori güven bandı (high/review/low)</td></tr>
+<tr><td>rating</td><td><small>DOUBLE</small></td><td>Puan (kaynağın kendi ölçeği)</td></tr>
+<tr><td>rating_count</td><td><small>BIGINT</small></td><td>Puan veren sayısı</td></tr>
+<tr><td>review_count</td><td><small>BIGINT</small></td><td>Yorum sayısı</td></tr>
+<tr class=h><td>phone</td><td><small>VARCHAR</small></td><td>KISITLI: telefon numarası — ürün katmanına çıkmaz</td></tr>
+<tr><td>address_raw</td><td><small>VARCHAR</small></td><td>Kaynaktaki adres metni</td></tr>
+<tr><td>lon</td><td><small>DOUBLE</small></td><td>Boylam (WGS84)</td></tr>
+<tr><td>lat</td><td><small>DOUBLE</small></td><td>Enlem (WGS84)</td></tr>
+<tr><td>geometry</td><td><small>GEOMETRY</small></td><td>Sınır/nokta geometrisi (WGS84)</td></tr>
+<tr><td>source_il</td><td><small>VARCHAR</small></td><td>Kaynağın belirttiği il</td></tr>
+<tr><td>source_il_reliability</td><td><small>VARCHAR</small></td><td>Kaynak il bilgisinin güvenilirliği</td></tr>
+<tr><td>assigned_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>assignment_method</td><td><small>VARCHAR</small></td><td>Coğrafyaya hangi yöntemle bağlandı (poligon içi, kaynak geo_id, ad eşleşmesi…)</td></tr>
+<tr><td>last_observed_at</td><td><small>VARCHAR</small></td><td>Kaynakta en son görüldüğü an</td></tr>
+<tr><td>observation_count</td><td><small>BIGINT</small></td><td>Kaç gözlemden oluştuğu</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+<tr><td>coord_validity</td><td><small>VARCHAR</small></td><td>Koordinat geçerliliği: valid / MISSING / OUT_OF_TURKEY / bozuk</td></tr>
+<tr><td>spatial_geo_id</td><td><small>VARCHAR</small></td><td>Yalnız koordinatın düştüğü poligon</td></tr>
+<tr><td>context_geo_id</td><td><small>VARCHAR</small></td><td>Yalnız adres metninden bulunan coğrafya</td></tr>
+<tr><td>context_match</td><td><small>VARCHAR</small></td><td>Kaynağın yazdığı adres ile poligon atamasının uyumu</td></tr>
+<tr><td>context_il_norm</td><td><small>VARCHAR</small></td><td>Kaynak adresinden çıkan il (sadeleştirilmiş)</td></tr>
+<tr><td>context_ilce_norm</td><td><small>VARCHAR</small></td><td>Kaynak adresinden çıkan ilçe (sadeleştirilmiş)</td></tr>
+<tr><td>context_mahalle_norm</td><td><small>VARCHAR</small></td><td>Kaynak adresinden çıkan mahalle (sadeleştirilmiş)</td></tr>
+<tr><td>assignment_confidence</td><td><small>DOUBLE</small></td><td>Coğrafya atama güveni 0-1</td></tr>
+<tr><td>assignment_flags</td><td><small>VARCHAR</small></td><td>Atama uyarıları (koordinat yok, poligon dışı, kaynakla çelişki…)</td></tr>
+<tr><td>assigned_ilce_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>ilce_assignment_confidence</td><td><small>DOUBLE</small></td><td>İlçe atama güveni 0-1</td></tr>
+<tr><td>source_coverage</td><td><small>VARCHAR</small></td><td>Bu kaydı hangi kaynakların gördüğü (google_only, google+osm, marketfiyati_only…)</td></tr>
+<tr><td>primary_source</td><td><small>VARCHAR</small></td><td>Kaydın ana kaynağı</td></tr>
+<tr><td>osm_id</td><td><small>VARCHAR</small></td><td>OpenStreetMap nesne kimliği</td></tr>
+<tr><td>osm_name</td><td><small>VARCHAR</small></td><td>OSM'deki ad</td></tr>
+<tr><td>osm_amenity</td><td><small>VARCHAR</small></td><td>OSM amenity etiketi</td></tr>
+<tr><td>osm_shop</td><td><small>VARCHAR</small></td><td>OSM shop etiketi</td></tr>
+<tr><td>osm_cuisine</td><td><small>VARCHAR</small></td><td>OSM mutfak etiketi</td></tr>
+<tr class=h><td>osm_phone</td><td><small>VARCHAR</small></td><td>KISITLI: OSM'deki telefon — ürün katmanına çıkmaz</td></tr>
+<tr><td>osm_website</td><td><small>VARCHAR</small></td><td>OSM'deki web sitesi</td></tr>
+<tr><td>osm_opening_hours</td><td><small>VARCHAR</small></td><td>OSM'deki çalışma saatleri</td></tr>
+<tr><td>osm_lon</td><td><small>DOUBLE</small></td><td>OSM boylamı</td></tr>
+<tr><td>osm_lat</td><td><small>DOUBLE</small></td><td>OSM enlemi</td></tr>
+<tr><td>osm_source_row_hash</td><td><small>VARCHAR</small></td><td>Eşleşen OSM satırının içerik özeti</td></tr>
+<tr><td>osm_match_score</td><td><small>DOUBLE</small></td><td>OSM eşleşme skoru 0-1</td></tr>
+<tr><td>osm_match_band</td><td><small>VARCHAR</small></td><td>OSM eşleşme bandı</td></tr>
+<tr><td>ys_venue_code</td><td><small>VARCHAR</small></td><td>Sipariş platformundaki mekân kodu</td></tr>
+<tr><td>ys_name</td><td><small>VARCHAR</small></td><td>Platformdaki ad</td></tr>
+<tr><td>ys_url</td><td><small>VARCHAR</small></td><td>Platform sayfası</td></tr>
+<tr><td>ys_cuisine_json</td><td><small>VARCHAR</small></td><td>Platformdaki mutfak listesi</td></tr>
+<tr><td>ys_price_range</td><td><small>VARCHAR</small></td><td>Platform fiyat aralığı</td></tr>
+<tr><td>ys_lon</td><td><small>DOUBLE</small></td><td>Platform boylamı</td></tr>
+<tr><td>ys_lat</td><td><small>DOUBLE</small></td><td>Platform enlemi</td></tr>
+<tr><td>ys_match_score</td><td><small>DOUBLE</small></td><td>Platform eşleşme skoru</td></tr>
+<tr><td>ys_match_band</td><td><small>VARCHAR</small></td><td>Platform eşleşme bandı</td></tr>
+<tr><td>ys_source_row_hash</td><td><small>VARCHAR</small></td><td>Eşleşen platform satırının özeti</td></tr>
+<tr><td>source_id_kind</td><td><small>VARCHAR</small></td><td>Kaynak kimliğin türü: gerçek platform kimliği mi, toplayıcının ürettiği yapay kimlik mi</td></tr>
+<tr><td>sector_hint</td><td><small>VARCHAR</small></td><td>Arama terimlerinden ölçülmüş sektör ipucu</td></tr>
+<tr><td>sector_hint_precision</td><td><small>DOUBLE</small></td><td>Sektör ipucunun ölçülmüş isabeti</td></tr>
+<tr><td>sector_hint_source</td><td><small>VARCHAR</small></td><td>Sektör ipucunun dayandığı kaynak</td></tr>
+<tr><td>coord_recovery</td><td><small>VARCHAR</small></td><td>Bozuk koordinatın nasıl kurtarıldığı</td></tr>
+<tr><td>source_path</td><td><small>VARCHAR</small></td><td>Kaynak dosya yolu</td></tr>
+</table>
+<h2 id='main_poi_category_candidate'>main.poi_category_candidate</h2><p>Modelin önerdiği ama otomatik uygulanmayan kategori adayları (insan onayı bekler).</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>poi_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>category</td><td><small>VARCHAR</small></td><td>Kategori</td></tr>
+<tr><td>sector</td><td><small>VARCHAR</small></td><td>Sektör</td></tr>
+<tr><td>method</td><td><small>VARCHAR</small></td><td>Kullanılan yöntem</td></tr>
+<tr><td>confidence</td><td><small>DOUBLE</small></td><td>Güven 0-1</td></tr>
+<tr><td>band</td><td><small>VARCHAR</small></td><td>Güven bandı</td></tr>
+<tr><td>evidence</td><td><small>VARCHAR</small></td><td>Kararın dayandığı kanıt</td></tr>
+<tr><td>flags</td><td><small>VARCHAR</small></td><td>Uyarı bayrakları</td></tr>
+<tr><td>version</td><td><small>VARCHAR</small></td><td>Sürüm</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+<tr><td>status</td><td><small>VARCHAR</small></td><td>Durum</td></tr>
+</table>
+<h2 id='main_poi_lifecycle_osm'>main.poi_lifecycle_osm</h2><p>OSM anlık görüntülerinden türeyen işletme yaşam döngüsü (açılış/kapanış izleri).</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>osm_ref</td><td><small>VARCHAR</small></td><td>OSM nesne referansı (tip+kimlik)</td></tr>
+<tr><td>osm_type</td><td><small>VARCHAR</small></td><td>OSM nesne tipi (node/way/relation)</td></tr>
+<tr><td>osm_id</td><td><small>VARCHAR</small></td><td>OpenStreetMap nesne kimliği</td></tr>
+<tr><td>osm_category</td><td><small>VARCHAR</small></td><td>OSM kategori etiketi</td></tr>
+<tr><td>category_group</td><td><small>VARCHAR</small></td><td>Kategori grubu (yeme-içme, perakende…)</td></tr>
+<tr><td>brand</td><td><small>VARCHAR</small></td><td>Marka</td></tr>
+<tr><td>name</td><td><small>VARCHAR</small></td><td>Ad</td></tr>
+<tr><td>lon</td><td><small>DOUBLE</small></td><td>Boylam (WGS84)</td></tr>
+<tr><td>lat</td><td><small>DOUBLE</small></td><td>Enlem (WGS84)</td></tr>
+<tr><td>first_seen_map</td><td><small>VARCHAR</small></td><td>Haritada ilk görüldüğü anlık görüntü</td></tr>
+<tr><td>last_seen_map</td><td><small>VARCHAR</small></td><td>Haritada son görüldüğü anlık görüntü</td></tr>
+<tr><td>map_status</td><td><small>VARCHAR</small></td><td>Harita durumu (halen var / kalkmış)</td></tr>
+<tr><td>snapshot_count</td><td><small>INTEGER</small></td><td>Kaç anlık görüntüde göründüğü</td></tr>
+<tr><td>name_change_count</td><td><small>INTEGER</small></td><td>Ad değişikliği sayısı</td></tr>
+<tr><td>brand_change_count</td><td><small>INTEGER</small></td><td>Marka değişikliği sayısı</td></tr>
+<tr><td>move_count</td><td><small>INTEGER</small></td><td>Konum değişikliği sayısı</td></tr>
+<tr><td>history_json</td><td><small>VARCHAR</small></td><td>Anlık görüntü geçmişi (ham)</td></tr>
+<tr><td>left_censored</td><td><small>BOOLEAN</small></td><td>İlk anlık görüntüden önce de var olabilir</td></tr>
+<tr><td>right_open</td><td><small>BOOLEAN</small></td><td>Son anlık görüntüde hâlâ var (kapanış gözlenmedi)</td></tr>
+<tr><td>event_semantics</td><td><small>VARCHAR</small></td><td>UYARI: bu satır haritadaki değişimi anlatır; işletmenin gerçekten açıldığı/kapandığı anlamına gelmez</td></tr>
+<tr><td>assigned_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>assigned_ilce_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>poi_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_poi_presence_osm'>main.poi_presence_osm</h2><p>OSM anlık görüntülerinde bir işletmenin görülüp görülmediği.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>snapshot_date</td><td><small>VARCHAR</small></td><td>Anlık görüntünün tarihi</td></tr>
+<tr><td>osm_ref</td><td><small>VARCHAR</small></td><td>OSM nesne referansı (tip+kimlik)</td></tr>
+<tr><td>osm_category</td><td><small>VARCHAR</small></td><td>OSM kategori etiketi</td></tr>
+<tr><td>brand</td><td><small>VARCHAR</small></td><td>Marka</td></tr>
+<tr><td>name</td><td><small>VARCHAR</small></td><td>Ad</td></tr>
+<tr><td>lon</td><td><small>DOUBLE</small></td><td>Boylam (WGS84)</td></tr>
+<tr><td>lat</td><td><small>DOUBLE</small></td><td>Enlem (WGS84)</td></tr>
+<tr><td>event_semantics</td><td><small>VARCHAR</small></td><td>UYARI: bu satır haritadaki değişimi anlatır; işletmenin gerçekten açıldığı/kapandığı anlamına gelmez</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_poi_snapshot'>main.poi_snapshot</h2><p>POI kaynak anlık görüntüleri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>observation_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>poi_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>observed_at</td><td><small>VARCHAR</small></td><td>Gözlem anı</td></tr>
+<tr><td>search_term</td><td><small>VARCHAR</small></td><td>Toplamada kullanılan arama terimi</td></tr>
+<tr><td>raw_rating</td><td><small>VARCHAR</small></td><td>Kaynaktan geldiği gibi, dokunulmamış değer</td></tr>
+<tr><td>raw_rating_count</td><td><small>VARCHAR</small></td><td>Kaynaktan geldiği gibi, dokunulmamış değer</td></tr>
+<tr><td>raw_review_count</td><td><small>VARCHAR</small></td><td>Kaynaktan geldiği gibi, dokunulmamış değer</td></tr>
+<tr><td>raw_hours</td><td><small>VARCHAR</small></td><td>Kaynaktan geldiği gibi, dokunulmamış değer</td></tr>
+<tr><td>payload_sha256</td><td><small>VARCHAR</small></td><td>Kaynak yanıtının içerik özeti</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+</table>
+<h2 id='main_poi_source_link'>main.poi_source_link</h2><p>Bir işletme kaydının hangi kaynak kaydından geldiği/eşleştiği. Eşleşme skoru, bandı ve gerekçesi burada; 'review' bandındakiler onay bekler.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>link_id</td><td><small>VARCHAR</small></td><td>Bağlantı kimliği (tekil)</td></tr>
+<tr><td>poi_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>source_system</td><td><small>VARCHAR</small></td><td>Kaynak sistem</td></tr>
+<tr><td>source_record_id</td><td><small>VARCHAR</small></td><td>Kaynaktaki kayıt kimliği</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>match_score</td><td><small>DOUBLE</small></td><td>Eşleşme skoru 0-1</td></tr>
+<tr><td>match_band</td><td><small>VARCHAR</small></td><td>Eşleşme bandı (virtually_certain/very_high/high/review)</td></tr>
+<tr><td>matcher_version</td><td><small>VARCHAR</small></td><td>Eşleştirici sürümü</td></tr>
+<tr><td>link_status</td><td><small>VARCHAR</small></td><td>Bağlantı durumu (merged/review/primary)</td></tr>
+<tr><td>reasons</td><td><small>VARCHAR</small></td><td>Eşleşme gerekçesi (skor bileşenleri)</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_population_observation'>main.population_observation</h2><p>Nüfus gözlemleri (TÜİK ADNKS, mahalle/ilçe/il).</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>observation_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>level</td><td><small>VARCHAR</small></td><td>Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke</td></tr>
+<tr><td>metric</td><td><small>VARCHAR</small></td><td>Ölçülen büyüklük</td></tr>
+<tr><td>raw_value</td><td><small>VARCHAR</small></td><td>Kaynaktaki değerin ham metni</td></tr>
+<tr><td>parsed_value</td><td><small>BIGINT</small></td><td>Sayıya çevrilmiş değer</td></tr>
+<tr><td>unit</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>period</td><td><small>VARCHAR</small></td><td>Dönem (gün/ay/çeyrek/yıl)</td></tr>
+<tr><td>period_assignment</td><td><small>VARCHAR</small></td><td>Dönemin hangi kurala göre atandığı</td></tr>
+<tr><td>observation_kind</td><td><small>VARCHAR</small></td><td>Gözlem türü</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>source_priority</td><td><small>INTEGER</small></td><td>Kaynak önceliği (çakışmada hangisi üstte)</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>recorded_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_price_observation'>main.price_observation</h2><p>GAYRİMENKUL fiyat gözlemleri (mahalle/ilçe düzeyinde satılık-kiralık m² fiyatı vb.), uzun biçim.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>observation_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>level</td><td><small>VARCHAR</small></td><td>Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke</td></tr>
+<tr><td>category</td><td><small>VARCHAR</small></td><td>Kategori</td></tr>
+<tr><td>metric</td><td><small>VARCHAR</small></td><td>Ölçülen büyüklük</td></tr>
+<tr><td>raw_value</td><td><small>VARCHAR</small></td><td>Kaynaktaki değerin ham metni</td></tr>
+<tr><td>parsed_value</td><td><small>DOUBLE</small></td><td>Sayıya çevrilmiş değer</td></tr>
+<tr><td>unit</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>period</td><td><small>VARCHAR</small></td><td>Dönem (gün/ay/çeyrek/yıl)</td></tr>
+<tr><td>observation_kind</td><td><small>VARCHAR</small></td><td>Gözlem türü</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>source_priority</td><td><small>INTEGER</small></td><td>Kaynak önceliği (çakışmada hangisi üstte)</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>recorded_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+<tr><td>subcategory</td><td><small>VARCHAR</small></td><td>Alt kategori</td></tr>
+<tr><td>source_updated_at</td><td><small>VARCHAR</small></td><td>Kaynaktaki güncellenme zamanı</td></tr>
+<tr><td>n_copies</td><td><small>INTEGER</small></td><td>Aynı değerin kaç kaynak kopyasında görüldüğü</td></tr>
+<tr><td>source_table</td><td><small>VARCHAR</small></td><td>Bu satırın türediği ambar tablosu</td></tr>
+</table>
+<h2 id='main_product'>main.product</h2><p>Ürün sözlüğü: market ürün kataloğu, akaryakıt ürünleri, hal ürünleri. Fiyat gözlemleri buraya bağlanır.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>product_id</td><td><small>VARCHAR</small></td><td>Ürün kimliği (product.product_id)</td></tr>
+<tr><td>source_system</td><td><small>VARCHAR</small></td><td>Kaynak sistem</td></tr>
+<tr><td>product_code</td><td><small>VARCHAR</small></td><td>Kaynaktaki ürün kodu</td></tr>
+<tr><td>name</td><td><small>VARCHAR</small></td><td>Ad</td></tr>
+<tr><td>brand</td><td><small>VARCHAR</small></td><td>Marka</td></tr>
+<tr><td>unit</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>quantity_unit</td><td><small>VARCHAR</small></td><td>Miktar birimi</td></tr>
+<tr><td>category_main</td><td><small>VARCHAR</small></td><td>Ana kategori</td></tr>
+<tr><td>category_menu</td><td><small>VARCHAR</small></td><td>Menü/alt kategori</td></tr>
+<tr><td>categories_json</td><td><small>VARCHAR</small></td><td>Kaynaktaki kategori listesi</td></tr>
+<tr><td>image_url</td><td><small>VARCHAR</small></td><td>Ürün görseli</td></tr>
+<tr><td>first_seen_at</td><td><small>VARCHAR</small></td><td>İlk görülme zamanı</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_product_price_observation'>main.product_price_observation</h2><p>ÜRÜN fiyat gözlemleri: market şubesi×ürün rafı, Opet ilçe×gün akaryakıt, HKS ulusal hal, İzmir hal, market il günlük geçmiş. Gayrimenkul fiyatından ayrı tablodur (farklı grain).</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>observation_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>source_system</td><td><small>VARCHAR</small></td><td>Kaynak sistem</td></tr>
+<tr><td>poi_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>level</td><td><small>VARCHAR</small></td><td>Coğrafi düzey: mahalle/ilce/il/nuts2/nuts1/ulke</td></tr>
+<tr><td>product_id</td><td><small>VARCHAR</small></td><td>Ürün kimliği (product.product_id)</td></tr>
+<tr><td>product_code</td><td><small>VARCHAR</small></td><td>Kaynaktaki ürün kodu</td></tr>
+<tr><td>price_kind</td><td><small>VARCHAR</small></td><td>Fiyat türü: raf (shelf), pompa listesi, hal ortalaması…</td></tr>
+<tr><td>price_value</td><td><small>DOUBLE</small></td><td>Fiyat</td></tr>
+<tr><td>price_min</td><td><small>DOUBLE</small></td><td>Asgari fiyat</td></tr>
+<tr><td>price_max</td><td><small>DOUBLE</small></td><td>Azami fiyat</td></tr>
+<tr><td>unit_price_value</td><td><small>DOUBLE</small></td><td>Birim fiyat (kg/lt başına)</td></tr>
+<tr><td>unit_price_text</td><td><small>VARCHAR</small></td><td>Birim fiyatın kaynaktaki metni</td></tr>
+<tr><td>volume_value</td><td><small>DOUBLE</small></td><td>İşlem hacmi (hal bültenleri)</td></tr>
+<tr><td>unit</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>currency</td><td><small>VARCHAR</small></td><td>Para birimi</td></tr>
+<tr><td>discount_flag</td><td><small>VARCHAR</small></td><td>İndirimli mi</td></tr>
+<tr><td>discount_ratio</td><td><small>VARCHAR</small></td><td>İndirim oranı</td></tr>
+<tr><td>promo_text</td><td><small>VARCHAR</small></td><td>Promosyon metni</td></tr>
+<tr><td>observed_at</td><td><small>VARCHAR</small></td><td>Gözlem anı</td></tr>
+<tr><td>period</td><td><small>VARCHAR</small></td><td>Dönem (gün/ay/çeyrek/yıl)</td></tr>
+<tr><td>period_kind</td><td><small>VARCHAR</small></td><td>Dönemin türü: day/month/quarter/year</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>source_path</td><td><small>VARCHAR</small></td><td>Kaynak dosya yolu</td></tr>
+<tr><td>recorded_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='main_sdmx_geo_map'>main.sdmx_geo_map</h2><p>TÜİK SDMX bölge kodu (REF_AREA) → bizim geo_id eşlemesi ve hangi yöntemle eşlendiği.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>ref_area_code</td><td><small>VARCHAR</small></td><td>TÜİK bölge kodu (REF_AREA)</td></tr>
+<tr><td>ref_area_name</td><td><small>VARCHAR</small></td><td>Bölge adı</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>geo_level</td><td><small>VARCHAR</small></td><td>Bağlandığı coğrafi düzey</td></tr>
+<tr><td>map_method</td><td><small>VARCHAR</small></td><td>Eşleme yöntemi</td></tr>
+</table>
+<h2 id='main_venue_delivery_observation'>main.venue_delivery_observation</h2><p>Platform teslimat/puan gözlemleri: puan, minimum sepet, teslimat süresi ve ücreti.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>observation_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>poi_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>venue_code</td><td><small>VARCHAR</small></td><td>Platform mekân kodu</td></tr>
+<tr><td>platform</td><td><small>VARCHAR</small></td><td>Platform adı</td></tr>
+<tr><td>observed_at</td><td><small>VARCHAR</small></td><td>Gözlem anı</td></tr>
+<tr><td>page_kind</td><td><small>VARCHAR</small></td><td>Sayfa türü</td></tr>
+<tr><td>rating_value</td><td><small>DOUBLE</small></td><td>Puan</td></tr>
+<tr><td>rating_count</td><td><small>INTEGER</small></td><td>Puan veren sayısı</td></tr>
+<tr><td>minimum_order_value</td><td><small>DOUBLE</small></td><td>Minimum sepet tutarı</td></tr>
+<tr><td>delivery_time_lower_min</td><td><small>INTEGER</small></td><td>Teslimat süresi alt sınırı (dk)</td></tr>
+<tr><td>delivery_time_upper_min</td><td><small>INTEGER</small></td><td>Teslimat süresi üst sınırı (dk)</td></tr>
+<tr><td>delivery_fee_total</td><td><small>DOUBLE</small></td><td>Teslimat ücreti</td></tr>
+<tr><td>delivery_fee_original</td><td><small>DOUBLE</small></td><td>İndirimsiz teslimat ücreti</td></tr>
+<tr><td>delivery_provider</td><td><small>VARCHAR</small></td><td>Teslimatı yapan</td></tr>
+<tr><td>delivery_hours_json</td><td><small>VARCHAR</small></td><td>Teslimat saatleri</td></tr>
+<tr><td>metrics_note</td><td><small>VARCHAR</small></td><td>Ölçüm notu (platform varsayılan konumu vb.)</td></tr>
+<tr><td>jsonld_rating</td><td><small>DOUBLE</small></td><td>Sayfa işaretlemesindeki puan</td></tr>
+<tr><td>jsonld_rating_count</td><td><small>INTEGER</small></td><td>Sayfa işaretlemesindeki puan sayısı</td></tr>
+<tr><td>price_range</td><td><small>VARCHAR</small></td><td>Fiyat aralığı</td></tr>
+<tr><td>cuisine_json</td><td><small>VARCHAR</small></td><td>Mutfak listesi</td></tr>
+<tr><td>currency</td><td><small>VARCHAR</small></td><td>Para birimi</td></tr>
+<tr><td>acquisition_class</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi: official_public (resmî açık) / web_research (web'den) </td></tr>
+<tr><td>distribution_class</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı: public (paylaşılabilir) / internal (iç kullanım) / restricted (kısıtlı)</td></tr>
+<tr><td>source_file_id</td><td><small>VARCHAR</small></td><td>Kaynak dosya kimliği (envanter)</td></tr>
+<tr><td>source_row_number</td><td><small>BIGINT</small></td><td>Kaynak dosyadaki satır sırası</td></tr>
+<tr><td>source_row_hash</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256) — izlenebilirlik</td></tr>
+<tr><td>staging_view</td><td><small>VARCHAR</small></td><td>Hangi ambar (staging) tablosundan geldiği</td></tr>
+<tr><td>created_at</td><td><small>VARCHAR</small></td><td>Bu satırın veritabanına yazılma zamanı (UTC)</td></tr>
+</table>
+<h2 id='urun_cografya'>urun.cografya</h2><p>ÜRÜN KATMANI — mahalle/ilçe/il/bölge sözlüğü ve sınırları.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>duzey</td><td><small>VARCHAR</small></td><td>Coğrafi düzey</td></tr>
+<tr><td>ad</td><td><small>VARCHAR</small></td><td>Ad</td></tr>
+<tr><td>ust_geo_id</td><td><small>VARCHAR</small></td><td>Üst coğrafya kimliği</td></tr>
+<tr><td>il_geo_id</td><td><small>VARCHAR</small></td><td>Bağlı olduğu il kimliği</td></tr>
+<tr><td>tuik_kodu</td><td><small>VARCHAR</small></td><td>TÜİK idari birim kodu</td></tr>
+<tr><td>nuts_kodu</td><td><small>VARCHAR</small></td><td>NUTS bölge kodu</td></tr>
+<tr><td>merkez_enlem</td><td><small>DOUBLE</small></td><td>Merkez noktası enlemi</td></tr>
+<tr><td>merkez_boylam</td><td><small>DOUBLE</small></td><td>Merkez noktası boylamı</td></tr>
+<tr><td>sinir_poligonu</td><td><small>GEOMETRY</small></td><td>Sınır poligonu (WGS84)</td></tr>
+<tr><td>sinir_kaynagi</td><td><small>VARCHAR</small></td><td>Sınır poligonunun kaynağı</td></tr>
+<tr><td>eslesme_durumu</td><td><small>VARCHAR</small></td><td>Eşleme durumu</td></tr>
+</table>
+<h2 id='urun_eticaret_sitesi'>urun.eticaret_sitesi</h2><p>ÜRÜN KATMANI — ETBİS e-ticaret siteleri (MERSİS/vergi/KEP çıkarılmış).</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>site_id</td><td><small>VARCHAR</small></td><td>ETBİS site kimliği</td></tr>
+<tr><td>unvan</td><td><small>VARCHAR</small></td><td>Ticaret unvanı (tüzel kişi adı)</td></tr>
+<tr><td>site_adresi</td><td><small>VARCHAR</small></td><td>Site adresi</td></tr>
+<tr><td>mobil_uygulama</td><td><small>VARCHAR</small></td><td>Mobil uygulama adı</td></tr>
+<tr><td>il_adi</td><td><small>VARCHAR</small></td><td>İl adı</td></tr>
+<tr><td>ilce_adi</td><td><small>VARCHAR</small></td><td>İlçe adı</td></tr>
+<tr><td>sektor</td><td><small>VARCHAR</small></td><td>Üst sektör</td></tr>
+<tr><td>isletme_adi</td><td><small>VARCHAR</small></td><td>İşletme adı (ETBİS profili)</td></tr>
+<tr><td>isletme_turu</td><td><small>VARCHAR</small></td><td>İşletme türü (limited, anonim, şahıs…)</td></tr>
+<tr><td>etbis_kayit_tarihi</td><td><small>VARCHAR</small></td><td>ETBİS'e kayıt tarihi</td></tr>
+<tr><td>hakkinda</td><td><small>VARCHAR</small></td><td>Site hakkında metni</td></tr>
+<tr><td>mal_hizmetler</td><td><small>VARCHAR</small></td><td>Satılan mal/hizmet listesi</td></tr>
+<tr><td>odeme_turleri</td><td><small>VARCHAR</small></td><td>Kabul edilen ödeme türleri</td></tr>
+<tr><td>diger_siteler</td><td><small>VARCHAR</small></td><td>Aynı işletmenin diğer siteleri</td></tr>
+<tr><td>ilk_gorulme</td><td><small>VARCHAR</small></td><td>İlk görüldüğü an</td></tr>
+<tr><td>son_gorulme</td><td><small>VARCHAR</small></td><td>En son görüldüğü an</td></tr>
+</table>
+<h2 id='urun_gosterge_gozlem'>urun.gosterge_gozlem</h2><p>ÜRÜN KATMANI — resmî bağlam göstergeleri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>gozlem_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>duzey</td><td><small>VARCHAR</small></td><td>Coğrafi düzey</td></tr>
+<tr><td>alan</td><td><small>VARCHAR</small></td><td>Gösterge alanı</td></tr>
+<tr><td>olcut</td><td><small>VARCHAR</small></td><td>Ölçülen büyüklük</td></tr>
+<tr><td>kirilim1</td><td><small>VARCHAR</small></td><td>Kırılım 1</td></tr>
+<tr><td>kirilim2</td><td><small>VARCHAR</small></td><td>Kırılım 2</td></tr>
+<tr><td>donem</td><td><small>VARCHAR</small></td><td>Dönem</td></tr>
+<tr><td>donem_turu</td><td><small>VARCHAR</small></td><td>Dönemin türü</td></tr>
+<tr><td>deger</td><td><small>DOUBLE</small></td><td>Değer</td></tr>
+<tr><td>birim</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>seri_surumu</td><td><small>VARCHAR</small></td><td>Seri sürümü</td></tr>
+<tr><td>edinim_sinifi</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi (resmî açık / web)</td></tr>
+<tr><td>dagitim_sinifi</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı (public/internal/restricted)</td></tr>
+</table>
+<h2 id='urun_ilce_yeni_kaynaklar'>urun.ilce_yeni_kaynaklar</h2><p>İlçe başına market şubesi, şarj istasyonu ve turizm tesisi sayıları.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>ilce_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>ilce_adi</td><td><small>VARCHAR</small></td><td>İlçe adı</td></tr>
+<tr><td>il_adi</td><td><small>VARCHAR</small></td><td>İl adı</td></tr>
+<tr><td>market_sube_sayisi</td><td><small>BIGINT</small></td><td>Market şubesi sayısı</td></tr>
+<tr><td>sarj_istasyonu_sayisi</td><td><small>BIGINT</small></td><td>Şarj istasyonu sayısı</td></tr>
+<tr><td>turizm_tesisi_sayisi</td><td><small>BIGINT</small></td><td>Belgeli turizm tesisi sayısı</td></tr>
+<tr><td>google_poi_sayisi</td><td><small>BIGINT</small></td><td>Google kaynaklı işletme sayısı</td></tr>
+<tr><td>toplam_poi</td><td><small>BIGINT</small></td><td>Toplam işletme sayısı</td></tr>
+</table>
+<h2 id='urun_ilce_zeka'>urun.ilce_zeka</h2><p>ÜRÜN KATMANI — ilçe düzeyi birleşik göstergeler.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>ilce</td><td><small>VARCHAR</small></td><td>İlçe adı</td></tr>
+<tr><td>il</td><td><small>VARCHAR</small></td><td>İl adı</td></tr>
+<tr><td>tuik_kodu</td><td><small>VARCHAR</small></td><td>TÜİK idari birim kodu</td></tr>
+<tr><td>web_county_id</td><td><small>VARCHAR</small></td><td>Kaynak sitedeki ilçe kimliği</td></tr>
+<tr><td>pop_2025_tuik</td><td><small>BIGINT</small></td><td>2025 nüfus (TÜİK ADNKS)</td></tr>
+<tr><td>pop_2024_tuik</td><td><small>BIGINT</small></td><td>2024 nüfus (TÜİK ADNKS)</td></tr>
+<tr><td>konut_satis_son12ay</td><td><small>DOUBLE</small></td><td>Son 12 ayda konut satışı (TÜİK)</td></tr>
+<tr><td>konut_satis_2025</td><td><small>DOUBLE</small></td><td>2025 konut satışı (TÜİK)</td></tr>
+<tr><td>konut_satis_2024</td><td><small>DOUBLE</small></td><td>2024 konut satışı (TÜİK)</td></tr>
+<tr><td>yapi_ruhsati_daire_2025</td><td><small>DOUBLE</small></td><td>2025 yapı ruhsatı daire sayısı</td></tr>
+<tr><td>kullanma_izni_daire_2025</td><td><small>DOUBLE</small></td><td>2025 yapı kullanma izni daire sayısı</td></tr>
+<tr><td>ses_skor_2023</td><td><small>DOUBLE</small></td><td>TÜİK SES 2023 sosyoekonomik skor</td></tr>
+<tr><td>poi_count</td><td><small>BIGINT</small></td><td>İşletme sayısı</td></tr>
+<tr><td>restoran_count</td><td><small>BIGINT</small></td><td>Restoran sayısı</td></tr>
+<tr><td>yeme_icme_count</td><td><small>BIGINT</small></td><td>Yeme-içme işletmesi sayısı</td></tr>
+<tr><td>poi_type_unknown_count</td><td><small>BIGINT</small></td><td>Türü çözülememiş işletme sayısı</td></tr>
+<tr><td>poi_avg_rating</td><td><small>DOUBLE</small></td><td>Ortalama işletme puanı</td></tr>
+<tr><td>mahalle_sayisi</td><td><small>BIGINT</small></td><td>Mahalle sayısı</td></tr>
+</table>
+<h2 id='urun_isletme'>urun.isletme</h2><p>ÜRÜN KATMANI — işletme kayıtları (kişisel sütunlar çıkarılmış).</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>isletme_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>ad</td><td><small>VARCHAR</small></td><td>Ad</td></tr>
+<tr><td>kaynak_kategori</td><td><small>VARCHAR</small></td><td>Kaynakta yazan ham kategori metni</td></tr>
+<tr><td>kategori</td><td><small>VARCHAR</small></td><td>Kategori (bizim sınıflandırmamız)</td></tr>
+<tr><td>sektor</td><td><small>VARCHAR</small></td><td>Üst sektör</td></tr>
+<tr><td>kategori_yontemi</td><td><small>VARCHAR</small></td><td>Kategori hangi yolla bulundu</td></tr>
+<tr><td>kategori_guven</td><td><small>DOUBLE</small></td><td>Kategori güveni 0-1</td></tr>
+<tr><td>puan</td><td><small>DOUBLE</small></td><td>Puan</td></tr>
+<tr><td>puan_sayisi</td><td><small>BIGINT</small></td><td>Puan veren sayısı</td></tr>
+<tr><td>yorum_sayisi</td><td><small>BIGINT</small></td><td>Yorum sayısı</td></tr>
+<tr><td>adres</td><td><small>VARCHAR</small></td><td>Adres metni</td></tr>
+<tr><td>enlem</td><td><small>DOUBLE</small></td><td>Enlem (WGS84)</td></tr>
+<tr><td>boylam</td><td><small>DOUBLE</small></td><td>Boylam (WGS84)</td></tr>
+<tr><td>koordinat_gecerliligi</td><td><small>VARCHAR</small></td><td>Koordinat geçerliliği</td></tr>
+<tr><td>mahalle_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>ilce_geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>atama_yontemi</td><td><small>VARCHAR</small></td><td>Coğrafyaya hangi yöntemle bağlandı</td></tr>
+<tr><td>atama_guveni</td><td><small>DOUBLE</small></td><td>Coğrafya atama güveni 0-1</td></tr>
+<tr><td>kaynak_kapsami</td><td><small>VARCHAR</small></td><td>Bu kaydı hangi kaynakların gördüğü</td></tr>
+<tr><td>ana_kaynak</td><td><small>VARCHAR</small></td><td>Kaydın ana kaynağı</td></tr>
+<tr><td>osm_tur</td><td><small>VARCHAR</small></td><td>OSM tür etiketi</td></tr>
+<tr><td>osm_dukkan</td><td><small>VARCHAR</small></td><td>OSM dükkân etiketi</td></tr>
+<tr><td>osm_mutfak</td><td><small>VARCHAR</small></td><td>OSM mutfak etiketi</td></tr>
+<tr><td>web_sitesi</td><td><small>VARCHAR</small></td><td>Web sitesi</td></tr>
+<tr><td>calisma_saatleri</td><td><small>VARCHAR</small></td><td>Çalışma saatleri</td></tr>
+<tr><td>platform_mutfak</td><td><small>VARCHAR</small></td><td>Platformdaki mutfak listesi</td></tr>
+<tr><td>platform_fiyat_araligi</td><td><small>VARCHAR</small></td><td>Platform fiyat aralığı</td></tr>
+<tr><td>sektor_ipucu</td><td><small>VARCHAR</small></td><td>Arama terimlerinden ölçülmüş sektör ipucu</td></tr>
+<tr><td>son_gorulme</td><td><small>VARCHAR</small></td><td>En son görüldüğü an</td></tr>
+<tr><td>gozlem_sayisi</td><td><small>BIGINT</small></td><td>Gözlem sayısı</td></tr>
+<tr><td>edinim_sinifi</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi (resmî açık / web)</td></tr>
+<tr><td>dagitim_sinifi</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı (public/internal/restricted)</td></tr>
+<tr><td>kaynak_satir_ozeti</td><td><small>VARCHAR</small></td><td>Kaynak satırın içerik özeti (sha256)</td></tr>
+</table>
+<h2 id='urun_isletme_kaynak'>urun.isletme_kaynak</h2><p>ÜRÜN KATMANI — işletmenin hangi kaynak kayıtlarıyla eşleştiği.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>baglanti_id</td><td><small>VARCHAR</small></td><td>Bağlantı kimliği</td></tr>
+<tr><td>isletme_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>kaynak_sistem</td><td><small>VARCHAR</small></td><td>Kaynak sistem</td></tr>
+<tr><td>kaynak_kayit_id</td><td><small>VARCHAR</small></td><td>Kaynaktaki kayıt kimliği</td></tr>
+<tr><td>eslesme_skoru</td><td><small>DOUBLE</small></td><td>Eşleşme skoru 0-1</td></tr>
+<tr><td>eslesme_bandi</td><td><small>VARCHAR</small></td><td>Eşleşme bandı</td></tr>
+<tr><td>baglanti_durumu</td><td><small>VARCHAR</small></td><td>Bağlantı durumu</td></tr>
+<tr><td>gerekce</td><td><small>VARCHAR</small></td><td>Eşleşme gerekçesi</td></tr>
+<tr><td>olusturulma</td><td><small>VARCHAR</small></td><td>Kayıt oluşturulma zamanı (UTC)</td></tr>
+</table>
+<h2 id='urun_konut_fiyat_gozlem'>urun.konut_fiyat_gozlem</h2><p>ÜRÜN KATMANI — gayrimenkul fiyat gözlemleri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>gozlem_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>duzey</td><td><small>VARCHAR</small></td><td>Coğrafi düzey</td></tr>
+<tr><td>kategori</td><td><small>VARCHAR</small></td><td>Kategori (bizim sınıflandırmamız)</td></tr>
+<tr><td>alt_kategori</td><td><small>VARCHAR</small></td><td>Alt kategori</td></tr>
+<tr><td>olcut</td><td><small>VARCHAR</small></td><td>Ölçülen büyüklük</td></tr>
+<tr><td>deger</td><td><small>DOUBLE</small></td><td>Değer</td></tr>
+<tr><td>birim</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>donem</td><td><small>VARCHAR</small></td><td>Dönem</td></tr>
+<tr><td>gozlem_turu</td><td><small>VARCHAR</small></td><td>Gözlem türü</td></tr>
+<tr><td>kaynak_tablo</td><td><small>VARCHAR</small></td><td>Bu satırın türediği ambar tablosu</td></tr>
+<tr><td>edinim_sinifi</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi (resmî açık / web)</td></tr>
+<tr><td>dagitim_sinifi</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı (public/internal/restricted)</td></tr>
+<tr><td>kayit_zamani</td><td><small>VARCHAR</small></td><td>Kayıt zamanı (UTC)</td></tr>
+</table>
+<h2 id='urun_mahalle_zeka'>urun.mahalle_zeka</h2><p>ÜRÜN KATMANI — mahalle düzeyi birleşik göstergeler.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>mahalle</td><td><small>VARCHAR</small></td><td>Mahalle adı</td></tr>
+<tr><td>ilce</td><td><small>VARCHAR</small></td><td>İlçe adı</td></tr>
+<tr><td>il</td><td><small>VARCHAR</small></td><td>İl adı</td></tr>
+<tr><td>tuik_il_kodu</td><td><small>VARCHAR</small></td><td>TÜİK il kodu</td></tr>
+<tr><td>web_district_id</td><td><small>VARCHAR</small></td><td>Kaynak sitedeki mahalle kimliği</td></tr>
+<tr><td>tkgm_id</td><td><small>VARCHAR</small></td><td>TKGM (tapu-kadastro) kimliği</td></tr>
+<tr><td>tuik_kodu</td><td><small>VARCHAR</small></td><td>TÜİK idari birim kodu</td></tr>
+<tr><td>tkgm_link_band</td><td><small>VARCHAR</small></td><td>TKGM eşleşme bandı</td></tr>
+<tr><td>tuik_link_band</td><td><small>VARCHAR</small></td><td>TÜİK eşleşme bandı</td></tr>
+<tr><td>centroid_lon</td><td><small>DOUBLE</small></td><td>Merkez noktası boylamı</td></tr>
+<tr><td>centroid_lat</td><td><small>DOUBLE</small></td><td>Merkez noktası enlemi</td></tr>
+<tr><td>pop_2024_web</td><td><small>BIGINT</small></td><td>2024 nüfus (web kaynağı)</td></tr>
+<tr><td>pop_2025_tuik</td><td><small>BIGINT</small></td><td>2025 nüfus (TÜİK ADNKS)</td></tr>
+<tr><td>konut_satilik_m2</td><td><small>DOUBLE</small></td><td>Konut satılık m² fiyatı</td></tr>
+<tr><td>konut_kiralik_m2</td><td><small>DOUBLE</small></td><td>Konut kiralık m² fiyatı</td></tr>
+<tr><td>konut_ort_fiyat</td><td><small>DOUBLE</small></td><td>Ortalama konut ilan fiyatı</td></tr>
+<tr><td>konut_ilan_sayisi</td><td><small>DOUBLE</small></td><td>Konut ilan sayısı</td></tr>
+<tr><td>konut_brut_kira_getirisi</td><td><small>DOUBLE</small></td><td>Brüt kira getirisi (%)</td></tr>
+<tr><td>konut_amortisman_yil</td><td><small>DOUBLE</small></td><td>Amortisman süresi (yıl)</td></tr>
+<tr><td>konut_ort_bina_yasi</td><td><small>DOUBLE</small></td><td>Ortalama bina yaşı</td></tr>
+<tr><td>konut_satilik_kalma_gun</td><td><small>DOUBLE</small></td><td>İlanın satılana kadar kalma süresi (gün)</td></tr>
+<tr><td>arsa_satilik_m2</td><td><small>DOUBLE</small></td><td>Arsa satılık m² fiyatı</td></tr>
+<tr><td>arsa_min_m2</td><td><small>DOUBLE</small></td><td>Arsa en düşük m² fiyatı</td></tr>
+<tr><td>arsa_max_m2</td><td><small>DOUBLE</small></td><td>Arsa en yüksek m² fiyatı</td></tr>
+<tr><td>arsa_ilan_sayisi</td><td><small>DOUBLE</small></td><td>Arsa ilan sayısı</td></tr>
+<tr><td>arsa_fiyat_endeksi</td><td><small>DOUBLE</small></td><td>Arsa fiyat endeksi</td></tr>
+<tr><td>tarla_satilik_m2</td><td><small>DOUBLE</small></td><td>Tarla satılık m² fiyatı</td></tr>
+<tr><td>poi_count</td><td><small>BIGINT</small></td><td>İşletme sayısı</td></tr>
+<tr><td>poi_count_coord_verified</td><td><small>BIGINT</small></td><td>Koordinatı poligonla doğrulanmış işletme sayısı</td></tr>
+<tr><td>yeme_icme_count</td><td><small>BIGINT</small></td><td>Yeme-içme işletmesi sayısı</td></tr>
+<tr><td>kuafor_guzellik_count</td><td><small>BIGINT</small></td><td>Kuaför/güzellik işletmesi sayısı</td></tr>
+<tr><td>market_count</td><td><small>BIGINT</small></td><td>Market sayısı</td></tr>
+<tr><td>poi_avg_rating</td><td><small>DOUBLE</small></td><td>Ortalama işletme puanı</td></tr>
+<tr><td>poi_google_osm_count</td><td><small>BIGINT</small></td><td>Hem Google hem OSM'de görülen işletme sayısı</td></tr>
+<tr><td>poi_osm_only_count</td><td><small>BIGINT</small></td><td>Yalnız OSM'de görülen işletme sayısı</td></tr>
+<tr><td>osm_poi_on_map_2026</td><td><small>BIGINT</small></td><td>2026 OSM anlık görüntüsündeki işletme sayısı</td></tr>
+<tr><td>osm_added_2025_2026</td><td><small>BIGINT</small></td><td>2025→2026 haritaya eklenen</td></tr>
+<tr><td>osm_removed_2025_2026</td><td><small>BIGINT</small></td><td>2025→2026 haritadan kalkan</td></tr>
+<tr><td>osm_map_churn_2025_2026</td><td><small>DOUBLE</small></td><td>Harita devir oranı (eklenen+kalkan)</td></tr>
+<tr><td>mapping_status</td><td><small>VARCHAR</small></td><td>Eşleme durumu (PROPOSED/APPROVED)</td></tr>
+</table>
+<h2 id='urun_menu_kalemi'>urun.menu_kalemi</h2><p>ÜRÜN KATMANI — menü kalemleri ve fiyatları.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>gozlem_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>isletme_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>platform</td><td><small>VARCHAR</small></td><td>Platform adı</td></tr>
+<tr><td>urun_adi</td><td><small>VARCHAR</small></td><td>Ürün adı</td></tr>
+<tr><td>aciklama</td><td><small>VARCHAR</small></td><td>Açıklama</td></tr>
+<tr><td>kategori</td><td><small>VARCHAR</small></td><td>Kategori (bizim sınıflandırmamız)</td></tr>
+<tr><td>fiyat</td><td><small>DOUBLE</small></td><td>Fiyat</td></tr>
+<tr><td>indirimli_fiyat</td><td><small>DOUBLE</small></td><td>İndirimli fiyat</td></tr>
+<tr><td>tukendi</td><td><small>BOOLEAN</small></td><td>Tükendi mi</td></tr>
+<tr><td>para_birimi</td><td><small>VARCHAR</small></td><td>Para birimi</td></tr>
+<tr><td>gozlem_zamani</td><td><small>VARCHAR</small></td><td>Gözlem anı</td></tr>
+</table>
+<h2 id='urun_sarj_soketi'>urun.sarj_soketi</h2><p>ÜRÜN KATMANI — şarj soketleri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>soket_id</td><td><small>VARCHAR</small></td><td>Soket kimliği</td></tr>
+<tr><td>isletme_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>istasyon_id</td><td><small>VARCHAR</small></td><td>EPDK istasyon kimliği</td></tr>
+<tr><td>soket_tipi</td><td><small>VARCHAR</small></td><td>Soket tipi</td></tr>
+<tr><td>soket_alt_tipi</td><td><small>VARCHAR</small></td><td>Soket alt tipi</td></tr>
+<tr><td>guc_kw</td><td><small>DOUBLE</small></td><td>Güç (kW)</td></tr>
+<tr><td>fiyat_tl_kwh</td><td><small>DOUBLE</small></td><td>kWh başına fiyat (TL)</td></tr>
+<tr><td>durum</td><td><small>VARCHAR</small></td><td>Durum</td></tr>
+<tr><td>gozlem_zamani</td><td><small>VARCHAR</small></td><td>Gözlem anı</td></tr>
+</table>
+<h2 id='urun_teslimat_gozlem'>urun.teslimat_gozlem</h2><p>ÜRÜN KATMANI — teslimat ve puan gözlemleri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>gozlem_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>isletme_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>platform</td><td><small>VARCHAR</small></td><td>Platform adı</td></tr>
+<tr><td>puan</td><td><small>DOUBLE</small></td><td>Puan</td></tr>
+<tr><td>puan_sayisi</td><td><small>INTEGER</small></td><td>Puan veren sayısı</td></tr>
+<tr><td>min_sepet</td><td><small>DOUBLE</small></td><td>Minimum sepet tutarı</td></tr>
+<tr><td>teslimat_alt_dk</td><td><small>INTEGER</small></td><td>Teslimat süresi alt sınırı (dk)</td></tr>
+<tr><td>teslimat_ust_dk</td><td><small>INTEGER</small></td><td>Teslimat süresi üst sınırı (dk)</td></tr>
+<tr><td>teslimat_ucreti</td><td><small>DOUBLE</small></td><td>Teslimat ücreti</td></tr>
+<tr><td>fiyat_araligi</td><td><small>VARCHAR</small></td><td>Fiyat aralığı</td></tr>
+<tr><td>mutfak</td><td><small>VARCHAR</small></td><td>Mutfak listesi</td></tr>
+<tr><td>gozlem_zamani</td><td><small>VARCHAR</small></td><td>Gözlem anı</td></tr>
+</table>
+<h2 id='urun_tuik_gozlem'>urun.tuik_gozlem</h2><p>ÜRÜN KATMANI — TÜİK SDMX gözlemleri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>seri_id</td><td><small>VARCHAR</small></td><td>Seri kimliği</td></tr>
+<tr><td>akis_id</td><td><small>VARCHAR</small></td><td>TÜİK veri akışı kimliği</td></tr>
+<tr><td>donem</td><td><small>VARCHAR</small></td><td>Dönem</td></tr>
+<tr><td>donem_etiketi</td><td><small>VARCHAR</small></td><td>Dönemin okunur etiketi</td></tr>
+<tr><td>deger</td><td><small>DOUBLE</small></td><td>Değer</td></tr>
+<tr><td>nitelikler</td><td><small>VARCHAR</small></td><td>Gözlem nitelikleri</td></tr>
+</table>
+<h2 id='urun_tuik_seri'>urun.tuik_seri</h2><p>ÜRÜN KATMANI — TÜİK SDMX seri tanımları.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>seri_id</td><td><small>VARCHAR</small></td><td>Seri kimliği</td></tr>
+<tr><td>akis_id</td><td><small>VARCHAR</small></td><td>TÜİK veri akışı kimliği</td></tr>
+<tr><td>akis_adi</td><td><small>VARCHAR</small></td><td>Akışın adı</td></tr>
+<tr><td>akis_aciklama</td><td><small>VARCHAR</small></td><td>Akışın açıklaması</td></tr>
+<tr><td>seri_anahtari</td><td><small>VARCHAR</small></td><td>Seri anahtarı</td></tr>
+<tr><td>boyutlar</td><td><small>VARCHAR</small></td><td>Serinin tüm boyutları</td></tr>
+<tr><td>bolge_kodu</td><td><small>VARCHAR</small></td><td>TÜİK bölge kodu</td></tr>
+<tr><td>bolge_adi</td><td><small>VARCHAR</small></td><td>Bölge adı</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>geo_duzeyi</td><td><small>VARCHAR</small></td><td>Bağlandığı coğrafi düzey</td></tr>
+<tr><td>gozlem_sayisi</td><td><small>BIGINT</small></td><td>Gözlem sayısı</td></tr>
+<tr><td>kaynak_hazirlanma</td><td><small>VARCHAR</small></td><td>TÜİK'in veriyi hazırladığı an</td></tr>
+</table>
+<h2 id='urun_urun_fiyat_gozlem'>urun.urun_fiyat_gozlem</h2><p>ÜRÜN KATMANI — ürün fiyat gözlemleri.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>gozlem_id</td><td><small>VARCHAR</small></td><td>Gözlem kimliği (tekil)</td></tr>
+<tr><td>kaynak_sistem</td><td><small>VARCHAR</small></td><td>Kaynak sistem</td></tr>
+<tr><td>isletme_id</td><td><small>VARCHAR</small></td><td>İşletme kimliği (poi.poi_id)</td></tr>
+<tr><td>geo_id</td><td><small>VARCHAR</small></td><td>Coğrafya kimliği (geo_entity.geo_id)</td></tr>
+<tr><td>duzey</td><td><small>VARCHAR</small></td><td>Coğrafi düzey</td></tr>
+<tr><td>urun_id</td><td><small>VARCHAR</small></td><td>Ürün kimliği (product.product_id)</td></tr>
+<tr><td>urun_kodu</td><td><small>VARCHAR</small></td><td>Kaynaktaki ürün kodu</td></tr>
+<tr><td>fiyat_turu</td><td><small>VARCHAR</small></td><td>Fiyat türü</td></tr>
+<tr><td>fiyat</td><td><small>DOUBLE</small></td><td>Fiyat</td></tr>
+<tr><td>asgari_fiyat</td><td><small>DOUBLE</small></td><td>Asgari fiyat</td></tr>
+<tr><td>azami_fiyat</td><td><small>DOUBLE</small></td><td>Azami fiyat</td></tr>
+<tr><td>birim_fiyat</td><td><small>DOUBLE</small></td><td>Birim fiyat (kg/lt başına)</td></tr>
+<tr><td>birim_fiyat_metni</td><td><small>VARCHAR</small></td><td>Birim fiyatın kaynaktaki metni</td></tr>
+<tr><td>islem_hacmi</td><td><small>DOUBLE</small></td><td>İşlem hacmi</td></tr>
+<tr><td>birim</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>para_birimi</td><td><small>VARCHAR</small></td><td>Para birimi</td></tr>
+<tr><td>indirim</td><td><small>VARCHAR</small></td><td>İndirimli mi</td></tr>
+<tr><td>promosyon</td><td><small>VARCHAR</small></td><td>Promosyon metni</td></tr>
+<tr><td>donem</td><td><small>VARCHAR</small></td><td>Dönem</td></tr>
+<tr><td>donem_turu</td><td><small>VARCHAR</small></td><td>Dönemin türü</td></tr>
+<tr><td>gozlem_zamani</td><td><small>VARCHAR</small></td><td>Gözlem anı</td></tr>
+<tr><td>edinim_sinifi</td><td><small>VARCHAR</small></td><td>Veri nasıl edinildi (resmî açık / web)</td></tr>
+<tr><td>dagitim_sinifi</td><td><small>VARCHAR</small></td><td>Dağıtım sınıfı (public/internal/restricted)</td></tr>
+</table>
+<h2 id='urun_urun_katalogu'>urun.urun_katalogu</h2><p>ÜRÜN KATMANI — ürün sözlüğü.</p><table><tr><th>Sütun</th><th>Tip</th><th>Açıklama</th></tr>
+<tr><td>urun_id</td><td><small>VARCHAR</small></td><td>Ürün kimliği (product.product_id)</td></tr>
+<tr><td>kaynak_sistem</td><td><small>VARCHAR</small></td><td>Kaynak sistem</td></tr>
+<tr><td>urun_kodu</td><td><small>VARCHAR</small></td><td>Kaynaktaki ürün kodu</td></tr>
+<tr><td>ad</td><td><small>VARCHAR</small></td><td>Ad</td></tr>
+<tr><td>marka</td><td><small>VARCHAR</small></td><td>Marka</td></tr>
+<tr><td>birim</td><td><small>VARCHAR</small></td><td>Ölçü birimi</td></tr>
+<tr><td>miktar_birimi</td><td><small>VARCHAR</small></td><td>Miktar birimi</td></tr>
+<tr><td>ana_kategori</td><td><small>VARCHAR</small></td><td>Ana kategori</td></tr>
+<tr><td>alt_kategori</td><td><small>VARCHAR</small></td><td>Alt kategori</td></tr>
+<tr><td>gorsel</td><td><small>VARCHAR</small></td><td>Ürün görseli</td></tr>
+<tr><td>ilk_gorulme</td><td><small>VARCHAR</small></td><td>İlk görüldüğü an</td></tr>
+</table>
