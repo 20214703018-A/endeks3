@@ -341,55 +341,82 @@ def phase_prices(it: Intake, threads: int, rps: float, depots: pd.DataFrame | No
 
 
 # ------------------------------------------------------------------ history
-def phase_history(it: Intake, threads: int, rps: float, sets_for=("GEO_IL_34", "GEO_IL_06", "GEO_IL_35")):
-    sets = json.loads((it.dir / "il_depot_sets.json").read_text())
-    prices = pd.concat([pd.read_parquet(p, columns=["id", "depotId", "il_geo_id"])
-                        for p in (it.dir / "prices").glob("prices_*.parquet")])
-    outdir = it.dir / "history"
-    outdir.mkdir(exist_ok=True)
+def phase_history(it: Intake, threads: int, rps: float, sets_for=("GEO_IL_34", "GEO_IL_06", "GEO_IL_35"),
+                  prices_file: str = "", il_shard: str = "", max_minutes: int = 0):
+    """Ürün×il fiyat geçmişi (API sabit son 90 günü verir; tarih parametresi kabul etmiyor — ölçüldü 2026-10-01).
+    prices_file: (il_geo_id, id, depotId) içeren tek parquet — GitHub Actions'ta depodan beslenir.
+    sets_for: il listesi veya ("all",) · il_shard: 'i/N' → iller makinelere round-robin dağıtılır."""
+    if prices_file:
+        prices = pd.read_parquet(prices_file, columns=["id", "depotId", "il_geo_id"])
+        sets = {il: 1 for il in prices.il_geo_id.unique()}
+    else:
+        sets = json.loads((it.dir / "il_depot_sets.json").read_text())
+        prices = pd.concat([pd.read_parquet(p, columns=["id", "depotId", "il_geo_id"])
+                            for p in (it.dir / "prices").glob("prices_*.parquet")])
+    if len(sets_for) == 1 and str(sets_for[0]).lower() == "all":
+        sets_for = tuple(sorted(sets))
+    shard_i = shard_n = 0
+    if il_shard:
+        shard_i, shard_n = (int(x) for x in il_shard.split("/"))
+    deadline = time.time() + max_minutes * 60 if max_minutes else None
+    sets_for = tuple(x for x in sets_for if x in sets)
+    outdir = it.dir / "history"; outdir.mkdir(exist_ok=True)
     rl = RateLimiter(rps)
+    # iş listesi ürün×il çifti düzeyinde kurulur ve makinelere çift bazında bölünür
+    # (il bazında bölmek dengesiz kalıyordu: iller 5-12 bin ürün arasında değişiyor).
+    work_items = []
     for il in sets_for:
-        if il not in sets:
-            continue
-        # ürünü o ilde taşıyan şubeler (zincir başına tek şube → seri şube/zincir eşleşmesi kesin)
-        sub = prices[prices.il_geo_id == il].groupby("id").depotId.apply(lambda s: sorted(set(s))).to_dict()
-        hdir = outdir / f"raw_{il}"
-        done = {d["uniqueId"] for d in read_chunks(hdir, "part")}
-        todo = [(pid, deps) for pid, deps in sub.items() if pid not in done]
-        it.log(f"history {il}: {len(sub)} ürün, {len(todo)} kaldı")
-        cw = ChunkWriter(hdir, "part", every=200)
+        sub = prices[prices.il_geo_id == il].groupby("id").depotId.apply(lambda x: sorted(set(x))).to_dict()
+        work_items += [(il, pid, deps) for pid, deps in sorted(sub.items())]
+    toplam = len(work_items)
+    if shard_n:
+        work_items = [w for k, w in enumerate(work_items) if k % shard_n == shard_i - 1]
+    ek = f"_s{shard_i}" if shard_n else ""
+    it.log(f"history payı: {len(sets_for)} il · {len(work_items):,}/{toplam:,} ürün×il çifti"
+           + (f" (pay {shard_i}/{shard_n})" if shard_n else ""))
+    hdir = outdir / f"raw{ek}"
+    done = {(d["il_geo_id"], d["uniqueId"]) for d in read_chunks(hdir, "part")}
+    todo = [w for w in work_items if (w[0], w[1]) not in done]
+    it.log(f"history: {len(todo):,} istek kaldı ({len(done):,} zaten var)")
+    cw = ChunkWriter(hdir, "part", every=200)
 
-        def work(a):
-            pid, deps = a
-            res = post(rl, "/v3/price-history", {"uniqueId": pid, "depots": deps})
-            cw.add({"uniqueId": pid, "depots": deps, "il_geo_id": il, "at": now_iso(), "res": res})
-            return 1
+    def work(a):
+        il, pid, deps = a
+        res = post(rl, "/v3/price-history", {"uniqueId": pid, "depots": deps})
+        cw.add({"uniqueId": pid, "depots": deps, "il_geo_id": il, "at": now_iso(), "res": res})
+        return 1
 
-        n = 0
-        with ThreadPoolExecutor(threads) as ex:
-            for f in as_completed([ex.submit(work, a) for a in todo]):
-                try:
-                    n += f.result()
-                except Blocked as e:
-                    it.log(f"history DURDU: {e}")
-                    break
-                except Exception as e:  # noqa: BLE001
-                    it.log(f"history hata: {e}")
-                if n and n % 1000 == 0:
-                    it.log(f"history {il}: {n}/{len(todo)}")
-        cw.close()
-        # düz tablo
-        recs = []
-        for d in read_chunks(hdir, "part"):
-            if True:
-                for s in d["res"] or []:
-                    for pt in s.get("series") or []:
-                        recs.append({"id": d["uniqueId"], "il_geo_id": il, "market": s.get("name"),
-                                     "date": pt.get("name"), "price": pt.get("value"), "captured_at": d["at"]})
-        df = pd.DataFrame(recs)
-        it.save_parquet(f"history/price_history_{il}", df, source_url=API + "/v3/price-history",
-                        method="api_post", note="son ~90 gün günlük; zincir başına o ildeki seçili şube(ler)")
-        it.log(f"history {il}: {len(df)} günlük gözlem")
+    n = 0
+    with ThreadPoolExecutor(threads) as ex:
+        futs = [ex.submit(work, a) for a in todo]
+        for f in as_completed(futs):
+            if deadline and time.time() > deadline:
+                it.log("history: süre doldu, temiz duruluyor (kalanı sonraki koşu alır)")
+                for g in futs:
+                    g.cancel()
+                break
+            try:
+                n += f.result()
+            except Blocked as e:
+                it.log(f"history DURDU: {e}")
+                break
+            except Exception as e:  # noqa: BLE001
+                it.log(f"history hata: {e}")
+            if n and n % 500 == 0:
+                it.log(f"history: {n:,}/{len(todo):,}")
+    cw.close()
+    # düz tablo (il bazında; pay varsa dosya adına pay eki gelir)
+    recs = {}
+    for d in read_chunks(hdir, "part"):
+        for sr in d["res"] or []:
+            for pt in sr.get("series") or []:
+                recs.setdefault(d["il_geo_id"], []).append(
+                    {"id": d["uniqueId"], "il_geo_id": d["il_geo_id"], "market": sr.get("name"),
+                     "date": pt.get("name"), "price": pt.get("value"), "captured_at": d["at"]})
+    for il, rows in recs.items():
+        it.save_parquet(f"history/price_history_{il}{ek}", pd.DataFrame(rows), source_url=API + "/v3/price-history",
+                        method="api_post", note="API sabit son 90 günü verir (tarih parametresi kabul etmiyor); zincir başına o ildeki seçili şube(ler)")
+        it.log(f"history {il}{ek}: {len(rows):,} günlük gözlem")
 
 
 # ------------------------------------------------------------------ branches
@@ -558,7 +585,9 @@ def main():
     ap.add_argument("--rps", type=float, default=8.0)
     ap.add_argument("--date")
     ap.add_argument("--depot-levels", default="ilce,il")
-    ap.add_argument("--history-ils", default="GEO_IL_34,GEO_IL_06,GEO_IL_35")
+    ap.add_argument("--history-ils", default="GEO_IL_34,GEO_IL_06,GEO_IL_35", help="il listesi ya da 'all'")
+    ap.add_argument("--prices-file", default="", help="(il_geo_id,id,depotId) parquet — GHA girdisi")
+    ap.add_argument("--il-shard", default="", help="i/N — illeri makineler arasında böl")
     a = ap.parse_args()
     it = Intake("marketfiyati", a.date)
     if a.phase in ("depots", "all"):
@@ -568,7 +597,8 @@ def main():
     if a.phase in ("prices", "all", "track"):
         phase_prices(it, a.threads, a.rps)
     if a.phase in ("history", "all"):
-        phase_history(it, a.threads, a.rps, tuple(a.history_ils.split(",")))
+        phase_history(it, a.threads, a.rps, tuple(a.history_ils.split(",")),
+                      prices_file=a.prices_file, il_shard=a.il_shard, max_minutes=a.max_minutes)
     if a.phase == "branches":
         phase_branches(it, a.rps, tuple(int(x) for x in a.rounds.split(",")), a.shard, a.max_minutes, a.depots_file,
                        a.skip_file, a.limit)

@@ -340,6 +340,60 @@ TABLO_ACIKLAMA_EK = {
 }
 
 
+# ---- toplu taşıma tarife ambarı (canonical v1.8) ----
+KOLON_ACIK.update({
+ "feed_id": "Kaynak (besleme) kimliği: hangi yayımcı/servisten geldiği", "source_kind": "Kaynak türü (gtfs / kentkart_api / resmi_web_sayfasi / osm_relation_no_schedule)",
+ "operator": "İşletmeci", "source_url": "Kaynak adresi", "fetched_at": "Çekim zamanı", "notes": "Kaynak notu",
+ "feed_start_date": "Yayımcının beyan ettiği geçerlilik başlangıcı", "feed_end_date": "Yayımcının beyan ettiği geçerlilik bitişi",
+ "calendar_end": "Takvimdeki en son geçerli gün", "is_expired": "Tarife süresi dolmuş mu (kaynak güncellenmemiş)",
+ "query_role": "Sorgu rolü: birincil / ikincil (aynı yeri kapsayan yinelenen kaynak) / yedek_saatsiz (OSM)",
+ "guncellenme_tarihi": "Ambara yazılma zamanı (ISO 8601)",
+ "route_uid": "Hat kimliği (kaynak:hat)", "route_id": "Kaynaktaki hat kimliği", "route_short_name": "Hat numarası/kodu",
+ "route_long_name": "Hat adı (güzergâh)", "route_desc": "Hat açıklaması (EGO: künye JSON)", "route_type": "GTFS hat türü kodu",
+ "mode": "Taşıma türü (otobus, metro, tramvay, vapur, minibus, taksi_dolmus, banliyo_tren, ...)", "agency_name": "İşletme adı",
+ "route_color": "Hat rengi", "name_repair": "Ad onarımı (double_utf8 = kaynakta bozuk Türkçe karakter düzeltildi)",
+ "stop_uid": "Durak kimliği (kaynak:durak)", "stop_id": "Kaynaktaki durak kimliği", "stop_code": "Durak kodu (yolcuya görünen)",
+ "stop_name": "Durak adı", "stop_desc": "Durak açıklaması/adresi",
+ "coord_repair": "Koordinat onarımı: none / excel_thousand_sep / osm_ref_eslesme / tahmini_hat_sirasi_arasi / koordinat_yok_*",
+ "geo_method": "Durağın mahalleye bağlanma yöntemi", "il_mekansal": "Durağın fiziken bulunduğu il", "ilce_mekansal": "Durağın fiziken bulunduğu ilçe",
+ "mahalle_mekansal": "Durağın fiziken bulunduğu mahalle", "isletme_il": "Hattı işleten kurumun ili",
+ "service_uid": "Çalışma takvimi kimliği", "service_id": "Kaynaktaki takvim kimliği", "service_label": "Takvim etiketi (hafta_ici, cumartesi, pazar, her_gun, ...)",
+ "monday": "Pazartesi çalışır mı (1/0)", "tuesday": "Salı çalışır mı (1/0)", "wednesday": "Çarşamba çalışır mı (1/0)",
+ "thursday": "Perşembe çalışır mı (1/0)", "friday": "Cuma çalışır mı (1/0)", "saturday": "Cumartesi çalışır mı (1/0)", "sunday": "Pazar çalışır mı (1/0)",
+ "start_date": "Geçerlilik başlangıcı", "end_date": "Geçerlilik bitişi (boş = kaynak belirtmemiş)",
+ "trip_uid": "Sefer kimliği", "source_trip_id": "Kaynaktaki sefer kimliği", "direction_id": "Yön (0/1; kaynak vermediyse boş)",
+ "headsign": "Seferin gittiği yön/son durak", "headsign_source": "Yön adının kökeni (kaynak / son_durak_adi)", "shape_uid": "Güzergâh çizgisi kimliği",
+ "trip_origin": "Sefer kökeni (gtfs, gtfs_frequency, kentkart, ego_page)",
+ "stop_sequence": "Durağın seferdeki sırası", "arrival_sec": "Varış (servis günü gece yarısından saniye; 86400+ = ertesi gün)",
+ "departure_sec": "Kalkış (servis günü gece yarısından saniye; 86400+ = ertesi gün)", "arrival_hhmm": "Varış saati SS:DD", "departure_hhmm": "Kalkış saati SS:DD",
+ "gece_yarisi_sonrasi": "Kalkış gece yarısından sonra mı",
+ "saat_tahmini": "TÜRETİLMİŞ bayrak: saat yayımcı tarafından verilmedi, tahmin edildi (true)",
+ "tahmin_yontemi": "Tahmin yönteminin adı ve sürümü (yöntem belgesi: reports/TOPLU_TASIMA_YONTEM.md)", "time_source": "Saatin kökeni: *_given = yayımcının verdiği, *_interpolated = TAHMİN, gtfs_frequency = sıklıktan açılmış, kentkart_offset = ilk kalkış + işletmeci durak farkı",
+ "pattern_id": "Hat-yön durak dizisi kimliği", "pattern_source": "Durak dizisinin kaynağı", "seq": "Nokta sırası",
+ "transition_date": "Geçiş tarihi", "transition_hour": "Geçiş saati (0-23)", "transport_type_id": "İBB taşıma türü kodu (1 karayolu, 2 raylı, 3 deniz)",
+ "road_type": "Yol türü (OTOYOL/RAYLI/DENİZ)", "line_long_name": "Hat adı (İBB)", "line_name": "Hat kodu (İBB)", "transfer_type": "Aktarma türü",
+ "number_of_passage": "Kart geçiş sayısı", "number_of_passenger": "Yolcu sayısı", "product_kind": "Kart/bilet türü", "transaction_type_desc": "İşlem türü",
+ "town": "İlçe (İBB kaydı)", "station_poi_desc_cd": "İstasyon kodu (İBB)", "source_file": "Ham kaynak dosya adı",
+ "gecis": "Toplam kart geçişi", "yolcu": "Toplam yolcu", "hafta_ici": "Tarih hafta içi mi",
+ "planli_sefer_hafta_ici_2026": "O saatte hattın planlı sefer sayısı (İETT 2026 hafta içi tarifesi)",
+ "sefer_basina_ortalama_yolcu_turetilmis": "TÜRETİLMİŞ: yolcu / planlı sefer (doluluk vekili; dönemler farklı)", "donem_notu": "Birleştirilen verilerin dönem notu",
+})
+TABLO_ACIKLAMA_EK.update({
+ "transit_feed": "Toplu taşıma kaynakları: il, işletme, ham dosya, takvim bitişi, süresi dolmuş mu, sorgu rolü.",
+ "transit_route": "Toplu taşıma hatları (otobüs, metro, tramvay, vapur, minibüs, şehirlerarası).",
+ "transit_stop": "Duraklar: koordinat, onarım bayrağı, fiziken bulunduğu il/ilçe/mahalle.",
+ "transit_service": "Sefer çalışma takvimleri (gün tipi ve geçerlilik aralığı).",
+ "transit_trip": "Tek tek seferler (hat, yön, takvim).",
+ "transit_stop_time": "Sefer × durak varış/kalkış saatleri; time_source saatin resmî mi tahmini mi olduğunu söyler.",
+ "transit_route_stop": "Hat/yön başına sıralı durak listesi (saat bilgisi olmayan OSM hatları dahil).",
+ "transit_shape_point": "Hat güzergâh çizgisi noktaları.",
+ "transit_ridership_hourly": "İBB hat × saat kart geçişi / yolcu sayısı (doluluk vekili; 2024 Ağustos ve 1-18 Ekim).",
+ "v_transit_departure": "Durak × hat × kalkış saati: 'buradan hangi hat, saat kaçta geçer' sorgusunun tabanı.",
+ "v_transit_stop_routes": "Durak × hat (saatsiz; OSM yedeği dahil).",
+ "v_istanbul_hat_saatlik_yolcu": "İstanbul hat × saat yolcu, planlı sefer ve türetilmiş sefer başına yolcu.",
+})
+
+
 def free_bytes(p): st = os.statvfs(p); return st.f_bavail * st.f_frsize
 
 

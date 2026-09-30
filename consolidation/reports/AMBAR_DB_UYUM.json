@@ -1,0 +1,182 @@
+{
+ "in": 32,
+ "in_rows": 76149509,
+ "out_real": 1118,
+ "out_rows": 43779009,
+ "top": [
+  [
+   "cadastre_zoning__stg_tkgm_alim_satim__tkgm_alim_satim_yogunlugu",
+   13882258
+  ],
+  [
+   "cadastre_zoning__stg_tkgm_alim_satim_yogunlugu",
+   6941245
+  ],
+  [
+   "price_series__stg_cimri_katalog_url",
+   3124581
+  ],
+  [
+   "poi_business__stg_osm_degisim__poi_yillik",
+   2844718
+  ],
+  [
+   "demographics_context__stg_piyasa_verileri__fiyat_trend",
+   1631256
+  ],
+  [
+   "poi_business__stg_osm_degisim__poi_yasam",
+   680481
+  ],
+  [
+   "poi_business__stg_google_places_ve_yogunluk__google_places_ticari_yogunluk",
+   665862
+  ],
+  [
+   "poi_business__stg_osm_degisim__poi_kimlik",
+   623793
+  ],
+  [
+   "poi_business__stg_osm_poi__poi",
+   623793
+  ],
+  [
+   "listings__stg_02_yillik_satislar_2010_2024",
+   615318
+  ],
+  [
+   "demographics_context__stg_07_secim_sonuclari_ve_oylar",
+   595190
+  ],
+  [
+   "price_series__stg_cografi_katmanlar__cografi_ozellikler",
+   580432
+  ],
+  [
+   "poi_business__stg_08_ilce_onemli_noktalar_poi",
+   561698
+  ],
+  [
+   "poi_business__stg_piyasa_verileri__poi_noktalari",
+   509403
+  ],
+  [
+   "listings__stg_bolge_istatistik__poi_ilce",
+   501783
+  ],
+  [
+   "poi_business__stg_google_places_ve_yogunluk__google_places_yorumlar_ve_niyet",
+   422858
+  ],
+  [
+   "price_series__stg_price_breakdown",
+   369286
+  ],
+  [
+   "demographics_context__stg_06_hemsehri_kutuk_dagilimi",
+   367079
+  ],
+  [
+   "demographics_context__stg_piyasa_verileri__yillik_satislar",
+   331425
+  ],
+  [
+   "demographics_context__stg_piyasa_verileri__secim_sonuclari",
+   318653
+  ],
+  [
+   "listings__stg_bolge_istatistik__yillik_satis",
+   310051
+  ],
+  [
+   "demographics_context__stg_kisitli_istatistik__secim_sonuclari",
+   299743
+  ],
+  [
+   "demographics_context__stg_tuik_bolge__konut_satis_ilce",
+   292992
+  ],
+  [
+   "poi_business__stg_player_bio",
+   283595
+  ],
+  [
+   "poi_business__stg_player_list",
+   283595
+  ],
+  [
+   "demographics_context__stg_tuik_bolge__yapi_ruhsat_amac_ilce",
+   280872
+  ],
+  [
+   "price_series__stg_ej_trend",
+   277348
+  ],
+  [
+   "cadastre_zoning__stg_turkiye_tum_ilanlar__ilanlar",
+   243370
+  ],
+  [
+   "mobility_logistics__stg_cevre__trafik_saatlik",
+   235450
+  ],
+  [
+   "poi_business__stg_player_perf_by_competition",
+   227100
+  ],
+  [
+   "poi_business__stg_google_places_ve_yogunluk__google_places_arama_gecmisi",
+   224199
+  ],
+  [
+   "demographics_context__stg_piyasa_verileri__hemsehri",
+   197642
+  ],
+  [
+   "demographics_context__stg_kisitli_istatistik__hemsehri_kutuk",
+   185092
+  ],
+  [
+   "poi_business__stg_player_perf_by_club",
+   142507
+  ],
+  [
+   "cadastre_zoning__stg_turkiye_konut_ayrintili",
+   133943
+  ],
+  [
+   "mobility_logistics__stg_cevre__hava_gunluk",
+   122733
+  ],
+  [
+   "poi_business__stg_cevre__trafik_saatlik",
+   117725
+  ],
+  [
+   "demographics_context__stg_piyasa_verileri__fiyat_dagilim",
+   113232
+  ],
+  [
+   "listings__stg_ilce_atlasi_ilanlar_2026_09_11__1_",
+   104171
+  ],
+  [
+   "reference_geography__stg_neighbourhood_point",
+   102342
+  ]
+ ],
+ "fam": {
+  "cadastre_zoning": 21385046,
+  "demographics_context": 5005872,
+  "economy": 12674,
+  "education": 122089,
+  "listings": 1890390,
+  "mobility_logistics": 539400,
+  "poi_business": 9138553,
+  "price_series": 4534024,
+  "reference_geography": 1051782,
+  "unclassified": 68659,
+  "vehicles": 24740,
+  "operational_metadata": 5780
+ }
+}

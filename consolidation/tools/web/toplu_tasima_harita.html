@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Toplu Taşıma Haritası</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root { --bg:#f7f7f5; --panel:#ffffff; --ink:#1d1d1b; --mut:#6b6b66; --line:#e3e2dd; --acc:#1f6feb; --warn:#b54708; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--ink); font:14px/1.4 -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #app { display:grid; grid-template-columns: 400px 1fr; height:100%; }
+  #panel { background:var(--panel); border-right:1px solid var(--line); display:flex; flex-direction:column; min-height:0; }
+  #ctrl { padding:12px 14px; border-bottom:1px solid var(--line); display:grid; grid-template-columns:1fr 1fr; gap:8px 10px; }
+  #ctrl h1 { grid-column:1/-1; font-size:16px; margin:0 0 2px; }
+  #ctrl p.hint { grid-column:1/-1; margin:0; color:var(--mut); font-size:12.5px; }
+  label { display:flex; flex-direction:column; font-size:12px; color:var(--mut); gap:3px; }
+  select, input { font:inherit; font-size:13px; padding:5px 6px; border:1px solid var(--line); border-radius:6px; background:#fff; color:var(--ink); }
+  .row2 { display:flex; gap:6px; align-items:center; }
+  .row2 input { width:100%; }
+  #ozet { padding:10px 14px; border-bottom:1px solid var(--line); font-size:13px; color:var(--mut); min-height:40px; }
+  #liste { overflow:auto; flex:1; padding:6px 8px 20px; }
+  .hat { border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin:6px 0; cursor:pointer; background:#fff; }
+  .hat:hover, .hat.sec { border-color:var(--acc); box-shadow:0 0 0 2px rgba(31,111,235,.15); }
+  .ust { display:flex; align-items:center; gap:8px; }
+  .kod { font-weight:700; min-width:44px; padding:1px 7px; border-radius:5px; color:#fff; text-align:center; font-size:13px; }
+  .ad { font-weight:600; font-size:13px; }
+  .yon { color:var(--mut); font-size:12px; margin-top:2px; }
+  .saat { margin-top:5px; font-variant-numeric: tabular-nums; font-size:12.5px; word-spacing:3px; }
+  .rozet { display:inline-block; font-size:11px; padding:0 6px; border-radius:10px; background:#eef1f5; color:#44474d; margin-right:4px; }
+  .uyari { color:var(--warn); font-size:12px; margin-top:4px; }
+  #map { height:100%; }
+  .lejant { background:#fff; padding:6px 9px; border-radius:6px; box-shadow:0 1px 4px rgba(0,0,0,.2); font-size:12px; line-height:1.6; }
+  @media (max-width: 800px) {
+    #app { grid-template-columns: 1fr; grid-template-rows: 55vh auto; }
+    #map { grid-row:1; } #panel { grid-row:2; border-right:0; border-top:1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="panel">
+    <div id="ctrl">
+      <h1>Toplu Taşıma — Noktadan Geçen Hatlar</h1>
+      <p class="hint">Haritada bir noktaya tıklayın. Çember içindeki duraklar, oradan geçen hatlar, güzergâhları ve geçiş saatleri gelir.</p>
+      <label>Çap
+        <select id="cap">
+          <option value="250">500 m çap (250 m yarıçap)</option>
+          <option value="500">1 km çap (500 m yarıçap)</option>
+          <option value="1000">2 km çap (1 km yarıçap)</option>
+        </select></label>
+      <label>Gün
+        <select id="gun">
+          <option value="bugun">Bugün</option><option value="hafta_ici">Hafta içi</option>
+          <option value="cumartesi">Cumartesi</option><option value="pazar">Pazar</option>
+        </select></label>
+      <label>Saat aralığı
+        <span class="row2"><input id="s0" type="time" value="07:00"><span>–</span><input id="s1" type="time" value="10:00"></span></label>
+      <label>Şehre git
+        <select id="sehir">
+          <option value="">—</option>
+          <option value="41.0082,28.9784,13">İstanbul</option><option value="39.9208,32.8541,13">Ankara</option>
+          <option value="38.4192,27.1287,13">İzmir</option><option value="36.8869,30.7075,13">Antalya</option>
+          <option value="37.8728,32.4926,13">Konya</option><option value="37.0662,37.3833,13">Gaziantep</option>
+          <option value="36.9914,35.3308,13">Adana</option><option value="40.7650,29.9408,13">Kocaeli</option>
+          <option value="37.2153,28.3636,12">Muğla</option><option value="39.9043,41.2679,13">Erzurum</option>
+          <option value="40.1826,29.0665,13">Bursa (saatsiz)</option>
+        </select></label>
+    </div>
+    <div id="ozet">Bir nokta seçin.</div>
+    <div id="liste"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<script>
+const TUR = {otobus:"Otobüs", metro:"Metro", tramvay:"Tramvay", banliyo_tren:"Banliyö", vapur:"Vapur", minibus:"Minibüs",
+  taksi_dolmus:"Taksi-dolmuş", funikuler:"Füniküler", teleferik:"Teleferik", sehirlerarasi_otobus:"Şehirlerarası", trolleybus:"Troleybüs", diger:"Diğer"};
+const PAL = ["#1f6feb","#d1242f","#1a7f37","#8250df","#bf8700","#0969da","#cf222e","#116329","#6639ba","#9a6700","#0550ae","#a40e26"];
+const map = L.map("map").setView([39.0, 35.0], 6);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom:19, attribution:"© OpenStreetMap katkıcıları"}).addTo(map);
+const lej = L.control({position:"bottomright"});
+lej.onAdd = () => { const d = L.DomUtil.create("div","lejant");
+  d.innerHTML = "── yol güzergâhı (yayımcı)<br>- - durak sırası çizgisi (yol çizgisi yok)<br>● durak · ◌ konumu tahmini durak"; return d; };
+lej.addTo(map);
+let katman = L.layerGroup().addTo(map), cizgiler = {}, sonNokta = null;
+
+function renk(h, i){ const c = (h.renk||"").replace("#","").split(",")[0]; return /^[0-9a-fA-F]{6}$/.test(c) ? "#"+c : PAL[i % PAL.length]; }
+function esc(s){ return (s??"").toString().replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
+
+async function sorgula(lat, lon){
+  sonNokta = [lat, lon];
+  const p = new URLSearchParams({lat, lon, yaricap: document.getElementById("cap").value, gun: document.getElementById("gun").value,
+    saat: document.getElementById("s0").value + "-" + document.getElementById("s1").value});
+  document.getElementById("ozet").textContent = "Sorgulanıyor…";
+  const r = await fetch("/api/nokta?" + p); const d = await r.json();
+  if (d.hata){ document.getElementById("ozet").textContent = "Hata: " + d.hata; return; }
+  ciz(d);
+}
+
+function ciz(d){
+  katman.clearLayers(); cizgiler = {};
+  const [lat, lon] = d.merkez;
+  const cember = L.circle([lat, lon], {radius:d.yaricap, color:"#1f6feb", weight:1.5, fillOpacity:.06}).addTo(katman);
+  map.invalidateSize(); map.fitBounds(cember.getBounds().pad(1.2));
+  L.circleMarker([lat, lon], {radius:4, color:"#1f6feb", fillOpacity:1}).addTo(katman);
+  d.hatlar.forEach((h, i) => {
+    const c = renk(h, i);
+    if (h.cizgi.length > 1){
+      const pl = L.polyline(h.cizgi, {color:c, weight:4, opacity:.75, dashArray: h.cizgi_turu === "durak_sirasi" ? "6 6" : null})
+        .bindTooltip(`${esc(h.hat)} ${esc(h.ad)}`, {sticky:true}).addTo(katman);
+      pl.on("click", () => sec(h.route_uid + "|" + h.yon_id));
+      cizgiler[h.route_uid + "|" + h.yon_id] = pl;
+    }
+  });
+  d.duraklar.forEach(s => {
+    L.circleMarker([s.lat, s.lon], {radius:5, color:"#1d1d1b", weight:1.5, fillColor: s.konum_tahmini ? "#fff" : "#ffd33d", fillOpacity:1})
+      .bindTooltip(`${esc(s.ad)} · ${s.mesafe_m} m${s.konum_tahmini ? " (konum tahmini)" : ""}`).addTo(katman);
+  });
+  const saatli = d.hatlar.filter(h => h.durum === "saatli").length;
+  const gunTr = {monday:"pazartesi",tuesday:"salı",wednesday:"çarşamba",thursday:"perşembe",friday:"cuma",saturday:"cumartesi",sunday:"pazar"}[d.gun];
+  document.getElementById("ozet").innerHTML = d.duraklar.length === 0
+    ? "Bu çemberde durak yok. Çapı büyütün veya başka bir nokta seçin."
+    : `<b>${d.duraklar.length}</b> durak · <b>${d.hatlar.length}</b> hat-yön geçiyor · <b>${saatli}</b> tanesinin seçilen aralıkta seferi var · ${gunTr}${d.tarih ? " (" + d.tarih + ")" : ""}`
+      + (d.osm_yedegi ? `<div class="uyari">Bu bölgede tarifeli kaynak yok; hatlar OpenStreetMap'ten (saat bilgisi yok).</div>` : "");
+  const L_ = document.getElementById("liste"); L_.innerHTML = "";
+  d.hatlar.forEach((h, i) => {
+    const c = renk(h, i), key = h.route_uid + "|" + h.yon_id;
+    const div = document.createElement("div"); div.className = "hat"; div.dataset.k = key;
+    let saat = "";
+    if (h.durum === "saatli") saat = `<div class="saat">${h.saatler.map(esc).join(" ")}</div>`;
+    else if (h.durum === "secilen_aralikta_sefer_yok") saat = `<div class="yon">Seçilen gün/saat aralığında sefer yok.</div>`;
+    else saat = `<div class="uyari">Kaynak bu hat için sefer saati yayımlamıyor.</div>`;
+    div.innerHTML = `<div class="ust"><span class="kod" style="background:${c}">${esc(h.hat) || "?"}</span>
+        <span class="ad">${esc(h.ad)}</span></div>
+      <div class="yon">${h.yon ? "→ " + esc(h.yon) + " · " : ""}durak: ${esc(h.en_yakin_durak)}</div>
+      <div><span class="rozet">${TUR[h.tur] || esc(h.tur)}</span>${h.durum === "saatli" ? `<span class="rozet">${h.sefer_sayisi} sefer</span>` : ""}
+        ${h.cizgi_turu === "durak_sirasi" ? `<span class="rozet">güzergâh: durak sırası</span>` : ""}<span class="rozet">${esc(h.kaynak)}</span></div>
+      ${saat}
+      ${h.tahmini ? `<div class="yon">~ ara durak saatleri tahmini (yayımcı yalnız ilk/son durak saatini veriyor)</div>` : ""}
+      ${h.suresi_dolmus ? `<div class="uyari">Tarife ${esc(h.tarife_bitis)} tarihinde sona ermiş; kaynak güncellenmemiş.</div>` : ""}`;
+    div.onclick = () => sec(key);
+    L_.appendChild(div);
+  });
+}
+
+function sec(key){
+  document.querySelectorAll(".hat").forEach(e => e.classList.toggle("sec", e.dataset.k === key));
+  Object.entries(cizgiler).forEach(([k, pl]) => pl.setStyle({opacity: k === key ? 1 : .15, weight: k === key ? 6 : 3}));
+  const pl = cizgiler[key]; if (pl) { pl.bringToFront(); map.fitBounds(pl.getBounds(), {padding:[30,30]}); }
+  const el = document.querySelector(`.hat[data-k="${CSS.escape(key)}"]`); if (el) el.scrollIntoView({block:"nearest"});
+}
+
+window.addEventListener("resize", () => map.invalidateSize());
+setTimeout(() => map.invalidateSize(), 200);
+map.on("click", e => sorgula(e.latlng.lat.toFixed(6), e.latlng.lng.toFixed(6)));
+["cap","gun","s0","s1"].forEach(id => document.getElementById(id).addEventListener("change", () => { if (sonNokta) sorgula(...sonNokta); }));
+document.getElementById("sehir").addEventListener("change", e => { if (!e.target.value) return;
+  const [a, b, z] = e.target.value.split(",").map(Number); map.setView([a, b], z); });
+</script>
+</body>
+</html>
