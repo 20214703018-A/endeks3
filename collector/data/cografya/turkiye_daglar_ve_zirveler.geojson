@@ -1356,8 +1356,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.51215,
-          36.66222
+          30.51113,
+          36.65809
         ]
       },
       "properties": {
@@ -1365,7 +1365,7 @@
         "ad": "Andızlı Tepe",
         "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 1220,
+        "rakim_metre": 588,
         "il_plaka": "07"
       }
     },
@@ -19572,8 +19572,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.50494,
-          36.63834
+          30.51734,
+          36.63418
         ]
       },
       "properties": {
@@ -19581,7 +19581,7 @@
         "ad": "Bağlık Dağı",
         "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 1220,
+        "rakim_metre": 892,
         "il_plaka": "07"
       }
     },
@@ -28698,16 +28698,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.17226,
-          36.88882
+          32.1672,
+          36.89316
         ]
       },
       "properties": {
         "id": 314532,
         "ad": "Geyik Dağı",
-        "tur": "Sıradağlar",
+        "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 2840,
+        "rakim_metre": 2757,
         "il_plaka": "07"
       }
     },
@@ -41982,16 +41982,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.18842,
-          36.80147
+          32.18394,
+          36.80242
         ]
       },
       "properties": {
         "id": 324765,
         "ad": "Akdağ",
-        "tur": "Zirve / Doruk",
+        "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 2701,
+        "rakim_metre": 2678,
         "il_plaka": "07"
       }
     },
@@ -43368,16 +43368,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          30.55,
-          36.7
+          30.55992,
+          36.74821
         ]
       },
       "properties": {
         "id": 388228,
         "ad": "Çam Dağı",
-        "tur": "Sıradağlar",
+        "tur": "Tepe",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 281,
+        "rakim_metre": 315,
         "il_plaka": "07"
       }
     },
@@ -113838,24 +113838,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          40.84542,
-          39.66737
-        ]
-      },
-      "properties": {
-        "id": 10330886,
-        "ad": "Kabaktepe Sırtı",
-        "tur": "Sırt / Tepe Sırası",
-        "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 2223,
-        "il_plaka": "25"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           41.07377,
           39.48792
         ]
@@ -129210,16 +129192,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.12196,
-          36.88085
+          32.12716,
+          36.87504
         ]
       },
       "properties": {
         "id": 10867211,
-        "ad": "Mor Kaya",
+        "ad": "Morkaya",
         "tur": "Kaya / Kayalık Alan",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 1917,
+        "rakim_metre": 1643,
         "il_plaka": "07"
       }
     },
@@ -129228,16 +129210,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          32.18571,
-          36.84177
+          32.18119,
+          36.84199
         ]
       },
       "properties": {
         "id": 10867213,
-        "ad": "Erkeçdeliği Tepe",
-        "tur": "Tepe",
+        "ad": "Erkeçdeliği Tepesi",
+        "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
-        "rakim_metre": 1953,
+        "rakim_metre": 1964,
         "il_plaka": "07"
       }
     },
@@ -129469,7 +129451,7 @@
       "properties": {
         "id": 10867227,
         "ad": "Göbekçal Tepe",
-        "tur": "Tepe",
+        "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
         "rakim_metre": 2367,
         "il_plaka": "07"
@@ -223522,7 +223504,7 @@
         "tur": "Tepe",
         "kategori": "DAG_VE_TEPE",
         "rakim_metre": 1956,
-        "il_plaka": "32"
+        "il_plaka": "78"
       }
     },
     {
@@ -223846,7 +223828,7 @@
         "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
         "rakim_metre": 1905,
-        "il_plaka": "32"
+        "il_plaka": "78"
       }
     },
     {
@@ -223972,7 +223954,7 @@
         "tur": "Tepe",
         "kategori": "DAG_VE_TEPE",
         "rakim_metre": 1967,
-        "il_plaka": "32"
+        "il_plaka": "78"
       }
     },
     {
@@ -225160,7 +225142,7 @@
         "tur": "Dağ",
         "kategori": "DAG_VE_TEPE",
         "rakim_metre": 2376,
-        "il_plaka": "71"
+        "il_plaka": "07"
       }
     },
     {
@@ -225449,6 +225431,2724 @@
         "kategori": "DAG_VE_TEPE",
         "rakim_metre": 1961,
         "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.10206,
+          36.85311
+        ]
+      },
+      "properties": {
+        "id": 13704681,
+        "ad": "Akdağ",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2233,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.23783,
+          36.88465
+        ]
+      },
+      "properties": {
+        "id": 13706688,
+        "ad": "Dedeeşme Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2074,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.21947,
+          36.94881
+        ]
+      },
+      "properties": {
+        "id": 13706694,
+        "ad": "Külâhlı Taş",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2066,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.18344,
+          36.98385
+        ]
+      },
+      "properties": {
+        "id": 13706697,
+        "ad": "Türbe Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2407,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.16576,
+          36.98834
+        ]
+      },
+      "properties": {
+        "id": 13706698,
+        "ad": "Kapız Gediği",
+        "tur": "Dağ Geçidi",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2333,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.17668,
+          36.98921
+        ]
+      },
+      "properties": {
+        "id": 13706699,
+        "ad": "Kelsu Tepesi",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2397,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.23833,
+          36.92628
+        ]
+      },
+      "properties": {
+        "id": 13706702,
+        "ad": "Zeybekesme Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2027,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.22924,
+          36.88162
+        ]
+      },
+      "properties": {
+        "id": 13706709,
+        "ad": "Kalaycı Taşı",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1998,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.16647,
+          36.90933
+        ]
+      },
+      "properties": {
+        "id": 13706714,
+        "ad": "Gökbel Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2534,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.21863,
+          36.97586
+        ]
+      },
+      "properties": {
+        "id": 13706719,
+        "ad": "Ardıçeşme Tepesi",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2155,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.24357,
+          36.9797
+        ]
+      },
+      "properties": {
+        "id": 13706722,
+        "ad": "Katranbaş Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2090,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.13244,
+          36.88238
+        ]
+      },
+      "properties": {
+        "id": 13706725,
+        "ad": "Gevenağa Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1643,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.24037,
+          36.9614
+        ]
+      },
+      "properties": {
+        "id": 13706728,
+        "ad": "Yüksekeşme Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2196,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.23838,
+          36.90377
+        ]
+      },
+      "properties": {
+        "id": 13706731,
+        "ad": "Apalakeşme Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2251,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.13126,
+          36.91417
+        ]
+      },
+      "properties": {
+        "id": 13706738,
+        "ad": "Akdağ",
+        "tur": "Zirve / Doruk",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2368,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.12828,
+          36.96334
+        ]
+      },
+      "properties": {
+        "id": 13706739,
+        "ad": "Nebi Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2111,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.22482,
+          36.96854
+        ]
+      },
+      "properties": {
+        "id": 13706741,
+        "ad": "Kızılgeriş Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2155,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.22125,
+          36.92081
+        ]
+      },
+      "properties": {
+        "id": 13706742,
+        "ad": "Battaleşme Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2222,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.23192,
+          36.9862
+        ]
+      },
+      "properties": {
+        "id": 13706747,
+        "ad": "Gölbeleni Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2141,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.18521,
+          36.89463
+        ]
+      },
+      "properties": {
+        "id": 13706750,
+        "ad": "Ardıçlı Taş",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2228,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.1864,
+          36.90273
+        ]
+      },
+      "properties": {
+        "id": 13706753,
+        "ad": "İparlı Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2419,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.21999,
+          36.99231
+        ]
+      },
+      "properties": {
+        "id": 13706755,
+        "ad": "Canavarcık Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2061,
+        "il_plaka": "71"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.18926,
+          36.88937
+        ]
+      },
+      "properties": {
+        "id": 13706759,
+        "ad": "Kızılkatkaya",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2515,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.25023,
+          36.90027
+        ]
+      },
+      "properties": {
+        "id": 13706761,
+        "ad": "Akeşme Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2318,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.14176,
+          36.95734
+        ]
+      },
+      "properties": {
+        "id": 13706764,
+        "ad": "Karagöz Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2094,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.15698,
+          36.91173
+        ]
+      },
+      "properties": {
+        "id": 13706765,
+        "ad": "Uzunkar Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2183,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.22676,
+          36.88333
+        ]
+      },
+      "properties": {
+        "id": 13706769,
+        "ad": "Lökceeyrek Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1998,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.15879,
+          36.89957
+        ]
+      },
+      "properties": {
+        "id": 13706770,
+        "ad": "Yepelekli Tepe",
+        "tur": "Zirve / Doruk",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2730,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.21009,
+          36.91358
+        ]
+      },
+      "properties": {
+        "id": 13706771,
+        "ad": "Kellegömüldü Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2147,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.23082,
+          36.89825
+        ]
+      },
+      "properties": {
+        "id": 13706773,
+        "ad": "Cirişli Taş",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2161,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.24586,
+          36.88463
+        ]
+      },
+      "properties": {
+        "id": 13706774,
+        "ad": "Yarıkin Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1947,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.1558,
+          36.95254
+        ]
+      },
+      "properties": {
+        "id": 13706775,
+        "ad": "Duvaklı Tepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1980,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.13561,
+          36.89005
+        ]
+      },
+      "properties": {
+        "id": 13706776,
+        "ad": "Kelertaş",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2092,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.21381,
+          36.87528
+        ]
+      },
+      "properties": {
+        "id": 13706780,
+        "ad": "Kartaldeliği Kayası",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2020,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.22459,
+          36.89853
+        ]
+      },
+      "properties": {
+        "id": 13706782,
+        "ad": "Ahmetyalak Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2099,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.13388,
+          36.93297
+        ]
+      },
+      "properties": {
+        "id": 13706784,
+        "ad": "Yassı Tepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1999,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.2052,
+          36.93987
+        ]
+      },
+      "properties": {
+        "id": 13706786,
+        "ad": "Karayaka Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2185,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.2415,
+          36.92077
+        ]
+      },
+      "properties": {
+        "id": 13706789,
+        "ad": "Belenyurt Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2233,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.24245,
+          36.91177
+        ]
+      },
+      "properties": {
+        "id": 13706798,
+        "ad": "Ziyaret Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2286,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.24653,
+          36.87249
+        ]
+      },
+      "properties": {
+        "id": 13706799,
+        "ad": "Ağaini Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2266,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.1342,
+          36.94653
+        ]
+      },
+      "properties": {
+        "id": 13706803,
+        "ad": "Kızılbelen Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2048,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.21876,
+          36.93202
+        ]
+      },
+      "properties": {
+        "id": 13706810,
+        "ad": "Sahilcibelen Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2191,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.19648,
+          36.92208
+        ]
+      },
+      "properties": {
+        "id": 13706814,
+        "ad": "Çangallar Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2312,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.22834,
+          36.85591
+        ]
+      },
+      "properties": {
+        "id": 13707337,
+        "ad": "Yerolukbaşı Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1986,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.15786,
+          36.84752
+        ]
+      },
+      "properties": {
+        "id": 13707343,
+        "ad": "Arap Deliği",
+        "tur": "Dağ Geçidi",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1396,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.20517,
+          36.84689
+        ]
+      },
+      "properties": {
+        "id": 13707345,
+        "ad": "Şimşirgediği Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1912,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.194,
+          36.85101
+        ]
+      },
+      "properties": {
+        "id": 13707346,
+        "ad": "Karakurt Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1711,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.18908,
+          36.83914
+        ]
+      },
+      "properties": {
+        "id": 13707353,
+        "ad": "Tavşanbaşı Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1953,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.16281,
+          36.82617
+        ]
+      },
+      "properties": {
+        "id": 13707357,
+        "ad": "Hanaylık Boğazı",
+        "tur": "Dağ Geçidi",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1848,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.15633,
+          36.8171
+        ]
+      },
+      "properties": {
+        "id": 13707358,
+        "ad": "Yarıkyol Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2281,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.23802,
+          36.82897
+        ]
+      },
+      "properties": {
+        "id": 13707361,
+        "ad": "Gökboyun Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2234,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.19409,
+          36.8254
+        ]
+      },
+      "properties": {
+        "id": 13707365,
+        "ad": "Gölbeleni Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2173,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.16308,
+          36.81291
+        ]
+      },
+      "properties": {
+        "id": 13707367,
+        "ad": "Aşı Gediği",
+        "tur": "Dağ Geçidi",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2279,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.23124,
+          36.8132
+        ]
+      },
+      "properties": {
+        "id": 13707371,
+        "ad": "Yellice Beli",
+        "tur": "Dağ Geçidi",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2085,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.24444,
+          36.81392
+        ]
+      },
+      "properties": {
+        "id": 13707372,
+        "ad": "Kartlangaz Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2248,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.13533,
+          36.80118
+        ]
+      },
+      "properties": {
+        "id": 13707378,
+        "ad": "Kızılkaya Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1911,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.15547,
+          36.79614
+        ]
+      },
+      "properties": {
+        "id": 13707380,
+        "ad": "Boğaz Ağzı",
+        "tur": "Dağ Geçidi",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1566,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.23499,
+          36.79209
+        ]
+      },
+      "properties": {
+        "id": 13707381,
+        "ad": "Karadelik Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1974,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.24545,
+          36.79015
+        ]
+      },
+      "properties": {
+        "id": 13707382,
+        "ad": "Samsam Beli",
+        "tur": "Dağ Geçidi",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1663,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.18387,
+          36.78332
+        ]
+      },
+      "properties": {
+        "id": 13707386,
+        "ad": "Karakoca Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1775,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.20635,
+          36.77676
+        ]
+      },
+      "properties": {
+        "id": 13707394,
+        "ad": "Hese Beleni",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1486,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.22967,
+          36.77505
+        ]
+      },
+      "properties": {
+        "id": 13707395,
+        "ad": "Döğüşbeleni Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1668,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.23993,
+          36.76355
+        ]
+      },
+      "properties": {
+        "id": 13707398,
+        "ad": "Börkükara Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1522,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.15808,
+          36.762
+        ]
+      },
+      "properties": {
+        "id": 13707404,
+        "ad": "Boğazağzı Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 441,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.14471,
+          36.769
+        ]
+      },
+      "properties": {
+        "id": 13707406,
+        "ad": "Düden Beleni",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 893,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.15079,
+          36.7497
+        ]
+      },
+      "properties": {
+        "id": 13707413,
+        "ad": "Tepe Yakası",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 536,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.18995,
+          36.75234
+        ]
+      },
+      "properties": {
+        "id": 13707418,
+        "ad": "Say Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 523,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.21902,
+          36.75837
+        ]
+      },
+      "properties": {
+        "id": 13707420,
+        "ad": "Tuztaş Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1176,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.686,
+          36.93832
+        ]
+      },
+      "properties": {
+        "id": 13709856,
+        "ad": "Deliktaş Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 283,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.74339,
+          36.99906
+        ]
+      },
+      "properties": {
+        "id": 13709869,
+        "ad": "Kızılin Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 125,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53969,
+          36.8889
+        ]
+      },
+      "properties": {
+        "id": 13710774,
+        "ad": "Nergizli Tepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 200,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.51108,
+          36.95344
+        ]
+      },
+      "properties": {
+        "id": 13710795,
+        "ad": "Kovanlık Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 222,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53812,
+          36.89605
+        ]
+      },
+      "properties": {
+        "id": 13710796,
+        "ad": "Keneli Tepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 207,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.50229,
+          36.97893
+        ]
+      },
+      "properties": {
+        "id": 13710799,
+        "ad": "İçerikoyası Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 344,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53537,
+          36.92293
+        ]
+      },
+      "properties": {
+        "id": 13710806,
+        "ad": "Doyrankeldağ Tepesi",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 669,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.49291,
+          36.92249
+        ]
+      },
+      "properties": {
+        "id": 13710807,
+        "ad": "Avlan Dağı",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1274,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.51816,
+          36.92671
+        ]
+      },
+      "properties": {
+        "id": 13710823,
+        "ad": "Karakuzdağı Tepesi",
+        "tur": "Zirve / Doruk",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1197,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53083,
+          36.93507
+        ]
+      },
+      "properties": {
+        "id": 13710825,
+        "ad": "Güvercinliğinkeh Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 887,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5007,
+          36.92597
+        ]
+      },
+      "properties": {
+        "id": 13710830,
+        "ad": "Avladağı Tepesi",
+        "tur": "Zirve / Doruk",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1274,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.58844,
+          36.95322
+        ]
+      },
+      "properties": {
+        "id": 13710835,
+        "ad": "Domuzalanı Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 297,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.50636,
+          36.99102
+        ]
+      },
+      "properties": {
+        "id": 13710855,
+        "ad": "Kocaharmancık Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 869,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.56162,
+          36.933
+        ]
+      },
+      "properties": {
+        "id": 13710856,
+        "ad": "Karamankeldağ Tepesi",
+        "tur": "Zirve / Doruk",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 431,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.57579,
+          36.93513
+        ]
+      },
+      "properties": {
+        "id": 13710860,
+        "ad": "Kel Tepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 263,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53544,
+          36.87747
+        ]
+      },
+      "properties": {
+        "id": 13710862,
+        "ad": "Üçtepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 142,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.52488,
+          36.97479
+        ]
+      },
+      "properties": {
+        "id": 13710866,
+        "ad": "Kocakayrak Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 447,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.51698,
+          36.98888
+        ]
+      },
+      "properties": {
+        "id": 13710874,
+        "ad": "Küçükharmancık Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 766,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53024,
+          36.88145
+        ]
+      },
+      "properties": {
+        "id": 13710880,
+        "ad": "Uzungeriş Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 193,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53545,
+          36.99222
+        ]
+      },
+      "properties": {
+        "id": 13710900,
+        "ad": "Altıkasar Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 658,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.54399,
+          36.90261
+        ]
+      },
+      "properties": {
+        "id": 13710902,
+        "ad": "Andızlı Tepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 111,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.54693,
+          36.92461
+        ]
+      },
+      "properties": {
+        "id": 13710908,
+        "ad": "Dağarcıklı Sırt",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 218,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53364,
+          36.99547
+        ]
+      },
+      "properties": {
+        "id": 13710913,
+        "ad": "Üstükasar Tepesi",
+        "tur": "Zirve / Doruk",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 658,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53759,
+          36.97082
+        ]
+      },
+      "properties": {
+        "id": 13710915,
+        "ad": "Kelkayrak Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 353,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.50779,
+          36.96081
+        ]
+      },
+      "properties": {
+        "id": 13710921,
+        "ad": "Attepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 245,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5335,
+          36.92787
+        ]
+      },
+      "properties": {
+        "id": 13710927,
+        "ad": "Andızlıyürek Tepesi",
+        "tur": "Zirve / Doruk",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 290,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.51569,
+          36.98148
+        ]
+      },
+      "properties": {
+        "id": 13710944,
+        "ad": "Dinecekasarı Kayası",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 706,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.50766,
+          36.99859
+        ]
+      },
+      "properties": {
+        "id": 13710950,
+        "ad": "Ortagözlek Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 980,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.50317,
+          36.8899
+        ]
+      },
+      "properties": {
+        "id": 13710961,
+        "ad": "Bozbelen Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 501,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53579,
+          36.94596
+        ]
+      },
+      "properties": {
+        "id": 13710967,
+        "ad": "Akyar Kayası",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 164,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5245,
+          36.90499
+        ]
+      },
+      "properties": {
+        "id": 13710984,
+        "ad": "Dedeini Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 135,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.50601,
+          36.8819
+        ]
+      },
+      "properties": {
+        "id": 13710991,
+        "ad": "Yazıbeleni Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 510,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.58,
+          36.92456
+        ]
+      },
+      "properties": {
+        "id": 13710992,
+        "ad": "Kızılkat Kayası",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 178,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.51023,
+          36.92852
+        ]
+      },
+      "properties": {
+        "id": 13710994,
+        "ad": "Ulubelen Gediği",
+        "tur": "Dağ Geçidi",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1110,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.51665,
+          36.98251
+        ]
+      },
+      "properties": {
+        "id": 13710995,
+        "ad": "Akkaaya Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 706,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5412,
+          36.63794
+        ]
+      },
+      "properties": {
+        "id": 13711373,
+        "ad": "Karaçukur Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 56,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.52435,
+          36.66122
+        ]
+      },
+      "properties": {
+        "id": 13711377,
+        "ad": "Alayapı Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 967,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.52294,
+          36.74849
+        ]
+      },
+      "properties": {
+        "id": 13711382,
+        "ad": "Kat Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1078,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5139,
+          36.68875
+        ]
+      },
+      "properties": {
+        "id": 13711385,
+        "ad": "Çetirli Tepe",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 203,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.54845,
+          36.68875
+        ]
+      },
+      "properties": {
+        "id": 13711395,
+        "ad": "Yağca Tepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 172,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5115,
+          36.70243
+        ]
+      },
+      "properties": {
+        "id": 13711398,
+        "ad": "Kopuk Tepe",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1284,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.52984,
+          36.67513
+        ]
+      },
+      "properties": {
+        "id": 13711400,
+        "ad": "Koca Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 51,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.55467,
+          36.66918
+        ]
+      },
+      "properties": {
+        "id": 13711402,
+        "ad": "Kara Tepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 85,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.54009,
+          36.73556
+        ]
+      },
+      "properties": {
+        "id": 13711405,
+        "ad": "Gökkaya",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 45,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.56451,
+          36.68689
+        ]
+      },
+      "properties": {
+        "id": 13711406,
+        "ad": "Reisburnu Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 335,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53434,
+          36.65646
+        ]
+      },
+      "properties": {
+        "id": 13711409,
+        "ad": "Kepez Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 174,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.52598,
+          36.73704
+        ]
+      },
+      "properties": {
+        "id": 13711410,
+        "ad": "Karabuz Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1069,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.5057,
+          36.71963
+        ]
+      },
+      "properties": {
+        "id": 13711413,
+        "ad": "Delik Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1673,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.55348,
+          36.64052
+        ]
+      },
+      "properties": {
+        "id": 13711415,
+        "ad": "Tekerlek Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 28,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.50533,
+          36.63814
+        ]
+      },
+      "properties": {
+        "id": 13711418,
+        "ad": "Çınarlıpınar Dağı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1342,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.53823,
+          36.74619
+        ]
+      },
+      "properties": {
+        "id": 13711424,
+        "ad": "Bel Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 651,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.54529,
+          36.65138
+        ]
+      },
+      "properties": {
+        "id": 13711425,
+        "ad": "Kızıl Tepe",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 211,
+        "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.79647,
+          39.73658
+        ]
+      },
+      "properties": {
+        "id": 13712687,
+        "ad": "Oyuk Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2219,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.81107,
+          39.74298
+        ]
+      },
+      "properties": {
+        "id": 13712688,
+        "ad": "Kale Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2236,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.82693,
+          39.74201
+        ]
+      },
+      "properties": {
+        "id": 13712689,
+        "ad": "Kiliseciğin Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2282,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.81134,
+          39.7313
+        ]
+      },
+      "properties": {
+        "id": 13712690,
+        "ad": "Küçükkale Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2289,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.75197,
+          39.74661
+        ]
+      },
+      "properties": {
+        "id": 13712691,
+        "ad": "Sarıkuzey Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2224,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.7629,
+          39.73406
+        ]
+      },
+      "properties": {
+        "id": 13712692,
+        "ad": "Merikeren Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2341,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.76311,
+          39.7077
+        ]
+      },
+      "properties": {
+        "id": 13712693,
+        "ad": "Çıngıl Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2544,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.7847,
+          39.71337
+        ]
+      },
+      "properties": {
+        "id": 13712694,
+        "ad": "Yanık Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2560,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.77066,
+          39.68331
+        ]
+      },
+      "properties": {
+        "id": 13712695,
+        "ad": "Kındıralık Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2350,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.75515,
+          39.66864
+        ]
+      },
+      "properties": {
+        "id": 13712698,
+        "ad": "Yurdu Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2308,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.75261,
+          39.67995
+        ]
+      },
+      "properties": {
+        "id": 13712700,
+        "ad": "Hamzanıntaşı Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2429,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.76483,
+          39.67414
+        ]
+      },
+      "properties": {
+        "id": 13712701,
+        "ad": "Kılıç Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2249,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.75359,
+          39.65912
+        ]
+      },
+      "properties": {
+        "id": 13712702,
+        "ad": "Sivriburun Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2240,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.78445,
+          39.64397
+        ]
+      },
+      "properties": {
+        "id": 13712703,
+        "ad": "Evliya Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1917,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.79438,
+          39.66357
+        ]
+      },
+      "properties": {
+        "id": 13712704,
+        "ad": "Sekiler Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2122,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.76087,
+          39.62908
+        ]
+      },
+      "properties": {
+        "id": 13712709,
+        "ad": "Güney Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1934,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.79576,
+          39.64481
+        ]
+      },
+      "properties": {
+        "id": 13712710,
+        "ad": "Kavluk Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1909,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.81758,
+          39.72475
+        ]
+      },
+      "properties": {
+        "id": 13712717,
+        "ad": "Şakşakların Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2382,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.83753,
+          39.63463
+        ]
+      },
+      "properties": {
+        "id": 13712720,
+        "ad": "Tavşantaş Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1835,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.83465,
+          39.659
+        ]
+      },
+      "properties": {
+        "id": 13712723,
+        "ad": "Çatakların Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2108,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.85832,
+          39.6993
+        ]
+      },
+      "properties": {
+        "id": 13712725,
+        "ad": "Bent Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2463,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.8294,
+          39.71323
+        ]
+      },
+      "properties": {
+        "id": 13712726,
+        "ad": "Dıkenliçayır Sırtı",
+        "tur": "Sırt / Tepe Sırası",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2435,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.82619,
+          39.73387
+        ]
+      },
+      "properties": {
+        "id": 13712728,
+        "ad": "Ziyaref Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2323,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.83744,
+          39.73579
+        ]
+      },
+      "properties": {
+        "id": 13712729,
+        "ad": "Güney Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2335,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.85382,
+          39.74085
+        ]
+      },
+      "properties": {
+        "id": 13712731,
+        "ad": "Soğukgöze Tepesi",
+        "tur": "Dağ",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2323,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.86966,
+          39.71711
+        ]
+      },
+      "properties": {
+        "id": 13712735,
+        "ad": "Büyükgüney Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2353,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.84963,
+          39.62795
+        ]
+      },
+      "properties": {
+        "id": 13712738,
+        "ad": "Karagöz Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1775,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.85819,
+          39.62742
+        ]
+      },
+      "properties": {
+        "id": 13712739,
+        "ad": "Kale Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1776,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.86617,
+          39.62807
+        ]
+      },
+      "properties": {
+        "id": 13712740,
+        "ad": "Kurt Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1764,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.84479,
+          39.6256
+        ]
+      },
+      "properties": {
+        "id": 13712742,
+        "ad": "Hazne Tepesi",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1775,
+        "il_plaka": "25"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.8001,
+          39.67868
+        ]
+      },
+      "properties": {
+        "id": 13712768,
+        "ad": "Keçi Taşı",
+        "tur": "Kaya / Kayalık Alan",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 2346,
+        "il_plaka": "25"
       }
     }
   ]
