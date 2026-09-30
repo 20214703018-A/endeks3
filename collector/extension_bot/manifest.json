@@ -1,11 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "GEOPROP Men\u00fc Toplay\u0131c\u0131",
-  "version": "1.0",
-  "description": "Google \u00fczerinden men\u00fcleri otomatik \u00e7eker",
+  "name": "GEOPROP Menü Toplayıcı",
+  "version": "2.2.0",
+  "description": "Uygun Google restoranlarının menü, fiyat, sağlayıcı ve görsellerini kaldığı yerden devam ederek toplar",
   "permissions": [
     "tabs",
-    "storage"
+    "storage",
+    "alarms",
+    "debugger"
   ],
   "host_permissions": [
     "*://www.google.com/*",
@@ -13,7 +15,7 @@
     "http://localhost:5050/*"
   ],
   "action": {
-    "default_title": "Taramay\u0131 Ba\u015flat",
+    "default_title": "Taramayı Başlat",
     "default_popup": "popup.html"
   },
   "background": {
@@ -25,6 +27,7 @@
         "*://www.google.com/search*"
       ],
       "js": [
+        "parsers.js",
         "content.js"
       ],
       "run_at": "document_idle"
