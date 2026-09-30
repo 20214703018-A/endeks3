@@ -1,0 +1,54 @@
+name: Market Fiyatı ürün fiyat geçmişi (40 makine)
+
+# 81 ilde, ürün×il çifti başına son 90 günün günlük fiyat serisi (api.marketfiyati.org.tr /v3/price-history).
+# Girdi: consolidation/girdi/marketfiyati_history_girdi.parquet (il_geo_id, id, depotId — 634.913 çift).
+# Her makine çiftlerin i/N payını çeker; sunucu art arda 25 isteği reddederse o makine DURUR (kimlik değiştirilmez).
+# Çıktı: makine başına artifact → yerelde gh run download → GEOPROP_RAW_INTAKE/marketfiyati/<RUN_DATE>/history/
+
+on:
+  push:
+    branches: [marketfiyati-gecmis]
+    paths: [".github/marketfiyati_gecmis_run.env"]
+  workflow_dispatch:
+
+jobs:
+  ayar:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: |
+          set -a; . .github/marketfiyati_gecmis_run.env; set +a
+          echo "matrix=$(python3 -c "import json; print(json.dumps(list(range(1, $SHARDS + 1))))")" >> "$GITHUB_OUTPUT"
+
+  gecmis:
+    needs: ayar
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.ayar.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q pandas pyarrow requests
+      - name: topla
+        run: |
+          set -a; . .github/marketfiyati_gecmis_run.env; set +a
+          INTAKE_RUN_DATE="$RUN_DATE" python -u consolidation/tools/intake_marketfiyati.py history \
+            --prices-file consolidation/girdi/marketfiyati_history_girdi.parquet \
+            --history-ils all --il-shard "${{ matrix.shard }}/$SHARDS" \
+            --rps "$RPS" --threads "$THREADS" --max-minutes "$MAX_MINUTES"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mf_gecmis_${{ github.run_id }}_${{ matrix.shard }}
+          path: |
+            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/2026-10-01/history/
+            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/2026-10-01/run.log
+          retention-days: 30
+          if-no-files-found: warn
