@@ -28,6 +28,8 @@
             payload: { id: venue.id, lease_token: venue.lease_token, error, blocked },
         });
     };
+    // Arka plandaki bekçiye "hâlâ çalışıyorum" der; her uzun adımdan önce çağrılır.
+    const heartbeat = (step) => chrome.runtime.sendMessage({ action: "heartbeat", step }).catch(() => {});
     const save = (payload) => {
         log(`Kaydediliyor: ${payload.fiyatlar.length} fiyat, ${payload.gorseller.length} görsel (${payload.fiyat_saglayici})`);
         return chrome.runtime.sendMessage({ action: "save_result", payload });
@@ -64,9 +66,13 @@
             const px = parseFloat((bar?.getAttribute("style") || "").match(/height:\s*([\d.]+)px/)?.[1] || "0");
             return { saat: el.getAttribute("aria-label"), yuzde: Math.max(0, Math.min(100, Math.round(px / 0.75))) };
         });
+    // Popüler saatlere ayrılan en uzun süre; dolarsa o ana kadar okunan günlerle devam edilir
+    // (gun_sayisi sütunu kaç günün okunduğunu gösterir). Menü asıl hedef olduğu için onu bekletmez.
+    const POPULAR_TIMES_BUDGET_MS = 15000;
     async function collectPopularTimes() {
         const root = busyRoot();
         if (!root) return null;
+        const startedAt = Date.now();
         root.scrollIntoView({ block: "center" });
         await sleep(300);
         const text = root.innerText || "";
@@ -80,6 +86,10 @@
         if (initial) result.gunler[initial] = readDayBars();
         for (const day of DAY_NAMES) {
             if (result.gunler[day]) continue;
+            if (Date.now() - startedAt > POPULAR_TIMES_BUDGET_MS) {
+                log(`Popüler saatler süre sınırı doldu (${Object.keys(result.gunler).length} gün okundu)`);
+                break;
+            }
             const radio = busyRadios().find((el) => el.getAttribute("aria-label") === day);
             if (!radio) continue;
             const rect = radio.getBoundingClientRect();
@@ -103,6 +113,7 @@
     }
 
     try {
+        heartbeat("sayfa");
         // Google sonuçları bazen geç boyanır; sabit bekleme yerine metin gelene kadar bekle (en fazla 10 sn).
         for (let waited = 0; waited < 6000 && bodyText().length < 400; waited += 250) await sleep(250);
         await sleep(300);
@@ -130,16 +141,24 @@
 
         // Yorum sayısı: önce yalnız "5.413 Yorum" gibi tek başına duran küçük elemanlara bak
         // (panelde puan ile yorum sayısının metin olarak birleşmesini önler), sonra tüm metne.
-        const leafReview = Array.from(document.querySelectorAll("span, a, div"))
+        const leafTexts = Array.from(document.querySelectorAll("span, a, div"))
             .filter((element) => element.children.length === 0)
-            .map((element) => parsers.parseReviewCount(parsers.cleanLine(element.textContent)))
+            .map((element) => parsers.cleanLine(element.textContent));
+        const leafReview = leafTexts
+            .map((text) => parsers.parseReviewCount(text))
             .find((count) => count !== null);
         const liveReviewCount = leafReview ?? parsers.parseReviewCount(bodyText());
-        if (liveReviewCount !== null && liveReviewCount < 10) {
-            await fail(`Canlı değerlendirme sayısı 10 altında: ${liveReviewCount}`);
+        // Eleme yalnız mekan paneline özgü "N Google yorumu" / "N değerlendirme" biçimine göre yapılır.
+        // Çıplak "3 yorum" sayısı çoğu zaman yorum yazan kişinin profilinden gelir; mekanı elemek için kullanılmaz.
+        const panelReview = leafTexts
+            .map((text) => parsers.parsePanelReviewCount(text))
+            .find((count) => count !== null) ?? null;
+        if (panelReview !== null && panelReview < 10) {
+            await fail(`Canlı değerlendirme sayısı 10 altında: ${panelReview}`);
             return;
         }
 
+        heartbeat("populer_saatler");
         let popularTimes = null;
         try {
             popularTimes = await collectPopularTimes();
@@ -153,6 +172,7 @@
             return /^(menü|menüyü göster|tüm menüyü göster|menüyü görüntüle)$/.test(text);
         });
         let candidates = menuCandidates();
+        heartbeat("menu");
         if (menuButton) {
             log("Menü düğmesi bulundu, tıklanıyor.");
             menuButton.click();

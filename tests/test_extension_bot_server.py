@@ -40,7 +40,10 @@ class ExtensionServerTests(unittest.TestCase):
         self.assertEqual(server.canonical_target_city("Izmir"), "İzmir")
         self.assertEqual(server.canonical_target_city("Canakkale"), "Çanakkale")
         self.assertEqual(server.canonical_target_city("Diyarbakir"), "Diyarbakır")
-        self.assertIsNone(server.canonical_target_city("Adana"))
+        self.assertEqual(server.canonical_target_city("Adana"), "Adana")  # 81 il kapsamı
+        self.assertEqual(server.canonical_target_city("Sanliurfa"), "Şanlıurfa")
+        self.assertIsNone(server.canonical_target_city("Otomotiv"))  # kaymış sütunlu shard satırı
+        self.assertEqual(len(server.ALL_CITIES), 81)
 
     def test_food_category_rejects_internet_and_gaming_cafes(self):
         self.assertFalse(server.is_food_category("Kafe", None, "Moss Internet Cafe"))
@@ -60,6 +63,42 @@ class ExtensionServerTests(unittest.TestCase):
         self.assertEqual(first["id"], second["id"])
         self.assertEqual(first["lease_token"], second["lease_token"])
         self.assertTrue(second["resumed"])
+
+    def test_queue_leases_west_metros_and_high_yield_categories_first(self):
+        base = self.venue()
+        venues = [
+            {**base, "id": "ankara-pizza", "il": "Ankara", "kategori": "Pizza"},
+            {**base, "id": "izmir-lokanta", "il": "İzmir", "kategori": "Restoran & Lokanta"},
+            {**base, "id": "izmir-pizza", "il": "İzmir", "kategori": "Pizza"},
+            {**base, "id": "adana-pizza", "il": "Adana", "kategori": "Pizza"},
+        ]
+        # geçmiş: Pizza 3/4 menülü, Restoran & Lokanta 0/4
+        history = [("h-p%d" % i, "Pizza", "completed" if i < 3 else "completed_no_menu") for i in range(4)]
+        history += [("h-l%d" % i, "Restoran & Lokanta", "completed_no_menu") for i in range(4)]
+        for venue_id, category, status in history:
+            self.conn.execute(
+                "INSERT INTO menu_tarama_kuyrugu (mekan_id, payload_json, durum, created_at, updated_at) VALUES (?,?,?,?,?)",
+                (venue_id, server.json.dumps({"kategori": category, "il": "İzmir"}), status, "t", "t"),
+            )
+        server.sync_queue(self.conn, venues)
+        order = []
+        for _ in venues:
+            leased = server.lease_next(self.conn)
+            order.append(leased["id"])
+            self.conn.execute("UPDATE menu_tarama_kuyrugu SET durum='completed' WHERE mekan_id=?", (leased["id"],))
+        self.assertEqual(order, ["izmir-pizza", "izmir-lokanta", "ankara-pizza", "adana-pizza"])
+
+    def test_false_failures_requeued_once(self):
+        server.sync_queue(self.conn, [self.venue()])
+        self.conn.execute(
+            "UPDATE menu_tarama_kuyrugu SET durum='failed', deneme_sayisi=2, son_hata=? WHERE mekan_id='place-1'",
+            ("Zaman aşımı: içerik betiği 0.5 dk içinde yanıt vermedi | url: x",),
+        )
+        self.assertEqual(server.requeue_known_false_failures(self.conn), 1)
+        row = self.conn.execute("SELECT durum, deneme_sayisi FROM menu_tarama_kuyrugu").fetchone()
+        self.assertEqual((row["durum"], row["deneme_sayisi"]), ("queued", 0))
+        self.conn.execute("UPDATE menu_tarama_kuyrugu SET durum='failed', son_hata='Zaman aşımı: y'")
+        self.assertEqual(server.requeue_known_false_failures(self.conn), 0)  # tek seferlik
 
     def test_queue_counts_by_city_uses_canonical_payload_city(self):
         server.sync_queue(self.conn, [self.venue()])

@@ -12,7 +12,10 @@ const API_BASE = "http://127.0.0.1:5050";
 const MIN_DELAY_MS = 1000;   // İki mekan arası en az bekleme (Google'ı yormamak için)
 const MAX_DELAY_MS = 2500;   // ... ve en çok bekleme; arada rastgele seçilir
 const WATCHDOG_ALARM = "geoprop-watchdog";
-const WATCHDOG_MINUTES = 0.5; // Chrome alarm alt sınırı 30 sn // İçerik betiğinden bu süre içinde haber gelmezse mekan bırakılır
+// İçerik betiği bu süre içinde ne sonuç ne de "heartbeat" gönderirse mekan bırakılır. Betik her
+// adımda (sayfa açıldı, popüler saatler, menü) heartbeat gönderip süreyi yeniler; 30 sn'lik eski
+// sınır popüler saatlerin 7 gün sekmesini okurken doluyor ve mekan boşuna başarısız sayılıyordu.
+const WATCHDOG_MINUTES = 1;
 const RESUME_ALARM = "geoprop-resume";
 
 let inFlight = false; // Aynı anda iki kez /next çağrılmasını engeller
@@ -252,21 +255,55 @@ chrome.tabs.onRemoved.addListener(async (tabId) => {
 // Google, betikle üretilen (isTrusted=false) tıklamaları yok sayar; "popüler saatler" grafiğinde
 // gün değiştirmek için DevTools protokolüyle gerçek fare olayı üretilir. Sekmede kısa süreli
 // "GEOPROP ... bu tarayıcıda hata ayıklıyor" şeridi görünmesi normaldir.
+// Hata ayıklayıcı her tıklamada ayrı ayrı bağlanıp ayrılmaz: bir mekanın 6 gün sekmesi için tek
+// bağlantı kullanılır, son tıklamadan DEBUGGER_IDLE_MS sonra ayrılır (şerit mekanlar arasında kapanır).
+const DEBUGGER_IDLE_MS = 4000;
+let debuggerTabId = null;
+let debuggerDetachTimer = null;
+
+async function detachDebugger() {
+    if (debuggerDetachTimer) clearTimeout(debuggerDetachTimer);
+    debuggerDetachTimer = null;
+    const tabId = debuggerTabId;
+    debuggerTabId = null;
+    if (tabId !== null) await chrome.debugger.detach({ tabId }).catch(() => {});
+}
+
+async function ensureDebugger(tabId) {
+    if (debuggerTabId !== null && debuggerTabId !== tabId) await detachDebugger();
+    if (debuggerTabId === null) {
+        try {
+            await chrome.debugger.attach({ tabId }, "1.3");
+        } catch (error) {
+            // Servis çalışanı uyuyup uyanınca değişken sıfırlanır ama bağlantı sürebilir.
+            if (!/already attached/i.test(error.message || "")) throw error;
+        }
+        debuggerTabId = tabId;
+    }
+    if (debuggerDetachTimer) clearTimeout(debuggerDetachTimer);
+    debuggerDetachTimer = setTimeout(detachDebugger, DEBUGGER_IDLE_MS);
+}
+
+chrome.debugger.onDetach.addListener((source) => {
+    if (source.tabId === debuggerTabId) {
+        debuggerTabId = null;
+        if (debuggerDetachTimer) clearTimeout(debuggerDetachTimer);
+        debuggerDetachTimer = null;
+    }
+});
+
 async function trustedClicks(tabId, points) {
     const target = { tabId };
-    await chrome.debugger.attach(target, "1.3");
-    try {
-        for (const point of points) {
-            for (const type of ["mouseMoved", "mousePressed", "mouseReleased"]) {
-                await chrome.debugger.sendCommand(target, "Input.dispatchMouseEvent", {
-                    type, x: point.x, y: point.y, button: type === "mouseMoved" ? "none" : "left", clickCount: 1,
-                });
-            }
-            if (point.waitMs) await new Promise((resolve) => setTimeout(resolve, point.waitMs));
+    await ensureDebugger(tabId);
+    for (const point of points) {
+        for (const type of ["mouseMoved", "mousePressed", "mouseReleased"]) {
+            await chrome.debugger.sendCommand(target, "Input.dispatchMouseEvent", {
+                type, x: point.x, y: point.y, button: type === "mouseMoved" ? "none" : "left", clickCount: 1,
+            });
         }
-    } finally {
-        await chrome.debugger.detach(target).catch(() => {});
+        if (point.waitMs) await new Promise((resolve) => setTimeout(resolve, point.waitMs));
     }
+    await ensureDebugger(tabId); // ayrılma zamanlayıcısını son tıklamadan itibaren yeniden başlat
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -288,6 +325,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             await finishAndContinue(request.payload);
         } else if (request.action === "fail_current") {
             await failCurrent(request.payload);
+        } else if (request.action === "heartbeat") {
+            const state = await getState();
+            if (state.isRunning && !state.pausedForCaptcha && sender.tab && sender.tab.id === state.currentTabId) {
+                await armWatchdog();
+            }
         } else if (request.action === "trusted_click") {
             const state = await getState();
             if (!sender.tab || sender.tab.id !== state.currentTabId) throw new Error("Bot sekmesi değil");

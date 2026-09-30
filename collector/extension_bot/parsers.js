@@ -105,5 +105,11 @@
         return results;
     }
 
-    return { cleanLine, parseTurkishPrice, detectProvider, parseReviewCount, countPriceMentions, extractMenuItems };
+    // Yalnız mekan paneline özgü biçim: "1.234 Google yorumu" ya da "56 değerlendirme".
+    function parsePanelReviewCount(text) {
+        const match = String(text || "").match(/(?:^|[^\d.,])(\d[\d.]*)\s*(?:Google\s+(?:yorumu|yorum|değerlendirmesi)|değerlendirme)/i);
+        return match ? Number(match[1].replace(/\./g, "")) : null;
+    }
+
+    return { cleanLine, parseTurkishPrice, detectProvider, parseReviewCount, parsePanelReviewCount, countPriceMentions, extractMenuItems };
 });

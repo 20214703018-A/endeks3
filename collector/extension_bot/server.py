@@ -27,14 +27,36 @@ except ImportError:  # Pillow yoksa görsel indirilir ama yeniden boyutlandırı
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DB_MENU = Path(os.environ.get("GEOPROP_MENU_DB", PROJECT_ROOT / "warehouse/product/restoran_ve_kafe_menuleri.sqlite"))
-DB_PLACES = Path(os.environ.get("GEOPROP_PLACES_DB", PROJECT_ROOT / "warehouse/product/google_places_ve_yogunluk.sqlite"))
-DB_STATS = Path(os.environ.get("GEOPROP_STATS_DB", PROJECT_ROOT / "warehouse/product/bolge_istatistik.sqlite"))
-RAW_INTAKE_ROOT = Path(os.environ.get("GEOPROP_RAW_INTAKE_ROOT", PROJECT_ROOT.parent / "GEOPROP_RAW_INTAKE"))
+# Kod git deposunda (endeks3), veri ambarı ise ~/Desktop/GEOPROP/warehouse altında durur.
+# Sunucu GEOPROP içinden çalıştırılırsa oradaki warehouse kullanılır; aksi halde GEOPROP_DATA_ROOT.
+DATA_ROOT = Path(os.environ.get("GEOPROP_DATA_ROOT") or (
+    PROJECT_ROOT if (PROJECT_ROOT / "warehouse/product").is_dir() else Path.home() / "Desktop" / "GEOPROP"
+))
+DB_MENU = Path(os.environ.get("GEOPROP_MENU_DB", DATA_ROOT / "warehouse/product/restoran_ve_kafe_menuleri.sqlite"))
+DB_PLACES = Path(os.environ.get("GEOPROP_PLACES_DB", DATA_ROOT / "warehouse/product/google_places_ve_yogunluk.sqlite"))
+DB_STATS = Path(os.environ.get("GEOPROP_STATS_DB", DATA_ROOT / "warehouse/product/bolge_istatistik.sqlite"))
+RAW_INTAKE_ROOT = Path(os.environ.get("GEOPROP_RAW_INTAKE_ROOT", DATA_ROOT.parent / "GEOPROP_RAW_INTAKE"))
 
-TARGET_CITIES = (
-    "Antalya", "Bursa", "Ankara", "Konya", "İzmir",
-    "İstanbul", "Aydın", "Çanakkale", "Diyarbakır", "Trabzon",
+ALL_CITIES = (
+    "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Aksaray", "Amasya", "Ankara", "Antalya", "Ardahan",
+    "Artvin", "Aydın", "Balıkesir", "Bartın", "Batman", "Bayburt", "Bilecik", "Bingöl", "Bitlis", "Bolu",
+    "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Düzce", "Edirne",
+    "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay",
+    "Iğdır", "Isparta", "İstanbul", "İzmir", "Kahramanmaraş", "Karabük", "Karaman", "Kars", "Kastamonu",
+    "Kayseri", "Kilis", "Kırıkkale", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya",
+    "Manisa", "Mardin", "Mersin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Osmaniye", "Rize",
+    "Sakarya", "Samsun", "Şanlıurfa", "Siirt", "Sinop", "Şırnak", "Sivas", "Tekirdağ", "Tokat", "Trabzon",
+    "Tunceli", "Uşak", "Van", "Yalova", "Yozgat", "Zonguldak",
+)
+# Öncelik katmanları (AGENTS.md kural 10): önce Batı büyükşehirleri, sonra ilk turda taranan
+# diğer iller, en son kalan iller. Kuyruk bu sırayla, her katman içinde menü bulma oranı
+# yüksek kategoriler önce olacak şekilde işlenir.
+WEST_METRO_CITIES = ("İstanbul", "İzmir", "Bursa", "Antalya", "Kocaeli", "Muğla", "Tekirdağ", "Balıkesir", "Aydın")
+FIRST_ROUND_CITIES = ("Ankara", "Konya", "Çanakkale", "Diyarbakır", "Trabzon")
+# GEOPROP_MENU_ILLER="İzmir,Muğla" gibi virgüllü liste kapsamı daraltır; boş/"hepsi" = 81 il.
+_cities_env = os.environ.get("GEOPROP_MENU_ILLER", "hepsi").strip()
+TARGET_CITIES = ALL_CITIES if _cities_env.casefold() in ("", "hepsi") else tuple(
+    city.strip() for city in _cities_env.split(",") if city.strip()
 )
 MIN_REVIEWS = 10
 MIN_COUNTY_POPULATION = 25_000
@@ -72,9 +94,10 @@ NON_FOOD_VENUE_MARKERS = (
 )
 VILLAGE_MARKERS = ("koy", "koyu", "koy mahallesi", "belde")
 
-# İlk aşama kapsamı: yalnız restoran tipi mekanlar. Kafe, kahveci, pastane, tatlıcı, büfe vb.
-# ana kategoriler kuyruğa alınmaz ("excluded"). GEOPROP_MENU_SCOPE=hepsi ile eski geniş kapsam açılır.
-SCOPE = os.environ.get("GEOPROP_MENU_SCOPE", "restoran")
+# Kapsam: varsayılan tüm yiyecek-içecek (kafe, kahveci, pastane, tatlıcı, büfe dahil). Bunların
+# menü bulma oranı restoranlardan düşük olduğundan kuyrukta sona doğru kalırlar (bkz. queue_priority).
+# GEOPROP_MENU_SCOPE=restoran ile yalnız restoran tipi mekanlara daraltılır.
+SCOPE = os.environ.get("GEOPROP_MENU_SCOPE", "hepsi")
 RESTAURANT_CATEGORY_KEYWORDS = (
     "restoran", "restaurant", "lokanta", "kebap", "kebab", "ocakbasi", "pizza",
     "hamburger", "burger", "fast food", "doner", "balik", "steak", "meyhane",
@@ -96,6 +119,10 @@ def normalize_tr(value: Any) -> str:
 # gerçek kayıtların atlanmasına neden olur; şehir karşılaştırmasını tek yerde
 # Türkçe karakterlerden bağımsız yapıyoruz.
 TARGET_CITY_BY_KEY = {normalize_tr(city): city for city in TARGET_CITIES}
+CITY_TIER = {
+    **{normalize_tr(city): 2 for city in WEST_METRO_CITIES},
+    **{normalize_tr(city): 1 for city in FIRST_ROUND_CITIES},
+}
 
 
 def canonical_target_city(value: Any) -> str | None:
@@ -285,6 +312,12 @@ def init_schema(conn: sqlite3.Connection) -> None:
         ("degerlendirme_sayisi", "INTEGER"),
     ):
         add_column_if_missing(conn, "mekan_menu_kalemleri_ve_fiyat_tarihcesi", column, definition)
+
+    # Kuyruk önceliği (büyük önce): il katmanı + kategorinin geçmiş menü bulma oranı. Bkz. queue_priority.
+    add_column_if_missing(conn, "menu_tarama_kuyrugu", "oncelik", "REAL NOT NULL DEFAULT 0")
+    conn.execute("CREATE INDEX IF NOT EXISTS idx_menu_queue_priority ON menu_tarama_kuyrugu(durum, oncelik)")
+    # Tek seferlik bakım işlerinin (ör. zaman aşımı yeniden kuyruğu) yapıldığını hatırlar.
+    conn.execute("CREATE TABLE IF NOT EXISTS menu_bot_meta (anahtar TEXT PRIMARY KEY, deger TEXT, updated_at TEXT)")
     conn.commit()
 
 
@@ -414,21 +447,56 @@ def load_eligible_venues() -> tuple[list[dict[str, Any]], Counter[str]]:
     return eligible, reasons
 
 
+def category_menu_rates(conn: sqlite3.Connection) -> tuple[dict[str, float], float]:
+    """Taranmış mekanlardan kategori başına menü bulma oranı (fiyat ya da menü fotoğrafı çıkan / taranan).
+
+    Az örnekli kategoriler genel orana doğru çekilir (m-tahmini, m=20), böylece 2-3 şanslı mekan
+    bir kategoriyi kuyruğun başına taşımaz. Hiç veri yoksa tüm kategoriler eşit kalır.
+    """
+    rows = conn.execute(
+        """
+        SELECT json_extract(payload_json, '$.kategori') AS kategori,
+               SUM(durum='completed') AS menulu, COUNT(*) AS taranan
+        FROM menu_tarama_kuyrugu
+        WHERE durum IN ('completed', 'completed_no_menu', 'failed')
+        GROUP BY 1
+        """
+    ).fetchall()
+    total = sum(row["taranan"] for row in rows)
+    overall = (sum(row["menulu"] for row in rows) / total) if total else 0.5
+    prior = 20
+    rates = {
+        normalize_tr(row["kategori"]): (row["menulu"] + prior * overall) / (row["taranan"] + prior)
+        for row in rows
+    }
+    return rates, overall
+
+
+def queue_priority(venue: dict[str, Any], rates: dict[str, float], overall: float) -> float:
+    """Büyük değer önce taranır: il katmanı (Batı büyükşehirleri 2, ilk tur illeri 1, diğer 0) × 10
+    + kategorinin menü bulma oranı (0–1) + çok küçük bir yorum sayısı katkısı (eşitlik bozucu)."""
+    tier = CITY_TIER.get(normalize_tr(venue.get("il")), 0)
+    rate = rates.get(normalize_tr(venue.get("kategori")), overall)
+    reviews = min(int(venue.get("degerlendirme_sayisi") or 0), 10_000)
+    return round(tier * 10 + rate + reviews / 1_000_000, 6)
+
+
 def sync_queue(conn: sqlite3.Connection, venues: list[dict[str, Any]]) -> None:
     now = now_iso()
     eligible_ids = {venue["id"] for venue in venues}
+    rates, overall = category_menu_rates(conn)
     with conn:
         for venue in venues:
             payload = json.dumps(venue, ensure_ascii=False, sort_keys=True)
             conn.execute(
                 """
-                INSERT INTO menu_tarama_kuyrugu (mekan_id, payload_json, durum, created_at, updated_at)
-                VALUES (?, ?, 'queued', ?, ?)
+                INSERT INTO menu_tarama_kuyrugu (mekan_id, payload_json, durum, oncelik, created_at, updated_at)
+                VALUES (?, ?, 'queued', ?, ?, ?)
                 ON CONFLICT(mekan_id) DO UPDATE SET payload_json=excluded.payload_json,
-                    updated_at=excluded.updated_at,
+                    oncelik=excluded.oncelik, updated_at=excluded.updated_at,
                     durum=CASE WHEN menu_tarama_kuyrugu.durum='excluded' THEN 'queued' ELSE menu_tarama_kuyrugu.durum END
                 """,
-                (venue["id"], payload, now, now),
+                (venue["id"], payload, queue_priority(venue, rates, overall), now, now),
             )
         for row in conn.execute(
             "SELECT mekan_id FROM menu_tarama_kuyrugu WHERE durum IN ('queued','in_progress','blocked')"
@@ -488,7 +556,7 @@ def lease_next(conn: sqlite3.Connection) -> dict[str, Any] | None:
             """
             SELECT * FROM menu_tarama_kuyrugu
             WHERE durum IN ('queued','blocked') AND deneme_sayisi < ?
-            ORDER BY CASE durum WHEN 'blocked' THEN 0 ELSE 1 END, updated_at, mekan_id LIMIT 1
+            ORDER BY CASE durum WHEN 'blocked' THEN 0 ELSE 1 END, oncelik DESC, updated_at, mekan_id LIMIT 1
             """,
             (MAX_ATTEMPTS,),
         ).fetchone()
@@ -1184,7 +1252,9 @@ class RequestHandler(BaseHTTPRequestHandler):
                         "cities": queue_counts_by_city(conn),
                         "current": {"id": current["mekan_id"], "adi": current_payload["adi"],
                                     "attempt": current["deneme_sayisi"], "leased_at": current["leased_at"]} if current else None,
-                        "rules": {"cities": TARGET_CITIES, "min_reviews": MIN_REVIEWS,
+                        "rules": {"cities": TARGET_CITIES, "scope": SCOPE,
+                                  "priority_tiers": [WEST_METRO_CITIES, FIRST_ROUND_CITIES, "diğer iller"],
+                                  "min_reviews": MIN_REVIEWS,
                                   "min_county_population": MIN_COUNTY_POPULATION,
                                   "min_neighborhood_population": MIN_NEIGHBORHOOD_POPULATION,
                                   "villages_excluded": True},
@@ -1236,20 +1306,58 @@ class RequestHandler(BaseHTTPRequestHandler):
         print(f"[{now_iso()}] {self.client_address[0]} {message_format % args}")
 
 
+# v2.3 öncesi iki hata yüzünden "başarısız" sayılan mekanlar bir kez yeniden kuyruğa alınır:
+#  - Zaman aşımı: bekçi 30 sn'de doluyordu; popüler saatlerin 7 gün sekmesi bu süreyi aşıyordu.
+#  - "Canlı değerlendirme sayısı 10 altında": yorum sayısı, panel yerine yorum yazan kişinin
+#    profilindeki "3 yorum" gibi sayılardan okunabiliyordu.
+RETRY_MIGRATION_KEY = "v2_3_zaman_asimi_ve_yorum_sayisi_yeniden_kuyruk"
+
+
+def requeue_known_false_failures(conn: sqlite3.Connection) -> int:
+    if conn.execute("SELECT 1 FROM menu_bot_meta WHERE anahtar=?", (RETRY_MIGRATION_KEY,)).fetchone():
+        return 0
+    now = now_iso()
+    with conn:
+        count = conn.execute(
+            """
+            UPDATE menu_tarama_kuyrugu
+            SET durum='queued', deneme_sayisi=0, lease_token=NULL, leased_at=NULL, updated_at=?,
+                son_hata='Yeniden kuyrukta (v2.3 düzeltmesi); önceki hata: ' || son_hata
+            WHERE durum='failed'
+              AND (son_hata LIKE 'Zaman aşımı%' OR son_hata LIKE 'Canlı değerlendirme sayısı 10 altında%')
+            """,
+            (now,),
+        ).rowcount
+        conn.execute(
+            "INSERT INTO menu_bot_meta (anahtar, deger, updated_at) VALUES (?, ?, ?)",
+            (RETRY_MIGRATION_KEY, str(count), now),
+        )
+    return count
+
+
 def prepare_queue() -> tuple[int, Counter[str]]:
     venues, reasons = load_eligible_venues()
     with connect_menu_db() as conn:
         init_schema(conn)
+        requeued = requeue_known_false_failures(conn)
+        if requeued:
+            print(f"Önceki hatalı 'başarısız' sayılan {requeued} mekan yeniden kuyruğa alındı.")
         sync_queue(conn, venues)
     return len(venues), reasons
 
 
 def run() -> None:
     venue_count, excluded_reasons = prepare_queue()
+    print(f"Veri ambarı: {DB_MENU}")
     print(f"Kapsam: {'yalnız restoranlar' if SCOPE == 'restoran' else 'tüm yiyecek-içecek'} (GEOPROP_MENU_SCOPE={SCOPE})")
     print(f"Uygun gerçek Google mekanı: {venue_count}")
     print(f"Kapsam dışı nedenleri: {dict(excluded_reasons)}")
-    print(f"Kurallar: {', '.join(TARGET_CITIES)} | değerlendirme >= {MIN_REVIEWS} | ilçe >= {MIN_COUNTY_POPULATION} | mahalle >= {MIN_NEIGHBORHOOD_POPULATION} | köyler hariç")
+    cities_label = "81 il" if TARGET_CITIES == ALL_CITIES else ", ".join(TARGET_CITIES)
+    print(f"Kurallar: {cities_label} | değerlendirme >= {MIN_REVIEWS} | ilçe >= {MIN_COUNTY_POPULATION} | mahalle >= {MIN_NEIGHBORHOOD_POPULATION} | köyler hariç")
+    print(f"Sıra: önce {', '.join(WEST_METRO_CITIES)}; sonra {', '.join(FIRST_ROUND_CITIES)}; sonra diğer iller "
+          "(her grupta menü bulma oranı yüksek kategoriler önce)")
+    with connect_menu_db() as conn:
+        print(f"Kuyruk: {queue_counts(conn)}")
     port = int(os.environ.get("GEOPROP_MENU_PORT", "5050"))
     server = ThreadingHTTPServer(("127.0.0.1", port), RequestHandler)
     IMAGE_DIR.mkdir(parents=True, exist_ok=True)

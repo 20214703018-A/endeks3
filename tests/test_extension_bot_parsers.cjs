@@ -26,6 +26,11 @@ assert.equal(parsers.parseReviewCount("1.774 kullanıcı yorumu"), 1774);
 assert.equal(parsers.parseReviewCount("3,85.413 Yorum"), null);
 assert.equal(parsers.parseReviewCount("5.413 Yorum"), 5413);
 assert.equal(parsers.parseReviewCount("(39) kullanıcı yorumu"), 39);
+// Eleme için yalnız panele özgü biçim: yorum yazan kişinin "3 yorum" sayısı mekanı elememeli
+assert.equal(parsers.parsePanelReviewCount("1.234 Google yorumu"), 1234);
+assert.equal(parsers.parsePanelReviewCount("56 değerlendirme"), 56);
+assert.equal(parsers.parsePanelReviewCount("Yerel Rehber · 3 yorum"), null);
+assert.equal(parsers.parsePanelReviewCount("3,85.413 Google yorumu"), null);
 // Panel seçimi: "tl" harfleri sıradan kelimelerde geçse de fiyat sayılmaz
 assert.equal(parsers.countPriceMentions("Yanıtlarınız Google Arama deneyimini iyileştirir"), 0);
 assert.equal(parsers.countPriceMentions("Köfte Bun\n₺815,00\nBizim Köfte\n₺1.050,00\nAyran 45 TL"), 3);

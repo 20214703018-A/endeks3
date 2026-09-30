@@ -1,10 +1,11 @@
-# GEOPROP Menü Toplayıcı 2.0
+# GEOPROP Menü Toplayıcı 2.3
 
 Bu Chrome eklentisi mevcut Google Places ambarındaki uygun restoranları kalıcı bir SQLite kuyruğundan işler. Her mekan için `mekan adı + adres` Google Search sorgusunu açar ve bilgi panelindeki **Menü** düğmesine basar; Maps koordinat araması kullanmaz. İş ilerlemesi tarayıcı veya servis yeniden başlasa da korunur.
 
 ## Kapsam kuralları
 
-- İller: Antalya, Bursa, Ankara, Konya, İzmir, İstanbul, Aydın, Çanakkale, Diyarbakır, Trabzon
+- İller: 81 il (`GEOPROP_MENU_ILLER="İzmir,Muğla"` ile daraltılabilir)
+- Kategori: tüm yiyecek-içecek: restoran, kafe, kahveci, pastane, tatlıcı, büfe (`GEOPROP_MENU_SCOPE=restoran` yalnız restoran tipi)
 - En az 10 Google değerlendirmesi
 - İlçe nüfusu en az 25.000
 - Mahalle nüfusu en az 3.000
@@ -15,15 +16,25 @@ Bu Chrome eklentisi mevcut Google Places ambarındaki uygun restoranları kalıc
 
 Nüfus eşleşmesi olmayan kayıtlar varsayımla tamamlanmaz; kapsam dışında bırakılır.
 
+## Tarama sırası
+
+Kuyruk `oncelik` sütununa göre işlenir (büyük önce):
+
+1. Batı büyükşehirleri: İstanbul, İzmir, Bursa, Antalya, Kocaeli, Muğla, Tekirdağ, Balıkesir, Aydın
+2. İlk turda taranan diğer iller: Ankara, Konya, Çanakkale, Diyarbakır, Trabzon
+3. Kalan iller
+
+Her grupta, daha önce taranan mekanlarda menü bulma oranı yüksek olan kategoriler öne alınır (ör. pizza ~%75, restoran & lokanta ~%23). Bu oranlar sunucu her açıldığında kuyruktaki sonuçlardan yeniden hesaplanır. Böylece saat başına daha çok fiyat toplanır.
+
 ## Çalıştırma
 
-Proje kökünden:
+Kod `~/Desktop/endeks3` deposundadır; veri ambarı `~/Desktop/GEOPROP/warehouse/product` altında kalır (başka yer için `GEOPROP_DATA_ROOT` ya da `GEOPROP_MENU_DB`). Depo kökünden:
 
 ```bash
 python3 collector/extension_bot/server.py
 ```
 
-Chrome'da `chrome://extensions` sayfasını açın, geliştirici modunu etkinleştirin ve bu klasörü paketlenmemiş eklenti olarak yükleyin. Kod güncellendiyse **Yeniden Yükle** düğmesine bir kez basın. Ardından eklenti penceresinden **Taramayı Başlat** seçeneğini kullanın.
+Chrome'da `chrome://extensions` sayfasını açın, geliştirici modunu etkinleştirin ve **bu klasörü** (`~/Desktop/endeks3/collector/extension_bot`) paketlenmemiş eklenti olarak yükleyin. Eski klasörden (`~/Desktop/GEOPROP/collector/extension_bot`) yüklenmiş eklenti varsa onu kaldırın. Kod güncellendiyse **Yeniden Yükle** düğmesine bir kez basın. Ardından eklenti penceresinden **Taramayı Başlat** seçeneğini kullanın.
 
 Yerel servis durumu:
 
@@ -43,9 +54,10 @@ Her fiyat kaydında sağlayıcı, sağlayıcı kanıtı, ham fiyat metni, kaynak
 
 ## Dayanıklılık ve sorun giderme
 
-- **Bekçi (watchdog):** Bir mekanın sayfası 1,5 dakika içinde sonuç ya da hata bildirmezse mekan "zaman aşımı" ile kuyruğa geri verilir ve tarama sıradakine geçer. Tarama artık tek bir sayfada sessizce takılı kalmaz.
+- **Bekçi (watchdog):** İçerik betiği her adımda (sayfa, popüler saatler, menü) "heartbeat" gönderir. Bir mekan 1 dakika boyunca ne sonuç ne heartbeat gönderirse "zaman aşımı" ile kuyruğa geri verilir ve tarama sıradakine geçer. (2.2'de sınır 30 sn'ydi ve popüler saatleri okuyan sağlıklı sayfaları da kesiyordu; bu yüzden başarısız sayılan mekanlar 2.3'e ilk geçişte bir kez yeniden kuyruğa alınır.)
+- **Popüler saatler:** Gün sekmelerine tek bir hata ayıklayıcı bağlantısıyla tıklanır; en çok 15 sn ayrılır, süre dolarsa okunan günlerle devam edilir (`mekan_populer_saat_ozeti.gun_sayisi`).
 - **Google CAPTCHA:** Bot sekmesi `google.com/sorry/` adresine düşerse tarama durmaz, *duraklar*. Sekmedeki doğrulamayı tamamlayın; Google aynı aramaya geri döner ve tarama kendiliğinden sürer. Eklenti penceresi bu durumu "CAPTCHA bekleniyor" olarak gösterir.
-- **Hız:** İki mekan arasında rastgele 3–6,5 sn beklenir (CAPTCHA riskini azaltmak için).
+- **Hız:** İki mekan arasında rastgele 1–2,5 sn beklenir (CAPTCHA riskini azaltmak için).
 - **Kod güncellendiğinde** `chrome://extensions` sayfasında **Yeniden Yükle**'ye basmak zorunludur; aksi halde eski içerik betiği yeni sayfa adreslerinde çalışmaz ve hiçbir sonuç gelmez. Yeniden yükleme sonrası tarama açıksa kendiliğinden devam eder.
 - **Günlükler:** Bot sekmesinde DevTools > Console'da `[GEOPROP]` önekli satırlar adım adım ne olduğunu gösterir (menü düğmesi bulundu mu, kaç fiyat çıktı vb.). Arka plan günlükleri için `chrome://extensions` > eklenti > "Service worker" bağlantısı.
 - **Neden başarısız?** `menu_tarama_kuyrugu.son_hata` sütunu artık sayfa başlığı ve ilk 160 karakteri de içerir:
