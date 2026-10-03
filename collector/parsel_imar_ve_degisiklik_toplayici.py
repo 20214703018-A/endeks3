@@ -583,7 +583,10 @@ class ParselImarToplayici:
                                            mahalle=mahalle, lat=lat, lon=lon, persist=persist)
         except Exception as e:
             self.parsel_hata_sayisi = getattr(self, "parsel_hata_sayisi", 0) + 1
-            print(f"    [HATA-ATLANDI] {il}/{ilce}/{mahalle} ada {ada} parsel {parsel}: {type(e).__name__}: {e}", flush=True)
+            import traceback as _tb
+            _yer = _tb.extract_tb(e.__traceback__)[-1]
+            print(f"    [HATA-ATLANDI] {il}/{ilce}/{mahalle} ada {ada} parsel {parsel}: {type(e).__name__}: {e} "
+                  f"(satır {_yer.lineno}, {_yer.name})", flush=True)
             if self.parsel_hata_sayisi > 200:
                 raise RuntimeError(f"çok fazla parsel hatası ({self.parsel_hata_sayisi}) — kaynak yanıt biçimi değişmiş olabilir") from e
             return None
@@ -594,17 +597,21 @@ class ParselImarToplayici:
         if not p_data:
             return None
             
-        il_ad = p_data["il"] or il or "Ankara"
-        ilce_ad = p_data["ilce"] or ilce or "Çankaya"
-        mah_ad = p_data["mahalle"] or mahalle or "Aziziye"
-        ada_no = p_data["ada_no"] or ada or "1"
-        parsel_no = p_data["parsel_no"] or parsel or "1"
-        mah_id = p_data["mahalle_id"] or mahalle_id
-        
+        # Kaynakta olmayan değer uydurulmaz (eski kod "Ankara/Çankaya/Aziziye", ada "1", parsel "1" yazıyordu).
+        il_ad = p_data.get("il") or il or None
+        ilce_ad = p_data.get("ilce") or ilce or None
+        mah_ad = p_data.get("mahalle") or mahalle or None
+        ada_no = p_data.get("ada_no") or ada or None
+        parsel_no = p_data.get("parsel_no") or parsel or None
+        mah_id = p_data.get("mahalle_id") or mahalle_id
+        if not (il_ad and ilce_ad and ada_no and parsel_no):
+            print(f"    [ATLANDI] kadastro kimliği eksik (il={il_ad}, ilçe={ilce_ad}, ada={ada_no}, parsel={parsel_no})", flush=True)
+            return None
+
         i_data = self.fetch_eplan_and_zoning(
             il_ad, ilce_ad, mah_ad, ada_no, parsel_no, mah_id,
             lat=p_data.get("enlem"), lon=p_data.get("boylam"),
-        )
+        ) or {"veri_durumu": "kaynak_erisilemedi"}
         bb_list = self.fetch_bagimsiz_bolumler(
             mah_id, ada_no, parsel_no,
             p_data.get("zemin_durumu", ""),
