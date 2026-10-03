@@ -1,0 +1,128 @@
+name: "GEOPROP Google anlık yoğunluk (günde 6 ölçüm, 6 makine)"
+
+# Google'ın canlı yoğunluk değeri yalnız o an görünür; geçmişi geri alınamaz. Bu iş akışı seçili ~9.000 işletmeyi
+# (Batı büyükşehirleri + Ankara; AVM, gece hayatı, restoran, kafe, market, otel, spor, hizmet, ulaşım) günde 6 kez ölçer.
+# Saatler (TR): 08, 11, 14, 17, 20, 23. Ağır 40'lık iş akışları en fazla 34 makine kullanır; 6 yer bu ölçüme ayrılmıştır.
+
+on:
+  schedule:
+    - cron: '0 5,8,11,14,17,20 * * *'   # UTC → TR 08,11,14,17,20,23
+  workflow_dispatch:
+    inputs:
+      max_saniye:
+        description: 'Makine başına azami ölçüm süresi (saniye)'
+        required: false
+        default: '2700'
+      hedef_yenile:
+        description: 'Hedef listesini ana ambardan yeniden üret (true/false)'
+        required: false
+        default: 'false'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: geoprop-anlik-yogunluk
+  cancel-in-progress: false
+
+env:
+  AMBAR_RELEASE: warehouse-latest
+  GH_TOKEN: ${{ github.token }}
+  HEDEF: anlik_yogunluk_hedef.csv
+
+jobs:
+  hedef:
+    name: "Hedef listesi"
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Hedef listesini indir (yoksa ana ambardan üret ve release'e koy)
+        run: |
+          mkdir -p hedef
+          if [ "${{ github.event.inputs.hedef_yenile }}" != "true" ] && \
+             gh release download "$AMBAR_RELEASE" --pattern "${HEDEF}.gz" --dir hedef --repo "$GITHUB_REPOSITORY" 2>/dev/null; then
+            gunzip -f "hedef/${HEDEF}.gz"
+          else
+            mkdir -p warehouse/master
+            ops/ambar_indir.sh google_places_ve_yogunluk.sqlite warehouse/master
+            python collector/google_anlik_hedef.py --ambar warehouse/master/google_places_ve_yogunluk.sqlite --out "hedef/${HEDEF}"
+            gzip -c "hedef/${HEDEF}" > "/tmp/${HEDEF}.gz"
+            gh release upload "$AMBAR_RELEASE" "/tmp/${HEDEF}.gz" --clobber --repo "$GITHUB_REPOSITORY"
+          fi
+          echo "hedef: $(($(wc -l < hedef/${HEDEF}) - 1)) işletme"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anlik-hedef
+          path: hedef/${{ env.HEDEF }}
+          retention-days: 1
+
+  olcum:
+    name: "Ölçüm ${{ matrix.shard }}/6"
+    needs: [hedef]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: anlik-hedef
+          path: hedef
+      - name: Canlı yoğunluk ölçümü
+        run: |
+          python collector/google_anlik_yogunluk.py --hedef "hedef/${HEDEF}" --out anlik_shard.sqlite \
+            --shard ${{ matrix.shard }} --num-shards 6 --max-seconds "${{ github.event.inputs.max_saniye || '2700' }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anlik-shard-${{ matrix.shard }}
+          path: anlik_shard.sqlite
+          retention-days: 2
+
+  birlestir:
+    name: "Ölçümleri anlık yoğunluk ambarına ekle"
+    needs: [olcum]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: geoprop-anlik-yogunluk-yazma
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: anlik-shard-*
+          path: shards/
+      - name: Birleştir ve release'e yaz
+        run: |
+          mkdir -p warehouse/product
+          ops/ambar_indir.sh google_anlik_yogunluk.sqlite warehouse/product || echo "ilk koşu: ambar yeni oluşturulacak"
+          python - <<'EOF' | tee -a "$GITHUB_STEP_SUMMARY"
+          import glob, sqlite3, sys
+          sys.path.insert(0, "collector")
+          from google_anlik_yogunluk import init_db
+          out = init_db("warehouse/product/google_anlik_yogunluk.sqlite")
+          once = out.execute("SELECT COUNT(*) FROM google_anlik_yogunluk").fetchone()[0]
+          for f in sorted(glob.glob("shards/*/anlik_shard.sqlite")):
+              out.execute("ATTACH DATABASE ? AS s", (f,))
+              out.execute("INSERT OR IGNORE INTO google_anlik_yogunluk SELECT * FROM s.google_anlik_yogunluk")
+              out.execute("INSERT OR IGNORE INTO google_tipik_yogunluk_profil SELECT * FROM s.google_tipik_yogunluk_profil")
+              out.commit(); out.execute("DETACH DATABASE s")
+          sonra = out.execute("SELECT COUNT(*) FROM google_anlik_yogunluk").fetchone()[0]
+          print(f"### Anlık yoğunluk: {once:,} → {sonra:,} ölçüm (+{sonra-once:,})")
+          for d, n in out.execute("SELECT durum, COUNT(*) FROM google_anlik_yogunluk WHERE kosu_id = ? GROUP BY 1 ORDER BY 2 DESC",
+                                  ("${{ github.run_id }}",)):
+              print(f"- {d}: {n:,}")
+          out.close()
+          EOF
+          ops/ambar_yukle.sh warehouse/product/google_anlik_yogunluk.sqlite

@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 40
+      max-parallel: 34  # 6 makine anlık yoğunluk ölçümüne ayrılı
       matrix:
         include:
           - { grup: 1, iller: "1,2" }      # Adana, Adıyaman

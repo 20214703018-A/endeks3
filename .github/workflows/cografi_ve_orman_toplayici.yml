@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # Haftalık olarak pazar gecesi saat 02:00'da çalışır
-    - cron: '0 2 * * 0'
+    - cron: '0 23 * * 0'
 
 permissions:
   contents: write

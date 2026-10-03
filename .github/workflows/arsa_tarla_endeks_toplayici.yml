@@ -1,6 +1,8 @@
 name: "Turkiye Arsa ve Tarla Fiyat Endeksi (40 Makine Paralel)"
 
 on:
+  schedule:
+    - cron: '0 22 3 * *'   # ayda bir; Endeksa aylık güncelliyor (TrendPeriod)
   workflow_dispatch:
     inputs:
       asama:
@@ -27,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 40
+      max-parallel: 34  # 6 makine anlık yoğunluk ölçümüne ayrılı
       matrix:
         include:
           - { grup: 1, iller: "1,2" }      # Adana, Adıyaman
@@ -144,3 +146,14 @@ jobs:
           name: TURKIYE-ARSA-TARLA-ENDEKS-40-MAKINE-PAKETI
           path: turkiye_arsa_tarla_tam_veriseti.zip
           retention-days: 14
+
+      - name: "Kalıcı kayıt: aylık sürümü release'e yaz (artifact 14 günde silinir)"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          AY=$(date -u +%Y-%m)
+          gh release view arsa-endeks --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create arsa-endeks --repo "$GITHUB_REPOSITORY" --latest=false -t "Arsa ve tarla endeksi (aylık sürümler)" \
+              -n "Emlakjet/Endeksa ilan fiyatı endeksi. Her ay ayrı dosya: geçmiş tahmin sürümleri de korunur (projeksiyon=1 satırlar tahmindir)."
+          gzip -c collector/data/arsa_piyasa_istihbarati.db > "arsa_piyasa_istihbarati_${AY}.db.gz"
+          gh release upload arsa-endeks "arsa_piyasa_istihbarati_${AY}.db.gz" --clobber --repo "$GITHUB_REPOSITORY"

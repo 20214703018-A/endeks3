@@ -6,9 +6,8 @@ name: Market Fiyatı ürün fiyat geçmişi (40 makine)
 # Çıktı: makine başına artifact → yerelde gh run download → GEOPROP_RAW_INTAKE/marketfiyati/<RUN_DATE>/history/
 
 on:
-  push:
-    branches: [marketfiyati-gecmis]
-    paths: [".github/marketfiyati_gecmis_run.env"]
+  schedule:
+    - cron: '0 21 2 * *'   # ayda bir: API son 90 günü veriyor, aylık çekimle pencereler üst üste biner
   workflow_dispatch:
 
 jobs:
@@ -28,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 350
     strategy:
+      max-parallel: 34  # 6 makine anlık yoğunluk ölçümüne ayrılı
       fail-fast: false
       matrix:
         shard: ${{ fromJSON(needs.ayar.outputs.matrix) }}
@@ -39,6 +39,8 @@ jobs:
       - name: topla
         run: |
           set -a; . .github/marketfiyati_gecmis_run.env; set +a
+          RUN_DATE=$(date -u +%Y-%m-%d)   # sabit tarih yerine koşu günü (env'deki RUN_DATE yalnız ilk elle koşu içindi)
+          echo "RUN_DATE=$RUN_DATE" >> "$GITHUB_ENV"
           INTAKE_RUN_DATE="$RUN_DATE" python -u consolidation/tools/intake_marketfiyati.py history \
             --prices-file consolidation/girdi/marketfiyati_history_girdi.parquet \
             --history-ils all --il-shard "${{ matrix.shard }}/$SHARDS" \
@@ -48,7 +50,30 @@ jobs:
         with:
           name: mf_gecmis_${{ github.run_id }}_${{ matrix.shard }}
           path: |
-            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/2026-10-01/history/
-            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/2026-10-01/run.log
+            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/${{ env.RUN_DATE }}/history/
+            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/${{ env.RUN_DATE }}/run.log
           retention-days: 30
           if-no-files-found: warn
+
+  kalici_kayit:
+    name: "Kalıcı kayıt: fiyat geçmişini release'e yaz (artifact 30 günde silinir)"
+    needs: gecmis
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mf_gecmis_${{ github.run_id }}_*
+          path: mf/
+      - run: |
+          GUN=$(date -u +%Y-%m-%d)
+          gh release view marketfiyati-gecmis --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create marketfiyati-gecmis --repo "$GITHUB_REPOSITORY" --latest=false -t "Market Fiyatı ürün fiyat geçmişi (aylık çekimler)" \
+              -n "Her çekim o günden geriye 90 günü kapsar; çekimler üst üste binerek kesintisiz seri oluşturur."
+          tar -czf "marketfiyati_gecmis_${GUN}.tgz" -C mf .
+          ls -la "marketfiyati_gecmis_${GUN}.tgz"
+          gh release upload marketfiyati-gecmis "marketfiyati_gecmis_${GUN}.tgz" --clobber --repo "$GITHUB_REPOSITORY"

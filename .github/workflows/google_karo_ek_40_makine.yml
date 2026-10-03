@@ -8,7 +8,7 @@ name: "GEOPROP Google KARO — EK kategoriler: gece hayatı + 91 yeni tür (40x)
 
 on:
   schedule:
-    - cron: '30 2 * * 1,2,4,5'   # temel karoyla aynı günler, 30 dk sonra: tarama aynı anda, yazma sırayla
+    - cron: '30 7 * * 1,2,4,5'   # temel karo (02:00, ~4,7 sa) bittikten sonra: ikisi aynı anda koşarsa anlık yoğunluğa yer kalmaz
   workflow_dispatch:
     inputs:
       max_saniye:
@@ -41,6 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 330
     strategy:
+      max-parallel: 34  # 6 makine anlık yoğunluk ölçümüne ayrılı
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]

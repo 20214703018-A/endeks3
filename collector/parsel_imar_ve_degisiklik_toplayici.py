@@ -28,6 +28,18 @@ JSON_OUTPUT_PATH = os.path.join(DATA_DIR, "parsel_imar_ve_degisiklikler.json")
 GEOJSON_OUTPUT_PATH = os.path.join(DATA_DIR, "turkiye_parseller_geo.geojson")
 
 EPLAN_BASE_URL = "https://eplan.csb.gov.tr"
+
+
+def _dis_halka(coordinates):
+    """GeoJSON koordinatlarından ilk poligonun dış halkasını [[x, y], ...] olarak döndürür.
+    TKGM çoğu parseli Polygon ([[[x,y],...]]) verir ama bazılarını MultiPolygon ([[[[x,y],...]]]) ya da daha derin
+    iç içe gönderir; eski kod tek seviye varsayıp 'int + list' hatasıyla tüm makineyi düşürüyordu (1-3 Ekim 2026)."""
+    c = coordinates
+    while isinstance(c, list) and c and isinstance(c[0], list) and c[0] and isinstance(c[0][0], list):
+        c = c[0]
+    if not isinstance(c, list):
+        return []
+    return [p for p in c if isinstance(p, list) and len(p) >= 2 and all(isinstance(v, (int, float)) for v in p[:2])]
 EPLAN_PLAN_OBJECT_ID = "1159bc1d-75cd-438d-958c-8716cc973f6c"
 EPLAN_GEOMETRY_FIELD = "3d758202-040e-481a-abd6-fb1c20312d63"
 EPLAN_PLAN_NAME_FIELD = "3f52b328-525b-49cb-a126-b0b2569a1553"
@@ -244,7 +256,7 @@ class ParselImarToplayici:
         if data:
             props = data.get("properties", {})
             geom = data.get("geometry", {})
-            coords = geom.get("coordinates", [[]])[0] if geom.get("coordinates") else []
+            coords = _dis_halka(geom.get("coordinates"))
             lat_c = sum(c[1] for c in coords) / len(coords) if coords else lat
             lon_c = sum(c[0] for c in coords) / len(coords) if coords else lon
             
@@ -565,6 +577,18 @@ class ParselImarToplayici:
         conn.close()
 
     def process_parsel(self, mahalle_id=None, ada=None, parsel=None, il=None, ilce=None, mahalle=None, lat=None, lon=None, persist=True):
+        """Tek parseli işler; beklenmedik bir hata o parseli atlatır ama taramayı durdurmaz (hata sayılır ve loglanır)."""
+        try:
+            return self._process_parsel_ic(mahalle_id=mahalle_id, ada=ada, parsel=parsel, il=il, ilce=ilce,
+                                           mahalle=mahalle, lat=lat, lon=lon, persist=persist)
+        except Exception as e:
+            self.parsel_hata_sayisi = getattr(self, "parsel_hata_sayisi", 0) + 1
+            print(f"    [HATA-ATLANDI] {il}/{ilce}/{mahalle} ada {ada} parsel {parsel}: {type(e).__name__}: {e}", flush=True)
+            if self.parsel_hata_sayisi > 200:
+                raise RuntimeError(f"çok fazla parsel hatası ({self.parsel_hata_sayisi}) — kaynak yanıt biçimi değişmiş olabilir") from e
+            return None
+
+    def _process_parsel_ic(self, mahalle_id=None, ada=None, parsel=None, il=None, ilce=None, mahalle=None, lat=None, lon=None, persist=True):
         """Parseli sorgular, imar durumunu ve bağımsız bölümlerini kaydeder."""
         p_data = self.fetch_tkgm_megsis(mahalle_id=mahalle_id, ada=ada, parsel=parsel, lat=lat, lon=lon)
         if not p_data:

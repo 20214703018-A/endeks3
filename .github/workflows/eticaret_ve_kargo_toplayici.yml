@@ -9,7 +9,7 @@ on:
         default: ""
   schedule:
     # Her Pazartesi sabah 03:00'da haftalık e-ticaret ve kargo dağıtım verilerini günceller
-    - cron: '0 3 * * 1'
+    - cron: '30 22 * * 1'
 
 permissions:
   contents: write

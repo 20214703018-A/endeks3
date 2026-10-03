@@ -6,7 +6,7 @@ name: OSM POI ambarı (haftalık)
 
 on:
   schedule:
-    - cron: "0 3 * * 1"   # her pazartesi 03:00 UTC
+    - cron: "30 21 * * 1"   # her pazartesi 21:30 UTC (karo ve anlık yoğunlukla çakışmasın)
   workflow_dispatch:
 
 jobs:

@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      max-parallel: 40
+      max-parallel: 34  # 6 makine anlık yoğunluk ölçümüne ayrılı
       matrix:
         sektor: [
            1,  2,  3,  4,  5,  6,  7,  8,

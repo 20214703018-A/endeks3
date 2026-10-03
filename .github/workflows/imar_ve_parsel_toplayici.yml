@@ -10,7 +10,7 @@ on:
         type: string
   schedule:
     # Her gece saat 03:30'da otomatik çalışarak tüm Türkiye ada ve parsellerini tarar
-    - cron: '30 3 * * *'
+    - cron: '0 22 * * *'
 
 permissions:
   contents: write

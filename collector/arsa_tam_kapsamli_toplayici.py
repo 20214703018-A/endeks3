@@ -385,6 +385,10 @@ def process_mahalle_trend(
         return 0
 
     now_iso = datetime.now().isoformat()
+    # Son GÖZLEMLENEN ay: API'nin TrendPeriod alanı (ör. 202609). Sonraki aylar Endeksa'nın tahminidir (ilan sayısı boş gelir).
+    # (Eski kod sabit "2026-08" sınırı kullanıyordu: Eylül 2026 gerçek verisi tahmin sayılıyor, sınır zamanla bozuluyordu.)
+    tp = str(resp.get("TrendPeriod") or "")
+    son_gozlem_ay = f"{tp[:4]}-{tp[4:6]}" if len(tp) == 6 and tp.isdigit() else None
     conn = get_db_connection()
     cur = conn.cursor()
     saved = 0
@@ -410,7 +414,9 @@ def process_mahalle_trend(
             t.get("UnitPriceForSale"), t.get("MinUnitPriceForSale"), t.get("MaxUnitPriceForSale"),
             t.get("PriceForSale"), t.get("ComparableAreaForSale"), t.get("IndexSale"),
             t.get("CountForSale") or 0, t.get("PriceChangeSale"), t.get("UnitPriceSaleAnnualChange"),
-            t.get("ListingPeriodForSale"), 1 if ay > "2026-08" else 0, now_iso
+            t.get("ListingPeriodForSale"),
+            1 if ((son_gozlem_ay and ay > son_gozlem_ay) or (not son_gozlem_ay and not t.get("CountForSale"))) else 0,
+            now_iso
         ))
         saved += 1
 
