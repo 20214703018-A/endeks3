@@ -1,0 +1,61 @@
+name: Pazarama satıcı ve ürün katalogu (40 makine, şifreli çıktı)
+
+# Sitemap'teki ~20 bin mağaza sayfasını SHARDS parçaya böler; her makine kendi payını çeker.
+# Çıktı kişisel veri içerebilir (şahıs satıcı unvanı/adres/KEP) ve depo PUBLIC olduğu için artifact
+# yüklenmeden önce age ile şifrelenir. Günlüklere veri basılmaz, yalnız sayaçlar.
+# Engel (403/429) ardışık STOP_AFTER_BLOCKS kez gelirse makine DURUR; kimlik değiştirilmez.
+# İndirme/çözme: consolidation/tools/schedule/pazarama_gha_indir.sh <run_id>
+
+on:
+  push:
+    branches: [marketfiyati-gecmis]
+    paths: [".github/pazarama_run.env"]
+  workflow_dispatch:
+
+jobs:
+  ayar:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.m.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: m
+        run: |
+          set -a; . .github/pazarama_run.env; set +a
+          echo "matrix=$SHARD_LIST" >> "$GITHUB_OUTPUT"
+
+  topla:
+    needs: ayar
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.ayar.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q requests
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq age
+      - name: topla
+        run: |
+          set -a; . .github/pazarama_run.env; set +a
+          INTAKE_RUN_DATE="$RUN_DATE" python -u consolidation/tools/intake_pazarama_satici.py \
+            --shard "${{ matrix.shard }}/$SHARDS" --rps "$RPS_SECONDS" \
+            --max-minutes "$MAX_MINUTES" --stop-after-blocks "$STOP_AFTER_BLOCKS"
+      - name: şifrele
+        if: always()
+        run: |
+          set -a; . .github/pazarama_run.env; set +a
+          D="$HOME/Desktop/GEOPROP_RAW_INTAKE/eticaret_pazarama_satici/$RUN_DATE"
+          if [ -d "$D" ]; then
+            tar czf - -C "$D" . | age -r "$AGE_PUBKEY" -o "pazarama_pay_${{ matrix.shard }}.tar.gz.age"
+          fi
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pazarama_${{ github.run_id }}_${{ matrix.shard }}
+          path: pazarama_pay_${{ matrix.shard }}.tar.gz.age
+          retention-days: 14
+          if-no-files-found: warn
