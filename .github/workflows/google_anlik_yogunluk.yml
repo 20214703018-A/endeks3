@@ -94,7 +94,10 @@ jobs:
           pip install -q playwright
           python -m playwright install --with-deps chromium
       - name: Canlı yoğunluk ölçümü
+        env:
+          ANLIK_EKRAN: ${{ github.workspace }}/tani
         run: |
+          mkdir -p tani
           LIM=""; [ -n "${{ github.event.inputs.limit }}" ] && LIM="--limit ${{ github.event.inputs.limit }}"
           if [ "${{ github.event.inputs.yontem || 'tarayici' }}" = "tarayici" ]; then
             python collector/google_anlik_yogunluk_tarayici.py --hedef "hedef/${HEDEF}" --out anlik_shard.sqlite \
@@ -103,6 +106,13 @@ jobs:
             python collector/google_anlik_yogunluk.py --hedef "hedef/${HEDEF}" --out anlik_shard.sqlite \
               --shard ${{ matrix.shard }} --num-shards 6 --max-seconds "${{ github.event.inputs.max_saniye || '2700' }}"
           fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: anlik-tani-${{ matrix.shard }}
+          path: tani/
+          retention-days: 3
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         with:
           name: anlik-shard-${{ matrix.shard }}

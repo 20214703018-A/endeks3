@@ -94,9 +94,23 @@ def main():
                     page.wait_for_selector('[aria-label*="yoğun" i], [aria-label*="busy" i]', timeout=8000)
                 except Exception:
                     pass
-                etiketler = page.eval_on_selector_all(
-                    '[aria-label*="yoğun" i], [aria-label*="busy" i]', "els => els.map(e => e.getAttribute('aria-label'))")
-                etiketler = [e for e in dict.fromkeys(etiketler) if e]
+                SEC = '[aria-label*="yoğun" i], [aria-label*="busy" i]'
+                oku = lambda: [e for e in dict.fromkeys(page.eval_on_selector_all(
+                    SEC, "els => els.map(e => e.getAttribute('aria-label'))")) if e]
+                etiketler = oku()
+                if not etiketler:
+                    # kurtarma 1: yan paneli aşağı kaydır (grafik tembel yükleniyor olabilir)
+                    for _ in range(4):
+                        page.mouse.move(200, 600); page.mouse.wheel(0, 1500); page.wait_for_timeout(900)
+                    etiketler = oku()
+                    if etiketler: sayac["kaydirma_ile"] = sayac.get("kaydirma_ile", 0) + 1
+                if not etiketler:
+                    # kurtarma 2: yeniden yükle ve daha uzun bekle
+                    page.reload(wait_until="domcontentloaded", timeout=30000)
+                    try: page.wait_for_selector(SEC, timeout=12000)
+                    except Exception: pass
+                    etiketler = oku()
+                    if etiketler: sayac["yeniden_yukleme_ile"] = sayac.get("yeniden_yukleme_ile", 0) + 1
                 if etiketler:
                     ham = json.dumps(etiketler, ensure_ascii=False)
                     canli = next((e for e in etiketler if CANLI_RX.search(e)), None)
@@ -107,7 +121,13 @@ def main():
                         durum = "canli_yok"
                 else:
                     durum = "populer_yok"
-                    tani = f"başlık={page.title()[:80]} | adres={page.url[:120]}"   # gerçek yokluk mu, farklı sayfa mı?
+                    html = page.content()
+                    tani = (f"başlık={page.title()[:60]} | 'Popüler saatler' metni={'Popüler saatler' in html or 'Popular times' in html}"
+                            f" | img-role={page.locator('[role=img]').count()} | adres={page.url[:90]}")
+                    if sayac.get("populer_yok", 0) == 0 and os.environ.get("ANLIK_EKRAN"):
+                        # makine başına ilk "grafik yok" sayfasının görüntüsü ve HTML'i (tanı için artifact'a gider)
+                        page.screenshot(path=os.path.join(os.environ["ANLIK_EKRAN"], f"grafik_yok_{a.shard}.png"), full_page=True)
+                        open(os.path.join(os.environ["ANLIK_EKRAN"], f"grafik_yok_{a.shard}.html"), "w").write(html)
             except Exception as e:
                 durum = "hata"; etiket = f"{type(e).__name__}: {str(e)[:120]}"
             sayac[durum] = sayac.get(durum, 0) + 1
