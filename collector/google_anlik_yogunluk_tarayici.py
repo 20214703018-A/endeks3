@@ -54,8 +54,8 @@ def main():
     ap.add_argument("--shard", type=int, default=1); ap.add_argument("--num-shards", type=int, default=1)
     ap.add_argument("--max-seconds", type=int, default=2700); ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--tur-dilimi", type=int, default=-1, help="-1: saat bazlı otomatik (TR saati // 3 mod tur-sayisi)")
-    ap.add_argument("--tur-sayisi", type=int, default=10,
-                    help="~9 sn/işletme → makine başına ~300/tur; makinelerin ~%%44'ü tam görünüm alıyor → 9.000 / 10")
+    ap.add_argument("--tur-sayisi", type=int, default=6,
+                    help="~9 sn/işletme → makine başına ~300/tur, 6 makine ≈ 1.500-1.800/tur → 9.000 / 6 (işletme başına ~günde 1)")
     ap.add_argument("--kosu-id", default=os.environ.get("GITHUB_RUN_ID", "yerel"))
     a = ap.parse_args()
     # 3 saatlik dilim sayacı: art arda turlar listenin farklı parçasını ölçer, her parça sırayla farklı saatlere düşer
@@ -174,7 +174,8 @@ def main():
             time.sleep(random.uniform(0.3, 0.8))
         br.close()
     c.commit(); c.close()
-    print(f"bitti: {sum(sayac.values()):,} ölçüm · {sayac}", flush=True)
+    olcum = sum(v for k, v in sayac.items() if k in ("canli", "canli_yok", "populer_yok", "kisitli_gorunum", "hata"))
+    print(f"bitti: {olcum:,} ölçüm · {sayac}", flush=True)
 
 
 if __name__ == "__main__":

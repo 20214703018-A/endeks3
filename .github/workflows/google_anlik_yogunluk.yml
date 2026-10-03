@@ -5,10 +5,9 @@ name: "GEOPROP Google anlık yoğunluk (günde 6 ölçüm, 6 makine)"
 # Saatler (TR): 08, 11, 14, 17, 20, 23. Ağır 40'lık iş akışları en fazla 34 makine kullanır; 6 yer bu ölçüme ayrılmıştır.
 
 on:
-  # ZAMANLAMA DURDURULDU (3 Eki 2026): eski istek yöntemi yoğunluğu yalnız ~%0,6 yanıtta veriyordu. Tarayıcı yöntemi
-  # bulut denemesinde doğrulanınca aşağıdaki satırlar açılacak.
-  # schedule:
-  #   - cron: '0 5,8,11,14,17,20 * * *'   # UTC → TR 08,11,14,17,20,23
+  # Tarayıcı yöntemi 3 Eki 2026 bulut denemesinde doğrulandı (6/6 makine tam görünüm, ölçümlerin %58'inde canlı değer).
+  schedule:
+    - cron: '0 5,8,11,14,17,20 * * *'   # UTC → TR 08,11,14,17,20,23
   workflow_dispatch:
     inputs:
       yontem:
