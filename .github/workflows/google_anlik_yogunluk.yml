@@ -5,10 +5,20 @@ name: "GEOPROP Google anlık yoğunluk (günde 6 ölçüm, 6 makine)"
 # Saatler (TR): 08, 11, 14, 17, 20, 23. Ağır 40'lık iş akışları en fazla 34 makine kullanır; 6 yer bu ölçüme ayrılmıştır.
 
 on:
-  schedule:
-    - cron: '0 5,8,11,14,17,20 * * *'   # UTC → TR 08,11,14,17,20,23
+  # ZAMANLAMA DURDURULDU (3 Eki 2026): eski istek yöntemi yoğunluğu yalnız ~%0,6 yanıtta veriyordu. Tarayıcı yöntemi
+  # bulut denemesinde doğrulanınca aşağıdaki satırlar açılacak.
+  # schedule:
+  #   - cron: '0 5,8,11,14,17,20 * * *'   # UTC → TR 08,11,14,17,20,23
   workflow_dispatch:
     inputs:
+      yontem:
+        description: 'tarayici (Playwright, önerilen) · istek (eski, yoğunluğu nadiren verir)'
+        required: false
+        default: 'tarayici'
+      limit:
+        description: '(Test) makine başına en fazla N işletme (boş = süre bitene kadar)'
+        required: false
+        default: ''
       max_saniye:
         description: 'Makine başına azami ölçüm süresi (saniye)'
         required: false
@@ -78,10 +88,21 @@ jobs:
         with:
           name: anlik-hedef
           path: hedef
+      - name: Tarayıcı kur (Playwright + Chromium)
+        if: ${{ (github.event.inputs.yontem || 'tarayici') == 'tarayici' }}
+        run: |
+          pip install -q playwright
+          python -m playwright install --with-deps chromium
       - name: Canlı yoğunluk ölçümü
         run: |
-          python collector/google_anlik_yogunluk.py --hedef "hedef/${HEDEF}" --out anlik_shard.sqlite \
-            --shard ${{ matrix.shard }} --num-shards 6 --max-seconds "${{ github.event.inputs.max_saniye || '2700' }}"
+          LIM=""; [ -n "${{ github.event.inputs.limit }}" ] && LIM="--limit ${{ github.event.inputs.limit }}"
+          if [ "${{ github.event.inputs.yontem || 'tarayici' }}" = "tarayici" ]; then
+            python collector/google_anlik_yogunluk_tarayici.py --hedef "hedef/${HEDEF}" --out anlik_shard.sqlite \
+              --shard ${{ matrix.shard }} --num-shards 6 --max-seconds "${{ github.event.inputs.max_saniye || '2700' }}" $LIM
+          else
+            python collector/google_anlik_yogunluk.py --hedef "hedef/${HEDEF}" --out anlik_shard.sqlite \
+              --shard ${{ matrix.shard }} --num-shards 6 --max-seconds "${{ github.event.inputs.max_saniye || '2700' }}"
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: anlik-shard-${{ matrix.shard }}
@@ -110,12 +131,16 @@ jobs:
           python - <<'EOF' | tee -a "$GITHUB_STEP_SUMMARY"
           import glob, sqlite3, sys
           sys.path.insert(0, "collector")
-          from google_anlik_yogunluk import init_db
+          from google_anlik_yogunluk_tarayici import init_db
           out = init_db("warehouse/product/google_anlik_yogunluk.sqlite")
+          # eski istek yöntemi: [84] yanıtta yoksa 'populer_yok' yazılmıştı; profil yok demek değil → düzelt
+          out.execute("UPDATE google_anlik_yogunluk SET durum='yanitta_yok' WHERE durum='populer_yok' AND yontem IS NULL")
           once = out.execute("SELECT COUNT(*) FROM google_anlik_yogunluk").fetchone()[0]
           for f in sorted(glob.glob("shards/*/anlik_shard.sqlite")):
               out.execute("ATTACH DATABASE ? AS s", (f,))
-              out.execute("INSERT OR IGNORE INTO google_anlik_yogunluk SELECT * FROM s.google_anlik_yogunluk")
+              kol = [r[1] for r in out.execute("PRAGMA s.table_info(google_anlik_yogunluk)")]
+              kl = ",".join(kol)
+              out.execute(f"INSERT OR IGNORE INTO google_anlik_yogunluk ({kl}) SELECT {kl} FROM s.google_anlik_yogunluk")
               out.execute("INSERT OR IGNORE INTO google_tipik_yogunluk_profil SELECT * FROM s.google_tipik_yogunluk_profil")
               out.commit(); out.execute("DETACH DATABASE s")
           sonra = out.execute("SELECT COUNT(*) FROM google_anlik_yogunluk").fetchone()[0]

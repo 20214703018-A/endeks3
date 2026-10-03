@@ -29,7 +29,7 @@ def init_db(path):
         olcum_id TEXT PRIMARY KEY,          -- feature_id|olcum_utc
         feature_id TEXT NOT NULL, google_place_id TEXT, isim TEXT, il TEXT, ilce TEXT, kategori TEXT, lat REAL, lon REAL,
         olcum_utc TEXT NOT NULL, olcum_tr TEXT NOT NULL, tr_gun INTEGER, tr_saat INTEGER,
-        durum TEXT NOT NULL,                -- canli · canli_yok (profil var, o an canlı değer yok) · populer_yok · zayif_yanit · hata
+        durum TEXT NOT NULL,                -- canli · canli_yok · populer_yok (yalnız tarayıcı yöntemi) · yanitta_yok · zayif_yanit · hata
         canli_saat INTEGER, canli_yuzde INTEGER, canli_etiket TEXT, kosu_id TEXT)""")
     c.execute("""CREATE TABLE IF NOT EXISTS google_tipik_yogunluk_profil (
         feature_id TEXT NOT NULL, iso_hafta TEXT NOT NULL, profil_json TEXT NOT NULL, kayit_utc TEXT,
@@ -72,7 +72,7 @@ def main():
             if ent is None or (pt is None and len(ent) < 150):
                 durum = "zayif_yanit"          # kısaltılmış yanıt: işletmenin yoğunluğu yok sayılmaz
             elif pt is None:
-                durum = "populer_yok"
+                durum = "yanitta_yok"          # bu istek türü yoğunluk bölümünü nadiren içerir; profil yok DEMEK DEĞİL
             else:
                 profil = pt[0] if len(pt) > 0 else None
                 cv = pt[7] if len(pt) > 7 else None
