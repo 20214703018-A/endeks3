@@ -144,6 +144,16 @@ def init_db(db_path):
         cur.execute("ALTER TABLE google_places_ticari_yogunluk ADD COLUMN ornek_yorum TEXT")
     except sqlite3.OperationalError:
         pass
+    # Google kategori kimliği (gcid) -> Google'ın Türkçe kategori adı. Her liste sonucunda asıl tür hem ad
+    # (21255108[0][0][0]) hem kimlik (gcid listesinin ilki) olarak gelir; çift buraya yazılır. Birleştirme
+    # sonrası geoprop/kategori_tamamla.py bu sözlükle, adı okunamamış eski kayıtların türünü doldurur.
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS gcid_kategori_cift (
+        gcid TEXT PRIMARY KEY,
+        kategori_tr TEXT NOT NULL,
+        ornek_place_id TEXT,
+        son_gorulme TEXT
+    )""")
     conn.commit()
     conn.close()
 
@@ -509,12 +519,14 @@ def parse_pb_venue_dict(v, query, now_utc):
         return None
     name = name.strip()
 
+    # Google'ın Türkçe kategori adları: v["21255108"][0] = [["Gece kulübü", ...], ["Bar", ...], ...]
+    # (Eski kod bir seviye fazla iniyordu ([0][0]) ve hiçbir kategoriyi alamıyordu → kayıtların ~%65'i
+    # "Ticari Mekan" kalmıştı. Asıl tür her zaman ilk eleman; gcid listesinin ilki ile eşleşir.)
     categories = []
     try:
-        cats_raw = v.get("21255108", [])[0][0]
-        for c in cats_raw:
-            if isinstance(c, list) and len(c) > 0 and isinstance(c[0], str):
-                categories.append(c[0])
+        for c in v.get("21255108", [])[0]:
+            if isinstance(c, list) and c and isinstance(c[0], str) and c[0].strip():
+                categories.append(c[0].strip())
     except Exception:
         pass
 
@@ -884,6 +896,15 @@ def save_venue(conn, venue):
             ))
         except Exception:
             pass
+    # gcid -> Türkçe ad çifti (yalnız Google'dan gerçek ad geldiyse; arama terimine göre konan etiket değil)
+    try:
+        _ad = json.loads(venue["tum_kategoriler"])[0] if venue.get("tum_kategoriler") else None
+        _gc = json.loads(venue["gcid_kategoriler"])[0] if venue.get("gcid_kategoriler") else None
+        if _ad and _gc:
+            cur.execute("INSERT OR REPLACE INTO gcid_kategori_cift (gcid, kategori_tr, ornek_place_id, son_gorulme) "
+                        "VALUES (?, ?, ?, ?)", (_gc, _ad, venue.get("google_place_id"), venue.get("guncellenme_tarihi")))
+    except Exception:
+        pass
     conn.commit()
     return True
 
@@ -1304,6 +1325,40 @@ KARO_KATEGORILER = [
     "emlak ofisi", "muhasebeci", "avukat", "diş kliniği", "veteriner", "spor salonu", "kurs",
     "anaokulu", "otel", "kırtasiye", "çiçekçi", "terzi", "çilingir", "matbaa", "nakliyat", "pet shop",
 ]
+# EK set (3 Ekim 2026): gece hayatı + gayrimenkul analizine yarayan, temel sette olmayan türler. Ayrı iş akışında
+# (--kategori-seti ek) temel setle AYNI ANDA koşabilsin diye ayrı tutulur; sorgu anahtarları farklı olduğu için çakışmaz.
+KARO_KATEGORILER_EK = [
+    # gece hayatı
+    "gece kulübü", "bar", "pub", "meyhane", "kokteyl bar", "birahane", "şarap evi", "lounge", "nargile kafe",
+    "canlı müzik", "karaoke", "dans kulübü", "beach club", "konser salonu", "sahne",
+    # finans ve resmi hizmet
+    "banka", "atm", "döviz bürosu", "sigorta acentesi", "noter", "ptt", "kargo şubesi",
+    # sağlık
+    "hastane", "poliklinik", "tıp merkezi", "laboratuvar", "fizik tedavi", "psikolog", "göz merkezi",
+    # eğitim
+    "dershane", "etüt merkezi", "özel okul", "dil kursu", "sürücü kursu", "öğrenci yurdu",
+    # konaklama
+    "pansiyon", "apart otel", "hostel", "butik otel", "tatil köyü",
+    # eğlence ve etkinlik
+    "sinema", "oyun salonu", "internet kafe", "bowling", "düğün salonu",
+    # spor
+    "halı saha", "yüzme havuzu", "pilates", "yoga", "dövüş sporları",
+    # ulaşım ve araç
+    "akaryakıt istasyonu", "otopark", "araç kiralama", "oto yedek parça", "motosiklet", "elektrikli araç şarj",
+    "taksi durağı",
+    # alışveriş
+    "avm", "kozmetik", "parfümeri", "kitapçı", "oyuncak", "spor malzemeleri", "saat", "hediyelik eşya", "antika",
+    "ikinci el",
+    # hizmet
+    "kuru temizleme", "çamaşırhane", "halı yıkama", "telefon tamiri", "ayakkabı tamiri", "fotoğrafçı", "coworking",
+    "elektrikçi", "cam balkon",
+    # sanayi ve toptan
+    "toptancı", "depo", "sanayi sitesi", "inşaat malzemeleri", "mermer", "zirai ilaç", "yem bayi",
+    # yemek alt türleri
+    "dönerci", "pizza", "burger", "çiğköfte", "balık restoranı", "kahve dükkanı", "su bayi", "tüp bayi",
+]
+KARO_KATEGORI_SETLERI = {"temel": KARO_KATEGORILER, "ek": KARO_KATEGORILER_EK,
+                         "hepsi": KARO_KATEGORILER + [k for k in KARO_KATEGORILER_EK if k not in KARO_KATEGORILER]}
 KARO_BOYUT_DERECE_LAT = 0.0045          # ~500 m
 KARO_YARICAP_KM = 0.7                    # mahalle merkezine bu mesafedeki karolar taranır
 KARO_OLCEK = {0: 1200, 1: 600}           # derinlik -> viewport ölçeği (500 m, 250 m)
@@ -1447,6 +1502,8 @@ def main():
     parser.add_argument("--mod", choices=["liste", "karo", "hepsi"], default="liste",
                         help="liste: mahalle metin sorguları (varsayılan); karo: büyükşehir 500 m karo taraması; hepsi: ikisi")
     parser.add_argument("--karo-limit", type=int, default=None, help="(Test) shard başına en fazla N karo")
+    parser.add_argument("--kategori-seti", choices=sorted(KARO_KATEGORI_SETLERI), default="temel",
+                        help="Karo taramasında aranacak kategori seti (temel: 57 eski · ek: gece hayatı + yeni türler · hepsi)")
     parser.add_argument("--gecmis-db", type=str, default=None,
                         help="Önceki koşuların birleşik ana ambarı (salt okunur). Orada yakın tarihte taranmış sorgular atlanır.")
     parser.add_argument("--yenileme-gunu", type=float, default=REFRESH_DAYS_BASARILI,
@@ -1488,7 +1545,8 @@ def main():
             )
             print(f"Shard {shard_id}/{total}: {len(initial_queries)} temel ticari & mahalle sorgusu yüklendi...")
         if args.mod in ("karo", "hepsi"):
-            initial_queries += get_karo_queries_by_shard(shard_id, total, limit=args.karo_limit)
+            initial_queries += get_karo_queries_by_shard(shard_id, total, kategoriler=KARO_KATEGORI_SETLERI[args.kategori_seti],
+                                                         limit=args.karo_limit)
     else:
         initial_queries = get_all_commercial_corridor_queries()
         print(f"Varsayılan Mod: {len(initial_queries)} ticari aks sorgulanıyor...")
@@ -1573,10 +1631,19 @@ def main():
         # Sayfalama: sayfa doluysa (20 sonuç) ve katman izin veriyorsa bir sonraki sayfayı da çek.
         venues = []
         seen_ids = set()
+        sayfa_ic = []   # karo: her sayfada karo içine düşen yeni sonuç sayısı (erken durma + ölçüm)
+        if karo:
+            import math as _m0
+            _r0 = (0.45 if k_derinlik == 0 else 0.25) * 1.6
+            _c0 = _m0.cos(_m0.radians(k_lat))
+            def _karo_icinde(v):
+                return bool(v.get("lat") and v.get("lon")) and _m0.sqrt(((v["lat"] - k_lat) * 111.0) ** 2 +
+                                                                     ((v["lon"] - k_lon) * 111.0 * _c0) ** 2) <= _r0
         for page in range(max_pages):
             page_venues = fetch_google_places(fetch_text, offset=page * PAGE_SIZE, viewport=viewport)
             pages_fetched += 1
             new_in_page = 0
+            ic_in_page = 0
             for v in page_venues:
                 identity = v.get("google_place_id") or (v["isim"], v["lat"], v["lon"])
                 if identity in seen_ids:
@@ -1584,10 +1651,22 @@ def main():
                 seen_ids.add(identity)
                 venues.append(v)
                 new_in_page += 1
+                if karo and _karo_icinde(v):
+                    ic_in_page += 1
+            if karo:
+                sayfa_ic.append(ic_in_page)
             # Sayfa 'dolu' sayılır: ticari-olmayan filtresi 1-2 kaydı eleyebilir (20 yerine 18-19 gelir)
             if len(page_venues) < PAGE_SIZE - 2 or new_in_page == 0:
                 break
+            # Karo erken durma: Google sonuçları görüş alanına yakınlığa göre sıralar; bir sayfa karonun içinden hiç
+            # yeni işletme getirmediyse sonraki sayfalar uzak doldurmadır (ölçüm: sayfa isteklerinin %84'ü karo içi
+            # 0-5 sonuçlu sorgulara gidiyordu). KARO_ERKEN_DURMA=0 ortam değişkeniyle kapatılabilir.
+            if karo and ic_in_page == 0 and os.environ.get("KARO_ERKEN_DURMA", "1") != "0":
+                globals()["KARO_ERKEN_DURAN"] = globals().get("KARO_ERKEN_DURAN", 0) + 1
+                break
             time.sleep(random.uniform(0.3, 0.6))
+        if karo and sayfa_ic:
+            print(f"  [📊 Sayfa başına karo içi] {sayfa_ic}", flush=True)
         if len(venues) > PAGE_SIZE:
             print(f"  [📄 Sayfalama] {q} -> {len(venues)} sonuç ({min(max_pages, (len(venues) + PAGE_SIZE - 1) // PAGE_SIZE)} sayfa)", flush=True)
         if karo:
@@ -1662,6 +1741,8 @@ def main():
         print(f"📐 KARO ÖLÇÜMÜ (bu shard, yalnızca karo içi sonuçlar): {g:,} tekil işletme görüldü; {y:,} tanesi "
               f"({(100.0*y/g if g else 0):.1f}%) ana ambarda yoktu. Karo dışı (uzak doldurma) sonuç: {globals().get('KARO_DISI_SONUC', 0):,}. "
               f"Kesin artış merge işinde raporlanır.", flush=True)
+        print(f"⏹ KARO ERKEN DURMA: {globals().get('KARO_ERKEN_DURAN', 0):,} sorguda karo içi sonuç bitince sayfalama kesildi "
+              f"(sorgu başına ortalama {pages_fetched / max(processed, 1):.2f} sayfa).", flush=True)
     print(f"Çıktı DB: {args.out}", flush=True)
 
 if __name__ == "__main__":

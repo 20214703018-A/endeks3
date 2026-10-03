@@ -1,4 +1,4 @@
-name: "GEOPROP Google KARO Taraması — büyükşehir 500 m karolar (40x)"
+name: "GEOPROP Google KARO — EK kategoriler: gece hayatı + 91 yeni tür (40x)"
 
 # Faz 2: metin sorgusu yoğun mahallede işletmelerin ~%40'ını görür (Google sorgu başına ~160 sonuç).
 # Bu koşu büyükşehir kentsel mahallelerin çevresini 500 m karolara böler (~35 bin karo) ve her
@@ -8,7 +8,7 @@ name: "GEOPROP Google KARO Taraması — büyükşehir 500 m karolar (40x)"
 
 on:
   schedule:
-    - cron: '0 2 * * 1,2,4,5'
+    - cron: '30 2 * * 1,2,4,5'   # temel karoyla aynı günler, 30 dk sonra: tarama aynı anda, yazma sırayla
   workflow_dispatch:
     inputs:
       max_saniye:
@@ -22,7 +22,7 @@ on:
       kategori_seti:
         description: 'Kategori seti: temel (57) · ek (gece hayatı + 91 yeni) · hepsi'
         required: false
-        default: 'temel'
+        default: 'ek'
 
 permissions:
   contents: write
@@ -37,7 +37,7 @@ env:
 
 jobs:
   karo_shards:
-    name: "Karo Shard ${{ matrix.shard }}/40"
+    name: "Ek Karo Shard ${{ matrix.shard }}/40"
     runs-on: ubuntu-latest
     timeout-minutes: 330
     strategy:
@@ -57,26 +57,19 @@ jobs:
           mkdir -p warehouse/master warehouse/product
           ops/ambar_indir.sh google_places_ve_yogunluk.sqlite warehouse/master
 
-      - name: Kategori kimliği sözlüğü (gcid → Google Türkçe adı; sözlükte eksik kimlikler, en fazla 10 dk)
-        continue-on-error: true
-        run: |
-          python collector/gcid_sozluk.py --gecmis-db warehouse/master/google_places_ve_yogunluk.sqlite \
-            --out warehouse/product/google_places_ve_yogunluk.sqlite \
-            --shard ${{ matrix.shard }} --num-shards 40 --max-seconds 600
-
       - name: Karo taraması
         run: |
           LIMIT_ARG=""
           if [ -n "${{ github.event.inputs.karo_limit }}" ]; then LIMIT_ARG="--karo-limit ${{ github.event.inputs.karo_limit }}"; fi
           python collector/google_places_ve_yogunluk_toplayici.py \
             --shard ${{ matrix.shard }} --num-shards 40 --mod karo \
-            --kategori-seti "${{ github.event.inputs.kategori_seti || 'temel' }}" \
+            --kategori-seti "${{ github.event.inputs.kategori_seti || 'ek' }}" \
             --gecmis-db warehouse/master/google_places_ve_yogunluk.sqlite \
             --max-seconds "${{ github.event.inputs.max_saniye || '16200' }}" $LIMIT_ARG
 
       - uses: actions/upload-artifact@v4
         with:
-          name: shard-db-${{ matrix.shard }}
+          name: shard-ek-db-${{ matrix.shard }}
           path: warehouse/product/*.sqlite
           retention-days: 3
           compression-level: 1
@@ -98,7 +91,7 @@ jobs:
           ops/ambar_indir.sh google_places_ve_yogunluk.sqlite warehouse/product
       - uses: actions/download-artifact@v4
         with:
-          pattern: shard-db-*
+          pattern: shard-ek-db-*
           path: temp_dbs/
       - name: Birleştir ve gerçek artışı ölç
         run: |
@@ -119,10 +112,10 @@ jobs:
       - name: Release'e yaz (gz)
         run: |
           ops/ambar_yukle.sh warehouse/product/google_places_ve_yogunluk.sqlite
-          gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — karo koşusu ${{ github.run_id }}"
+          gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — ek karo koşusu ${{ github.run_id }}"
       - uses: actions/upload-artifact@v4
         with:
-          name: warehouse-karo-${{ github.run_number }}
+          name: warehouse-karo-ek-${{ github.run_number }}
           path: warehouse/product/google_places_ve_yogunluk.sqlite
           retention-days: 14
           compression-level: 1
