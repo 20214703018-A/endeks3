@@ -250,8 +250,14 @@ def main():
     a = ap.parse_args()
     t0 = time.time()
     it = Intake("eticaret_pazarama_satici", rate=a.rps)
-    xml = it.get(SM, timeout=120).text
+    sr = it.get(SM, timeout=120)
+    xml = sr.text
     urls = re.findall(r"<loc>([^<]+)</loc>", xml)
+    if sr.status_code != 200 or not urls:
+        gov = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", xml))[:160]
+        it.log(f"sitemap alınamadı: HTTP {sr.status_code}, {len(xml)} bayt, sunucu={sr.headers.get('server')}, "
+               f"cf-ray={'cf-ray' in sr.headers}, içerik='{gov}'")
+        raise SystemExit(4)
     si, sn = (1, 1)
     if a.shard:
         si, sn = (int(x) for x in a.shard.split("/"))
@@ -315,8 +321,9 @@ def main():
         n += 1
         if n % 50 == 0:
             it.log(f"{n} mağaza işlendi")
-    it._record(out, source_url=SM, method="http_get_nuxt_state", rows=len(done) + n,
-               note="UI_STORE_INFO + ürün listesi/filtreler; kişisel e-posta alınmadı; TCKN ham yazılmaz; restricted: kep, sellerAddress, sellerTradeName(şahıs)")
+    if out.exists():
+        it._record(out, source_url=SM, method="http_get_nuxt_state", rows=len(done) + n,
+                   note="UI_STORE_INFO + ürün listesi/filtreler; kişisel e-posta alınmadı; TCKN ham yazılmaz; restricted: kep, sellerAddress, sellerTradeName(şahıs)")
 
 
 if __name__ == "__main__":
