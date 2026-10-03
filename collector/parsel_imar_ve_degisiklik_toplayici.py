@@ -254,8 +254,8 @@ class ParselImarToplayici:
                 pass
 
         if data:
-            props = data.get("properties", {})
-            geom = data.get("geometry", {})
+            props = data.get("properties") or {}
+            geom = data.get("geometry") or {}      # TKGM bazı parsellerde "geometry": null gönderiyor
             coords = _dis_halka(geom.get("coordinates"))
             lat_c = sum(c[1] for c in coords) / len(coords) if coords else lat
             lon_c = sum(c[0] for c in coords) / len(coords) if coords else lon
