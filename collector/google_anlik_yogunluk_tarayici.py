@@ -54,7 +54,8 @@ def main():
     ap.add_argument("--shard", type=int, default=1); ap.add_argument("--num-shards", type=int, default=1)
     ap.add_argument("--max-seconds", type=int, default=2700); ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--tur-dilimi", type=int, default=-1, help="-1: saat bazlı otomatik (TR saati // 3 mod tur-sayisi)")
-    ap.add_argument("--tur-sayisi", type=int, default=5, help="~9 sn/işletme: 6 makine × 45 dk ≈ 1.800 işletme/tur → 9.000 / 5")
+    ap.add_argument("--tur-sayisi", type=int, default=10,
+                    help="~9 sn/işletme → makine başına ~300/tur; makinelerin ~%%44'ü tam görünüm alıyor → 9.000 / 10")
     ap.add_argument("--kosu-id", default=os.environ.get("GITHUB_RUN_ID", "yerel"))
     a = ap.parse_args()
     # 3 saatlik dilim sayacı: art arda turlar listenin farklı parçasını ölçer, her parça sırayla farklı saatlere düşer
@@ -66,12 +67,25 @@ def main():
     c = init_db(a.out)
     from playwright.sync_api import sync_playwright
     sayac = {}; t0 = time.time()
+    # Google bazı makinelere (IP'ye göre, bölgeden bağımsız; 3 Eki ölçümü 8/18 tam) "kısıtlı görünüm" veriyor: sayfa tam ama
+    # "Popüler saatler" bölümü yok. Makine hiç tam görünüm görmediyse grafiksiz sayfa 'kisitli_gorunum' (ölçülemedi) sayılır,
+    # 'populer_yok' DEĞİL. İlk 5 işletmede tam görünüm yoksa önce temiz oturum, sonra mobil görünüm denenir; yine yoksa çıkılır.
+    tam_gorunum_goruldu = False; kisitli_seri = 0; varyant = 0
+    VARYANTLAR = [
+        dict(locale="tr-TR", timezone_id="Europe/Istanbul", viewport={"width": 1280, "height": 900},
+             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"),
+        dict(locale="tr-TR", timezone_id="Europe/Istanbul", viewport={"width": 1366, "height": 860},
+             user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"),
+        "Pixel 7",
+    ]
     with sync_playwright() as p:
         br = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
-        ctx = br.new_context(locale="tr-TR", timezone_id="Europe/Istanbul", viewport={"width": 1280, "height": 900},
-                             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36")
-        page = ctx.new_page()
-        page.route(re.compile(r".*\.(png|jpg|jpeg|webp|gif|woff2?)(\?.*)?$"), lambda r: r.abort())   # görseller gereksiz
+        def yeni_sayfa(v):
+            ayar = dict(p.devices[v], locale="tr-TR", timezone_id="Europe/Istanbul") if isinstance(v, str) else v
+            cx = br.new_context(**ayar); pg = cx.new_page()
+            pg.route(re.compile(r".*\.(png|jpg|jpeg|webp|gif|woff2?)(\?.*)?$"), lambda r: r.abort())   # görseller gereksiz
+            return cx, pg
+        ctx, page = yeni_sayfa(VARYANTLAR[0])
         for i, r in enumerate(hedef, 1):
             if time.time() - t0 > a.max_seconds:
                 print(f"  süre doldu ({i-1:,}/{len(hedef):,})", flush=True); break
@@ -120,16 +134,20 @@ def main():
                     else:
                         durum = "canli_yok"
                 else:
-                    durum = "populer_yok"
                     html = page.content()
+                    durum = "populer_yok" if tam_gorunum_goruldu else "kisitli_gorunum"
                     tani = (f"başlık={page.title()[:60]} | 'Popüler saatler' metni={'Popüler saatler' in html or 'Popular times' in html}"
                             f" | img-role={page.locator('[role=img]').count()} | adres={page.url[:90]}")
-                    if sayac.get("populer_yok", 0) == 0 and os.environ.get("ANLIK_EKRAN"):
+                    if sayac.get("populer_yok", 0) + sayac.get("kisitli_gorunum", 0) == 0 and os.environ.get("ANLIK_EKRAN"):
                         # makine başına ilk "grafik yok" sayfasının görüntüsü ve HTML'i (tanı için artifact'a gider)
                         page.screenshot(path=os.path.join(os.environ["ANLIK_EKRAN"], f"grafik_yok_{a.shard}.png"), full_page=True)
                         open(os.path.join(os.environ["ANLIK_EKRAN"], f"grafik_yok_{a.shard}.html"), "w").write(html)
             except Exception as e:
                 durum = "hata"; etiket = f"{type(e).__name__}: {str(e)[:120]}"
+            if durum in ("canli", "canli_yok"):
+                tam_gorunum_goruldu = True; kisitli_seri = 0
+            elif durum == "kisitli_gorunum":
+                kisitli_seri += 1
             sayac[durum] = sayac.get(durum, 0) + 1
             c.execute("""INSERT OR REPLACE INTO google_anlik_yogunluk
                 (olcum_id, feature_id, google_place_id, isim, il, ilce, kategori, lat, lon, olcum_utc, olcum_tr, tr_gun, tr_saat,
@@ -139,12 +157,20 @@ def main():
                 r.get("il"), r.get("ilce"), r.get("kategori"), float(r["lat"]), float(r["lon"]),
                 now.isoformat(timespec="seconds"), tr.isoformat(timespec="seconds"), tr.isoweekday(), tr.hour,
                 durum, tr.hour if yuzde is not None else None, yuzde, etiket, a.kosu_id, ham, "tarayici", genel, tani))
-            if durum == "populer_yok" and sayac.get("populer_yok", 0) <= 3:
+            if durum in ("populer_yok", "kisitli_gorunum") and sayac.get(durum, 0) <= 2:
                 print(f"  tanı (grafik yok): {r.get('isim')} · {tani}", flush=True)
             if i % 25 == 0:
                 c.commit(); print(f"  {i:,}/{len(hedef):,} · {sayac} · {(time.time()-t0)/i:.1f} sn/işletme", flush=True)
             if i <= 3 and ham:
                 print(f"  örnek etiketler ({r.get('isim')}): {ham[:300]}", flush=True)
+            if not tam_gorunum_goruldu and kisitli_seri >= 5:
+                varyant += 1
+                if varyant >= len(VARYANTLAR):
+                    print(f"  [!] bu makine kısıtlı görünüm alıyor (3 tarayıcı varyantı denendi) — kalan {len(hedef)-i:,} işletme "
+                          f"ölçülmeden çıkılıyor", flush=True)
+                    break
+                print(f"  [!] {kisitli_seri} işletmede kısıtlı görünüm — tarayıcı varyantı {varyant} deneniyor", flush=True)
+                ctx.close(); ctx, page = yeni_sayfa(VARYANTLAR[varyant]); kisitli_seri = 0
             time.sleep(random.uniform(0.3, 0.8))
         br.close()
     c.commit(); c.close()
