@@ -7,7 +7,7 @@ name: "GEOPROP Google anlık yoğunluk (günde 6 ölçüm, 6 makine)"
 on:
   # Tarayıcı yöntemi 3 Eki 2026 bulut denemesinde doğrulandı (6/6 makine tam görünüm, ölçümlerin %58'inde canlı değer).
   schedule:
-    - cron: '0 5,8,11,14,17,20 * * *'   # UTC → TR 08,11,14,17,20,23
+    - cron: '17 5,8,11,14,17,20 * * *'   # UTC → TR 08:17 … 23:17 (saat başı GitHub'da saatlerce gecikiyordu)
   workflow_dispatch:
     inputs:
       yontem:

@@ -76,13 +76,20 @@ def main():
              user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"),
         dict(locale="tr-TR", timezone_id="Europe/Istanbul", viewport={"width": 1366, "height": 860},
              user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"),
-        "Pixel 7",
+        dict(locale="tr-TR", timezone_id="Europe/Istanbul", viewport={"width": 1440, "height": 900},
+             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0"),
+        "yeniden_baslat",   # tarayıcıyı tamamen kapatıp yeniden aç (yeni süreç, yeni oturum)
     ]
+    # Not: mobil görünüm (Pixel 7) denendi — Haritalar sayfası hiç yüklenmiyor, her işletme 30 sn zaman aşımı (4 Eki).
     with sync_playwright() as p:
-        br = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
+        tarayici = {"br": p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])}
         def yeni_sayfa(v):
-            ayar = dict(p.devices[v], locale="tr-TR", timezone_id="Europe/Istanbul") if isinstance(v, str) else v
-            cx = br.new_context(**ayar); pg = cx.new_page()
+            if v == "yeniden_baslat":
+                try: tarayici["br"].close()
+                except Exception: pass
+                tarayici["br"] = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
+                v = VARYANTLAR[0]
+            cx = tarayici["br"].new_context(**v); pg = cx.new_page()
             pg.route(re.compile(r".*\.(png|jpg|jpeg|webp|gif|woff2?)(\?.*)?$"), lambda r: r.abort())   # görseller gereksiz
             return cx, pg
         ctx, page = yeni_sayfa(VARYANTLAR[0])
@@ -146,8 +153,8 @@ def main():
                 durum = "hata"; etiket = f"{type(e).__name__}: {str(e)[:120]}"
             if durum in ("canli", "canli_yok"):
                 tam_gorunum_goruldu = True; kisitli_seri = 0
-            elif durum == "kisitli_gorunum":
-                kisitli_seri += 1
+            elif durum in ("kisitli_gorunum", "hata"):
+                kisitli_seri += 1        # zaman aşımı serisi de (bozuk oturum) varyant değiştirmeyi tetikler
             sayac[durum] = sayac.get(durum, 0) + 1
             c.execute("""INSERT OR REPLACE INTO google_anlik_yogunluk
                 (olcum_id, feature_id, google_place_id, isim, il, ilce, kategori, lat, lon, olcum_utc, olcum_tr, tr_gun, tr_saat,
@@ -163,16 +170,16 @@ def main():
                 c.commit(); print(f"  {i:,}/{len(hedef):,} · {sayac} · {(time.time()-t0)/i:.1f} sn/işletme", flush=True)
             if i <= 3 and ham:
                 print(f"  örnek etiketler ({r.get('isim')}): {ham[:300]}", flush=True)
-            if not tam_gorunum_goruldu and kisitli_seri >= 5:
+            if kisitli_seri >= 5 and (not tam_gorunum_goruldu or durum == "hata"):
                 varyant += 1
                 if varyant >= len(VARYANTLAR):
-                    print(f"  [!] bu makine kısıtlı görünüm alıyor (3 tarayıcı varyantı denendi) — kalan {len(hedef)-i:,} işletme "
+                    print(f"  [!] bu makinede ölçüm olmuyor ({len(VARYANTLAR)} varyant denendi) — kalan {len(hedef)-i:,} işletme "
                           f"ölçülmeden çıkılıyor", flush=True)
                     break
-                print(f"  [!] {kisitli_seri} işletmede kısıtlı görünüm — tarayıcı varyantı {varyant} deneniyor", flush=True)
+                print(f"  [!] art arda {kisitli_seri} kısıtlı görünüm/zaman aşımı — tarayıcı varyantı {varyant} deneniyor", flush=True)
                 ctx.close(); ctx, page = yeni_sayfa(VARYANTLAR[varyant]); kisitli_seri = 0
             time.sleep(random.uniform(0.3, 0.8))
-        br.close()
+        tarayici["br"].close()
     c.commit(); c.close()
     olcum = sum(v for k, v in sayac.items() if k in ("canli", "canli_yok", "populer_yok", "kisitli_gorunum", "hata"))
     print(f"bitti: {olcum:,} ölçüm · {sayac}", flush=True)
