@@ -10,6 +10,9 @@ on:
   schedule:
     - cron: "0 12 * * 3" # Her Çarşamba sabaha karşı haftalık güncelleme
 
+permissions:
+  contents: write
+
 jobs:
   madencilik:
     name: Shard ${{ matrix.shard }}/40 Teslimat & Darkstore
@@ -74,6 +77,12 @@ jobs:
             --shards "artifacts/**/shard_*.sqlite" \
             --out warehouse/product/yemek_ve_market_teslimat_ekosistemi.sqlite
 
+      - name: "Kalıcı kayıt: sonucu tarihli olarak veri-arsivi release'ine yaz"
+        if: ${ !cancelled() }
+        env:
+          GH_TOKEN: ${ github.token }
+        run: |
+          ops/arsive_yaz.sh warehouse/product/yemek_ve_market_teslimat_ekosistemi.sqlite
       - name: Nihai Ambarı Yükle
         uses: actions/upload-artifact@v4
         with:

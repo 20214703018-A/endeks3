@@ -12,6 +12,9 @@ on:
   schedule:
     - cron: "30 22 1 * *"   # ayda bir (MEB listesi/LGS nadiren değişir; LGS yılda bir)
 
+permissions:
+  contents: write
+
 jobs:
   hazirlik:
     runs-on: ubuntu-latest
@@ -77,6 +80,12 @@ jobs:
           print("lgs:", c.execute("SELECT COUNT(*), SUM(kurum_kodu IS NOT NULL) FROM lgs_taban").fetchone())
           for r in c.execute("SELECT tur, COUNT(*) FROM okul GROUP BY tur ORDER BY 2 DESC"): print("  ", r)
           EOF
+      - name: "Kalıcı kayıt: sonucu tarihli olarak veri-arsivi release'ine yaz"
+        if: ${ !cancelled() }
+        env:
+          GH_TOKEN: ${ github.token }
+        run: |
+          ops/arsive_yaz.sh warehouse/product/resmi_egitim.sqlite
       - uses: actions/upload-artifact@v4
         with:
           name: resmi_egitim_sqlite

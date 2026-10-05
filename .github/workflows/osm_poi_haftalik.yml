@@ -9,6 +9,9 @@ on:
     - cron: "30 21 * * 1"   # her pazartesi 21:30 UTC (karo ve anlık yoğunlukla çakışmasın)
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,6 +39,12 @@ jobs:
           print(dict(c.execute("SELECT key, value FROM meta")))
           for r in c.execute("SELECT kategori, SUM(sayi) FROM kapsama GROUP BY 1 ORDER BY 2 DESC"): print(r)
           EOF
+      - name: "Kalıcı kayıt: sonucu tarihli olarak veri-arsivi release'ine yaz"
+        if: ${ !cancelled() }
+        env:
+          GH_TOKEN: ${ github.token }
+        run: |
+          ops/arsive_yaz.sh warehouse/product/osm_poi.sqlite
       - uses: actions/upload-artifact@v4
         with:
           name: osm_poi_sqlite
