@@ -68,7 +68,7 @@
         });
     // Popüler saatlere ayrılan en uzun süre; dolarsa o ana kadar okunan günlerle devam edilir
     // (gun_sayisi sütunu kaç günün okunduğunu gösterir). Menü asıl hedef olduğu için onu bekletmez.
-    const POPULAR_TIMES_BUDGET_MS = 15000;
+    const POPULAR_TIMES_BUDGET_MS = 10000;
     async function collectPopularTimes() {
         const root = busyRoot();
         if (!root) return null;
@@ -103,9 +103,9 @@
                 log("Gün sekmesine tıklanamadı:", error.message);
                 break;
             }
-            for (let waited = 0; waited < 3000 && selectedDay() !== day; waited += 150) await sleep(150);
+            for (let waited = 0; waited < 2000 && selectedDay() !== day; waited += 100) await sleep(100);
             if (selectedDay() !== day) { log(`${day} sekmesi açılmadı`); continue; }
-            await sleep(150);
+            await sleep(100);
             result.gunler[day] = readDayBars();
         }
         log(`Popüler saatler: ${Object.keys(result.gunler).length} gün`);

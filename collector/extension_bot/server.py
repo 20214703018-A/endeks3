@@ -72,6 +72,9 @@ MIN_NEIGHBORHOOD_POPULATION = 3_000
 MAX_ATTEMPTS = 2  # yalnız zaman aşımı/CAPTCHA için tek tekrar; menü bulunamayan mekan tekrar denenmez
 MAX_BODY_BYTES = 2_000_000
 LEASE_TIMEOUT_SECONDS = 15 * 60
+# ThreadingHTTPServer: paralel çalışanların /next istekleri aynı anda gelebilir; aynı mekanın iki
+# çalışana verilmemesi için seçme+kiralama tek kilit altında yapılır.
+LEASE_LOCK = threading.Lock()
 
 # Görseller yerel diske küçültülerek indirilir. Menü kartı fotoğrafları OCR ile okunacağı için
 # uzun kenar 1024 px'te tutulur (~140 KB); yemek fotoğrafları yalnız önizleme amaçlı (~30 KB).
@@ -349,6 +352,8 @@ def init_schema(conn: sqlite3.Connection) -> None:
     # Kuyruk önceliği (büyük önce): il katmanı + kategorinin geçmiş menü bulma oranı. Bkz. queue_priority.
     add_column_if_missing(conn, "menu_tarama_kuyrugu", "oncelik", "REAL NOT NULL DEFAULT 0")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_menu_queue_priority ON menu_tarama_kuyrugu(durum, oncelik)")
+    # Paralel tarama: her kiralama hangi eklenti çalışanına (pencere/sekme yuvası) verildiğini tutar.
+    add_column_if_missing(conn, "menu_tarama_kuyrugu", "isci", "TEXT")
     # Tek seferlik bakım işlerinin (ör. zaman aşımı yeniden kuyruğu) yapıldığını hatırlar.
     conn.execute("CREATE TABLE IF NOT EXISTS menu_bot_meta (anahtar TEXT PRIMARY KEY, deger TEXT, updated_at TEXT)")
     conn.commit()
@@ -576,6 +581,46 @@ def sync_queue(conn: sqlite3.Connection, venues: list[dict[str, Any]], loaded_so
         print(f"UYARI: kaynak veritabanı okunamayan {kept_missing_source} mekan kuyrukta bırakıldı (dışarı atılmadı).")
 
 
+TWIN_MAX_DEGREES = 0.002  # ~200 m
+
+
+def mark_duplicate_twins(conn: sqlite3.Connection) -> int:
+    """Google ambarında aynı mekan farklı kimlikle birden çok kez bulunabiliyor (aynı ad, il, ilçe ve
+    ~200 m içinde). Bunlar aynı Google aramasını tekrarlatır; eşi taranmış ya da kuyrukta önde olan
+    kayıt bırakılır, diğeri silinmeden 'excluded' + nedeniyle işaretlenir (taranan eşin sonucu geçerlidir)."""
+    rows = conn.execute(
+        "SELECT mekan_id, durum, payload_json FROM menu_tarama_kuyrugu "
+        "WHERE durum IN ('queued','blocked','in_progress','completed','completed_no_menu')"
+    ).fetchall()
+    groups: dict[tuple[str, str, str], list[tuple[int, int, str, str, float, float]]] = {}
+    for row in rows:
+        payload = json.loads(row["payload_json"])
+        if payload.get("lat") is None or payload.get("lon") is None:
+            continue
+        key = (normalize_tr(payload.get("adi")), normalize_tr(payload.get("il")), normalize_tr(payload.get("ilce")))
+        rank = 0 if row["durum"].startswith("completed") else 1 if row["durum"] == "in_progress" else 2
+        groups.setdefault(key, []).append((rank, -int(payload.get("degerlendirme_sayisi") or 0), row["mekan_id"],
+                                           row["durum"], float(payload["lat"]), float(payload["lon"])))
+    now = now_iso()
+    marked = 0
+    with conn:
+        for members in groups.values():
+            if len(members) < 2:
+                continue
+            kept: list[tuple[str, float, float]] = []
+            for _, _, venue_id, status, lat, lon in sorted(members):
+                twin = next((k for k in kept if abs(k[1] - lat) < TWIN_MAX_DEGREES and abs(k[2] - lon) < TWIN_MAX_DEGREES), None)
+                if twin and status in ("queued", "blocked"):
+                    conn.execute(
+                        "UPDATE menu_tarama_kuyrugu SET durum='excluded', son_hata=?, updated_at=? WHERE mekan_id=?",
+                        (f"Tekrar kayıt: {twin[0]} ile aynı ad/ilçe ve ~200 m içinde", now, venue_id),
+                    )
+                    marked += 1
+                elif not twin:
+                    kept.append((venue_id, lat, lon))
+    return marked
+
+
 def queue_counts(conn: sqlite3.Connection) -> dict[str, int]:
     result = {row["durum"]: row["adet"] for row in conn.execute(
         "SELECT durum, COUNT(*) AS adet FROM menu_tarama_kuyrugu GROUP BY durum"
@@ -600,26 +645,33 @@ def queue_counts_by_city(conn: sqlite3.Connection) -> dict[str, int]:
     }
 
 
-def lease_next(conn: sqlite3.Connection) -> dict[str, Any] | None:
+def lease_next(conn: sqlite3.Connection, worker: str = "1") -> dict[str, Any] | None:
+    """Çalışana (worker) bir mekan kiralar. Aynı çalışanın süresi dolmamış kiralaması varsa onu
+    "resumed" olarak geri verir (sekme yenilendi/servis çalışanı uyandı); başka çalışanlarınkine dokunmaz."""
+    with LEASE_LOCK:
+        return _lease_next_locked(conn, worker)
+
+
+def _lease_next_locked(conn: sqlite3.Connection, worker: str) -> dict[str, Any] | None:
     now = now_iso()
     expiry_epoch = time.time() - LEASE_TIMEOUT_SECONDS
     with conn:
-        active = conn.execute(
-            "SELECT * FROM menu_tarama_kuyrugu WHERE durum='in_progress' ORDER BY leased_at LIMIT 1"
-        ).fetchone()
-        if active:
+        for active in conn.execute(
+            "SELECT * FROM menu_tarama_kuyrugu WHERE durum='in_progress' ORDER BY leased_at"
+        ).fetchall():
             try:
                 leased_epoch = calendar.timegm(time.strptime(active["leased_at"], "%Y-%m-%dT%H:%M:%SZ"))
             except (TypeError, ValueError):
                 leased_epoch = 0
-            if leased_epoch >= expiry_epoch:
+            if leased_epoch < expiry_epoch:
+                conn.execute(
+                    "UPDATE menu_tarama_kuyrugu SET durum='queued', lease_token=NULL, leased_at=NULL, isci=NULL, updated_at=? WHERE mekan_id=?",
+                    (now, active["mekan_id"]),
+                )
+            elif (active["isci"] or "1") == worker:
                 payload = json.loads(active["payload_json"])
-                payload.update({"lease_token": active["lease_token"], "resumed": True})
+                payload.update({"lease_token": active["lease_token"], "resumed": True, "isci": worker})
                 return payload
-            conn.execute(
-                "UPDATE menu_tarama_kuyrugu SET durum='queued', lease_token=NULL, leased_at=NULL, updated_at=? WHERE mekan_id=?",
-                (now, active["mekan_id"]),
-            )
         row = conn.execute(
             """
             SELECT * FROM menu_tarama_kuyrugu
@@ -633,13 +685,13 @@ def lease_next(conn: sqlite3.Connection) -> dict[str, Any] | None:
         token = uuid.uuid4().hex
         conn.execute(
             """
-            UPDATE menu_tarama_kuyrugu SET durum='in_progress', lease_token=?, leased_at=?,
+            UPDATE menu_tarama_kuyrugu SET durum='in_progress', lease_token=?, leased_at=?, isci=?,
                 deneme_sayisi=deneme_sayisi+1, updated_at=? WHERE mekan_id=?
             """,
-            (token, now, now, row["mekan_id"]),
+            (token, now, worker, now, row["mekan_id"]),
         )
         payload = json.loads(row["payload_json"])
-        payload.update({"lease_token": token, "resumed": False})
+        payload.update({"lease_token": token, "resumed": False, "isci": worker})
         return payload
 
 
@@ -1287,7 +1339,8 @@ class RequestHandler(BaseHTTPRequestHandler):
             with connect_menu_db() as conn:
                 init_schema(conn)
                 if path == "/next":
-                    venue = lease_next(conn)
+                    worker = re.sub(r"[^0-9A-Za-z_-]", "", parse_qs(urlparse(self.path).query).get("worker", ["1"])[0])[:16] or "1"
+                    venue = lease_next(conn, worker)
                     if venue is None:
                         self._send_json(200, {"status": "done", "queue": queue_counts(conn)})
                     else:
@@ -1315,7 +1368,11 @@ class RequestHandler(BaseHTTPRequestHandler):
                         "SELECT mekan_id, payload_json, deneme_sayisi, leased_at FROM menu_tarama_kuyrugu WHERE durum='in_progress' LIMIT 1"
                     ).fetchone()
                     current_payload = json.loads(current["payload_json"]) if current else None
+                    active_rows = conn.execute(
+                        "SELECT isci, payload_json FROM menu_tarama_kuyrugu WHERE durum='in_progress' ORDER BY isci"
+                    ).fetchall()
                     self._send_json(200, {
+                        "active": [{"isci": r["isci"] or "1", "adi": json.loads(r["payload_json"]).get("adi")} for r in active_rows],
                         "status": "ok", "queue": queue_counts(conn),
                         "cities": queue_counts_by_city(conn),
                         "current": {"id": current["mekan_id"], "adi": current_payload["adi"],
@@ -1417,10 +1474,19 @@ def prepare_queue() -> tuple[int, Counter[str]]:
         if not existing:
             raise SystemExit(f"Kuyruk boş ve kaynak okunamadı: {error}")
         print(f"UYARI: kuyruk güncellenemedi ({error}); mevcut {existing} kayıtlık kuyrukla devam ediliyor.")
+        with connect_menu_db() as conn:
+            report_twins(conn)
         return 0, Counter({"kaynak_okunamadi": 1})
     with connect_menu_db() as conn:
         sync_queue(conn, venues, discover_places_databases())
+        report_twins(conn)
     return len(venues), reasons
+
+
+def report_twins(conn: sqlite3.Connection) -> None:
+    twins = mark_duplicate_twins(conn)
+    if twins:
+        print(f"Tekrar kayıt olarak işaretlenen (aranmayacak) mekan: {twins}")
 
 
 def run() -> None:

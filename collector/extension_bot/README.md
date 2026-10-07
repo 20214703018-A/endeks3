@@ -1,4 +1,4 @@
-# GEOPROP Menü Toplayıcı 2.3
+# GEOPROP Menü Toplayıcı 2.4
 
 Bu Chrome eklentisi mevcut Google Places ambarındaki uygun restoranları kalıcı bir SQLite kuyruğundan işler. Her mekan için `mekan adı + adres` Google Search sorgusunu açar ve bilgi panelindeki **Menü** düğmesine basar; Maps koordinat araması kullanmaz. İş ilerlemesi tarayıcı veya servis yeniden başlasa da korunur.
 
@@ -57,7 +57,9 @@ Her fiyat kaydında sağlayıcı, sağlayıcı kanıtı, ham fiyat metni, kaynak
 - **Bekçi (watchdog):** İçerik betiği her adımda (sayfa, popüler saatler, menü) "heartbeat" gönderir. Bir mekan 1 dakika boyunca ne sonuç ne heartbeat gönderirse "zaman aşımı" ile kuyruğa geri verilir ve tarama sıradakine geçer. (2.2'de sınır 30 sn'ydi ve popüler saatleri okuyan sağlıklı sayfaları da kesiyordu; bu yüzden başarısız sayılan mekanlar 2.3'e ilk geçişte bir kez yeniden kuyruğa alınır.)
 - **Popüler saatler:** Gün sekmelerine tek bir hata ayıklayıcı bağlantısıyla tıklanır; en çok 15 sn ayrılır, süre dolarsa okunan günlerle devam edilir (`mekan_populer_saat_ozeti.gun_sayisi`).
 - **Google CAPTCHA:** Bot sekmesi `google.com/sorry/` adresine düşerse tarama durmaz, *duraklar*. Sekmedeki doğrulamayı tamamlayın; Google aynı aramaya geri döner ve tarama kendiliğinden sürer. Eklenti penceresi bu durumu "CAPTCHA bekleniyor" olarak gösterir.
-- **Hız:** İki mekan arasında rastgele 1–2,5 sn beklenir (CAPTCHA riskini azaltmak için).
+- **Hız / paralel pencere (2.4):** Eklenti penceresinden 1–4 paralel pencere seçilir (varsayılan 2). Her pencere ayrı bir mekan tarar; sunucu her pencereye (`/next?worker=N`) ayrı kiralama verir, aynı mekan iki pencereye verilmez. Pencereler üst üste kaydırılarak açılır; **küçültmeyin ve tamamen örtmeyin** (Chrome gizli pencereleri yavaşlatır). Bir pencerede iki mekan arası rastgele 0,8–2 sn beklenir. Ölçüm: tek pencerede mekan başına ~6 sn (saatte ~500); 2 pencerede yaklaşık iki katı.
+- **Otomatik fren:** Herhangi bir pencerede CAPTCHA çıkarsa bütün pencereler durur; doğrulama o pencerede geçilince tarama bir pencere eksik sürer. 30 dk CAPTCHA'sız geçerse pencere sayısı yeniden bir artar (seçilen sayıyı aşmadan).
+- **Tekrar kayıtlar:** Google ambarında aynı mekan farklı kimlikle birden çok kez olabilir. Aynı ad + il + ilçe ve ~200 m içindeki kayıtlardan biri taranmışsa diğerleri aranmaz, `excluded` + "Tekrar kayıt: …" nedeniyle işaretlenir (silinmez).
 - **Kod güncellendiğinde** `chrome://extensions` sayfasında **Yeniden Yükle**'ye basmak zorunludur; aksi halde eski içerik betiği yeni sayfa adreslerinde çalışmaz ve hiçbir sonuç gelmez. Yeniden yükleme sonrası tarama açıksa kendiliğinden devam eder.
 - **Günlükler:** Bot sekmesinde DevTools > Console'da `[GEOPROP]` önekli satırlar adım adım ne olduğunu gösterir (menü düğmesi bulundu mu, kaç fiyat çıktı vb.). Arka plan günlükleri için `chrome://extensions` > eklenti > "Service worker" bağlantısı.
 - **Neden başarısız?** `menu_tarama_kuyrugu.son_hata` sütunu artık sayfa başlığı ve ilk 160 karakteri de içerir:

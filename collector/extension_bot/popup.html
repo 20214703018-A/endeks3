@@ -14,6 +14,14 @@
 </head>
 <body>
     <h3>GEOPROP Menü</h3>
+    <label for="workers" style="font-size:12px;display:block;margin-bottom:8px;">Paralel pencere:
+        <select id="workers">
+            <option value="1">1 (en güvenli)</option>
+            <option value="2" selected>2 (önerilen)</option>
+            <option value="3">3</option>
+            <option value="4">4 (en hızlı, CAPTCHA riski yüksek)</option>
+        </select>
+    </label>
     <button id="startBtn">Taramayı Başlat</button>
     <button id="stopBtn" class="stop">Durdur</button>
     <p id="status">Bekliyor...</p>

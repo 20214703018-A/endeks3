@@ -25,17 +25,23 @@ function refreshStatus() {
         renderCities(response.data.cities);
         if (response.state.pausedForCaptcha) {
             statusElement.innerText = "Google CAPTCHA bekleniyor — sekmede doğrulamayı tamamlayın, tarama kendiliğinden sürer.";
-        } else if (response.data.current) {
-            statusElement.innerText = `${response.state.isRunning ? "Aktif" : "Yarım kalan"}: ${response.data.current.adi}`;
+        } else if (response.data.active?.length) {
+            const label = response.state.isRunning ? `Aktif (${response.state.activeWorkers}/${response.state.workerCount} pencere)` : "Yarım kalan";
+            statusElement.innerText = `${label}: ${response.data.active.map((a) => a.adi).join(" · ")}`;
         } else {
             statusElement.innerText = response.state.isRunning ? "Kuyruk bekleniyor..." : "Bekliyor...";
         }
     });
 }
 
+const workersElement = document.getElementById("workers");
+chrome.storage.local.get("workerCount", ({ workerCount }) => {
+    if (workerCount) workersElement.value = String(workerCount);
+});
+
 document.getElementById("startBtn").addEventListener("click", () => {
     statusElement.innerText = "Kaldığı yerden başlatılıyor...";
-    chrome.runtime.sendMessage({ action: "start" });
+    chrome.runtime.sendMessage({ action: "start", workers: Number(workersElement.value) });
 });
 
 document.getElementById("stopBtn").addEventListener("click", () => {
