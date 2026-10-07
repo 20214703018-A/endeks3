@@ -148,15 +148,12 @@
             .map((text) => parsers.parseReviewCount(text))
             .find((count) => count !== null);
         const liveReviewCount = leafReview ?? parsers.parseReviewCount(bodyText());
-        // Eleme yalnız mekan paneline özgü "N Google yorumu" / "N değerlendirme" biçimine göre yapılır.
-        // Çıplak "3 yorum" sayısı çoğu zaman yorum yazan kişinin profilinden gelir; mekanı elemek için kullanılmaz.
+        // Panel sayısı yalnız mekan paneline özgü "N Google yorumu" / "N değerlendirme" biçiminden okunur.
+        // Çıplak "3 yorum" sayısı çoğu zaman yorum yazan kişinin profilinden gelir.
+        // 10'dan az yorumu görünen mekan da taranır (menüsü varsa kaydedilir); sayı yalnız kayda yazılır.
         const panelReview = leafTexts
             .map((text) => parsers.parsePanelReviewCount(text))
             .find((count) => count !== null) ?? null;
-        if (panelReview !== null && panelReview < 10) {
-            await fail(`Canlı değerlendirme sayısı 10 altında: ${panelReview}`);
-            return;
-        }
 
         heartbeat("populer_saatler");
         let popularTimes = null;
@@ -198,7 +195,7 @@
         if (!menuRoot) {
             await save({
                 id: venue.id, lease_token: venue.lease_token, source_url: location.href,
-                degerlendirme_sayisi: liveReviewCount || venue.degerlendirme_sayisi,
+                degerlendirme_sayisi: liveReviewCount || venue.degerlendirme_sayisi, panel_yorum_sayisi: panelReview,
                 fiyat_saglayici: "Bulunamadı",
                 saglayici_kaniti: menuButton ? "Menü düğmesi var, menü paneli yüklenmedi" : "Google panelinde Menü düğmesi yok",
                 fiyatlar: [], gorseller: [], populer_saatler: popularTimes,
@@ -241,7 +238,7 @@
 
         await save({
             id: venue.id, lease_token: venue.lease_token, source_url: location.href,
-            degerlendirme_sayisi: liveReviewCount || venue.degerlendirme_sayisi,
+            degerlendirme_sayisi: liveReviewCount || venue.degerlendirme_sayisi, panel_yorum_sayisi: panelReview,
             fiyat_saglayici: providerInfo.provider, saglayici_kaniti: providerInfo.evidence,
             fiyatlar: prices, gorseller: Array.from(uniqueImages.values()).slice(0, 30),
             populer_saatler: popularTimes,

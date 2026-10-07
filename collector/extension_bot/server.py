@@ -762,17 +762,9 @@ def save_result(conn: sqlite3.Connection, data: dict[str, Any]) -> dict[str, int
     source_url = clean_text(data.get("source_url"), 2_000)
     if not source_url.startswith("https://www.google.com/"):
         raise ValueError("Kaynak URL doğrulanamadı")
+    # Sayfada 10'dan az yorum görünse de sonuç kaydedilir (kullanıcı kararı, 7 Eki 2026): menü varsa
+    # fiyat/görsel yazılır, yoksa completed_no_menu. Canlı sayı gözlem kaydında (payload) saklanır.
     live_reviews = int(data.get("degerlendirme_sayisi") or 0)
-    if live_reviews and live_reviews < MIN_REVIEWS:
-        # Kural gereği kapsam dışı ama bu bir tarama sonucu, istek hatası değil: 400 döndürmek eklentiye
-        # "sunucu bozuk" dedirtip bütün taramayı durduruyordu. Mekan nedeniyle 'failed' işaretlenir.
-        reason = f"Canlı değerlendirme sayısı {MIN_REVIEWS} altında: {live_reviews}"
-        with conn:
-            conn.execute(
-                "UPDATE menu_tarama_kuyrugu SET durum='failed', lease_token=NULL, leased_at=NULL, son_hata=?, updated_at=? WHERE mekan_id=?",
-                (reason, observed_at, queue_row["mekan_id"]),
-            )
-        return {"status": "failed", "prices": 0, "images": 0, "busy_hours": 0, "reason": reason}
     raw_payload = json.dumps(data, ensure_ascii=False, sort_keys=True)
     payload_hash = hashlib.sha256(raw_payload.encode("utf-8")).hexdigest()
     observation_id = hashlib.sha256(f'{venue["id"]}|{payload_hash}'.encode()).hexdigest()
@@ -1444,6 +1436,30 @@ class RequestHandler(BaseHTTPRequestHandler):
 #  - "Canlı değerlendirme sayısı 10 altında": yorum sayısı, panel yerine yorum yazan kişinin
 #    profilindeki "3 yorum" gibi sayılardan okunabiliyordu.
 RETRY_MIGRATION_KEY = "v2_3_zaman_asimi_ve_yorum_sayisi_yeniden_kuyruk"
+LOW_REVIEW_MIGRATION_KEY = "v2_4_2_dusuk_yorumlu_mekanlar_yeniden_kuyruk"
+
+
+def requeue_low_review_failures(conn: sqlite3.Connection) -> int:
+    """2.4.2'ye kadar sayfada 10'dan az yorum görünen mekanlar menüsüne bakılmadan eleniyordu; artık
+    taranıyorlar. Bu nedenle 'failed' olanlar bir kez yeniden kuyruğa alınır."""
+    if conn.execute("SELECT 1 FROM menu_bot_meta WHERE anahtar=?", (LOW_REVIEW_MIGRATION_KEY,)).fetchone():
+        return 0
+    now = now_iso()
+    with conn:
+        count = conn.execute(
+            """
+            UPDATE menu_tarama_kuyrugu
+            SET durum='queued', deneme_sayisi=0, lease_token=NULL, leased_at=NULL, updated_at=?,
+                son_hata='Yeniden kuyrukta (v2.4.2, düşük yorum artık eleme nedeni değil); önceki: ' || son_hata
+            WHERE durum='failed' AND son_hata LIKE 'Canlı değerlendirme sayısı%'
+            """,
+            (now,),
+        ).rowcount
+        conn.execute(
+            "INSERT INTO menu_bot_meta (anahtar, deger, updated_at) VALUES (?, ?, ?)",
+            (LOW_REVIEW_MIGRATION_KEY, str(count), now),
+        )
+    return count
 
 
 def requeue_known_false_failures(conn: sqlite3.Connection) -> int:
@@ -1474,6 +1490,9 @@ def prepare_queue() -> tuple[int, Counter[str]]:
         requeued = requeue_known_false_failures(conn)
         if requeued:
             print(f"Önceki hatalı 'başarısız' sayılan {requeued} mekan yeniden kuyruğa alındı.")
+        low_review = requeue_low_review_failures(conn)
+        if low_review:
+            print(f"10'dan az yorum nedeniyle elenmiş {low_review} mekan yeniden kuyruğa alındı (menüsü varsa kaydedilecek).")
         existing = conn.execute("SELECT COUNT(*) FROM menu_tarama_kuyrugu").fetchone()[0]
     try:
         venues, reasons = load_eligible_venues()
