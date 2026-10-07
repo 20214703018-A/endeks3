@@ -764,7 +764,15 @@ def save_result(conn: sqlite3.Connection, data: dict[str, Any]) -> dict[str, int
         raise ValueError("Kaynak URL doğrulanamadı")
     live_reviews = int(data.get("degerlendirme_sayisi") or 0)
     if live_reviews and live_reviews < MIN_REVIEWS:
-        raise ValueError(f"Canlı değerlendirme sayısı eşik altında: {live_reviews}")
+        # Kural gereği kapsam dışı ama bu bir tarama sonucu, istek hatası değil: 400 döndürmek eklentiye
+        # "sunucu bozuk" dedirtip bütün taramayı durduruyordu. Mekan nedeniyle 'failed' işaretlenir.
+        reason = f"Canlı değerlendirme sayısı {MIN_REVIEWS} altında: {live_reviews}"
+        with conn:
+            conn.execute(
+                "UPDATE menu_tarama_kuyrugu SET durum='failed', lease_token=NULL, leased_at=NULL, son_hata=?, updated_at=? WHERE mekan_id=?",
+                (reason, observed_at, queue_row["mekan_id"]),
+            )
+        return {"status": "failed", "prices": 0, "images": 0, "busy_hours": 0, "reason": reason}
     raw_payload = json.dumps(data, ensure_ascii=False, sort_keys=True)
     payload_hash = hashlib.sha256(raw_payload.encode("utf-8")).hexdigest()
     observation_id = hashlib.sha256(f'{venue["id"]}|{payload_hash}'.encode()).hexdigest()

@@ -206,19 +206,21 @@ async function scheduleNext(slot, reason) {
     await chrome.alarms.create(RESUME_ALARM, { delayInMinutes: 0.5 });
 }
 
-// Sonuç/hata bildirimi kuyruk kiralamasıyla eşleşmiyorsa (süre dolmuş, bekçi zaten bırakmış
-// vb.) bu bir "taramayı durdur" nedeni değildir; sadece sıradakine geç.
+// Sunucu yanıt verdi ama bu mekanın sonucunu kabul etmedi (kiralama süresi dolmuş, doğrulama hatası
+// vb.): bu bir "taramayı durdur" nedeni değildir, sadece sıradakine geç. Tarama yalnız sunucuya hiç
+// ulaşılamazsa (status yok) durur; eskiden her 400 yanıtı bütün pencereleri durduruyordu.
 function isLeaseError(error) {
-    return error.status === 400 && /kiralama/i.test(error.message);
+    return Boolean(error.status);
 }
 
 async function finishAndContinue(slot, payload) {
     try {
         const result = await api("/save", { method: "POST", body: JSON.stringify(payload) });
-        await scheduleNext(slot, `Kaydedildi: ${result.prices} fiyat, ${result.images} görsel`);
+        await scheduleNext(slot, result.status === "failed"
+            ? `Atlandı: ${result.reason}` : `Kaydedildi: ${result.prices} fiyat, ${result.images} görsel`);
     } catch (error) {
         if (isLeaseError(error)) {
-            await scheduleNext(slot, `Kiralama eşleşmedi, atlandı (${error.message})`);
+            await scheduleNext(slot, `Sunucu kaydı kabul etmedi, atlandı (${error.message})`);
             return;
         }
         await setRunning(false);
