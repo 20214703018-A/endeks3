@@ -29,12 +29,20 @@ except ImportError:  # Pillow yoksa görsel indirilir ama yeniden boyutlandırı
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 # Kod git deposunda (endeks3), veri ambarı ise ~/Desktop/GEOPROP/warehouse altında durur.
 # Sunucu GEOPROP içinden çalıştırılırsa oradaki warehouse kullanılır; aksi halde GEOPROP_DATA_ROOT.
+# Yalnız klasörün varlığına bakılmaz: endeks3/warehouse/product menü görselleri için de oluşur ve
+# eskiden sunucu bu yüzden boş bir veritabanı açıyordu. Kök, menü veritabanı gerçekten oradaysa seçilir.
+_LOCAL_MENU_DB = PROJECT_ROOT / "warehouse/product/restoran_ve_kafe_menuleri.sqlite"
 DATA_ROOT = Path(os.environ.get("GEOPROP_DATA_ROOT") or (
-    PROJECT_ROOT if (PROJECT_ROOT / "warehouse/product").is_dir() else Path.home() / "Desktop" / "GEOPROP"
+    PROJECT_ROOT if _LOCAL_MENU_DB.is_file() and _LOCAL_MENU_DB.stat().st_size > 0 else Path.home() / "Desktop" / "GEOPROP"
 ))
 DB_MENU = Path(os.environ.get("GEOPROP_MENU_DB", DATA_ROOT / "warehouse/product/restoran_ve_kafe_menuleri.sqlite"))
 DB_PLACES = Path(os.environ.get("GEOPROP_PLACES_DB", DATA_ROOT / "warehouse/product/google_places_ve_yogunluk.sqlite"))
 DB_STATS = Path(os.environ.get("GEOPROP_STATS_DB", DATA_ROOT / "warehouse/product/bolge_istatistik.sqlite"))
+# Güncel Google ambarından (warehouse-latest) yalnız kuyruk için gereken yiyecek-içecek satırlarının
+# süzülmüş kopyası; varsa DB_PLACES'e ek kaynak olarak okunur (bkz. README "Mekan kaynağı").
+DB_PLACES_MENU_KAYNAK = Path(os.environ.get(
+    "GEOPROP_MENU_KAYNAK_DB", DATA_ROOT / "warehouse/product/menu_kaynak_google_mekanlari.sqlite"
+))
 RAW_INTAKE_ROOT = Path(os.environ.get("GEOPROP_RAW_INTAKE_ROOT", DATA_ROOT.parent / "GEOPROP_RAW_INTAKE"))
 
 ALL_CITIES = (
@@ -152,8 +160,33 @@ def is_village_name(name: str | None) -> bool:
     return bool(normalized) and any(normalize_tr(marker) in normalized for marker in VILLAGE_MARKERS)
 
 
+def sqlite_has_table(path: Path, table: str) -> bool:
+    """Dosya var, boş değil ve beklenen tabloyu içeriyor mu? (0 baytlık yer tutucular geçersiz sayılır.)"""
+    try:
+        if not path.is_file() or path.stat().st_size == 0:
+            return False
+        conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+        try:
+            return conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (table,)).fetchone() is not None
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        return False
+
+
 def connect_menu_db() -> sqlite3.Connection:
     DB_MENU.parent.mkdir(parents=True, exist_ok=True)
+    # Ana dosya yok ama -shm/-wal kalıntısı varsa veritabanı silinmiş/taşınmış demektir: sessizce boş
+    # bir veritabanı açıp sıfırdan başlamak yerine dur (GEOPROP_MENU_YENI=1 ile bilerek yeni başlatılabilir).
+    if (not DB_MENU.exists() or DB_MENU.stat().st_size == 0) and os.environ.get("GEOPROP_MENU_YENI") != "1":
+        orphans = [p.name for p in (Path(f"{DB_MENU}-shm"), Path(f"{DB_MENU}-wal")) if p.exists()]
+        if orphans:
+            raise SystemExit(
+                f"Menü veritabanı bulunamadı: {DB_MENU} (yalnız {', '.join(orphans)} kalıntısı var).\n"
+                "Yedekten geri yükleyin: python3 ops/veri_indir.py indir geoprop_warehouse_ek_20261002 "
+                "\"warehouse/product/restoran_ve_kafe_menuleri.sqlite\" --hedef <klasör>\n"
+                "Bilerek boş veritabanıyla başlamak için: GEOPROP_MENU_YENI=1"
+            )
     conn = sqlite3.connect(DB_MENU, timeout=30)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys=ON")
@@ -322,8 +355,8 @@ def init_schema(conn: sqlite3.Connection) -> None:
 
 
 def load_population_rules() -> tuple[dict[tuple[str, str], int], dict[tuple[str, str, str], int]]:
-    if not DB_STATS.exists():
-        raise FileNotFoundError(f"Bölge istatistik veritabanı bulunamadı: {DB_STATS}")
+    if not sqlite_has_table(DB_STATS, "demografi"):
+        raise FileNotFoundError(f"Bölge istatistik veritabanı bulunamadı ya da boş: {DB_STATS}")
     conn = sqlite3.connect(f"file:{DB_STATS}?mode=ro", uri=True)
     try:
         counties = {
@@ -360,7 +393,7 @@ def load_population_rules() -> tuple[dict[tuple[str, str], int], dict[tuple[str,
 
 
 def discover_places_databases() -> list[Path]:
-    databases = [DB_PLACES]
+    databases = [DB_PLACES, DB_PLACES_MENU_KAYNAK]
     shard_pattern = "github_actions/endeks3/run_*/artifacts/shard-db-*/google_places_ve_yogunluk.sqlite"
     if RAW_INTAKE_ROOT.exists():
         databases.extend(sorted(RAW_INTAKE_ROOT.glob(shard_pattern)))
@@ -368,9 +401,13 @@ def discover_places_databases() -> list[Path]:
     seen: set[Path] = set()
     for database in databases:
         resolved = database.resolve()
-        if resolved.exists() and resolved not in seen:
-            seen.add(resolved)
+        if resolved in seen:
+            continue
+        seen.add(resolved)
+        if sqlite_has_table(resolved, "google_places_ticari_yogunluk"):
             unique.append(resolved)
+        elif resolved.exists():
+            print(f"UYARI: boş ya da tablosuz Google veritabanı atlandı: {resolved}")
     return unique
 
 
@@ -481,9 +518,24 @@ def queue_priority(venue: dict[str, Any], rates: dict[str, float], overall: floa
     return round(tier * 10 + rate + reviews / 1_000_000, 6)
 
 
-def sync_queue(conn: sqlite3.Connection, venues: list[dict[str, Any]]) -> None:
+def sync_queue(conn: sqlite3.Connection, venues: list[dict[str, Any]], loaded_sources: list[Path]) -> None:
     now = now_iso()
+    # Aynı mekan farklı Google ambarlarında farklı kimlikle gelebilir (eski kayıtlar 24 karakterlik kod,
+    # güncel ambar Google'ın kendi place kodu). Google cid her ikisinde ortak: kuyrukta aynı cid'li kayıt
+    # varsa onun kimliği kullanılır, böylece taranmış mekan yeniden kuyruğa girmez.
+    id_by_cid: dict[str, str] = {}
+    for row in conn.execute(
+        "SELECT mekan_id, json_extract(payload_json, '$.cid') AS cid FROM menu_tarama_kuyrugu ORDER BY created_at"
+    ):
+        if row["cid"] and str(row["cid"]) not in id_by_cid:
+            id_by_cid[str(row["cid"])] = row["mekan_id"]
+    for venue in venues:
+        existing_id = id_by_cid.get(str(venue.get("cid") or ""))
+        if existing_id and existing_id != venue["id"]:
+            venue["google_place_id_kaynak"] = venue["id"]
+            venue["id"] = existing_id
     eligible_ids = {venue["id"] for venue in venues}
+    loaded = {str(path) for path in loaded_sources}
     rates, overall = category_menu_rates(conn)
     with conn:
         for venue in venues:
@@ -498,14 +550,30 @@ def sync_queue(conn: sqlite3.Connection, venues: list[dict[str, Any]]) -> None:
                 """,
                 (venue["id"], payload, queue_priority(venue, rates, overall), now, now),
             )
+        kept_missing_source = 0
         for row in conn.execute(
-            "SELECT mekan_id FROM menu_tarama_kuyrugu WHERE durum IN ('queued','in_progress','blocked')"
+            """
+            SELECT mekan_id, json_extract(payload_json, '$.il') AS il,
+                   json_extract(payload_json, '$.kategori') AS kategori,
+                   json_extract(payload_json, '$.kaynak_veritabani') AS kaynak
+            FROM menu_tarama_kuyrugu WHERE durum IN ('queued','in_progress','blocked')
+            """
         ).fetchall():
             if row["mekan_id"] not in eligible_ids:
+                # Kaynak veritabanı bu açılışta okunamadıysa (silinmiş/taşınmış) mekanın uygunluğu
+                # bilinemez: il/kapsam kuralı açıkça dışarıda bırakmıyorsa kuyrukta kalır.
+                in_scope = canonical_target_city(row["il"]) is not None and (
+                    SCOPE != "restoran" or is_restaurant_category(row["kategori"])
+                )
+                if row["kaynak"] and row["kaynak"] not in loaded and in_scope:
+                    kept_missing_source += 1
+                    continue
                 conn.execute(
                     "UPDATE menu_tarama_kuyrugu SET durum='excluded', son_hata=?, updated_at=? WHERE mekan_id=?",
                     ("Güncel kapsam veya uygunluk kurallarının dışında", now, row["mekan_id"]),
                 )
+    if kept_missing_source:
+        print(f"UYARI: kaynak veritabanı okunamayan {kept_missing_source} mekan kuyrukta bırakıldı (dışarı atılmadı).")
 
 
 def queue_counts(conn: sqlite3.Connection) -> dict[str, int]:
@@ -1336,13 +1404,22 @@ def requeue_known_false_failures(conn: sqlite3.Connection) -> int:
 
 
 def prepare_queue() -> tuple[int, Counter[str]]:
-    venues, reasons = load_eligible_venues()
     with connect_menu_db() as conn:
         init_schema(conn)
         requeued = requeue_known_false_failures(conn)
         if requeued:
             print(f"Önceki hatalı 'başarısız' sayılan {requeued} mekan yeniden kuyruğa alındı.")
-        sync_queue(conn, venues)
+        existing = conn.execute("SELECT COUNT(*) FROM menu_tarama_kuyrugu").fetchone()[0]
+    try:
+        venues, reasons = load_eligible_venues()
+    except (FileNotFoundError, sqlite3.Error) as error:
+        # Kaynaklar (Google ambarı / nüfus tablosu) yoksa ama kuyruk doluysa mevcut kuyrukla devam edilir.
+        if not existing:
+            raise SystemExit(f"Kuyruk boş ve kaynak okunamadı: {error}")
+        print(f"UYARI: kuyruk güncellenemedi ({error}); mevcut {existing} kayıtlık kuyrukla devam ediliyor.")
+        return 0, Counter({"kaynak_okunamadi": 1})
+    with connect_menu_db() as conn:
+        sync_queue(conn, venues, discover_places_databases())
     return len(venues), reasons
 
 

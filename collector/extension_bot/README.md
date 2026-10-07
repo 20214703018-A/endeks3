@@ -64,3 +64,5 @@ Her fiyat kaydında sağlayıcı, sağlayıcı kanıtı, ham fiyat metni, kaynak
   ```bash
   sqlite3 warehouse/product/restoran_ve_kafe_menuleri.sqlite "SELECT son_hata, COUNT(*) FROM menu_tarama_kuyrugu WHERE son_hata IS NOT NULL GROUP BY 1 ORDER BY 2 DESC"
   ```
+- **Veritabanı eksik/boş (2.3.1):** Sunucu artık 0 baytlık veya tablosuz veritabanlarında çökmez. Menü veritabanı silinmiş ama `-shm/-wal` kalıntısı varsa sessizce boş veritabanı açmaz, yedekten geri yükleme komutunu yazıp durur (`GEOPROP_MENU_YENI=1` ile bilerek sıfırdan başlatılır). Google mekân ya da nüfus veritabanı okunamazsa mevcut kuyrukla devam eder; kaynağı okunamayan mekanları kuyruktan atmaz. Veri kökü, menü veritabanı gerçekten orada bulunan klasör olarak seçilir (`endeks3/warehouse/product` yalnız görseller için oluşmuşsa seçilmez).
+- **Mekan kaynağı:** `warehouse/product/menu_kaynak_google_mekanlari.sqlite` (ya da `GEOPROP_MENU_KAYNAK_DB`) varsa ek kaynak olarak okunur. Farklı ambarlarda aynı mekanın kimliği farklı olabildiğinden yeni mekanlar kuyruktakilerle Google `cid` üzerinden eşleştirilir; taranmış mekan yeniden kuyruğa girmez.
