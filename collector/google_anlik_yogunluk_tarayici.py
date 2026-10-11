@@ -11,6 +11,15 @@ Kurallar: etiket metinleri HAM saklanır (ham_etiketler); canlı yüzde yalnız 
 gerçekten varsa çıkarılır, tahmin yok. Sayfa açılamazsa 'hata', grafik yoksa 'populer_yok'.
 Çıktı tablosu google_anlik_yogunluk ile aynı (+ ham_etiketler, yontem sütunları).
 
+İşletme kaydı (11 Eki 2026): her ölçümde aynı sayfadan işletmenin o anki Google kaydı da zaman damgasıyla yazılır →
+google_place_anlik_kayit (olcum_id ile bağlı): sayfadaki ad, kategori, puan, yorum sayısı, yıldız dağılımı, açık/kapalı durumu,
+7 günlük çalışma saatleri, adres, telefon, web sitesi, plus code, fiyat düzeyi ve sayfa öğeleri (data-item-id etiketleri).
+Yorum yazan kişilerin adları/yorum metinleri ALINMAZ (kişisel veri). Telefon/web sitesi kanonikte firma kimlik grafiğine bağlanır.
+
+Saat dağılımı (11 Eki 2026): iş akışı her saat çalışır; liste 7 parçaya bölünür ve her saat sıradaki parça ölçülür
+(parça = UTC saat sayacı mod 7). 7 ile 24 aralarında asal → her işletme her gün farklı saatlere düşer, 7 günde günün
+24 saatinin hepsinde ölçülür (işletme başına günde ~3,4 ölçüm). GitHub bazı zamanlanmış koşuları kaçırsa da döngü kayar, saat boşluğu kalmaz.
+
 Kullanım: google_anlik_yogunluk_tarayici.py --hedef hedef.csv --out shard.sqlite --shard 1 --num-shards 6
           [--max-seconds 2700] [--limit N] [--tur-dilimi 0 --tur-sayisi 3]
 """
@@ -32,8 +41,60 @@ def init_db(path):
     for col in ("ham_etiketler TEXT", "yontem TEXT", "genelde_yuzde INTEGER", "tani TEXT"):
         try: c.execute(f"ALTER TABLE google_anlik_yogunluk ADD COLUMN {col}")
         except sqlite3.OperationalError: pass
+    c.execute("""CREATE TABLE IF NOT EXISTS google_place_anlik_kayit (
+        olcum_id TEXT PRIMARY KEY, feature_id TEXT NOT NULL, olcum_utc TEXT NOT NULL, olcum_tr TEXT, kosu_id TEXT,
+        isim_sayfa TEXT, kategori_sayfa TEXT, puan REAL, yorum_sayisi INTEGER, yildiz_dagilimi TEXT,
+        acik_durum TEXT, calisma_saatleri TEXT, adres TEXT, telefon TEXT, web_sitesi TEXT, plus_code TEXT, fiyat_duzeyi TEXT,
+        ogeler TEXT, sayfa_url TEXT)""")
+    c.execute("CREATE INDEX IF NOT EXISTS idx_place_kayit_fid ON google_place_anlik_kayit(feature_id, olcum_utc)")
     c.commit()
     return c
+
+
+# Sayfadaki işletme kaydı (yorum yazanların adları/yorum metinleri bilerek ALINMAZ)
+KAYIT_JS = r"""() => {
+  const all = s => Array.from(document.querySelectorAll(s));
+  const h1 = document.querySelector('h1');
+  const imgs = all('[role=img][aria-label]').map(e => e.getAttribute('aria-label') || '');
+  const ogeler = all('[data-item-id]').map(e => ({id: e.getAttribute('data-item-id'), etiket: (e.getAttribute('aria-label') || '').trim(),
+                                                  href: e.getAttribute('href')}))
+                    .filter(o => !/review|yorum/i.test(o.id || ''));
+  const saat = all('button[aria-label*="Çalışma saatlerini kopyala"], button[aria-label*="Copy open hours"]').map(e => e.getAttribute('aria-label'));
+  // açık/kapalı satırı (ör. "Açık · Kapanış saati: 22:00"); önce bilinen kutu, yoksa metin kalıbı
+  const kutu = document.querySelector('span.ZDu9vd, div.o0Svhf');
+  const durum = (kutu && (kutu.innerText || '').trim()) || all('span').map(e => (e.innerText || '').trim())
+                    .find(t => /^(Açık|Kapalı|Kalıcı olarak kapandı|Geçici olarak kapalı|Yakında kapanacak|Yakında açılacak|Open|Closed)( |·|$)/.test(t) && t.length < 80);
+  const fiyat = all('[aria-label^="Fiyat"], [aria-label^="Price"], [aria-label*="kişi başı"]').map(e => e.getAttribute('aria-label'))[0] || null;
+  const kat = all('button[jsaction*="category"]').map(e => e.innerText.trim()).filter(Boolean)[0] || null;
+  return {isim: h1 ? h1.innerText.trim() : null, kategori: kat, imgs, ogeler, saat, durum: durum || null, fiyat};
+}"""
+SAYI = lambda t: int(re.sub(r"[^\d]", "", t)) if t and re.search(r"\d", t) else None
+
+
+def kayit_ayikla(d):
+    """KAYIT_JS çıktısı → tablo alanları (yalnız sayfada gerçekten yazanlar; tahmin yok)."""
+    puan = yorum = None; dag = {}
+    for t in d.get("imgs") or []:
+        m = re.match(r"^\s*([1-5])\s*yıldızlı\s*,\s*([\d.]+)\s*yorum", t)
+        if m: dag[m.group(1)] = SAYI(m.group(2)); continue
+        m = re.match(r"^\s*(\d,\d|\d)\s*yıldızlı\s*$", t)
+        if m and puan is None: puan = float(m.group(1).replace(",", "."))
+        m = re.match(r"^\s*([\d.]+)\s*yorum\s*$", t)
+        if m and yorum is None: yorum = SAYI(m.group(1))
+    og = d.get("ogeler") or []
+    bul = lambda f: next((o for o in og if f(o.get("id") or "")), None)
+    adr, tel, web, plus = bul(lambda i: i == "address"), bul(lambda i: i.startswith("phone:tel:")), bul(lambda i: i == "authority"), bul(lambda i: i == "oloc")
+    temiz = lambda o, on: (o["etiket"].split(":", 1)[1].strip() if o and ":" in o["etiket"] else None) if o else None
+    saat = {}
+    for t in d.get("saat") or []:
+        g, _, h = t.partition(",")
+        saat[g.strip()] = h.replace("Çalışma saatlerini kopyala", "").replace("Copy open hours", "").strip(" ,")
+    return dict(isim_sayfa=d.get("isim"), kategori_sayfa=d.get("kategori"), puan=puan, yorum_sayisi=yorum,
+                yildiz_dagilimi=json.dumps(dag, ensure_ascii=False) if dag else None, acik_durum=(" ".join(re.sub("[\ue000-\uf8ff]", " ", d["durum"]).split()) or None) if d.get("durum") else None,
+                calisma_saatleri=json.dumps(saat, ensure_ascii=False) if saat else None, adres=temiz(adr, "Adres"),
+                telefon=(tel["id"].split("phone:tel:", 1)[1] if tel else None), web_sitesi=(web.get("href") if web else None),
+                plus_code=temiz(plus, "Plus code"), fiyat_duzeyi=d.get("fiyat"),
+                ogeler=json.dumps([o for o in og if o.get("id") not in ("address", "oloc")], ensure_ascii=False) if og else None)
 
 
 def hedefler(path, shard, n, dilim, dilim_sayisi):
@@ -53,13 +114,14 @@ def main():
     ap.add_argument("--hedef", required=True); ap.add_argument("--out", required=True)
     ap.add_argument("--shard", type=int, default=1); ap.add_argument("--num-shards", type=int, default=1)
     ap.add_argument("--max-seconds", type=int, default=2700); ap.add_argument("--limit", type=int, default=0)
-    ap.add_argument("--tur-dilimi", type=int, default=-1, help="-1: saat bazlı otomatik (TR saati // 3 mod tur-sayisi)")
-    ap.add_argument("--tur-sayisi", type=int, default=6,
-                    help="~9 sn/işletme → makine başına ~300/tur, 6 makine ≈ 1.500-1.800/tur → 9.000 / 6 (işletme başına ~günde 1)")
+    ap.add_argument("--tur-dilimi", type=int, default=-1, help="-1: saat bazlı otomatik (UTC saat sayacı mod tur-sayisi)")
+    ap.add_argument("--tur-sayisi", type=int, default=7,
+                    help="saatlik koşu; 7 parça (24 ile aralarında asal) → her işletme 7 günde 24 saatin hepsinde ölçülür; "
+                         "9.000 / 7 ≈ 1.290 işletme/koşu ≈ 215/makine ≈ 32 dk")
     ap.add_argument("--kosu-id", default=os.environ.get("GITHUB_RUN_ID", "yerel"))
     a = ap.parse_args()
-    # 3 saatlik dilim sayacı: art arda turlar listenin farklı parçasını ölçer, her parça sırayla farklı saatlere düşer
-    dilim = a.tur_dilimi if a.tur_dilimi >= 0 else int(time.time() // (3 * 3600)) % a.tur_sayisi
+    # saat sayacı: art arda saatlik koşular listenin sıradaki parçasını ölçer; her parça her gün farklı saatlere düşer
+    dilim = a.tur_dilimi if a.tur_dilimi >= 0 else int(time.time() // 3600) % a.tur_sayisi
     hedef = list(hedefler(a.hedef, a.shard, a.num_shards, dilim, a.tur_sayisi))
     random.shuffle(hedef)
     if a.limit: hedef = hedef[:a.limit]
@@ -97,7 +159,7 @@ def main():
             if time.time() - t0 > a.max_seconds:
                 print(f"  süre doldu ({i-1:,}/{len(hedef):,})", flush=True); break
             now = datetime.now(timezone.utc); tr = now.astimezone(TR)
-            durum, yuzde, etiket, ham, genel, tani = "hata", None, None, None, None, None
+            durum, yuzde, etiket, ham, genel, tani, kayit = "hata", None, None, None, None, None, None
             try:
                 url = f"https://www.google.com/maps/place/data=!4m2!3m1!1s{r['feature_id']}?hl=tr&gl=tr"
                 page.goto(url, wait_until="domcontentloaded", timeout=30000)
@@ -132,6 +194,10 @@ def main():
                     except Exception: pass
                     etiketler = oku()
                     if etiketler: sayac["yeniden_yukleme_ile"] = sayac.get("yeniden_yukleme_ile", 0) + 1
+                try:
+                    kayit = kayit_ayikla(page.evaluate(KAYIT_JS)); kayit["sayfa_url"] = page.url[:500]
+                except Exception as e:
+                    sayac["kayit_hata"] = sayac.get("kayit_hata", 0) + 1
                 if etiketler:
                     ham = json.dumps(etiketler, ensure_ascii=False)
                     canli = next((e for e in etiketler if CANLI_RX.search(e)), None)
@@ -164,6 +230,14 @@ def main():
                 r.get("il"), r.get("ilce"), r.get("kategori"), float(r["lat"]), float(r["lon"]),
                 now.isoformat(timespec="seconds"), tr.isoformat(timespec="seconds"), tr.isoweekday(), tr.hour,
                 durum, tr.hour if yuzde is not None else None, yuzde, etiket, a.kosu_id, ham, "tarayici", genel, tani))
+            if kayit and kayit.get("isim_sayfa"):
+                k = ["isim_sayfa", "kategori_sayfa", "puan", "yorum_sayisi", "yildiz_dagilimi", "acik_durum", "calisma_saatleri", "adres",
+                     "telefon", "web_sitesi", "plus_code", "fiyat_duzeyi", "ogeler", "sayfa_url"]
+                c.execute(f"INSERT OR REPLACE INTO google_place_anlik_kayit (olcum_id, feature_id, olcum_utc, olcum_tr, kosu_id, {','.join(k)}) "
+                          f"VALUES (?,?,?,?,?,{','.join('?' * len(k))})",
+                          (f"{r['feature_id']}|{now.strftime('%Y-%m-%dT%H:%M')}", r["feature_id"], now.isoformat(timespec="seconds"),
+                           tr.isoformat(timespec="seconds"), a.kosu_id, *[kayit.get(x) for x in k]))
+                sayac["kayit"] = sayac.get("kayit", 0) + 1
             if durum in ("populer_yok", "kisitli_gorunum") and sayac.get(durum, 0) <= 2:
                 print(f"  tanı (grafik yok): {r.get('isim')} · {tani}", flush=True)
             if i % 25 == 0:

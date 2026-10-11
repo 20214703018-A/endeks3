@@ -1,13 +1,17 @@
-name: "GEOPROP Google anlık yoğunluk (günde 6 ölçüm, 6 makine)"
+name: "GEOPROP Google anlık yoğunluk (saatlik ölçüm + işletme kaydı, 6 makine)"
 
 # Google'ın canlı yoğunluk değeri yalnız o an görünür; geçmişi geri alınamaz. Bu iş akışı seçili ~9.000 işletmeyi
-# (Batı büyükşehirleri + Ankara; AVM, gece hayatı, restoran, kafe, market, otel, spor, hizmet, ulaşım) günde 6 kez ölçer.
-# Saatler (TR): 08, 11, 14, 17, 20, 23. Ağır 40'lık iş akışları en fazla 34 makine kullanır; 6 yer bu ölçüme ayrılmıştır.
+# (Batı büyükşehirleri + Ankara; AVM, gece hayatı, restoran, kafe, market, otel, spor, hizmet, ulaşım) ölçer.
+# 11 Eki 2026: HER SAAT çalışır; liste 7 parçaya bölünür, her saat sıradaki parça ölçülür → her işletme 7 günde günün 24 saatinin
+# hepsinde ölçülür (eski düzende 6 sabit saatin sabah olanları GitHub gecikmesiyle hiç çalışmıyordu: 05–12 TR neredeyse boştu).
+# Her ölçümde işletmenin o anki Google kaydı da zaman damgasıyla yazılır (google_place_anlik_kayit: puan, yorum sayısı, açık/kapalı,
+# saatler, adres, telefon, web sitesi …; yorum yazanların adları alınmaz).
+# Ağır 40'lık iş akışları en fazla 34 makine kullanır; 6 yer bu ölçüme ayrılmıştır.
 
 on:
   # Tarayıcı yöntemi 3 Eki 2026 bulut denemesinde doğrulandı (6/6 makine tam görünüm, ölçümlerin %58'inde canlı değer).
   schedule:
-    - cron: '17 5,8,11,14,17,20 * * *'   # UTC → TR 08:17 … 23:17 (saat başı GitHub'da saatlerce gecikiyordu)
+    - cron: '23 * * * *'   # her saat :23 (saat başı GitHub'da saatlerce gecikiyordu); kaçan saatleri 7'li döngü telafi eder
   workflow_dispatch:
     inputs:
       yontem:
@@ -21,7 +25,7 @@ on:
       max_saniye:
         description: 'Makine başına azami ölçüm süresi (saniye)'
         required: false
-        default: '2700'
+        default: '2400'
       hedef_yenile:
         description: 'Hedef listesini ana ambardan yeniden üret (true/false)'
         required: false
@@ -100,10 +104,10 @@ jobs:
           LIM=""; [ -n "${{ github.event.inputs.limit }}" ] && LIM="--limit ${{ github.event.inputs.limit }}"
           if [ "${{ github.event.inputs.yontem || 'tarayici' }}" = "tarayici" ]; then
             python collector/google_anlik_yogunluk_tarayici.py --hedef "hedef/${HEDEF}" --out anlik_shard.sqlite \
-              --shard ${{ matrix.shard }} --num-shards 6 --max-seconds "${{ github.event.inputs.max_saniye || '2700' }}" $LIM
+              --shard ${{ matrix.shard }} --num-shards 6 --max-seconds "${{ github.event.inputs.max_saniye || '2400' }}" $LIM
           else
             python collector/google_anlik_yogunluk.py --hedef "hedef/${HEDEF}" --out anlik_shard.sqlite \
-              --shard ${{ matrix.shard }} --num-shards 6 --max-seconds "${{ github.event.inputs.max_saniye || '2700' }}"
+              --shard ${{ matrix.shard }} --num-shards 6 --max-seconds "${{ github.event.inputs.max_saniye || '2400' }}"
           fi
       - uses: actions/upload-artifact@v4
         if: always()
@@ -151,9 +155,14 @@ jobs:
               kl = ",".join(kol)
               out.execute(f"INSERT OR IGNORE INTO google_anlik_yogunluk ({kl}) SELECT {kl} FROM s.google_anlik_yogunluk")
               out.execute("INSERT OR IGNORE INTO google_tipik_yogunluk_profil SELECT * FROM s.google_tipik_yogunluk_profil")
+              if out.execute("SELECT 1 FROM s.sqlite_master WHERE name = 'google_place_anlik_kayit'").fetchone():
+                  kk = ",".join(r[1] for r in out.execute("PRAGMA s.table_info(google_place_anlik_kayit)"))
+                  out.execute(f"INSERT OR IGNORE INTO google_place_anlik_kayit ({kk}) SELECT {kk} FROM s.google_place_anlik_kayit")
               out.commit(); out.execute("DETACH DATABASE s")
           sonra = out.execute("SELECT COUNT(*) FROM google_anlik_yogunluk").fetchone()[0]
           print(f"### Anlık yoğunluk: {once:,} → {sonra:,} ölçüm (+{sonra-once:,})")
+          kayit = out.execute("SELECT COUNT(*) FROM google_place_anlik_kayit WHERE kosu_id = ?", ("${{ github.run_id }}",)).fetchone()[0]
+          print(f"### İşletme kaydı (zaman damgalı): bu koşuda {kayit:,}")
           for d, n in out.execute("SELECT durum, COUNT(*) FROM google_anlik_yogunluk WHERE kosu_id = ? GROUP BY 1 ORDER BY 2 DESC",
                                   ("${{ github.run_id }}",)):
               print(f"- {d}: {n:,}")
