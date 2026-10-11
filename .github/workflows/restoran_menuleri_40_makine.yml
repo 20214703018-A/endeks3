@@ -78,9 +78,9 @@ jobs:
             --out warehouse/product/restoran_ve_kafe_menuleri.sqlite
 
       - name: "Kalıcı kayıt: sonucu tarihli olarak veri-arsivi release'ine yaz"
-        if: ${ !cancelled() }
+        if: ${{ !cancelled() }}
         env:
-          GH_TOKEN: ${ github.token }
+          GH_TOKEN: ${{ github.token }}
         run: |
           ops/arsive_yaz.sh warehouse/product/restoran_ve_kafe_menuleri.sqlite
       - name: Nihai Ambarı Yükle

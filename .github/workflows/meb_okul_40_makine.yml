@@ -81,9 +81,9 @@ jobs:
           for r in c.execute("SELECT tur, COUNT(*) FROM okul GROUP BY tur ORDER BY 2 DESC"): print("  ", r)
           EOF
       - name: "Kalıcı kayıt: sonucu tarihli olarak veri-arsivi release'ine yaz"
-        if: ${ !cancelled() }
+        if: ${{ !cancelled() }}
         env:
-          GH_TOKEN: ${ github.token }
+          GH_TOKEN: ${{ github.token }}
         run: |
           ops/arsive_yaz.sh warehouse/product/resmi_egitim.sqlite
       - uses: actions/upload-artifact@v4
