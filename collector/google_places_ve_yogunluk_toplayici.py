@@ -475,12 +475,16 @@ def is_valid_commercial_venue(name, category=None, rating=None, reviews=None, is
     if any(n_low.endswith(ce) for ce in cadde_ekleri) and (not category or category == "Ticari Mekan"):
         return False
         
+    # KAMU_MOD=1: kamu binası taraması (kaymakamlık, adliye, belediye, karakol, hükümet dairesi…) — 3. ve 4. adım
+    # bu kurumları elediği için atlanır; idari sınır, yol ve geometri süzgeçleri (1, 2, 5) aynen çalışır.
+    kamu_mod = os.environ.get("KAMU_MOD") == "1"
+
     # 3. İdari / Konut / Dini kategoriler
-    if any(ncc in c_low for ncc in NON_COMMERCIAL_CATEGORIES):
+    if not kamu_mod and any(ncc in c_low for ncc in NON_COMMERCIAL_CATEGORIES):
         return False
         
     # 4. İsimde site, apartman, konut vb. geçiyorsa ve açık bir ticari kategori yoksa ele
-    if any(kw in n_low for kw in NON_COMMERCIAL_KEYWORDS):
+    if not kamu_mod and any(kw in n_low for kw in NON_COMMERCIAL_KEYWORDS):
         if not any(ck in c_low for ck in ["restoran", "kafe", "market", "otel", "dükkan", "mağaza", "fırın", "pastane", "avm", "lokanta"]):
             return False
             
@@ -1504,6 +1508,10 @@ def main():
     parser.add_argument("--karo-limit", type=int, default=None, help="(Test) shard başına en fazla N karo")
     parser.add_argument("--kategori-seti", choices=sorted(KARO_KATEGORI_SETLERI), default="temel",
                         help="Karo taramasında aranacak kategori seti (temel: 57 eski · ek: gece hayatı + yeni türler · hepsi)")
+    parser.add_argument("--sorgu-dosyasi", type=str, default=None,
+                        help="Hazır sorgu listesi (satır başına bir sorgu; shard = satır sırası mod toplam). "
+                             "Kamu binası taraması gibi özel listeler için; derinleştirme yapılmaz.")
+    parser.add_argument("--sorgu-sayfa", type=int, default=3, help="--sorgu-dosyasi sorguları için en fazla sayfa (20'şer)")
     parser.add_argument("--gecmis-db", type=str, default=None,
                         help="Önceki koşuların birleşik ana ambarı (salt okunur). Orada yakın tarihte taranmış sorgular atlanır.")
     parser.add_argument("--yenileme-gunu", type=float, default=REFRESH_DAYS_BASARILI,
@@ -1528,7 +1536,18 @@ def main():
     init_db(args.out)
     conn = sqlite3.connect(args.out)
 
-    if args.all:
+    if args.sorgu_dosyasi:
+        shard_id, total = (int(x) for x in (args.shard or "1/1").split("/"))
+        with open(args.sorgu_dosyasi, encoding="utf-8") as f:
+            satirlar = [ln.strip() for ln in f if ln.strip() and not ln.startswith("#")]
+        initial_queries = [q for i, q in enumerate(satirlar) if i % total == shard_id - 1]
+        ozel_profil = {"temel": (), "derin_esik": None, "max_sayfa": args.sorgu_sayfa, "derin_sayfa": 1, "ek_kategori": False}
+        TIER_PROFILE[9] = ozel_profil
+        for q in initial_queries:
+            QUERY_META[q] = {"tier": 9, "tip": "liste_dosyasi"}
+        args.no_deep = True
+        print(f"Sorgu dosyası {args.sorgu_dosyasi}: shard {shard_id}/{total} → {len(initial_queries)} sorgu", flush=True)
+    elif args.all:
         initial_queries = get_all_commercial_corridor_queries()
         print(f"81 İl Tam Kapsama Modu: {len(initial_queries)} ticari koridor ve ilçe sorgulanıyor...")
     elif args.shard:

@@ -1,0 +1,45 @@
+name: Kamu Binaları Google Haritalar Taraması (40 Makine)
+
+# Kamu binası envanteri (kamu_v1): collector/kamu_bina_sorgulari.txt içindeki il/ilçe × kurum sorguları
+# (valilik, kaymakamlık, belediye, vergi dairesi, tapu, nüfus, SGK, adliye, emniyet, müftülük, il/ilçe müdürlükleri…).
+# KAMU_MOD=1: toplayıcının ticari-olmayan süzgeci kamu kurumlarını elemez. Yalnız Google'a istek atar
+# (resmî kurum siteleri yurt dışı IP'yi engelleyebildiği için onlar Mac'ten taranır). Elle başlatılır.
+on:
+  workflow_dispatch:
+    inputs:
+      sorgu_sayfa:
+        description: "Sorgu başına en fazla sayfa (20 sonuç/sayfa)"
+        required: false
+        default: "5"
+
+jobs:
+  tarama:
+    name: Kamu shard ${{ matrix.shard }}/40
+    runs-on: ubuntu-latest
+    timeout-minutes: 260
+    strategy:
+      fail-fast: false
+      max-parallel: 34
+      matrix:
+        shard: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Kamu sorgularını tara
+        env:
+          KAMU_MOD: "1"
+        run: |
+          python collector/google_places_ve_yogunluk_toplayici.py \
+            --sorgu-dosyasi collector/kamu_bina_sorgulari.txt \
+            --shard ${{ matrix.shard }}/40 \
+            --sorgu-sayfa ${{ github.event.inputs.sorgu_sayfa || '5' }} \
+            --out kamu_shard_${{ matrix.shard }}.sqlite \
+            --max-seconds 14400
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kamu_bina_shard_${{ matrix.shard }}
+          path: kamu_shard_${{ matrix.shard }}.sqlite
+          retention-days: 14
