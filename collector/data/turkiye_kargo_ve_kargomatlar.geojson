@@ -1482,6 +1482,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          37.85397804,
+          37.69387299
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ADIYAMAN DAĞITIM VE TOPLAMA MÜDÜRLÜĞÜ",
+        "adres": "DUMLUPINAR MAHALLESİ KİRAZLAR SOKAK No:2 BESNİ ADIYAMAN",
+        "il": "ADIYAMAN",
+        "telefon": "04162166002",
+        "calisma_saati": "08:30-17:00 / 13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           38.2516,
           37.755241
         ]
@@ -18266,6 +18284,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "OSMANGAZİ METRO KARGOMAT",
         "adres": "SANTRAL GARAJ MAHALLESİ KIBRIS ŞEHİTLERİ CADDE No:66 A OSMANGAZİ BURSA",
+        "il": "BURSA",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.059,
+          40.19593
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "OSMANGAZİ METRO KARGOMAT",
+        "adres": "SANTRAL GARAJ MAHALLESİ KIBRIS ŞEHİTLERİ CADDE NO:66 A OSMANGAZİ BURSA",
         "il": "BURSA",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -47724,6 +47760,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          36.211091555332075,
+          41.37084099837611
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "ÜNİVERSİTE PTT ŞUBESİ",
+        "adres": "KÖRFEZ MAHALLESİ OMÜ CADDE No:35 ATAKUM SAMSUN",
+        "il": "SAMSUN",
+        "telefon": "03624576180",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           36.33047,
           41.286332
         ]
@@ -54912,6 +54966,24 @@
       },
       "properties": {
         "tip": "PTT_KARGOMAT",
+        "ad": "AKŞEMSETTİN KARGOMAT",
+        "adres": "AKŞEMSETTİN MAHALLESİ ALPEREN CADDE No: 41 EYÜPSULTAN İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.922660174,
+          41.084393897
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
         "ad": "AKŞEMSETTİN PTT",
         "adres": "AKŞEMSETTİN MAHALLESİ ALPEREN CADDE No: 41 EYÜPSULTAN İSTANBUL",
         "il": "İSTANBUL",
@@ -55644,6 +55716,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          28.626828,
+          41.01881
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "BEYKENT ÜNİVERSİTESİ MYO KARGOMAT",
+        "adres": "CUMHURİYET MAHALLESİ ŞİMŞEK SOKAK No:5 BÜYÜKÇEKMECE İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           28.630247,
           40.990353
         ]
@@ -56058,6 +56148,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          28.665005907,
+          41.069323597
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "DUMANKAYA MODERN EVLERİ KARGOMAT",
+        "adres": "KOZA MAHALLESİ ESENKENT BAHÇEŞEHİR YOLU CADDE No:22 B ESENYURT İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           28.92971,
           41.02369
         ]
@@ -56156,6 +56264,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "ESENLER EMLAK KONUTLARI KARGOMAT",
         "adres": "HAVAALANI MAHALLESİ GÖNLÜM SOKAK  ESENLER İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.87408512,
+          41.057154
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "ESENLER EMLAK KONUTLARI KARGOMAT",
+        "adres": "ATIŞALANI MAHALLESİ GÖNLÜM SOKAK No:47 P ESENLER İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -56336,6 +56462,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "ESENYURT MOBİLYACILAR KARGOMAT",
         "adres": "KOZA MAHALLESİ 1639. SOKAK NO: 29 ESENYURT İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.66191588,
+          41.06889999
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "ESENYURT MOBİLYACILAR KARGOMAT",
+        "adres": "KOZA MAHALLESİ 1645. SOKAK No:30 ESENYURT İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -56652,6 +56796,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          28.941251,
+          41.047487
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "FSM ÜNİVERSİTESİ HALİÇ KARGOMAT",
+        "adres": "SÜTLÜCE MAHALLESİ KARAAĞAÇ CADDE No:12 A BEYOĞLU İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           29.051451,
           40.993016
         ]
@@ -56840,6 +57002,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "GÜNGÖREN GENÇOSMAN KARGOMAT",
         "adres": "GENÇOSMAN MAHALLESİ GEÇİT SOKAK No:9 GÜNGÖREN İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.8795886784792,
+          41.0274786160875
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "GÜNGÖREN GENÇOSMAN KARGOMAT",
+        "adres": "GENÇOSMAN MAHALLESİ GEÇİT SOKAK No:9 A GÜNGÖREN İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -57228,6 +57408,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          29.07404,
+          41.205855
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "KOÇ ÜNİVERSİTESİ RUMELİFENERİ",
+        "adres": "RUMELİFENERİ MAHALLESİ RUMELİFENERİ CADDE No:37 /62 SARIYER İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           29.298347,
           40.913841
         ]
@@ -57336,6 +57534,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          28.261831986,
+          41.093071395
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "KİPTAŞ 2.ETAP KARGOMAT",
+        "adres": "YENİ MAHALLESİ ABDÜLHALİK RENDA SOKAK NO: 23 SİLİVRİ İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           28.515363055,
           41.024066508
         ]
@@ -57408,6 +57624,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          28.639708,
+          41.110465
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "KİPTAŞ ÖMERLİ SİTESİ KARGOMAT",
+        "adres": "ÖMERLİ MAHALLESİ TERME SOKAK No:4 A ARNAVUTKÖY İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           29.016748915,
           41.075689602
         ]
@@ -57416,6 +57650,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "LEVENT KARGOMAT",
         "adres": "LEVENT MAHALLESİ KARAKOL SOKAK No: 14 BEŞİKTAŞ İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.0167425276288,
+          41.0752840627057
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "LEVENT KARGOMAT",
+        "adres": "LEVENT MAHALLESİ BİNBİRÇİÇEK SOKAK No: 13 BEŞİKTAŞ İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -59666,6 +59918,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "İSTOÇ PTT",
         "adres": "MAHMUTBEY MAHALLESİ 2459. SOKAK No: 6 BAĞCILAR İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          28.829844,
+          41.064902
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "İSTOÇ PTT",
+        "adres": "MAHMUTBEY MAHALLESİ 2416. SOKAK No: 2 BAĞCILAR İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -67920,14 +68190,14 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          27.130363017,
-          38.419534753
+          27.08873496,
+          38.46816099
         ]
       },
       "properties": {
         "tip": "PTT_KARGOMAT",
         "ad": "KONAK KARGOMAT",
-        "adres": "KONAK MAHALLESİ 858 SOKAK No: 2 A KONAK İZMİR",
+        "adres": "YALI MAHALLESİ 6439 SOKAK No: 60 A KARŞIYAKA İZMİR",
         "il": "İZMİR",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -67938,14 +68208,14 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          27.08873496,
-          38.46816099
+          27.130276,
+          38.419638
         ]
       },
       "properties": {
         "tip": "PTT_KARGOMAT",
         "ad": "KONAK KARGOMAT",
-        "adres": "YALI MAHALLESİ 6439 SOKAK No: 60 A KARŞIYAKA İZMİR",
+        "adres": "KONAK MAHALLESİ 858 SOKAK No: 2 A KONAK İZMİR",
         "il": "İZMİR",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
