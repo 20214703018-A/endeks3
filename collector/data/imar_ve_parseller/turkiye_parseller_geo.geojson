@@ -311288,6 +311288,69 @@
         "gabari": null,
         "kat_adedi": null
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.27845,
+              38.45564
+            ],
+            [
+              28.27814,
+              38.45483
+            ],
+            [
+              28.27839,
+              38.45481
+            ],
+            [
+              28.27867,
+              38.45478
+            ],
+            [
+              28.27907,
+              38.45475
+            ],
+            [
+              28.27948,
+              38.45476
+            ],
+            [
+              28.27981,
+              38.45477
+            ],
+            [
+              28.27995,
+              38.45533
+            ],
+            [
+              28.27845,
+              38.45564
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 153,
+        "il": "Manisa",
+        "ilce": "Salihli",
+        "mahalle": "Yeşilkavak",
+        "ada_no": "110",
+        "parsel_no": "12",
+        "alan_m2": 11340.89,
+        "nitelik": "Bağ",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
     }
   ]
 }
