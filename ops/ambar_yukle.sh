@@ -15,7 +15,14 @@ ls -la "$OUT"
 # mevcut ilgili asset'ler
 OLD=$(gh release view "$REL" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' | grep -F "${NAME}.gz" || true)
 # yeni parçaları yükle (aynı adlı varsa --clobber üstüne yazar)
-gh release upload "$REL" "$OUT"/* --clobber --repo "$GITHUB_REPOSITORY"
+# GitHub ara sıra 500 verir (7 Eki 2026: detay yüklemesi kayboldu) → dosya başına 5 deneme, artan bekleme
+for f in "$OUT"/*; do
+  for i in 1 2 3 4 5; do
+    gh release upload "$REL" "$f" --clobber --repo "$GITHUB_REPOSITORY" && break
+    [ "$i" = 5 ] && { echo "yükleme 5 denemede başarısız: $f"; exit 1; }
+    echo "yükleme hatası ($i/5), $((i * 30)) sn sonra tekrar: $f"; sleep $((i * 30))
+  done
+done
 NEW=$(ls "$OUT")
 # artık kullanılmayan eski asset'leri sil (yeni sette olmayanlar)
 for a in $OLD; do

@@ -23,7 +23,7 @@ jobs:
           python-version: "3.13"
           cache: pip
       - name: Bağımlılıklar
-        run: pip install osmium
+        run: pip install osmium shapely   # shapely yoksa alan sınırları (geometri) sessizce boş kalıyordu (11 Eki 2026)
       - name: PBF indir (Geofabrik Türkiye)
         run: |
           mkdir -p warehouse/raw/osm

@@ -103,12 +103,12 @@ jobs:
               print(t, c.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0], "satır")
           print("durum dağılımı:", c.execute("SELECT durum, COUNT(*) FROM google_places_detay GROUP BY 1 ORDER BY 2 DESC").fetchall()[:5])
           EOF
-      - name: Release'e yaz (gz)
-        run: |
-          ops/ambar_yukle.sh warehouse/product/google_places_detay.sqlite
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4   # önce yedek: release yüklemesi hata verse de birleşik veri 30 gün kalır
         with:
           name: detay-merged-${{ github.run_number }}
           path: warehouse/product/google_places_detay.sqlite
           retention-days: 30
           compression-level: 1
+      - name: Release'e yaz (gz)
+        run: |
+          ops/ambar_yukle.sh warehouse/product/google_places_detay.sqlite
