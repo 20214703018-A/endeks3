@@ -7,6 +7,9 @@ name: "GEOPROP Google anlık yoğunluk (saatlik ölçüm + işletme kaydı, 6 ma
 # Her ölçümde işletmenin o anki Google kaydı da zaman damgasıyla yazılır (google_place_anlik_kayit: puan, yorum sayısı, açık/kapalı,
 # saatler, adres, telefon, web sitesi …; yorum yazanların adları alınmaz).
 # Ağır 40'lık iş akışları en fazla 34 makine kullanır; 6 yer bu ölçüme ayrılmıştır.
+# 14 Eki 2026: GitHub '23 * * * *' zamanlamasının çoğunu atlıyordu (günde 24 yerine 3–4 koşu). Artık her koşu bitince
+# sonraki saatin :23'ünü bekleyip bir sonrakini kendisi başlatır (zincir); cron yalnız zincir koparsa yeniden başlatan
+# yedektir. "kapı" işi: aynı UTC saatinde açılan koşulardan yalnız ilki ölçer, diğerleri hemen kapanır (çift ölçüm olmaz).
 
 on:
   # Tarayıcı yöntemi 3 Eki 2026 bulut denemesinde doğrulandı (6/6 makine tam görünüm, ölçümlerin %58'inde canlı değer).
@@ -30,9 +33,14 @@ on:
         description: 'Hedef listesini ana ambardan yeniden üret (true/false)'
         required: false
         default: 'false'
+      zincir:
+        description: 'Bitince sonraki saatin koşusunu başlat (true/false; test için false)'
+        required: false
+        default: 'true'
 
 permissions:
   contents: write
+  actions: write   # zincir: sonraki koşuyu workflow_dispatch ile başlatır
 
 concurrency:
   group: geoprop-anlik-yogunluk
@@ -44,8 +52,28 @@ env:
   HEDEF: anlik_yogunluk_hedef.csv
 
 jobs:
+  kapi:
+    name: "Kapı (bu saatin ilk koşusu mu?)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      calis: ${{ steps.k.outputs.calis }}
+    steps:
+      - id: k
+        run: |
+          # Bu koşunun açıldığı UTC saati; o saatte açılmış (iptal edilmemiş) koşulardan en eskisi ölçer.
+          RUN_CREATED=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" -q .created_at)
+          SAAT=${RUN_CREATED:0:13}
+          ILK=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/google_anlik_yogunluk.yml/runs?created=%3E%3D${SAAT}:00:00Z&per_page=100" \
+                -q "[.workflow_runs[] | select(.created_at[0:13] == \"$SAAT\") | select(.conclusion != \"cancelled\")] | sort_by(.created_at, .id) | .[0].id")
+          echo "koşu $GITHUB_RUN_ID · açılış $RUN_CREATED · bu saatin ilk koşusu $ILK"
+          if [ "$ILK" = "$GITHUB_RUN_ID" ] || [ -z "$ILK" ]; then echo "calis=true" >> "$GITHUB_OUTPUT"
+          else echo "calis=false" >> "$GITHUB_OUTPUT"; echo "### Bu saat zaten ölçülüyor (koşu $ILK) — bu koşu atlandı" >> "$GITHUB_STEP_SUMMARY"; fi
+
   hedef:
     name: "Hedef listesi"
+    needs: [kapi]
+    if: ${{ needs.kapi.outputs.calis == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -169,3 +197,23 @@ jobs:
           out.close()
           EOF
           ops/ambar_yukle.sh warehouse/product/google_anlik_yogunluk.sqlite
+
+  zincir:
+    name: "Zincir: sonraki saatin koşusunu başlat"
+    needs: [kapi, birlestir]
+    # Ölçüm/birleştirme başarısız olsa da zincir sürer; yalnız bu saatin asıl koşusu zincirler (çift zincir olmaz).
+    if: ${{ always() && needs.kapi.outputs.calis == 'true' && github.event.inputs.zincir != 'false' && github.event.inputs.limit == '' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - name: Sonraki saatin :23'ünü bekle ve başlat
+        run: |
+          RUN_CREATED=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" -q .created_at)
+          # hedef: bu koşunun saatinden SONRAKİ ilk saat :23 (aynı saate düşerse kapı onu atlardı)
+          HEDEF=$(( $(date -u -d "${RUN_CREATED:0:13}:00:00Z" +%s) + 3600 + 23*60 ))
+          SIMDI=$(date -u +%s)
+          while [ $HEDEF -lt $((SIMDI + 60)) ]; do HEDEF=$((HEDEF + 3600)); done
+          echo "sonraki koşu: $(date -u -d @$HEDEF '+%F %H:%M') UTC ($(( (HEDEF - SIMDI) / 60 )) dk sonra)"
+          sleep $((HEDEF - SIMDI))
+          gh workflow run google_anlik_yogunluk.yml --repo "$GITHUB_REPOSITORY" --ref "${GITHUB_REF_NAME:-main}"
+          echo "### Zincir: $(date -u '+%F %H:%M') UTC'de sonraki koşu başlatıldı" >> "$GITHUB_STEP_SUMMARY"
