@@ -523,6 +523,17 @@ def queue_priority(venue: dict[str, Any], rates: dict[str, float], overall: floa
     return round(tier * 10 + rate + reviews / 1_000_000, 6)
 
 
+def normalize_cid(value: Any) -> str:
+    """Google cid: eski kayıtlarda bazen feature kodu ('0x…:0x<cid onaltılık>') biçiminde; düz ondalığa çevrilir."""
+    text = str(value or "").strip()
+    if ":0x" in text:
+        try:
+            return str(int(text.split(":0x", 1)[1], 16))
+        except ValueError:
+            return text
+    return text
+
+
 def sync_queue(conn: sqlite3.Connection, venues: list[dict[str, Any]], loaded_sources: list[Path]) -> None:
     now = now_iso()
     # Aynı mekan farklı Google ambarlarında farklı kimlikle gelebilir (eski kayıtlar 24 karakterlik kod,
@@ -532,10 +543,11 @@ def sync_queue(conn: sqlite3.Connection, venues: list[dict[str, Any]], loaded_so
     for row in conn.execute(
         "SELECT mekan_id, json_extract(payload_json, '$.cid') AS cid FROM menu_tarama_kuyrugu ORDER BY created_at"
     ):
-        if row["cid"] and str(row["cid"]) not in id_by_cid:
-            id_by_cid[str(row["cid"])] = row["mekan_id"]
+        cid = normalize_cid(row["cid"])
+        if cid and cid not in id_by_cid:
+            id_by_cid[cid] = row["mekan_id"]
     for venue in venues:
-        existing_id = id_by_cid.get(str(venue.get("cid") or ""))
+        existing_id = id_by_cid.get(normalize_cid(venue.get("cid")))
         if existing_id and existing_id != venue["id"]:
             venue["google_place_id_kaynak"] = venue["id"]
             venue["id"] = existing_id
@@ -585,7 +597,7 @@ TWIN_MAX_DEGREES = 0.002  # ~200 m
 
 
 def mark_duplicate_twins(conn: sqlite3.Connection) -> int:
-    """Google ambarında aynı mekan farklı kimlikle birden çok kez bulunabiliyor (aynı ad, il, ilçe ve
+    """Google ambarında aynı mekan farklı kimlikle birden çok kez bulunabiliyor (aynı ad ve il,
     ~200 m içinde). Bunlar aynı Google aramasını tekrarlatır; eşi taranmış ya da kuyrukta önde olan
     kayıt bırakılır, diğeri silinmeden 'excluded' + nedeniyle işaretlenir (taranan eşin sonucu geçerlidir)."""
     rows = conn.execute(
@@ -597,7 +609,8 @@ def mark_duplicate_twins(conn: sqlite3.Connection) -> int:
         payload = json.loads(row["payload_json"])
         if payload.get("lat") is None or payload.get("lon") is None:
             continue
-        key = (normalize_tr(payload.get("adi")), normalize_tr(payload.get("il")), normalize_tr(payload.get("ilce")))
+        # İlçe anahtara girmez: eski ve yeni ambar aynı noktaya farklı ilçe yazabiliyor; ~200 m sınırı yeterli ayırıcı.
+        key = (normalize_tr(payload.get("adi")), normalize_tr(payload.get("il")))
         rank = 0 if row["durum"].startswith("completed") else 1 if row["durum"] == "in_progress" else 2
         groups.setdefault(key, []).append((rank, -int(payload.get("degerlendirme_sayisi") or 0), row["mekan_id"],
                                            row["durum"], float(payload["lat"]), float(payload["lon"])))
@@ -613,7 +626,7 @@ def mark_duplicate_twins(conn: sqlite3.Connection) -> int:
                 if twin and status in ("queued", "blocked"):
                     conn.execute(
                         "UPDATE menu_tarama_kuyrugu SET durum='excluded', son_hata=?, updated_at=? WHERE mekan_id=?",
-                        (f"Tekrar kayıt: {twin[0]} ile aynı ad/ilçe ve ~200 m içinde", now, venue_id),
+                        (f"Tekrar kayıt: {twin[0]} ile aynı ad ve ~200 m içinde", now, venue_id),
                     )
                     marked += 1
                 elif not twin:
