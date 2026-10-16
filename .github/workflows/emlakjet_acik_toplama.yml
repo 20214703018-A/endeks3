@@ -1,0 +1,48 @@
+name: "Emlakjet açık veri toplama (eksik fiyat trendleri + piyasa sayfaları)"
+
+# Veri kaybı denetimi (16 Eki 2026): emlakjet'te daha önce alınmamış HERKESE AÇIK fiyat verisi.
+#   trend  : arazi (3/2), daire (1/1), müstakil (1/3) aylık trendleri — 81 il, 951 ilçe, 50.174 mahalle/köy (20 makine)
+#   piyasa : emlak-piyasasi sayfalarındaki il/ilçe/mahalle fiyat tabloları — ticari, kiralık işyeri, konut, kiralık konut, arsa, arazi
+# Kişisel/kısıtlı veri toplanmaz. Çıktılar yalnız iş çıktısı (artifact, 2 gün); özel ambara Mac'ten taşınır, burada kalıcı sürüm yok.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -u collector/emlakjet_acik_toplayici.py trend --bolge collector/data/emlakjet_bolge_kimlik.json.gz --shard ${{ matrix.shard }}/20 --cikti trend_${{ matrix.shard }}.sqlite
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: ej-trend-${{ matrix.shard }}
+          path: trend_${{ matrix.shard }}.sqlite
+          retention-days: 2
+
+  piyasa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    strategy:
+      fail-fast: false
+      matrix:
+        tip: [satilik-ticari, kiralik-is-yeri, satilik-konut, kiralik-konut, satilik-arsa, satilik-arazi]
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -u collector/emlakjet_acik_toplayici.py piyasa --tip ${{ matrix.tip }} --cikti piyasa_${{ matrix.tip }}.sqlite
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: ej-piyasa-${{ matrix.tip }}
+          path: piyasa_${{ matrix.tip }}.sqlite
+          retention-days: 2
