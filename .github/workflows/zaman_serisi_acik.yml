@@ -1,0 +1,102 @@
+name: "Zaman serisi toplayıcıları (açık depo; birikim özel depoda)"
+
+# 17 Eki 2026 kararı: sanal makineler yalnız veri işler; yurt dışı IP'ye izin veren kaynaklar burada (GitHub'ın ücretsiz makineleri) toplanır.
+# Birikim BURADA TUTULMAZ: her kaynak için
+#   zs-delta-<dosya>-<koşu>  bu koşuda eklenen satırlar (7 gün) → özel depodaki zaman_serisi_birlestir.yml birikime ekler
+#   zs-durum-<dosya>         tablo başına son 200 bin satır (14 gün) → bir sonraki koşu "kaldığı yerden" devam eder
+# Kaynaklar ve sıklıklar özel depodaki eski zaman_serisi.yml ile aynı. Yurt dışı IP'ye kapalı olanlar (uçuş ekranı, BKM) Mac'te.
+
+on:
+  schedule:
+    - cron: '45 12 * * 1-5'
+    - cron: '20 3 * * *'
+    - cron: '40 4 * * 1'
+    - cron: '10 5 3 * *'
+    - cron: '50 2 * * *'
+    - cron: '7 */3 * * *'
+  workflow_dispatch:
+    inputs:
+      kaynak:
+        description: 'Virgülle kaynaklar (boş = günlük set)'
+        default: ''
+      tam:
+        description: 'Derin tarama (true/false)'
+        default: 'false'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: zs-acik-${{ github.event.schedule || 'elle' }}
+  cancel-in-progress: false
+
+jobs:
+  sec:
+    runs-on: ubuntu-latest
+    outputs:
+      kaynaklar: ${{ steps.s.outputs.kaynaklar }}
+      tam: ${{ steps.s.outputs.tam }}
+    steps:
+      - id: s
+        run: |
+          case "${{ github.event.schedule }}" in
+            '45 12 * * 1-5') K="tcmb_kur,yabanci_kur,hisse_fiyat"; TAM=false ;;
+            '20 3 * * *')    K="hava_tahmin,biletix,sikayetvar,afad_deprem,appstore,tranco,gdelt,resmi_gazete"; TAM=false ;;
+            '40 4 * * 1')    K="resmi_tatil,is_ilani,mali_tablo,tff_fikstur,dhmi,ktb_turizm,ibb_acik_veri,dosya_sayfa"; TAM=true ;;
+            '10 5 3 * *')    K="eurostat_turizm,dunya_bankasi,rusya_turizm"; TAM=false ;;
+            '50 2 * * *')    K="opensky"; TAM=false ;;
+            '7 */3 * * *')   K="ispark"; TAM=false ;;
+            *) K="${{ github.event.inputs.kaynak }}"; TAM="${{ github.event.inputs.tam }}"
+               [ -z "$K" ] && K="tcmb_kur,yabanci_kur,hava_tahmin,biletix,sikayetvar,afad_deprem,appstore,tranco,gdelt,resmi_gazete" ;;
+          esac
+          echo "kaynaklar=$(python3 -c "import json,sys; print(json.dumps([k for k in sys.argv[1].split(',') if k]))" "$K")" >> $GITHUB_OUTPUT
+          echo "tam=$TAM" >> $GITHUB_OUTPUT
+
+  topla:
+    needs: sec
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        kaynak: ${{ fromJson(needs.sec.outputs.kaynaklar) }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Durumu al (önceki koşunun son satırları)
+        id: d
+        run: |
+          mkdir -p db
+          F=$(python3 -c "import sys; sys.path.insert(0, 'collector/zaman_serisi'); from kaynaklar import DOSYA; print(DOSYA['${{ matrix.kaynak }}'])")
+          echo "dosya=$F" >> $GITHUB_OUTPUT
+          A=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=zs-durum-$F&per_page=5" -q '[.artifacts[]|select(.expired==false)]|sort_by(.created_at)|last|.id // empty')
+          if [ -n "$A" ]; then gh api repos/$GITHUB_REPOSITORY/actions/artifacts/$A/zip > d.zip && unzip -o -q d.zip -d db && echo "durum: $A"; else echo "durum yok — ilk koşu"; fi
+          python3 collector/zaman_serisi/delta.py taban db taban.json
+      - name: Topla
+        run: |
+          T=""; [ "${{ needs.sec.outputs.tam }}" = "true" ] && T="--tam"
+          python3 -u collector/zaman_serisi/calistir.py --kaynak "${{ matrix.kaynak }}" --dizin db $T
+        env:
+          OPENSKY_CLIENT_ID: ${{ secrets.OPENSKY_CLIENT_ID }}
+          OPENSKY_CLIENT_SECRET: ${{ secrets.OPENSKY_CLIENT_SECRET }}
+      - name: Delta + durum ayır
+        if: ${{ !cancelled() }}
+        run: python3 collector/zaman_serisi/delta.py ayir db taban.json delta durum
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && hashFiles('delta/*.sqlite') != '' }}
+        with:
+          name: zs-delta-${{ steps.d.outputs.dosya }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: delta/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && hashFiles('durum/*.sqlite') != '' }}
+        with:
+          name: zs-durum-${{ steps.d.outputs.dosya }}
+          path: durum/
+          retention-days: 14
+          overwrite: true
