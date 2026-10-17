@@ -321835,6 +321835,136 @@
         "gabari": null,
         "kat_adedi": null
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.09217,
+              40.72321
+            ],
+            [
+              38.09193,
+              40.72337
+            ],
+            [
+              38.09186,
+              40.72328
+            ],
+            [
+              38.09187,
+              40.72323
+            ],
+            [
+              38.09181,
+              40.72314
+            ],
+            [
+              38.09174,
+              40.72309
+            ],
+            [
+              38.09189,
+              40.72295
+            ],
+            [
+              38.09195,
+              40.72289
+            ],
+            [
+              38.09219,
+              40.72268
+            ],
+            [
+              38.09226,
+              40.72274
+            ],
+            [
+              38.09237,
+              40.72284
+            ],
+            [
+              38.09243,
+              40.72291
+            ],
+            [
+              38.09251,
+              40.72299
+            ],
+            [
+              38.09217,
+              40.72321
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 154,
+        "il": "Giresun",
+        "ilce": "Bulancak",
+        "mahalle": "Kovanlık/Ahurlu",
+        "ada_no": "369",
+        "parsel_no": "13",
+        "alan_m2": 2366.21,
+        "nitelik": "Fındık Bahçesi",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              27.13759,
+              41.37136
+            ],
+            [
+              27.13748,
+              41.3712
+            ],
+            [
+              27.13756,
+              41.37116
+            ],
+            [
+              27.13768,
+              41.37132
+            ],
+            [
+              27.13759,
+              41.37136
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 154,
+        "il": "Kırklareli",
+        "ilce": "Babaeski",
+        "mahalle": "Alpullu",
+        "ada_no": "182",
+        "parsel_no": "6",
+        "alan_m2": 163.35,
+        "nitelik": "Arsa",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
     }
   ]
 }
