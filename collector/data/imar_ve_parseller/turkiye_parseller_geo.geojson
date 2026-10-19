@@ -328308,6 +328308,836 @@
         "gabari": null,
         "kat_adedi": null
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.09326,
+              40.72344
+            ],
+            [
+              38.09324,
+              40.72334
+            ],
+            [
+              38.09325,
+              40.72322
+            ],
+            [
+              38.09328,
+              40.7233
+            ],
+            [
+              38.09334,
+              40.72342
+            ],
+            [
+              38.09336,
+              40.72345
+            ],
+            [
+              38.09344,
+              40.72355
+            ],
+            [
+              38.09328,
+              40.72357
+            ],
+            [
+              38.09326,
+              40.72344
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 154,
+        "il": "Giresun",
+        "ilce": "Bulancak",
+        "mahalle": "Kovanlık/Ahurlu",
+        "ada_no": "369",
+        "parsel_no": "20",
+        "alan_m2": 238.58,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.09276,
+              40.72401
+            ],
+            [
+              38.09272,
+              40.72392
+            ],
+            [
+              38.09269,
+              40.72383
+            ],
+            [
+              38.09281,
+              40.72356
+            ],
+            [
+              38.0929,
+              40.72331
+            ],
+            [
+              38.09272,
+              40.72317
+            ],
+            [
+              38.09283,
+              40.72308
+            ],
+            [
+              38.09293,
+              40.72294
+            ],
+            [
+              38.09304,
+              40.723
+            ],
+            [
+              38.09305,
+              40.72302
+            ],
+            [
+              38.09313,
+              40.72307
+            ],
+            [
+              38.09319,
+              40.72315
+            ],
+            [
+              38.09322,
+              40.72318
+            ],
+            [
+              38.09325,
+              40.72322
+            ],
+            [
+              38.09324,
+              40.72334
+            ],
+            [
+              38.09326,
+              40.72344
+            ],
+            [
+              38.09328,
+              40.72357
+            ],
+            [
+              38.09321,
+              40.72358
+            ],
+            [
+              38.09318,
+              40.72357
+            ],
+            [
+              38.09317,
+              40.72371
+            ],
+            [
+              38.0931,
+              40.7239
+            ],
+            [
+              38.09307,
+              40.72409
+            ],
+            [
+              38.09303,
+              40.72405
+            ],
+            [
+              38.09276,
+              40.72401
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 153,
+        "il": "Giresun",
+        "ilce": "Bulancak",
+        "mahalle": "Kovanlık/Ahurlu",
+        "ada_no": "369",
+        "parsel_no": "19",
+        "alan_m2": 3838.3,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.09283,
+              40.72439
+            ],
+            [
+              38.09264,
+              40.72433
+            ],
+            [
+              38.09271,
+              40.72418
+            ],
+            [
+              38.09276,
+              40.72411
+            ],
+            [
+              38.09276,
+              40.72401
+            ],
+            [
+              38.09303,
+              40.72405
+            ],
+            [
+              38.09307,
+              40.72409
+            ],
+            [
+              38.09304,
+              40.72417
+            ],
+            [
+              38.09305,
+              40.72427
+            ],
+            [
+              38.09291,
+              40.72434
+            ],
+            [
+              38.09283,
+              40.72439
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 152,
+        "il": "Giresun",
+        "ilce": "Bulancak",
+        "mahalle": "Kovanlık/Ahurlu",
+        "ada_no": "369",
+        "parsel_no": "18",
+        "alan_m2": 989.67,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.09276,
+              40.72401
+            ],
+            [
+              38.09276,
+              40.72411
+            ],
+            [
+              38.09271,
+              40.72418
+            ],
+            [
+              38.09264,
+              40.72433
+            ],
+            [
+              38.09253,
+              40.72435
+            ],
+            [
+              38.09243,
+              40.72435
+            ],
+            [
+              38.09219,
+              40.72429
+            ],
+            [
+              38.09229,
+              40.72415
+            ],
+            [
+              38.09237,
+              40.72399
+            ],
+            [
+              38.09244,
+              40.72386
+            ],
+            [
+              38.09248,
+              40.72381
+            ],
+            [
+              38.09269,
+              40.72383
+            ],
+            [
+              38.09272,
+              40.72392
+            ],
+            [
+              38.09276,
+              40.72401
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 151,
+        "il": "Giresun",
+        "ilce": "Bulancak",
+        "mahalle": "Kovanlık/Ahurlu",
+        "ada_no": "369",
+        "parsel_no": "17",
+        "alan_m2": 1883.48,
+        "nitelik": "Fındık Bahçesi",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.09281,
+              40.72356
+            ],
+            [
+              38.09269,
+              40.72383
+            ],
+            [
+              38.09248,
+              40.72381
+            ],
+            [
+              38.0923,
+              40.72382
+            ],
+            [
+              38.09221,
+              40.72375
+            ],
+            [
+              38.09214,
+              40.72364
+            ],
+            [
+              38.09205,
+              40.72353
+            ],
+            [
+              38.09224,
+              40.72343
+            ],
+            [
+              38.09245,
+              40.72332
+            ],
+            [
+              38.0926,
+              40.72323
+            ],
+            [
+              38.09272,
+              40.72317
+            ],
+            [
+              38.0929,
+              40.72331
+            ],
+            [
+              38.09281,
+              40.72356
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 150,
+        "il": "Giresun",
+        "ilce": "Bulancak",
+        "mahalle": "Kovanlık/Ahurlu",
+        "ada_no": "369",
+        "parsel_no": "16",
+        "alan_m2": 3143.79,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.09251,
+              40.72299
+            ],
+            [
+              38.09262,
+              40.72308
+            ],
+            [
+              38.09272,
+              40.72317
+            ],
+            [
+              38.0926,
+              40.72323
+            ],
+            [
+              38.09245,
+              40.72332
+            ],
+            [
+              38.09224,
+              40.72343
+            ],
+            [
+              38.09205,
+              40.72353
+            ],
+            [
+              38.09198,
+              40.72348
+            ],
+            [
+              38.09193,
+              40.72337
+            ],
+            [
+              38.09217,
+              40.72321
+            ],
+            [
+              38.09251,
+              40.72299
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 149,
+        "il": "Giresun",
+        "ilce": "Bulancak",
+        "mahalle": "Kovanlık/Ahurlu",
+        "ada_no": "369",
+        "parsel_no": "15",
+        "alan_m2": 1612.64,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              38.09262,
+              40.72308
+            ],
+            [
+              38.09251,
+              40.72299
+            ],
+            [
+              38.09243,
+              40.72291
+            ],
+            [
+              38.09237,
+              40.72284
+            ],
+            [
+              38.09226,
+              40.72274
+            ],
+            [
+              38.09219,
+              40.72268
+            ],
+            [
+              38.09229,
+              40.72259
+            ],
+            [
+              38.09239,
+              40.72252
+            ],
+            [
+              38.09249,
+              40.72242
+            ],
+            [
+              38.09254,
+              40.72235
+            ],
+            [
+              38.09263,
+              40.72227
+            ],
+            [
+              38.09265,
+              40.72228
+            ],
+            [
+              38.09269,
+              40.72236
+            ],
+            [
+              38.09269,
+              40.7224
+            ],
+            [
+              38.0927,
+              40.72244
+            ],
+            [
+              38.09275,
+              40.72263
+            ],
+            [
+              38.09279,
+              40.72271
+            ],
+            [
+              38.09279,
+              40.72275
+            ],
+            [
+              38.09279,
+              40.7228
+            ],
+            [
+              38.0928,
+              40.72285
+            ],
+            [
+              38.09285,
+              40.72289
+            ],
+            [
+              38.09295,
+              40.72293
+            ],
+            [
+              38.09293,
+              40.72294
+            ],
+            [
+              38.09283,
+              40.72308
+            ],
+            [
+              38.09272,
+              40.72317
+            ],
+            [
+              38.09262,
+              40.72308
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 148,
+        "il": "Giresun",
+        "ilce": "Bulancak",
+        "mahalle": "Kovanlık/Ahurlu",
+        "ada_no": "369",
+        "parsel_no": "14",
+        "alan_m2": 2842.45,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              26.53929,
+              40.62774
+            ],
+            [
+              26.53926,
+              40.62784
+            ],
+            [
+              26.53924,
+              40.62804
+            ],
+            [
+              26.53921,
+              40.62807
+            ],
+            [
+              26.53899,
+              40.62817
+            ],
+            [
+              26.5389,
+              40.62774
+            ],
+            [
+              26.53929,
+              40.62774
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 154,
+        "il": "Edirne",
+        "ilce": "Keşan",
+        "mahalle": "Mecidiye",
+        "ada_no": "144",
+        "parsel_no": "6",
+        "alan_m2": 1099.05,
+        "nitelik": "Kargir Ev Ve Arsası",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.55631,
+              37.49035
+            ],
+            [
+              29.55655,
+              37.49038
+            ],
+            [
+              29.55692,
+              37.49043
+            ],
+            [
+              29.55716,
+              37.49045
+            ],
+            [
+              29.55742,
+              37.49047
+            ],
+            [
+              29.55747,
+              37.49063
+            ],
+            [
+              29.55685,
+              37.49073
+            ],
+            [
+              29.55647,
+              37.4908
+            ],
+            [
+              29.55639,
+              37.49083
+            ],
+            [
+              29.5562,
+              37.49077
+            ],
+            [
+              29.55572,
+              37.49066
+            ],
+            [
+              29.55524,
+              37.49064
+            ],
+            [
+              29.55528,
+              37.49039
+            ],
+            [
+              29.5553,
+              37.49021
+            ],
+            [
+              29.55572,
+              37.49029
+            ],
+            [
+              29.55586,
+              37.4903
+            ],
+            [
+              29.55615,
+              37.49034
+            ],
+            [
+              29.55631,
+              37.49035
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 149,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Güney",
+        "ada_no": "405",
+        "parsel_no": "1",
+        "alan_m2": 7556.39,
+        "nitelik": "Mezarlık",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.56048,
+              37.48987
+            ],
+            [
+              29.56047,
+              37.49007
+            ],
+            [
+              29.56045,
+              37.49024
+            ],
+            [
+              29.56022,
+              37.49026
+            ],
+            [
+              29.56028,
+              37.49006
+            ],
+            [
+              29.56033,
+              37.48984
+            ],
+            [
+              29.56048,
+              37.48987
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 148,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Güney",
+        "ada_no": "405",
+        "parsel_no": "107",
+        "alan_m2": 748.54,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
     }
   ]
 }
