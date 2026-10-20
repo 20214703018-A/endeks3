@@ -3876,6 +3876,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          32.873266,
+          39.980489
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": " ANKAGROSS KEÇİÖREN KARGOMAT",
+        "adres": "GÜÇLÜKAYA MAHALLESİ KIZLAR PINARI CADDE NO: 15 KEÇİÖREN ANKARA",
+        "il": "ANKARA",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           32.895883,
           39.925139
         ]
@@ -4218,6 +4236,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          32.886995,
+          39.94233
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "AYTEMİZ PETROL KARGOMAT",
+        "adres": "ŞAFAKTEPE MAHALLESİ PLEVNE CADDE NO: 82 MAMAK ANKARA",
+        "il": "ANKARA",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           32.885627,
           40.031267
         ]
@@ -4370,6 +4406,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "BAĞLICA KARGOMAT",
         "adres": "YENİ BAĞLICA MAHALLESİ 1174 SOKAK No: 2 ETİMESGUT ANKARA",
+        "il": "ANKARA",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.841955,
+          40.050351
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "BAĞLUM KARGOMAT",
+        "adres": "KARŞIYAKA MAHALLESİ OKUL CADDE No: 4 A KEÇİÖREN ANKARA",
         "il": "ANKARA",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -17610,6 +17664,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          28.955978,
+          40.210857
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "BURSA BEŞEVLER KARGOMAT",
+        "adres": "BEŞEVLER MAHALLESİ BEŞEVLER CADDE No: 246 NİLÜFER BURSA",
+        "il": "BURSA",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           28.972385,
           40.231678
         ]
@@ -17960,6 +18032,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "HÜDAVENDİGAR KARGOMAT",
         "adres": "SOĞANLI MAHALLESİ 1.NİLÜFER CADDE No: 149 A OSMANGAZİ BURSA",
+        "il": "BURSA",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.00803,
+          40.202866
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "HÜDAVENDİGAR KARGOMAT",
+        "adres": "HÜDAVENDİGAR MAHALLESİ 3.DEMET SOKAK No: 35 A OSMANGAZİ BURSA",
         "il": "BURSA",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -19511,6 +19601,24 @@
         "il": "BURSA",
         "telefon": "02242380577",
         "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.00803,
+          40.202866
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "HÜDAVENDİGAR ŞUBESİ",
+        "adres": "HÜDAVENDİGAR MAHALLESİ 3.DEMET SOKAK No:35 A OSMANGAZİ BURSA",
+        "il": "BURSA",
+        "telefon": "02242380577",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
       }
     },
     {
@@ -23903,6 +24011,24 @@
         "il": "EDİRNE",
         "telefon": "02845131871",
         "calisma_saati": "08:30-12:30"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.68783896,
+          41.26668201
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "UZUNKÖPRÜ PTT MÜDÜRLÜĞÜ",
+        "adres": "ATATÜRK MAHALLESİ HAYRABOLU CADDE No:108 C UZUNKÖPRÜ EDİRNE",
+        "il": "EDİRNE",
+        "telefon": "02845131871",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
       }
     },
     {
@@ -43242,6 +43368,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          41.366615,
+          38.896174
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "KONUKBEKLER  ACENTELİĞİ",
+        "adres": "KONUKBEKLER BELDESİ/ŞİRİNEVLER MAHALLESİ 212 SOKAK No:6 MERKEZ MUŞ",
+        "il": "MUŞ",
+        "telefon": "05051225395",
+        "calisma_saati": "KAPALI"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           41.784154,
           38.738504
         ]
@@ -43325,6 +43469,24 @@
         "il": "MUŞ",
         "telefon": "05354888408",
         "calisma_saati": "08:30-12:30/13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          41.544778,
+          38.928478
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "SERİNOVA ACENTELİĞİ",
+        "adres": "SERİNOVA BELDESİ/HÜRRİYET MAHALLESİ EĞİTİM CADDE No:14 MERKEZ MUŞ",
+        "il": "MUŞ",
+        "telefon": "05354888408",
+        "calisma_saati": "KAPALI"
       }
     },
     {
@@ -49470,6 +49632,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          27.849083,
+          41.016456
+        ]
+      },
+      "properties": {
+        "tip": "PTT_SUBE",
+        "ad": "YENİÇİFTLİK SAHİL ŞUBESİ",
+        "adres": "YENİÇİFTLİK MAHALLESİ HÜRRİYET CADDE No:160 MARMARAEREĞLİSİ TEKİRDAĞ",
+        "il": "TEKİRDAĞ",
+        "telefon": "02826441963",
+        "calisma_saati": "08:30-12:30 / 13:30-17:00"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           27.766713868,
           41.189079115
         ]
@@ -52178,6 +52358,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "DİLŞAD HATUN ÖĞRENCİ YURDU KARGOMAT",
         "adres": "BAHÇELİEVLER MAHALLESİ ÇINARCIK YOLU CADDE NO: 103 MERKEZ YALOVA",
+        "il": "YALOVA",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.24540388,
+          40.65495201
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "DİLŞAD HATUN ÖĞRENCİ YURDU KARGOMAT",
+        "adres": "BAHÇELİEVLER MAHALLESİ ÇINARCIK YOLU CADDE No:95 /1 MERKEZ YALOVA",
         "il": "YALOVA",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -57030,6 +57228,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          28.8795886784792,
+          41.0274786160875
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "GÜNGÖREN GENÇOSMAN KARGOMAT",
+        "adres": "GENÇOSMAN MAHALLESİ GEÇİT SOKAK No: 9 A GÜNGÖREN İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           28.97484984,
           41.04290799
         ]
@@ -57380,6 +57596,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "KIRAÇ BARBAROS KARGOMAT",
         "adres": "BARBAROS HAYRETTİN PAŞA MAHALLESİ ADNAN KAHVECİ BULVAR No:6 ESENYURT İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.07404,
+          41.205855
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "KOÇ ÜNİVERSİTESİ KARGOMAT",
+        "adres": "RUMELİFENERİ MAHALLESİ RUMELİFENERİ CADDE NO:37 /62 SARIYER İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
@@ -58560,6 +58794,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          28.64382984,
+          41.09039802
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "SEMT BAHÇEKENT KARGOMAT",
+        "adres": "ORHAN GAZİ MAHALLESİ 4.YOL SOKAK No:2 ESENYURT İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           28.767426361,
           41.037379538
         ]
@@ -59532,6 +59784,24 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          28.81867212,
+          41.00963904
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "İHLAS YUVA KARGOMAT",
+        "adres": "YENİBOSNA MERKEZ MAHALLESİ 29 EKİM CADDE No:26 - BAHÇELİEVLER İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           28.714366677,
           41.060370042
         ]
@@ -59990,6 +60260,24 @@
         "tip": "PTT_KARGOMAT",
         "ad": "İTÜ MASLAK KARGOMAT",
         "adres": "AYAZAĞA MAHALLESİ 193. SOKAK No:6 SARIYER İSTANBUL",
+        "il": "İSTANBUL",
+        "telefon": "",
+        "calisma_saati": "7/24 Açık"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.021337,
+          41.10768
+        ]
+      },
+      "properties": {
+        "tip": "PTT_KARGOMAT",
+        "ad": "İTÜ MASLAK KARGOMAT",
+        "adres": "REŞİTPAŞA MAHALLESİ KATAR CADDE No:2 SARIYER İSTANBUL",
         "il": "İSTANBUL",
         "telefon": "",
         "calisma_saati": "7/24 Açık"
