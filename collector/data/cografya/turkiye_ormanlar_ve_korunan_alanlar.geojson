@@ -2634,8 +2634,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          36.44561,
-          40.93708
+          36.44477,
+          40.92988
         ]
       },
       "properties": {
@@ -2643,7 +2643,7 @@
         "ad": "Hemşinler Ormanı",
         "tur": "Orman",
         "kategori": "ORMAN_VE_KORUMA_ALANI",
-        "rakim_metre": 906,
+        "rakim_metre": 1159,
         "il_plaka": "55"
       }
     },
@@ -3059,6 +3059,24 @@
         "kategori": "ORMAN_VE_KORUMA_ALANI",
         "rakim_metre": 1,
         "il_plaka": "07"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.76336,
+          41.83824
+        ]
+      },
+      "properties": {
+        "id": 13729207,
+        "ad": "Çileklik Ormanı",
+        "tur": "Orman",
+        "kategori": "ORMAN_VE_KORUMA_ALANI",
+        "rakim_metre": 624,
+        "il_plaka": "57"
       }
     }
   ]
