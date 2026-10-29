@@ -5,6 +5,8 @@ name: "Zaman serisi toplayıcıları (açık depo; birikim özel depoda)"
 #   zs-delta-<dosya>-<koşu>  bu koşuda eklenen satırlar (7 gün) → özel depodaki zaman_serisi_birlestir.yml birikime ekler
 #   zs-durum-<dosya>         tablo başına son 200 bin satır (14 gün) → bir sonraki koşu "kaldığı yerden" devam eder
 # Kaynaklar ve sıklıklar özel depodaki eski zaman_serisi.yml ile aynı. Yurt dışı IP'ye kapalı olanlar (uçuş ekranı, BKM) Mac'te.
+# 29 Eki 2026: hisse_fiyat (İş Yatırım ~2 saat sonra GitHub IP'sini kesiyor) ve ispark (api.ibb.gov.tr yurt dışı IP'ye kapalı) Mac'e alındı;
+# yeni: akaryakit_fiyat + hal_fiyat (günlük), sarj_istasyon (3 saatte bir).
 
 on:
   schedule:
@@ -41,12 +43,12 @@ jobs:
       - id: s
         run: |
           case "${{ github.event.schedule }}" in
-            '45 12 * * 1-5') K="tcmb_kur,yabanci_kur,hisse_fiyat"; TAM=false ;;
-            '20 3 * * *')    K="hava_tahmin,biletix,sikayetvar,afad_deprem,appstore,tranco,gdelt,resmi_gazete"; TAM=false ;;
+            '45 12 * * 1-5') K="tcmb_kur,yabanci_kur"; TAM=false ;;
+            '20 3 * * *')    K="hava_tahmin,biletix,sikayetvar,afad_deprem,appstore,tranco,gdelt,resmi_gazete,akaryakit_fiyat,hal_fiyat"; TAM=false ;;
             '40 4 * * 1')    K="resmi_tatil,is_ilani,mali_tablo,tff_fikstur,dhmi,ktb_turizm,ibb_acik_veri,dosya_sayfa"; TAM=true ;;
             '10 5 3 * *')    K="eurostat_turizm,dunya_bankasi,rusya_turizm"; TAM=false ;;
             '50 2 * * *')    K="opensky"; TAM=false ;;
-            '7 */3 * * *')   K="ispark"; TAM=false ;;
+            '7 */3 * * *')   K="sarj_istasyon"; TAM=false ;;
             *) K="${{ github.event.inputs.kaynak }}"; TAM="${{ github.event.inputs.tam }}"
                [ -z "$K" ] && K="tcmb_kur,yabanci_kur,hava_tahmin,biletix,sikayetvar,afad_deprem,appstore,tranco,gdelt,resmi_gazete" ;;
           esac

@@ -239,11 +239,15 @@ from turizm import eurostat_turizm, dunya_bankasi, yabanci_kur, ktb_turizm, rusy
 from opensky import opensky
 from ucus_ekrani import ucus_ekrani
 from ek_kaynaklar import afad_deprem, ispark, ibb_acik_veri, appstore, tranco, gdelt, hisse_fiyat, resmi_gazete, dosya_sayfa, bkm_tablo
+from fiyat_kaynaklari import akaryakit_fiyat, hal_fiyat
+from altyapi_kaynaklari import sarj_istasyon
 KAYNAKLAR = {"ucus_ekrani": ucus_ekrani, "afad_deprem": afad_deprem, "ispark": ispark, "ibb_acik_veri": ibb_acik_veri, "appstore": appstore, "tranco": tranco, "gdelt": gdelt,
              "hisse_fiyat": hisse_fiyat, "resmi_gazete": resmi_gazete, "dosya_sayfa": dosya_sayfa, "bkm_tablo": bkm_tablo, "opensky": opensky, "eurostat_turizm": eurostat_turizm, "dunya_bankasi": dunya_bankasi, "yabanci_kur": yabanci_kur, "ktb_turizm": ktb_turizm,
              "rusya_turizm": rusya_turizm, "tcmb_kur": tcmb_kur, "resmi_tatil": resmi_tatil, "hava_tahmin": hava_tahmin, "biletix": biletix, "sikayetvar": sikayetvar,
-             "is_ilani": is_ilani, "mali_tablo": mali_tablo, "dhmi": dhmi, "tff_fikstur": tff_fikstur}
+             "is_ilani": is_ilani, "mali_tablo": mali_tablo, "dhmi": dhmi, "tff_fikstur": tff_fikstur,
+             "akaryakit_fiyat": akaryakit_fiyat, "hal_fiyat": hal_fiyat, "sarj_istasyon": sarj_istasyon}
 DOSYA = {"ucus_ekrani": "ucus_ekrani", "afad_deprem": "afad_deprem", "ispark": "ispark", "ibb_acik_veri": "ibb_acik_veri", "appstore": "appstore", "tranco": "tranco", "gdelt": "gdelt_tr",
          "hisse_fiyat": "hisse_fiyat", "resmi_gazete": "resmi_gazete", "dosya_sayfa": "istatistik_dosya", "bkm_tablo": "bkm", "opensky": "opensky_ucus", "eurostat_turizm": "eurostat_turizm", "dunya_bankasi": "dunya_bankasi_turizm", "yabanci_kur": "yabanci_kur", "ktb_turizm": "ktb_turizm",
          "rusya_turizm": "rusya_turizm", "tcmb_kur": "tcmb_kur", "resmi_tatil": "resmi_tatil", "hava_tahmin": "hava_tahmin", "biletix": "etkinlik_biletix", "sikayetvar": "sikayetvar",
-         "is_ilani": "is_ilani", "mali_tablo": "mali_tablo", "dhmi": "dhmi", "tff_fikstur": "tff_fikstur"}
+         "is_ilani": "is_ilani", "mali_tablo": "mali_tablo", "dhmi": "dhmi", "tff_fikstur": "tff_fikstur",
+         "akaryakit_fiyat": "akaryakit_fiyat", "hal_fiyat": "hal_fiyat", "sarj_istasyon": "sarj_istasyon"}

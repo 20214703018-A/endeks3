@@ -1,29 +1,193 @@
 name: Market Fiyatı ürün fiyat geçmişi (40 makine)
 
-# 81 ilde, ürün×il çifti başına son 90 günün günlük fiyat serisi (api.marketfiyati.org.tr /v3/price-history).
-# Girdi: consolidation/girdi/marketfiyati_history_girdi.parquet (il_geo_id, id, depotId — 634.913 çift).
-# Her makine çiftlerin i/N payını çeker; sunucu art arda 25 isteği reddederse o makine DURUR (kimlik değiştirilmez).
-# Çıktı: makine başına artifact → yerelde gh run download → GEOPROP_RAW_INTAKE/marketfiyati/<RUN_DATE>/history/
+# Aylık zincir (29 Eki 2026'dan beri ürün listesini kendisi yeniler):
+#   1) sube_bul      yeni açılan şubeler: mahalle/ilçe/il merkezlerinden /v2/nearest (il bazında 20 pay)
+#   2) sube_listesi  önceki şube listesiyle birleştir (eski şube silinmez, son_gorulme) → marketfiyati-subeler release'ine güncel liste
+#   3) fiyat         her ilde zincir başına temsilci şubenin bütün ürünleri ve fiyatı (aylık il fiyat fotoğrafı)
+#   4) girdi         3'ten güncel ürün×il listesi (yeni ürünler seriye girer)
+#   5) gecmis        her ürün×il çiftinin son 90 günlük günlük fiyatı (/v3/price-history)
+#   6) kalici_kayit  hepsi tek tgz → marketfiyati-gecmis release'i (artifact 30 günde silinir)
+# API tarih parametresi kabul etmiyor (her çağrı bugünden geriye 90 gün) → aylık çekimlerin pencereleri üst üste biner.
+# Sunucu art arda 25 isteği reddederse o makine DURUR (kimlik değiştirilmez).
 
 on:
   schedule:
-    - cron: '0 21 2 * *'   # ayda bir: API son 90 günü veriyor, aylık çekimle pencereler üst üste biner
+    - cron: '0 21 2 * *'
   workflow_dispatch:
+    inputs:
+      girdi_yenile:
+        description: 'Şube + ürün listesini yenile (false = depodaki/son listeyle yalnız geçmiş)'
+        default: 'true'
+      gecmis:
+        description: '90 günlük geçmişi çek (false = yalnız şube listesi + il fiyat fotoğrafı + ürün listesi; deneme için)'
+        default: 'true'
+
+concurrency:
+  group: marketfiyati-aylik
+  cancel-in-progress: false
+
+env:
+  GEO_MERKEZ: consolidation/girdi/geo_merkezler.parquet
+  ILCE_SINIR: consolidation/girdi/ilce_sinirlari.parquet
+  MF_KANONIK: /yok
+  RAW: /home/runner/Desktop/GEOPROP_RAW_INTAKE/marketfiyati
 
 jobs:
   ayar:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.m.outputs.matrix }}
+      bul: ${{ steps.m.outputs.bul }}
+      fiyat: ${{ steps.m.outputs.fiyat }}
+      gun: ${{ steps.m.outputs.gun }}
+      yenile: ${{ steps.m.outputs.yenile }}
     steps:
       - uses: actions/checkout@v4
       - id: m
         run: |
           set -a; . .github/marketfiyati_gecmis_run.env; set +a
           echo "matrix=$(python3 -c "import json; print(json.dumps(list(range(1, $SHARDS + 1))))")" >> "$GITHUB_OUTPUT"
+          echo "bul=$(python3 -c "import json; print(json.dumps(list(range(1, 21))))")" >> "$GITHUB_OUTPUT"
+          echo "fiyat=$(python3 -c "import json; print(json.dumps(list(range(1, 28))))")" >> "$GITHUB_OUTPUT"
+          echo "gun=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          echo "yenile=${{ github.event.inputs.girdi_yenile || 'true' }}" >> "$GITHUB_OUTPUT"
+
+  sube_bul:
+    needs: ayar
+    if: needs.ayar.outputs.yenile == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 140
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.ayar.outputs.bul) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q pandas pyarrow requests scipy shapely
+      - run: |
+          INTAKE_RUN_DATE=${{ needs.ayar.outputs.gun }} python -u consolidation/tools/intake_marketfiyati.py depots \
+            --depot-levels mahalle,ilce,il --shard "${{ matrix.shard }}/20" --threads 2 --rps 1 --max-minutes 120
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mf_subebul_${{ github.run_id }}_${{ matrix.shard }}
+          path: ${{ env.RAW }}/${{ needs.ayar.outputs.gun }}/depots_raw/
+          retention-days: 30
+          if-no-files-found: warn
+
+  sube_listesi:
+    needs: [ayar, sube_bul]
+    if: ${{ !cancelled() && needs.ayar.outputs.yenile == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q pandas pyarrow requests scipy shapely
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mf_subebul_${{ github.run_id }}_*
+          path: ${{ env.RAW }}/${{ needs.ayar.outputs.gun }}/depots_raw/
+          merge-multiple: true
+      - name: birleştir (önceki liste = release'teki güncel liste, yoksa depodaki ilk liste)
+        run: |
+          ONCEKI=consolidation/girdi/marketfiyati_depots.parquet
+          gh release download marketfiyati-subeler -p marketfiyati_depots_guncel.parquet -D /tmp --repo "$GITHUB_REPOSITORY" 2>/dev/null && ONCEKI=/tmp/marketfiyati_depots_guncel.parquet || true
+          INTAKE_RUN_DATE=${{ needs.ayar.outputs.gun }} python -u consolidation/tools/intake_marketfiyati.py build_depots --depots-file "$ONCEKI"
+          cp $RAW/${{ needs.ayar.outputs.gun }}/depots.parquet marketfiyati_depots_guncel.parquet
+          gh release view marketfiyati-subeler --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create marketfiyati-subeler --repo "$GITHUB_REPOSITORY" --latest=false -t "Market Fiyatı şube katalogları (günlük dilimler)" \
+              -n "Her gün en uzun süredir güncellenmemiş şubelerin tam ürün/fiyat kataloğu; marketfiyati_depots_guncel.parquet = aylık güncellenen şube listesi."
+          cp marketfiyati_depots_guncel.parquet "marketfiyati_depots_${{ needs.ayar.outputs.gun }}.parquet"
+          gh release upload marketfiyati-subeler marketfiyati_depots_guncel.parquet "marketfiyati_depots_${{ needs.ayar.outputs.gun }}.parquet" --clobber --repo "$GITHUB_REPOSITORY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mf_depots_${{ github.run_id }}
+          path: ${{ env.RAW }}/${{ needs.ayar.outputs.gun }}/depots.parquet
+          retention-days: 30
+
+  fiyat:
+    needs: [ayar, sube_listesi]
+    if: ${{ !cancelled() && needs.sube_listesi.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.ayar.outputs.fiyat) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q pandas pyarrow requests
+      - uses: actions/download-artifact@v4
+        with:
+          name: mf_depots_${{ github.run_id }}
+          path: /tmp/dep
+      - run: |
+          INTAKE_RUN_DATE=${{ needs.ayar.outputs.gun }} python -u consolidation/tools/intake_marketfiyati.py prices \
+            --depots-file /tmp/dep/depots.parquet --il-shard "${{ matrix.shard }}/27" --threads 1 --rps 1
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mf_fiyat_${{ github.run_id }}_${{ matrix.shard }}
+          path: |
+            ${{ env.RAW }}/${{ needs.ayar.outputs.gun }}/prices/
+            ${{ env.RAW }}/${{ needs.ayar.outputs.gun }}/manifest.jsonl
+          retention-days: 30
+          if-no-files-found: warn
+
+  girdi:
+    needs: [ayar, fiyat]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q pandas pyarrow requests
+      - uses: actions/download-artifact@v4
+        if: needs.fiyat.result != 'skipped'
+        with:
+          pattern: mf_fiyat_${{ github.run_id }}_*
+          path: /tmp/fiyat
+      - name: güncel ürün×il listesi (fiyat aşaması yoksa ya da çok eksikse depodaki liste)
+        run: |
+          mkdir -p $RAW/${{ needs.ayar.outputs.gun }}/prices
+          find /tmp/fiyat -name 'prices_*.parquet' -exec cp {} $RAW/${{ needs.ayar.outputs.gun }}/prices/ \; 2>/dev/null || true
+          N=$(ls $RAW/${{ needs.ayar.outputs.gun }}/prices/ 2>/dev/null | wc -l)
+          echo "fiyat dosyası: $N il"
+          if [ "$N" -ge 70 ]; then
+            INTAKE_RUN_DATE=${{ needs.ayar.outputs.gun }} python -u consolidation/tools/intake_marketfiyati.py build_girdi --out /tmp/girdi/girdi.parquet
+            # eksik illerin çiftleri önceki listeden (il atlanmasın)
+            python - <<'EOF'
+          import pandas as pd
+          y = pd.read_parquet("/tmp/girdi/girdi.parquet"); e = pd.read_parquet("consolidation/girdi/marketfiyati_history_girdi.parquet")
+          eksik = set(e.il_geo_id) - set(y.il_geo_id)
+          if eksik:
+              y = pd.concat([y, e[e.il_geo_id.isin(eksik)]], ignore_index=True)
+              print("eksik iller önceki listeden:", sorted(eksik))
+          y.to_parquet("/tmp/girdi/girdi.parquet", index=False)
+          print("girdi:", len(y), "satır", y.groupby(["il_geo_id", "id"]).ngroups, "çift")
+          EOF
+          else
+            mkdir -p /tmp/girdi && cp consolidation/girdi/marketfiyati_history_girdi.parquet /tmp/girdi/girdi.parquet
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mf_girdi_${{ github.run_id }}
+          path: /tmp/girdi/girdi.parquet
+          retention-days: 30
 
   gecmis:
-    needs: ayar
+    needs: [ayar, girdi]
+    if: ${{ !cancelled() && needs.girdi.result == 'success' && github.event.inputs.gecmis != 'false' }}
     runs-on: ubuntu-latest
     timeout-minutes: 350
     strategy:
@@ -36,13 +200,15 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.13" }
       - run: pip install -q pandas pyarrow requests
+      - uses: actions/download-artifact@v4
+        with:
+          name: mf_girdi_${{ github.run_id }}
+          path: /tmp/girdi
       - name: topla
         run: |
           set -a; . .github/marketfiyati_gecmis_run.env; set +a
-          RUN_DATE=$(date -u +%Y-%m-%d)   # sabit tarih yerine koşu günü (env'deki RUN_DATE yalnız ilk elle koşu içindi)
-          echo "RUN_DATE=$RUN_DATE" >> "$GITHUB_ENV"
-          INTAKE_RUN_DATE="$RUN_DATE" python -u consolidation/tools/intake_marketfiyati.py history \
-            --prices-file consolidation/girdi/marketfiyati_history_girdi.parquet \
+          INTAKE_RUN_DATE=${{ needs.ayar.outputs.gun }} python -u consolidation/tools/intake_marketfiyati.py history \
+            --prices-file /tmp/girdi/girdi.parquet \
             --history-ils all --il-shard "${{ matrix.shard }}/$SHARDS" \
             --rps "$RPS" --threads "$THREADS" --max-minutes "$MAX_MINUTES"
       - if: always()
@@ -50,14 +216,14 @@ jobs:
         with:
           name: mf_gecmis_${{ github.run_id }}_${{ matrix.shard }}
           path: |
-            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/${{ env.RUN_DATE }}/history/
-            ~/Desktop/GEOPROP_RAW_INTAKE/marketfiyati/${{ env.RUN_DATE }}/run.log
+            ${{ env.RAW }}/${{ needs.ayar.outputs.gun }}/history/
+            ${{ env.RAW }}/${{ needs.ayar.outputs.gun }}/run.log
           retention-days: 30
           if-no-files-found: warn
 
   kalici_kayit:
-    name: "Kalıcı kayıt: fiyat geçmişini release'e yaz (artifact 30 günde silinir)"
-    needs: gecmis
+    name: "Kalıcı kayıt: şube listesi, il fiyat fotoğrafı, ürün listesi ve fiyat geçmişi → release"
+    needs: [ayar, gecmis]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     permissions:
@@ -67,13 +233,14 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: mf_gecmis_${{ github.run_id }}_*
+          pattern: mf_*_${{ github.run_id }}*
           path: mf/
       - run: |
-          GUN=$(date -u +%Y-%m-%d)
+          GUN=${{ needs.ayar.outputs.gun }}
           gh release view marketfiyati-gecmis --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
             gh release create marketfiyati-gecmis --repo "$GITHUB_REPOSITORY" --latest=false -t "Market Fiyatı ürün fiyat geçmişi (aylık çekimler)" \
-              -n "Her çekim o günden geriye 90 günü kapsar; çekimler üst üste binerek kesintisiz seri oluşturur."
+              -n "Her çekim o günden geriye 90 günü kapsar; çekimler üst üste binerek kesintisiz seri oluşturur. Ayrıca aylık şube listesi, il fiyat fotoğrafı ve ürün listesi."
           tar -czf "marketfiyati_gecmis_${GUN}.tgz" -C mf .
           ls -la "marketfiyati_gecmis_${GUN}.tgz"
-          gh release upload marketfiyati-gecmis "marketfiyati_gecmis_${GUN}.tgz" --clobber --repo "$GITHUB_REPOSITORY"
+          sha256sum "marketfiyati_gecmis_${GUN}.tgz" > "marketfiyati_gecmis_${GUN}.tgz.sha256"
+          gh release upload marketfiyati-gecmis "marketfiyati_gecmis_${GUN}.tgz" "marketfiyati_gecmis_${GUN}.tgz.sha256" --clobber --repo "$GITHUB_REPOSITORY"

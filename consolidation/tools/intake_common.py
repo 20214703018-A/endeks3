@@ -175,7 +175,9 @@ def fill_admin_nearest(df, lat="lat", lon="lon"):
     import numpy as np
     import pandas as pd
     from scipy.spatial import cKDTree
-    geo = pd.read_parquet(Path.home() / "Desktop/GEOPROP_CONSOLIDATION/tmp/geo_centroids.parquet")
+    import os
+    # GitHub Actions'ta depodaki küçük kopya kullanılır (GEO_MERKEZ=consolidation/girdi/geo_merkezler.parquet)
+    geo = pd.read_parquet(os.environ.get("GEO_MERKEZ") or Path.home() / "Desktop/GEOPROP_CONSOLIDATION/tmp/geo_centroids.parquet")
     m = geo[geo.level == "mahalle"].dropna(subset=["centroid_lat", "centroid_lon"]).reset_index(drop=True)
     df = df.copy()
     df["admin_match"] = np.where(df["il_geo_id"].notna(), "contains", None)

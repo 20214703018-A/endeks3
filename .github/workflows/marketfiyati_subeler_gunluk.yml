@@ -1,0 +1,108 @@
+name: Market Fiyatı şube katalogları — günlük dilim (20 makine)
+
+# Her gün en uzun süredir güncellenmemiş ~1.000 şubenin TAM ürün kataloğu + fiyatı (tek şubeli /v3/searchByCategories).
+# Şube listesi: marketfiyati-subeler release'indeki marketfiyati_depots_guncel.parquet (aylık iş yeniler; yoksa depodaki ilk liste).
+# Durum (şube başına son çekim): aynı release'te marketfiyati_subeler_durum.parquet. Her günün ham parçaları ayrı tarihli tgz
+# (kronolojik; eski çekimler silinmez). Sunucu art arda 25 isteği reddederse makine DURUR (kimlik değiştirilmez).
+
+on:
+  schedule:
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+    inputs:
+      n:
+        description: 'Bu dilimdeki şube sayısı'
+        default: '1000'
+
+concurrency:
+  group: marketfiyati-subeler-gunluk
+  cancel-in-progress: false
+
+env:
+  RAW: /home/runner/Desktop/GEOPROP_RAW_INTAKE/marketfiyati
+
+jobs:
+  hazirla:
+    runs-on: ubuntu-latest
+    outputs:
+      gun: ${{ steps.s.outputs.gun }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q pandas pyarrow
+      - id: s
+        run: |
+          echo "gun=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+          DEP=consolidation/girdi/marketfiyati_depots.parquet
+          gh release download marketfiyati-subeler -p marketfiyati_depots_guncel.parquet -D /tmp --repo "$GITHUB_REPOSITORY" 2>/dev/null && DEP=/tmp/marketfiyati_depots_guncel.parquet || true
+          gh release download marketfiyati-subeler -p marketfiyati_subeler_durum.parquet -D /tmp --repo "$GITHUB_REPOSITORY" 2>/dev/null || true
+          python consolidation/tools/marketfiyati_sube_dilimi.py sec --depots "$DEP" --durum /tmp/marketfiyati_subeler_durum.parquet \
+            --n "${{ github.event.inputs.n || '1000' }}" --out /tmp/dilim/todo.parquet
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mf_dilim_${{ github.run_id }}
+          path: /tmp/dilim/todo.parquet
+          retention-days: 7
+
+  sube:
+    needs: hazirla
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      max-parallel: 20
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q pandas pyarrow requests
+      - uses: actions/download-artifact@v4
+        with:
+          name: mf_dilim_${{ github.run_id }}
+          path: /tmp/dilim
+      - run: |
+          INTAKE_RUN_DATE=${{ needs.hazirla.outputs.gun }} python -u consolidation/tools/intake_marketfiyati.py branches \
+            --rounds 1,2 --shard "${{ matrix.shard }}/20" --rps 1 --max-minutes 300 --depots-file /tmp/dilim/todo.parquet
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mf_subegun_${{ github.run_id }}_${{ matrix.shard }}
+          path: |
+            ${{ env.RAW }}/${{ needs.hazirla.outputs.gun }}/branches/
+            ${{ env.RAW }}/${{ needs.hazirla.outputs.gun }}/run.log
+          retention-days: 30
+          if-no-files-found: warn
+
+  kayit:
+    needs: [hazirla, sube]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q pandas pyarrow
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: mf_subegun_${{ github.run_id }}_*
+          path: sube/
+      - run: |
+          GUN=${{ needs.hazirla.outputs.gun }}
+          gh release view marketfiyati-subeler --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create marketfiyati-subeler --repo "$GITHUB_REPOSITORY" --latest=false -t "Market Fiyatı şube katalogları (günlük dilimler)" \
+              -n "Her gün en uzun süredir güncellenmemiş şubelerin tam ürün/fiyat kataloğu; marketfiyati_depots_guncel.parquet = aylık güncellenen şube listesi."
+          gh release download marketfiyati-subeler -p marketfiyati_subeler_durum.parquet -D /tmp --repo "$GITHUB_REPOSITORY" 2>/dev/null || true
+          python consolidation/tools/marketfiyati_sube_dilimi.py durum --durum /tmp/marketfiyati_subeler_durum.parquet --parcalar sube --out marketfiyati_subeler_durum.parquet
+          tar -czf "marketfiyati_subeler_${GUN}.tgz" -C sube .
+          sha256sum "marketfiyati_subeler_${GUN}.tgz" > "marketfiyati_subeler_${GUN}.tgz.sha256"
+          ls -la "marketfiyati_subeler_${GUN}.tgz"
+          gh release upload marketfiyati-subeler "marketfiyati_subeler_${GUN}.tgz" "marketfiyati_subeler_${GUN}.tgz.sha256" marketfiyati_subeler_durum.parquet --clobber --repo "$GITHUB_REPOSITORY"

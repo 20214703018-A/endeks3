@@ -9,6 +9,12 @@ Aşamalar (her biri kaldığı yerden devam eder):
              sayfa sayfa → ürün × şube fiyatı (kalem kalem, ortalama değil)
   history  — her benzersiz ürün için /v3/price-history (son ~90 gün, günlük, zincir bazında)
   track    — izleme modu: yalnız prices aşamasını yeni tarihli klasöre yazar (cron/launchd için)
+  build_girdi — prices çıktılarından history girdisi (il_geo_id, id, depotId) — aylık iş ürün listesini böyle yeniler
+
+Aylık GitHub Actions zinciri (29 Eki 2026): depots --shard (yeni şubeler) → build_depots --depots-file önceki liste
+(eski şubeler silinmez; son_gorulme) → prices --depots-file --il-shard (il fiyat fotoğrafı + güncel ürün listesi)
+→ build_girdi → history. Kanonik veritabanı olmayan makinede şube il/ilçe/mahallesi en yakın mahalle merkezinden
+(GEO_MERKEZ dosyası; admin_match='nearest_centroid').
 
 Kullanım: python3 intake_marketfiyati.py depots|prices|history|all [--threads N]
 """
@@ -16,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import gzip
+import os
 import json
 import math
 import sys
@@ -35,7 +42,7 @@ API = "https://api.marketfiyati.org.tr/api"
 PRIORITY_ILS = ["GEO_IL_34", "GEO_IL_35", "GEO_IL_16", "GEO_IL_07", "GEO_IL_41", "GEO_IL_48", "GEO_IL_59", "GEO_IL_10",
                 "GEO_IL_09", "GEO_IL_06", "GEO_IL_01", "GEO_IL_42", "GEO_IL_27", "GEO_IL_33", "GEO_IL_21", "GEO_IL_38",
                 "GEO_IL_26", "GEO_IL_55", "GEO_IL_20", "GEO_IL_45", "GEO_IL_54", "GEO_IL_61", "GEO_IL_31", "GEO_IL_63"]
-GEO = Path.home() / "Desktop/GEOPROP_CONSOLIDATION/tmp/geo_centroids.parquet"
+GEO = Path(os.environ.get("GEO_MERKEZ") or Path.home() / "Desktop/GEOPROP_CONSOLIDATION/tmp/geo_centroids.parquet")
 HEADERS = {"Content-Type": "application/json", "Accept": "application/json",
            "Origin": "https://marketfiyati.org.tr", "Referer": "https://marketfiyati.org.tr/"}
 
@@ -155,7 +162,7 @@ def _cover_radius(res, distance_km):
     return min(rs)
 
 
-def phase_depots(it: Intake, threads: int, rps: float, levels=("mahalle", "ilce", "il")):
+def phase_depots(it: Intake, threads: int, rps: float, levels=("mahalle", "ilce", "il"), shard=None, max_minutes=0):
     """Uyarlamalı kapsama: mahalle merkezleri sırayla sorgulanır; önceki bir sorgunun 'tam bilinen'
     dairesinin yarısı içinde kalan nokta atlanır (şehirde sık, kırsalda seyrek sorgu)."""
     geo = pd.read_parquet(GEO)
@@ -165,6 +172,12 @@ def phase_depots(it: Intake, threads: int, rps: float, levels=("mahalle", "ilce"
     pri = {g: i for i, g in enumerate(PRIORITY_ILS)}
     pts = pts.assign(_p=pts.il_geo_id.map(pri).fillna(99), _l=pts.level.map({"il": 0, "ilce": 1, "mahalle": 2}))
     pts = pts.drop_duplicates("cell").sort_values(["_l", "_p", "il_geo_id", "centroid_lat", "centroid_lon"])
+    if shard:  # il bazında pay: bir ilin noktaları aynı makinede → uyarlamalı kapsama bilgisi paylaşılır
+        si, sn = (int(x) for x in shard.split("/"))
+        iller = sorted(pts.il_geo_id.dropna().unique())
+        benim = {il for k, il in enumerate(iller) if k % sn == si - 1}
+        pts = pts[pts.il_geo_id.isin(benim)]
+    deadline = time.time() + max_minutes * 60 if max_minutes else None
     raw_dir = it.dir / "depots_raw"
     grid = {}  # 0.1° hücre → [(lat, lon, skip_radius_m)]
     lock = threading.Lock()
@@ -194,6 +207,8 @@ def phase_depots(it: Intake, threads: int, rps: float, levels=("mahalle", "ilce"
     stats = {"q": 0, "skip": 0, "err": 0}
 
     def work(row):
+        if deadline and time.time() > deadline:
+            return
         if row.cell in done or covered(row.centroid_lat, row.centroid_lon):
             stats["skip"] += 1
             return
@@ -218,11 +233,14 @@ def phase_depots(it: Intake, threads: int, rps: float, levels=("mahalle", "ilce"
                     stats["err"] += 1
                     it.log(f"depots hata: {e}")
     cw.close()
-    it.log(f"depots bitti: {stats}")
-    build_depots(it)
+    it.log(f"depots bitti: {stats}" + (" (süre sınırı)" if deadline and time.time() > deadline else ""))
+    if not shard:
+        build_depots(it)
 
 
-def build_depots(it: Intake):
+def build_depots(it: Intake, previous_file=None):
+    """Ham sorgulardan şube listesi. previous_file verilirse önceki listeyle birleşir: önceki şubeler silinmez
+    (bu turda görülmeyen → son_gorulme eski kalır), yeni şubeler eklenir (ilk_gorulme bu tur)."""
     rows = {}
     for d in read_chunks(it.dir / "depots_raw", "part"):
         if True:
@@ -230,8 +248,30 @@ def build_depots(it: Intake):
                 rows[x["id"]] = {"depot_id": x["id"], "market": x["marketName"], "depot_name": x["sellerName"],
                                  "lat": x["location"]["lat"], "lon": x["location"]["lon"], "first_seen_at": d["at"]}
     df = pd.DataFrame(rows.values())
-    df = fill_admin_nearest(add_admin(df))
-    df["guncellenme_tarihi"] = now_iso()
+    canon = Path(os.environ.get("MF_KANONIK") or Path.home() / "Desktop/GEOPROP_CONSOLIDATION/canonical/v1.1/geoprop_canonical_v1_1.duckdb")
+    if canon.exists():
+        df = fill_admin_nearest(add_admin(df))
+    else:  # GitHub Actions: kanonik yok → ilçe sınırı (girdi/ilce_sinirlari.parquet) + ilçe içindeki en yakın mahalle merkezi
+        df = admin_kanoniksiz(df)
+    simdi = now_iso()
+    df["guncellenme_tarihi"] = simdi
+    df["son_gorulme"] = simdi
+    if previous_file and Path(previous_file).exists():
+        eski = pd.read_parquet(previous_file)
+        if "son_gorulme" not in eski:
+            eski["son_gorulme"] = eski.get("guncellenme_tarihi")
+        yeni_id = set(df.depot_id)
+        # önceki listede olup bu turda görülen şubenin il/ilçe bilgisi ve ilk görülmesi önceki kayıttan (kanonik eşlemesi daha iyi)
+        tut = eski[eski.depot_id.isin(yeni_id)].set_index("depot_id")
+        df = df.set_index("depot_id")
+        for c in ("mahalle_geo_id", "mahalle_adi", "ilce_adi", "ilce_geo_id", "il_adi", "il_geo_id", "first_seen_at", "admin_match"):
+            if c in tut:
+                df.loc[tut.index, c] = tut[c]
+        df = df.reset_index()
+        gorulmeyen = eski[~eski.depot_id.isin(yeni_id)]
+        it.log(f"depots birleştirme: önceki {len(eski)}, bu tur {len(df)} (yeni {len(yeni_id - set(eski.depot_id))}), "
+               f"bu turda görülmeyen {len(gorulmeyen)} (silinmedi)")
+        df = pd.concat([df, gorulmeyen], ignore_index=True)
     it.save_parquet("depots", df, source_url=API + "/v2/nearest", method="api_post_grid",
                     note="mahalle merkezleri 0.01° ızgara; her sorguda zincir başına en yakın 5 şube")
     it.log(f"depots: {len(df)} benzersiz şube; zincir dağılımı {df.market.value_counts().to_dict()}")
@@ -256,6 +296,35 @@ def add_admin(df: pd.DataFrame) -> pd.DataFrame:
         left join k.geo_entity l on l.geo_id=m.il_geo_id
     """).df()
     return out.drop_duplicates(subset=[df.columns[0]])
+
+
+def admin_kanoniksiz(df: pd.DataFrame) -> pd.DataFrame:
+    """Kanonik veritabanı olmayan makinede (GitHub Actions) il/ilçe/mahalle: nokta ilçe sınırına düşürülür (sadeleştirilmiş
+    kanonik v1.1 ilçe poligonları), mahalle o ilçedeki en yakın mahalle merkezidir. admin_match: 'ilce_siniri+en_yakin_mahalle',
+    sınır dışı (kıyı) ise 'nearest_centroid' (en yakın mahalle merkezi, ilçe sınırına bakılmadan)."""
+    import numpy as np
+    from shapely import wkb
+    from shapely.geometry import Point
+    from shapely.strtree import STRtree
+    sinir = pd.read_parquet(os.environ.get("ILCE_SINIR") or Path(__file__).resolve().parents[1] / "girdi/ilce_sinirlari.parquet")
+    polys = [wkb.loads(b) for b in sinir.wkb]
+    tree = STRtree(polys)
+    geo = pd.read_parquet(GEO)
+    mah = geo[geo.level == "mahalle"].dropna(subset=["centroid_lat", "centroid_lon"])
+    by_ilce = {k: g for k, g in mah.groupby("parent_geo_id")}
+    out = {c: [] for c in ("mahalle_geo_id", "mahalle_adi", "ilce_adi", "ilce_geo_id", "il_adi", "il_geo_id", "admin_match")}
+    for lat, lon in zip(df.lat, df.lon):
+        p = Point(lon, lat); k = next((i for i in tree.query(p) if polys[i].contains(p)), None)
+        if k is not None and sinir.geo_id.iloc[k] in by_ilce:
+            g = by_ilce[sinir.geo_id.iloc[k]]; how = "ilce_siniri+en_yakin_mahalle"
+        else:
+            g = mah; how = "nearest_centroid"
+        j = int(np.argmin((g.centroid_lat.values - lat) ** 2 + ((g.centroid_lon.values - lon) * math.cos(math.radians(lat))) ** 2))
+        m = g.iloc[j]
+        for c, v in (("mahalle_geo_id", m.geo_id), ("mahalle_adi", m["name"]), ("ilce_adi", m.ilce_adi), ("ilce_geo_id", m.parent_geo_id),
+                     ("il_adi", m.il_adi), ("il_geo_id", m.il_geo_id), ("admin_match", how)):
+            out[c].append(v)
+    return df.assign(**out)
 
 
 # ------------------------------------------------------------------ prices
@@ -292,11 +361,14 @@ def flatten(page_content, il_geo_id, il_adi, captured_at):
     return rows
 
 
-def phase_prices(it: Intake, threads: int, rps: float, depots: pd.DataFrame | None = None, only=None):
+def phase_prices(it: Intake, threads: int, rps: float, depots: pd.DataFrame | None = None, only=None, il_shard=""):
     if depots is None:
         depots = pd.read_parquet(it.dir / "depots.parquet") if (it.dir / "depots.parquet").exists() \
             else pd.read_parquet(sorted((it.dir.parent).glob("*/depots.parquet"))[-1])
     sets = pick_il_depots(depots)
+    if il_shard:
+        si, sn = (int(x) for x in il_shard.split("/"))
+        only = {il for k, il in enumerate(sorted(sets)) if k % sn == si - 1}
     (it.dir / "il_depot_sets.json").write_text(json.dumps(sets, ensure_ascii=False, indent=1))
     rl = RateLimiter(rps)
     outdir = it.dir / "prices"
@@ -314,16 +386,31 @@ def phase_prices(it: Intake, threads: int, rps: float, depots: pd.DataFrame | No
         cap = now_iso()
         rows = flatten(first["content"], il, s["il_adi"], cap)
         ids = {p["id"] for p in first["content"]}
-        for pg in range(1, pages):
-            j = post(rl, "/v3/searchByCategories", {**body, "pages": pg})
-            rows += flatten(j["content"], il, s["il_adi"], cap)
-            ids |= {p["id"] for p in j["content"]}
+        # 29 Eki: tek sayfadaki bağlantı kopması bütün ili düşürüyordu → hatalı sayfa sona bırakılır, 2 tur daha denenir;
+        # yine alınamazsa il eksik sayfa listesiyle kaydedilir (manifest extra.eksik_sayfa)
+        bekleyen = list(range(1, pages))
+        for tur in range(3):
+            kalan = []
+            for pg in bekleyen:
+                try:
+                    j = post(rl, "/v3/searchByCategories", {**body, "pages": pg})
+                except Blocked:
+                    raise
+                except Exception as e:  # noqa: BLE001
+                    kalan.append(pg); continue
+                rows += flatten(j["content"], il, s["il_adi"], cap)
+                ids |= {p["id"] for p in j["content"]}
+            bekleyen = kalan
+            if not bekleyen:
+                break
+            time.sleep(30 * (tur + 1))
         df = pd.DataFrame(rows)
         df["guncellenme_tarihi"] = cap
         df.to_parquet(target, compression="zstd", index=False)
         it._record(target, source_url=API + "/v3/searchByCategories", method="api_post_paginated", rows=len(df),
-                   extra={"il_geo_id": il, "numberOfFound": total, "unique_products": len(ids), "depots": s["depots"]})
-        return il, f"{len(ids)}/{total} ürün", len(df)
+                   extra={"il_geo_id": il, "numberOfFound": total, "unique_products": len(ids), "depots": s["depots"],
+                          "eksik_sayfa": bekleyen})
+        return il, f"{len(ids)}/{total} ürün" + (f" · {len(bekleyen)} sayfa alınamadı" if bekleyen else ""), len(df)
 
     pri = {g: i for i, g in enumerate(PRIORITY_ILS)}
     ils = sorted([il for il in sets if (only is None or il in only)], key=lambda g: (pri.get(g, 99), g))
@@ -571,10 +658,19 @@ def build_branches(it: Intake):
     it.log(f"branches build: {n} şube×ürün satırı, {len(summ)} şube, {len(prods)} ürün")
 
 
+def build_girdi(it: Intake, out: str):
+    """prices_<il>.parquet → history girdisi (il_geo_id, id, depotId): ilin temsilci şubelerinde bulunan her ürün."""
+    parts = sorted((it.dir / "prices").glob("prices_*.parquet"))
+    g = pd.concat([pd.read_parquet(p, columns=["il_geo_id", "id", "depotId"]) for p in parts]).dropna().drop_duplicates()
+    Path(out).parent.mkdir(parents=True, exist_ok=True)
+    g.to_parquet(out, compression="zstd", index=False)
+    it.log(f"build_girdi: {len(parts)} il dosyası → {len(g):,} satır, {g.groupby(['il_geo_id', 'id']).ngroups:,} ürün×il çifti → {out}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("phase", choices=["depots", "build_depots", "prices", "history", "all", "track",
-                                      "branches", "build_branches"])
+                                      "branches", "build_branches", "build_girdi"])
     ap.add_argument("--rounds", default="1,2", help="branches: 1=ilçe×zincir temsilcisi, 2=kalan tüm şubeler")
     ap.add_argument("--shard", help="branches: i/N (GitHub Actions matrisi)")
     ap.add_argument("--max-minutes", type=float, default=0)
@@ -588,14 +684,17 @@ def main():
     ap.add_argument("--history-ils", default="GEO_IL_34,GEO_IL_06,GEO_IL_35", help="il listesi ya da 'all'")
     ap.add_argument("--prices-file", default="", help="(il_geo_id,id,depotId) parquet — GHA girdisi")
     ap.add_argument("--il-shard", default="", help="i/N — illeri makineler arasında böl")
+    ap.add_argument("--out", default="", help="build_girdi: çıktı parquet yolu")
     a = ap.parse_args()
     it = Intake("marketfiyati", a.date)
     if a.phase in ("depots", "all"):
-        phase_depots(it, a.threads, a.rps, tuple(a.depot_levels.split(",")))
+        phase_depots(it, a.threads, a.rps, tuple(a.depot_levels.split(",")), a.shard, a.max_minutes)
     if a.phase == "build_depots":
-        build_depots(it)
+        build_depots(it, a.depots_file)
     if a.phase in ("prices", "all", "track"):
-        phase_prices(it, a.threads, a.rps)
+        phase_prices(it, a.threads, a.rps, pd.read_parquet(a.depots_file) if a.depots_file else None, il_shard=a.il_shard)
+    if a.phase == "build_girdi":
+        build_girdi(it, a.out or str(it.dir / "history_girdi.parquet"))
     if a.phase in ("history", "all"):
         phase_history(it, a.threads, a.rps, tuple(a.history_ils.split(",")),
                       prices_file=a.prices_file, il_shard=a.il_shard, max_minutes=a.max_minutes)
