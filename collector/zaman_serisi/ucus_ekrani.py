@@ -8,7 +8,7 @@ Antalya (AYT) bot doğrulaması (F5 TSPD) kullanıyor → atlatılmaz, toplanmaz
 """
 import html as htmlmod, json, re, urllib.parse, urllib.request
 from datetime import datetime, timedelta, timezone
-from ortak import Istemci, db, kosu_yaz, simdi, UA
+from ortak import Istemci, BotEngeli, db, kosu_yaz, simdi, UA
 
 TR = timezone(timedelta(hours=3))
 
@@ -57,7 +57,11 @@ def ucus_ekrani(dizin, tam=False):
                     son_ = yeni_son; tarih = yeni_son; btn = "moreFlight"
     # --- SAW ---
     for sayfa, yon in (("ucus-bilgi-ekrani", None),):
-        st, t = ist.get("https://www.sabihagokcen.aero/yolcu-ve-ziyaretciler/yolcu-rehberi/" + sayfa)
+        # 29 Eki 2026: SAW bot doğrulaması koydu (atlatılmaz). Önceden bu hata IST verisini de kaydetmeden düşürüyordu → not düş, IST'yi kaydet
+        try:
+            st, t = ist.get("https://www.sabihagokcen.aero/yolcu-ve-ziyaretciler/yolcu-rehberi/" + sayfa)
+        except BotEngeli:
+            notlar.append("SAW: bot doğrulaması (atlanmadı)"); st, t = None, None
         for blok in re.findall(r'<div class="fids-tr">(.*?)</div>\s*(?=<div class="fids-tr">|</div>)', t or "", re.S):
             m = re.search(r'ucus-ayrintilari\.fid\((\d+)\)\.d\((\d)\)\.i\((\d)\)', blok)
             if not m: continue
