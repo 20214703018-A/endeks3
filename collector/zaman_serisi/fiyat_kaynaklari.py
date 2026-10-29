@@ -8,7 +8,7 @@ akaryakit_fiyat (günlük)
          Günlük seri istenirse aradaki günler türetilmiş katmanda bir önceki değişimle doldurulur (burada yapılmaz).
   po     petrolofisi.com.tr/akaryakit-fiyatlari/<il>-akaryakit-fiyatlari — ilçe başına KDV dahil + KDV hariç fiyat (6 ürün).
   Sunucular art arda isteklerde bağlantıyı kesebiliyor → istekler arası ≥1,5 sn, kopmada 60 sn bekleyip sürdürülür.
-hal_fiyat (günlük)
+hal_fiyat (günlük, GitHub) — yalnız İzmir · hal_hks (günlük, Mac) — hal.gov.tr yurt dışı DNS'te bile çözülmüyor (29 Eki denendi)
   izmir  openapi.izmir.bel.tr/api/ibb/halfiyatlari/{sebzemeyve|balik}/{gün} — asgari/azami/ortalama ücret (2008'den beri;
          geçmişi gece turunda çekildi — burada her koşu son 10 gün, ilk koşu son 60 gün).
   hks    hal.gov.tr Fiyat İstatistikleri (Ticaret Bakanlığı HKS ulusal günlük bülten: ürün/cins/tür, ortalama fiyat, işlem hacmi) —
@@ -208,6 +208,17 @@ def hal_fiyat(dizin, tam=False):
                            x.get("AsgariUcret"), x.get("AzamiUcret"), x.get("OrtalamaUcret"), json.dumps(x, ensure_ascii=False), simdi(), simdi())); k += 1
             c.commit()
         notlar.append(f"izmir {tur} {k}"); n += k
+    kosu_yaz(c, "hal_fiyat", bas, n, ist.sayac, "tamam" if n else "bos", "; ".join(notlar))
+    return n, ist.sayac, "; ".join(notlar)
+
+
+def hal_hks(dizin, tam=False):
+    """HKS ulusal günlük bülten (Mac'te: hal.gov.tr yurt dışı IP/DNS'e kapalı). Her koşu son 10 gün; ilk koşu son 60 gün."""
+    c = db(f"{dizin}/hal_hks.sqlite", HAL_DDL)
+    bas = simdi(); n = 0; notlar = []
+    bugun = date.fromisoformat(_tr_bugun())
+    gunler = [bugun - timedelta(days=i) for i in range(60, -1, -1)]
+    if SINIR: gunler = gunler[-SINIR:]
     k = 0; bos = 0
     hks_ilk = c.execute("SELECT count(*) FROM hks").fetchone()[0] == 0
     for g, bulten, satirlar in _hks_gunler(gunler if (hks_ilk or tam) else gunler[-11:]):   # ilk koşu: gece turu (24 Eyl) sonrası boşluk
@@ -221,5 +232,5 @@ def hal_fiyat(dizin, tam=False):
                        _sayi(r.get("İşlem Hacmi")), r.get("Birim Adı"), json.dumps(r, ensure_ascii=False), simdi(), simdi())); k += 1
         c.commit()
     notlar.append(f"hks {k} satır ({bos} gün bülten yok/hata)"); n += k
-    kosu_yaz(c, "hal_fiyat", bas, n, ist.sayac, "tamam" if n else "bos", "; ".join(notlar))
-    return n, ist.sayac, "; ".join(notlar)
+    kosu_yaz(c, "hal_hks", bas, n, 2 * len(gunler), "tamam" if n else "bos", "; ".join(notlar))
+    return n, 2 * len(gunler), "; ".join(notlar)
