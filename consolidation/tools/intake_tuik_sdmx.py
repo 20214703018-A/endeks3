@@ -7,6 +7,9 @@ Kaynak: https://databrowser2.tuik.gov.tr/api/core/ (TÜİK'in resmî veri taray�
 SDMX-JSON kod adlarını (il/ilçe adı, gösterge adı vb.) içerdiği için kendi kendini tanımlar.
 Her veri kümesi ham .json.gz olarak saklanır; gözlem sayısı ve kısmi yanıt (partialcontent) manifest'e yazılır.
 Kısmi (1,5 M gözlem sınırını aşan) kümeler TIME_PERIOD yıllarına bölünerek yeniden istenir.
+
+29 Eki 2026: aylık GitHub Actions işi (tuik_aylik.yml) — `--pay i/N` ile akışlar makinelere bölünür; katalogda güncellenme tarihi
+olmadığından her ay bütün akışlar yeniden indirilir (TÜİK revizyonları ayrı tarihli çekimler olarak birikir, eskiler silinmez).
 """
 from __future__ import annotations
 
@@ -46,12 +49,18 @@ def count_obs(j):
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser(); ap.add_argument("--pay", default="", help="i/N — akışları makinelere böl")
+    a = ap.parse_args()
     it = Intake("tuik_sdmx", rate=1.0)
     it.s.headers.update({"Accept": "application/json, */*", "Content-Type": "application/json"})
     cat = it.get(B + "nodes/1/catalog").json()
     it.save_json("catalog.json", cat, source_url=B + "nodes/1/catalog", method="rest_get")
     ids = all_ids(cat)
-    it.log(f"katalog: {len(ids)} veri akışı")
+    if a.pay:
+        pi, pn = (int(x) for x in a.pay.split("/"))
+        ids = [x for k, x in enumerate(ids) if k % pn == pi - 1]
+    it.log(f"katalog: {len(ids)} veri akışı" + (f" (pay {a.pay})" if a.pay else ""))
     done = set()
     if it.manifest.exists():
         for l in it.manifest.read_text().split("\n"):

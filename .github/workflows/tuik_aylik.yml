@@ -1,0 +1,60 @@
+name: TÜİK veri akışları — aylık tam çekim (10 makine)
+
+# databrowser2.tuik.gov.tr (TÜİK veri portalının arka ucu; giriş gerekmez): ~510 veri akışının tamamı SDMX-JSON.
+# Katalogda güncellenme tarihi yok → her ay bütün akışlar yeniden indirilir; her ayın çekimi tuik-aylik release'inde ayrı tarihli
+# dosyalar (revizyonlar kronolojik birikir, eski çekimler silinmez). Ayın 5'i: aylık bültenlerin çoğu ayın ilk günlerinde yayımlanır.
+
+on:
+  schedule:
+    - cron: '0 6 5 * *'
+  workflow_dispatch:
+
+concurrency:
+  group: tuik-aylik
+  cancel-in-progress: false
+
+jobs:
+  cek:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        pay: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install -q requests pandas pyarrow
+      - run: python -u consolidation/tools/intake_tuik_sdmx.py --pay "${{ matrix.pay }}/10"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tuik_${{ github.run_id }}_${{ matrix.pay }}
+          path: /home/runner/Desktop/GEOPROP_RAW_INTAKE/tuik_sdmx/
+          retention-days: 30
+          if-no-files-found: warn
+
+  kayit:
+    needs: cek
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: tuik_${{ github.run_id }}_*
+          path: t/
+      - run: |
+          GUN=$(date -u +%Y-%m-%d)
+          gh release view tuik-aylik --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 || \
+            gh release create tuik-aylik --repo "$GITHUB_REPOSITORY" --latest=false -t "TÜİK veri akışları (aylık tam çekimler)" \
+              -n "Her ay bütün TÜİK veri portalı akışları (SDMX-JSON, gz). Dosya adı: tuik_<gün>_<pay>.tgz. Eski çekimler silinmez."
+          for d in t/*/; do
+            p=$(basename "$d" | sed 's/.*_//')
+            tar -czf "tuik_${GUN}_${p}.tgz" -C "$d" . && ls -la "tuik_${GUN}_${p}.tgz"
+            gh release upload tuik-aylik "tuik_${GUN}_${p}.tgz" --clobber --repo "$GITHUB_REPOSITORY"
+          done

@@ -14,7 +14,7 @@ Ek zaman serisi kaynakları (12 Ekim 2026; kullanıcı: "eksik verilerin hepsini
 """
 import csv, gzip, html as htmlmod, io, json, re, time, urllib.parse, zipfile
 from datetime import date, datetime, timedelta, timezone
-from ortak import Istemci, BotEngeli, db, kosu_yaz, simdi, bugun
+from ortak import Istemci, BotEngeli, ErisimYok, db, kosu_yaz, simdi, bugun
 
 
 def afad_deprem(dizin, tam=False):
@@ -195,18 +195,25 @@ def dosya_sayfa(dizin, tam=False):
     c = db(f"{dizin}/istatistik_dosya.sqlite", """CREATE TABLE IF NOT EXISTS dosya (url TEXT PRIMARY KEY, kaynak TEXT, baslik TEXT, uzanti TEXT, boyut INTEGER,
         ilk_gorulme TEXT, icerik BLOB);""")
     ist = Istemci(1.0, zaman_asimi=120); bas = simdi(); n = 0
-    var = {r[0] for r in c.execute("SELECT url FROM dosya")}
+    var = {r[0] for r in c.execute("SELECT url FROM dosya")}; notlar = []
     for ad, sayfalar in DOSYA_SAYFA.items():
         for s in sayfalar:
-            st, t = ist.get(s)
+            # 29 Eki 2026: tek sitenin yanıt vermemesi (TOBB sayfası) öteki kaynakları (KGM, TBB) düşürüyordu → site bazında atla
+            try:
+                st, t = ist.get(s)
+            except ErisimYok as e:
+                notlar.append(f"{ad}: yanıt yok"); ist.ardisik_zaman = 0; continue
             for u, b in re.findall(r'href="([^"]+\.(?:xlsx|xls|csv|zip|pdf)[^"]*)"[^>]*>(.*?)</a>', t or "", re.S | re.I):
                 u = urllib.parse.urljoin(s, htmlmod.unescape(u))
                 if u in var: continue
-                st2, icerik = ist.get(urllib.parse.quote(u, safe=":/%?=&"), ham=True, deneme=2)
+                try:
+                    st2, icerik = ist.get(urllib.parse.quote(u, safe=":/%?=&"), ham=True, deneme=2)
+                except ErisimYok:
+                    ist.ardisik_zaman = 0; notlar.append(f"{ad}: dosya alınamadı"); break
                 if st2 != 200 or not icerik or len(icerik) > 80e6: continue
                 c.execute("INSERT OR IGNORE INTO dosya VALUES (?,?,?,?,?,?,?)", (u, ad, re.sub(r"<[^>]+>|\s+", " ", htmlmod.unescape(b)).strip()[:300],
                           u.split("?")[0].rsplit(".", 1)[-1].lower(), len(icerik), simdi(), icerik)); n += 1; var.add(u); c.commit()
-    kosu_yaz(c, "dosya_sayfa", bas, n, ist.sayac, "tamam"); return n, ist.sayac, None
+    kosu_yaz(c, "dosya_sayfa", bas, n, ist.sayac, "tamam", "; ".join(notlar) or None); return n, ist.sayac, "; ".join(notlar) or None
 
 
 # 15 Eki 2026: bkm.com.tr "Dönemsel Bilgiler" menüsündeki güncel sayfalar (eski listedeki bazı adresler 404 veriyordu).
