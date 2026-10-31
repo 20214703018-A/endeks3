@@ -14,6 +14,7 @@ ilanını 'warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite' ambarın
 import os
 import sys
 import time
+import random
 import json
 import sqlite3
 import re
@@ -247,7 +248,13 @@ def determine_company_type(unvan):
 
 def query_tsm_keyword(tsm_id, tsm_name, keyword, conn):
     cmd_search = [
-        "curl", "-k", "-s", "--connect-timeout", "6", "--max-time", "25",
+        "curl", "-k", "-s", "--connect-timeout", "8", "--max-time", "25",
+        "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "-H", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "-H", "Accept-Language: tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "-H", "Referer: https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php",
+        "-H", "Origin: https://www.ticaretsicil.gov.tr",
+        "-H", "X-Requested-With: XMLHttpRequest",
         "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
         "-d", f"SicilMudurluguId={tsm_id}&TicSicNo=&TicaretUnvani={keyword}&BagliIlan=0&Tarih=0",
         "https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme_ok.php"
@@ -390,8 +397,12 @@ def main():
                 state["total_announcements_saved"] = total_saved_ilan
                 save_state(state)
                 
-                # Polite pause to avoid TOBB stateful SYN drops
-                time.sleep(0.9)
+                # Hayalet / Stealth modu: İnsansı rastgele gecikme (1.2s - 2.2s)
+                jitter = random.uniform(1.2, 2.2)
+                # Her 25 sorguda bir okuma molası simülasyonu (ekstra 3-5 saniye)
+                if kw_idx % 25 == 0:
+                    jitter += random.uniform(3.0, 5.5)
+                time.sleep(jitter)
                 
             # Completed all keywords for this TSM, move to next
             kw_idx = 0
@@ -399,7 +410,7 @@ def main():
             state["tsm_idx"] = tsm_idx
             state["kw_idx"] = 0
             save_state(state)
-            time.sleep(1.5)
+            time.sleep(random.uniform(2.5, 4.5))
             
     except KeyboardInterrupt:
         print("\n🛑 Kullanıcı tarafından durduruldu.")
