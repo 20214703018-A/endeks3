@@ -6,6 +6,8 @@ name: "Emlakjet açık veri toplama (eksik fiyat trendleri + piyasa sayfaları)"
 # Kişisel/kısıtlı veri toplanmaz. Çıktılar yalnız iş çıktısı (artifact, 2 gün); özel ambara Mac'ten taşınır, burada kalıcı sürüm yok.
 
 on:
+  schedule:
+    - cron: '0 4 6 * *'   # her ayın 6'sı — emlakjet aylık fiyat trendleri (31 Eki 2026: toplama sürekliliği, kullanıcı onayı)
   workflow_dispatch:
 
 permissions:
