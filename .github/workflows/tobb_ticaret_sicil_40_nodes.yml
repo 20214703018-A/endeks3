@@ -9,7 +9,11 @@ on:
       max_pdfs_per_shard:
         description: 'Shard başına indirilecek maksimum gazete PDF sayısı'
         required: true
-        default: '10'
+        default: '150'
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   tobb_mining_shards:
@@ -61,7 +65,7 @@ jobs:
           retention-days: 1
 
   merge_and_commit:
-    name: "40 Shard Verisini Birleştir (Master Merge)"
+    name: "40 Shard Verisini Birleştir ve Kalıcı Arşivle (Master Merge)"
     needs: [tobb_mining_shards]
     runs-on: ubuntu-latest
     steps:
@@ -77,7 +81,18 @@ jobs:
         run: |
           pip install pyarrow pandas pymupdf beautifulsoup4 requests
 
-      - name: Tüm Artifact'leri İndir
+      - name: Önceki Master Ambardan Geri Yükle (GitHub Release)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p warehouse/product
+          gh release download warehouse-latest -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ || true
+          if [ -f "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" ]; then
+            gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+            echo "✅ Önceki master ambar başarıyla geri yüklendi ($(ls -lh warehouse/product/*.sqlite))."
+          fi
+
+      - name: Tüm Shard Artifact'lerini İndir
         uses: actions/download-artifact@v4
         with:
           path: temp_artifacts/
@@ -103,14 +118,45 @@ jobs:
           export_snapshots()
           "
 
-      - name: Değişiklikleri Ana Repoya Commit Et
+      - name: Master SQLite'ı Sıkıştır ve GitHub Release'e Yükle (Kalıcı Asla Silinmez Arşiv)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "📦 Master SQLite sıkıştırılıyor..."
+          gzip -9 -c warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          echo "☁️ GitHub Release 'warehouse-latest' içine yükleniyor..."
+          gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
+          echo "✅ GitHub Release başarıyla güncellendi."
+
+      - name: Master Ambarı Artifact Olarak da Yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-turkiye-ticaret-sicil-latest
+          path: |
+            warehouse/product/*.sqlite
+            warehouse/product/*.parquet
+          overwrite: true
+          retention-days: 30
+
+      - name: Parquet ve Snapshot Verilerini Ana Repoya Commit Et
         run: |
           git config --global user.name 'geoprop-bot'
           git config --global user.email 'bot@geoprop.ai'
-          git add warehouse/product/*.sqlite warehouse/product/*.parquet collector/data/csv_ciktilari/*.csv || true
+          git add warehouse/product/*.parquet collector/data/csv_ciktilari/*.csv || true
+          SQLITE_SIZE=$(stat -c%s warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite 2>/dev/null || stat -f%z warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite 2>/dev/null || echo 0)
+          if [ "$SQLITE_SIZE" -lt 83886080 ] && [ "$SQLITE_SIZE" -gt 0 ]; then
+            git add warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite || true
+          fi
           if git diff --cached --quiet; then
-            echo "Yeni veya değişen ambar verisi yok; commit atlanıyor."
+            echo "Yeni snapshot değişikliği yok; commit atlanıyor."
           else
             git commit -m "🤖 [TOBB 40x Matris] 40 Makineden Gelen Şirket ve Gazete Verileri Birleştirildi."
             git push origin main
           fi
+
+      - name: Eksikleri Tamamlamak İçin Bir Sonraki Koşuyu Başlat (Otonom Sürekli Döngü)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🚀 Mevcut koşu verileri kalıcı olarak GitHub'a yüklendi. Eksikleri tamamlamak için bir sonraki 40-Runner matris koşusu tetikleniyor..."
+          gh workflow run "GEOPROP TOBB ve Ticaret Sicil (40x Paralel Matris)" --ref main || true
