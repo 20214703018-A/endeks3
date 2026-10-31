@@ -534,21 +534,33 @@ def run_ito_batch_shard(start_sicil, end_sicil, cap_path, conn):
     print(f"  ✅ İTO'dan {saved} adet doğrulanmış adresli firma kaydedildi.")
     return saved
 
+UNVAN_PREFIXES = [
+    "AK", "ÖZ", "TEK", "GÜN", "DEM", "YIL", "KAY", "YAP", "MİM", "MÜH",
+    "TUR", "OTO", "MED", "GİD", "PET", "KİM", "ELE", "LOJ", "SAN", "TİC",
+    "ATA", "BAŞ", "DOĞ", "ER", "GÖK", "İLK", "KAR", "KOÇ", "NET", "PAN",
+    "SES", "TAN", "ULA", "VAR", "YEN", "ZİR", "AY", "BAR", "BİL", "CAN",
+    "ÇÖZ", "DEN", "DÜN", "EGE", "EN", "GÜL", "HAK", "IŞI", "KAP", "KOR"
+]
+
 # =========================================================================
-# ANA ÇALIŞTIRICI
+# ANA ÇALIŞTIRICI (6 SAATLİK DAYANIKLILIK MADENCİLİĞİ)
 # =========================================================================
 def main():
-    parser = argparse.ArgumentParser(description="GEOPROP TOBB 40x Shard Worker")
+    parser = argparse.ArgumentParser(description="GEOPROP TOBB 40x Shard Worker (6 Saatlik Kesintisiz Madenci)")
     parser.add_argument("--shard", type=int, required=True, help="Shard Numarası (1 - 40)")
     parser.add_argument("--num-shards", type=int, default=40, help="Toplam Shard Sayısı (varsayılan: 40)")
+    parser.add_argument("--max-seconds", type=int, default=19800, help="Maksimum çalışma süresi (saniye, varsayılan: 19800 = 5.5 saat)")
+    parser.add_argument("--max-pdfs", type=int, default=150, help="Shard başına indirilecek maksimum gazete PDF sayısı")
     args = parser.parse_args()
 
     shard_idx = args.shard - 1  # 0-indexed
     num_shards = args.num_shards
 
     print("=" * 65)
-    print(f"🚀 GEOPROP TİCARET SİCİL 40-NODE MATRİS İŞÇİSİ [SHARD {args.shard}/{num_shards}]")
+    print(f"🚀 GEOPROP TİCARET SİCİL 40-NODE KESİNTİSİZ MADENCİ [SHARD {args.shard}/{num_shards}]")
     print(f"⏰ Başlangıç Zamanı: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"⏱️ Hedef Çalışma Süresi: {args.max_seconds / 3600:.1f} Saat ({args.max_seconds} sn)")
+    print(f"📦 Hedef PDF Kotası: {args.max_pdfs} Sayfa")
     print("=" * 65)
 
     os.makedirs(DATA_DIR, exist_ok=True)
@@ -559,35 +571,67 @@ def main():
     cap_path = DATA_DIR / f"tobb_cap_shard_{args.shard}.png"
     ito_cap_path = DATA_DIR / f"ito_cap_shard_{args.shard}.png"
 
-    # 1. Shard'a düşen TOBB anahtar kelimeleri
-    all_keywords = load_keywords()
-    shard_keywords = [kw for i, kw in enumerate(all_keywords) if i % num_shards == shard_idx]
+    # Havuz: 238 Sektör + 50 Yaygın Unvan Kökü = 288 Arama Terimi
+    base_keywords = load_keywords()
+    all_search_terms = base_keywords + [p for p in UNVAN_PREFIXES if p not in base_keywords]
     
-    # 2. Shard'a düşen TSM'ler
-    shard_tsms = [tsm for i, tsm in enumerate(PRIORITY_TSM) if i % num_shards == shard_idx]
+    # 1.2 Milyonluk İTO Tescil Alanını 40 Shard'a Paylaştır (Shard başına 30.000 Sicil ID)
+    current_ito_sicil = (shard_idx * 30000) + 1
+    max_ito_sicil = current_ito_sicil + 30000
 
     conn = sqlite3.connect(DB_PATH, timeout=60)
     conn.execute("PRAGMA journal_mode = WAL;")
 
-    # Adım 1: TOBB Unvan Arama
-    tobb_saved = run_tobb_unvan_keywords(shard_keywords, cookie_file, cap_path, conn)
+    start_time = time.time()
+    cycle = 0
+    total_tobb_saved = 0
+    total_ann_saved = 0
+    total_pdf_saved = 0
+    total_ito_saved = 0
 
-    # Adım 2: TOBB Gazete İlanları & Sıkıştırılmış PDF'ler
-    ann_saved, pdf_saved = run_tobb_announcements_and_pdfs(shard_tsms, shard_keywords, cookie_file, cap_path, conn, max_pdfs=8)
+    # 5.5 SAATLİK ARALIKSIZ MADENCİLİK DÖNGÜSÜ (GitHub Actions Timeout Güvenlik Sınırı)
+    while (time.time() - start_time) < (args.max_seconds - 300):
+        cycle += 1
+        elapsed_min = (time.time() - start_time) / 60
+        remaining_min = (args.max_seconds - (time.time() - start_time)) / 60
+        print(f"\n▶️ [Shard {args.shard}] Döngü #{cycle} | Geçen: {elapsed_min:.1f} dk | Kalan: {remaining_min:.1f} dk")
 
-    # Adım 3: İTO Ardışık Sicil Taraması (150 firma / shard)
-    ito_start = 110000 + (shard_idx * 150)
-    ito_end = ito_start + 150
-    ito_saved = run_ito_batch_shard(ito_start, ito_end, ito_cap_path, conn)
+        # 1. İTO Ardışık Sicil Taraması (Her döngüde 200 ardışık ID)
+        if current_ito_sicil < max_ito_sicil:
+            ito_end = min(current_ito_sicil + 200, max_ito_sicil)
+            ito_saved = run_ito_batch_shard(current_ito_sicil, ito_end, ito_cap_path, conn)
+            total_ito_saved += ito_saved
+            current_ito_sicil = ito_end
+
+        # 2. TOBB Sektörel ve Unvan Kökü Madenciliği (Sıradaki 4 terim)
+        term_start = ((cycle - 1) * 4 + shard_idx * 7) % len(all_search_terms)
+        term_batch = all_search_terms[term_start : term_start + 4]
+        if not term_batch:
+            term_batch = all_search_terms[:4]
+        tobb_saved = run_tobb_unvan_keywords(term_batch, cookie_file, cap_path, conn)
+        total_tobb_saved += tobb_saved
+
+        # 3. TOBB Resmî Gazete İlanları & Sıkıştırılmış PDF Arşivi (Her döngüde 1 TSM)
+        if total_pdf_saved < args.max_pdfs:
+            tsm_target = PRIORITY_TSM[(shard_idx + cycle) % len(PRIORITY_TSM)]
+            ann_saved, pdf_saved = run_tobb_announcements_and_pdfs([tsm_target], term_batch[:2], cookie_file, cap_path, conn, max_pdfs=5)
+            total_ann_saved += ann_saved
+            total_pdf_saved += pdf_saved
+
+        conn.commit()
+        print(f"📊 [Shard {args.shard} Canlı Kümülatif]: İTO: {total_ito_saved} | TOBB Şirket: {total_tobb_saved} | İlan: {total_ann_saved} | PDF: {total_pdf_saved}")
+        
+        # Küçük nefeslenme
+        time.sleep(3)
 
     conn.close()
 
     print("\n" + "=" * 65)
-    print(f"🏆 SHARD {args.shard}/{num_shards} TAMAMLANDI!")
-    print(f"  🏢 TOBB Kaydedilen Şirket: {tobb_saved}")
-    print(f"  🏛️ İTO Kaydedilen Şirket : {ito_saved}")
-    print(f"  📰 Resmî Gazete İlanı    : {ann_saved}")
-    print(f"  📥 İndirilen Gazete PDF  : {pdf_saved}")
+    print(f"🏆 SHARD {args.shard}/{num_shards} 6 SAATLİK MARATONU TAMAMLADI!")
+    print(f"  🏢 TOBB Kaydedilen Şirket: {total_tobb_saved}")
+    print(f"  🏛️ İTO Kaydedilen Şirket : {total_ito_saved}")
+    print(f"  📰 Resmî Gazete İlanı    : {total_ann_saved}")
+    print(f"  📥 İndirilen Gazete PDF  : {total_pdf_saved}")
     print("=" * 65)
 
 if __name__ == "__main__":

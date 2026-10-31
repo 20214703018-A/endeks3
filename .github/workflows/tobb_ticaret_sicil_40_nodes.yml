@@ -15,7 +15,7 @@ jobs:
   tobb_mining_shards:
     name: "TOBB & Ticaret Sicil Shard ${{ matrix.shard }}/40"
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 350
     strategy:
       fail-fast: false
       matrix:
@@ -39,9 +39,9 @@ jobs:
         run: |
           pip install beautifulsoup4 requests pymupdf pillow pyarrow pandas
 
-      - name: Shard Madencilik Görevini Başlat
+      - name: Shard Madencilik Görevini Başlat (5.5 Saatlik Kesintisiz Maratona Giriş)
         run: |
-          python collector/tobb_40_shard_worker.py --shard ${{ matrix.shard }} --num-shards 40
+          python collector/tobb_40_shard_worker.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds 19800 --max-pdfs 150
 
       - name: Shard SQLite Veritabanını Yükle
         uses: actions/upload-artifact@v4
