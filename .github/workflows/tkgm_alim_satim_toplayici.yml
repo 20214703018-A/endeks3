@@ -1,6 +1,8 @@
 name: "TKGM Alım-Satım Yoğunluğu Toplayıcı (40 Paralel Makine)"
 
 on:
+  schedule:
+    - cron: '0 2 10 * *'   # her ayın 10'u — TKGM aylık alım-satım yoğunluğu (31 Eki 2026: toplama sürekliliği, kullanıcı onayı)
   workflow_dispatch:
     inputs:
       yil_bas:
@@ -61,7 +63,7 @@ jobs:
             --shard "${{ matrix.shard }}/40" \
             --tipler "${{ github.event.inputs.tipler || '1' }}" \
             --yil-bas "${{ github.event.inputs.yil_bas || '2021' }}" \
-            --yil-bit "${{ github.event.inputs.yil_bit || '2025' }}" \
+            --yil-bit "$(Y='${{ github.event.inputs.yil_bit }}'; [ -n "$Y" ] && echo "$Y" || date +%Y)" \
             --db "shard_${{ matrix.shard }}.sqlite"
 
       - name: "Shard çıktısını artifakt olarak yükle"
