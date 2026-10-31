@@ -5,6 +5,8 @@ name: Kamu Binaları Google Haritalar Taraması (40 Makine)
 # KAMU_MOD=1: toplayıcının ticari-olmayan süzgeci kamu kurumlarını elemez. Yalnız Google'a istek atar
 # (resmî kurum siteleri yurt dışı IP'yi engelleyebildiği için onlar Mac'ten taranır). Elle başlatılır.
 on:
+  schedule:
+    - cron: '0 3 8 * *'   # her ayın 8'i — kamu binaları aylık yenilenir (31 Eki 2026: toplama sürekliliği, kullanıcı onayı)
   workflow_dispatch:
     inputs:
       sorgu_sayfa:
