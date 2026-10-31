@@ -52,6 +52,17 @@ def _transfer_columns(cur, table):
     return [c[1] for c in master_cols if c[1] in shard_cols and c[1] not in skip]
 
 
+
+def quote_identifier(value):
+    return '"' + str(value).replace('"', '""') + '"'
+
+
+def table_columns(cursor, database, table):
+    database_name = quote_identifier(database)
+    table_name = str(table).replace("'", "''")
+    cursor.execute(f"PRAGMA {database_name}.table_info('{table_name}')")
+    return {row[1]: (row[2] or "TEXT") for row in cursor.fetchall()}
+
 def merge_databases(temp_dir, out_dir):
     os.makedirs(out_dir, exist_ok=True)
 
@@ -83,7 +94,9 @@ def merge_databases(temp_dir, out_dir):
                 tables = [r[0] for r in cur.execute(
                     "SELECT name FROM shard_db.sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")]
                 for table in tables:
+                    quoted_table = quote_identifier(table)
                     try:
+<<<<<<< Updated upstream
                         schema = cur.execute(
                             "SELECT sql FROM shard_db.sqlite_master WHERE type='table' AND name=?", (table,)).fetchone()[0]
                         cur.execute(schema)  # master'da yoksa oluştur
@@ -97,6 +110,39 @@ def merge_databases(temp_dir, out_dir):
                         before = master_conn.total_changes
                         cur.execute(f'INSERT OR REPLACE INTO "{table}" ({col_list}) SELECT {col_list} FROM shard_db."{table}"')
                         toplam_eklenen += master_conn.total_changes - before
+=======
+                        # Eğer tablo master'da yoksa oluştur (schema copy)
+                        master_cur.execute("SELECT sql FROM shard_db.sqlite_master WHERE type='table' AND name=?", (table,))
+                        schema_row = master_cur.fetchone()
+                        if schema_row and schema_row[0]:
+                            master_cur.execute(schema_row[0])
+                    except sqlite3.OperationalError:
+                        pass # Tablo zaten var
+
+                    # Repodaki master daha eski bir semadaysa shard'daki yeni
+                    # ayrinti sutunlarini kaybetmeden ileri tasir.
+                    master_columns = table_columns(master_cur, "main", table)
+                    shard_columns = table_columns(master_cur, "shard_db", table)
+                    for column, declared_type in shard_columns.items():
+                        if column not in master_columns:
+                            try:
+                                master_cur.execute(
+                                    f"ALTER TABLE {quoted_table} ADD COLUMN "
+                                    f"{quote_identifier(column)} {declared_type}"
+                                )
+                                master_columns[column] = declared_type
+                            except sqlite3.OperationalError as e:
+                                print(f"     [!] Sütun eklenemedi ({table}.{column}): {e}")
+                        
+                    # Verileri aktar (INSERT OR REPLACE)
+                    try:
+                        common_columns = [column for column in shard_columns if column in master_columns]
+                        column_sql = ", ".join(quote_identifier(column) for column in common_columns)
+                        master_cur.execute(
+                            f"INSERT OR REPLACE INTO {quoted_table} ({column_sql}) "
+                            f"SELECT {column_sql} FROM shard_db.{quoted_table}"
+                        )
+>>>>>>> Stashed changes
                     except sqlite3.OperationalError as e:
                         print(f"     [!] Tablo uyuşmazlığı atlandı ({table}): {e}")
                 master_conn.commit()
