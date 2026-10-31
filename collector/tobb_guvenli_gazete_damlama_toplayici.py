@@ -14,6 +14,7 @@ yükler ve yerel disk alanını korumak için geçici dosyaları anında temizle
 import os
 import sys
 import time
+import shutil
 import random
 import re
 import json
@@ -25,14 +26,49 @@ from pathlib import Path
 import pymupdf
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 DB_PATH = REPO_ROOT / "warehouse" / "product" / "turkiye_ticaret_sicil_ve_sirketler.sqlite"
 COOKIE_FILE = REPO_ROOT / "collector" / "data" / "tobb_auth_cookies.txt"
 TEMP_BUNDLE_DIR = REPO_ROOT / "warehouse" / "raw" / "temp_bundle"
 BUNDLE_ARCHIVE_DIR = REPO_ROOT / "warehouse" / "raw" / "bundles"
+TESSERACT_BIN = shutil.which("tesseract") or "/opt/homebrew/bin/tesseract" or "/usr/bin/tesseract"
 
 USER_EMAIL = "geoprop_bot1@yandex.com"
 USER_PASS = "Geoprop2026*"
 BUNDLE_SIZE = 50  # Her 50 sayfada bir paket yap ve GitHub'a yükle
+
+def solve_captcha(cap_path):
+    for _ in range(4):
+        try:
+            cmd_cap = [
+                "curl", "-k", "-s", "--connect-timeout", "4", "--max-time", "6",
+                "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
+                "https://www.ticaretsicil.gov.tr/assets/captcha/captcha.php"
+            ]
+            cap_bytes = subprocess.check_output(cmd_cap, stderr=subprocess.DEVNULL)
+            with open(cap_path, "wb") as f:
+                f.write(cap_bytes)
+                
+            out = subprocess.check_output([
+                TESSERACT_BIN, str(cap_path), "stdout",
+                "--psm", "8",
+                "-c", "tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            ], stderr=subprocess.DEVNULL)
+            
+            code = out.decode("utf-8").strip()
+            if len(code) == 4 and code.isalnum() and "ERROR" not in code:
+                return code
+        except Exception:
+            pass
+        finally:
+            if os.path.exists(cap_path):
+                try:
+                    os.remove(cap_path)
+                except Exception:
+                    pass
+        time.sleep(0.2)
+    return None
 
 def ensure_authenticated():
     cmd = [
@@ -48,7 +84,6 @@ def ensure_authenticated():
         pass
         
     print("🔑 [Damlama Motoru] TOBB Oturumu yenileniyor...")
-    from collector.tobb_turkiye_geneli_hizli_toplayici import solve_captcha
     cap_path = REPO_ROOT / "collector" / "data" / "tobb_login_cap_trickle.png"
     subprocess.run(["curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8", "-c", str(COOKIE_FILE), "https://www.ticaretsicil.gov.tr/view/hizlierisim/girisyap.php"], stdout=subprocess.DEVNULL)
     

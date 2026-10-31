@@ -1,0 +1,139 @@
+name: "GEOPROP TOBB 40x Gazete PDF Arşiv Matrisi"
+
+on:
+  schedule:
+    # Günde 4 kez otonom kontrol (00:00, 06:00, 12:00, 18:00 UTC)
+    - cron: '0 0,6,12,18 * * *'
+  workflow_dispatch:
+    inputs:
+      max_pdfs:
+        description: 'Shard başına maksimum PDF sayısı'
+        required: true
+        default: '5000'
+      max_seconds:
+        description: 'Shard başına maksimum çalışma süresi (saniye)'
+        required: true
+        default: '19000'
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  pdf_mining_shards:
+    name: "PDF Shard ${{ matrix.shard }}/40"
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Sistem Paketlerini Kur (Tesseract OCR Türkçe & MuPDF)
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y tesseract-ocr tesseract-ocr-tur libmupdf-dev
+
+      - name: Bağımlılıkları Yükle
+        run: |
+          pip install beautifulsoup4 requests pymupdf pillow
+
+      - name: Master SQLite Ambarını Geri Yükle (GitHub Release)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p warehouse/product
+          gh release download warehouse-latest -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ || true
+          if [ -f "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" ]; then
+            gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+            echo "✅ Master SQLite ambarı başarıyla geri yüklendi: $(ls -lh warehouse/product/*.sqlite)"
+          fi
+
+      - name: Shard Gazete PDF İndirme Maratonunu Başlat
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          MAX_PDFS="${{ github.event.inputs.max_pdfs || '5000' }}"
+          MAX_SECS="${{ github.event.inputs.max_seconds || '19000' }}"
+          python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds $MAX_SECS --max-pdfs $MAX_PDFS
+
+      - name: Kalan PDF Paketlerini GitHub Release'e Yükle
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if ls warehouse/raw/bundles/*.tar.gz 1> /dev/null 2>&1; then
+            echo "📦 Kalan paketler GitHub Release'e yükleniyor..."
+            for b in warehouse/raw/bundles/*.tar.gz; do
+              gh release upload warehouse-latest "$b" --clobber || true
+            done
+          fi
+
+      - name: Shard Güncelleme Veritabanını Yükle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shard-pdf-update-${{ matrix.shard }}
+          path: warehouse/product/shard_${{ matrix.shard }}_updates.sqlite
+          if-no-files-found: ignore
+          retention-days: 1
+
+  merge_and_sync:
+    name: "40 Shard PDF Güncellemelerini Birleştir ve Kalıcı Arşivle"
+    needs: [pdf_mining_shards]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Master SQLite Ambarını Geri Yükle (GitHub Release)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p warehouse/product
+          gh release download warehouse-latest -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ || true
+          if [ -f "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" ]; then
+            gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+            echo "✅ Master SQLite ambarı geri yüklendi: $(ls -lh warehouse/product/*.sqlite)"
+          fi
+
+      - name: Tüm Shard Güncelleme Artifact'lerini İndir
+        uses: actions/download-artifact@v4
+        with:
+          path: temp_artifacts/
+
+      - name: Shard Güncellemelerini Master Ambara Birleştir
+        run: |
+          python geoprop/apply_shard_pdf_updates.py temp_artifacts/ warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
+
+      - name: Güncellenmiş Master SQLite'ı Sıkıştır ve GitHub Release'e Yükle
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "📦 Master SQLite sıkıştırılıyor..."
+          gzip -9 -c warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          echo "☁️ GitHub Release 'warehouse-latest' içine yükleniyor..."
+          gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
+          echo "✅ Master SQLite başarıyla güncellendi."
+
+      - name: Bir Sonraki Koşuyu Başlat (Otonom Kesintisiz Döngü)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🚀 Mevcut koşu verileri arşivlendi. Bir sonraki 40-Runner matris koşusu tetikleniyor..."
+          gh workflow run "GEOPROP TOBB 40x Gazete PDF Arşiv Matrisi" --ref main || true
