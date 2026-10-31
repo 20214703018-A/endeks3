@@ -115,20 +115,44 @@ def init_database(db_file):
     conn.commit()
     conn.close()
 
+HIGH_YIELD_UNVAN_KOKLERI = [
+    "DEMİR", "ANADOLU", "YILDIZ", "ÖZDEMİR", "GÜNEŞ", "ŞAHİN", "AYDIN", "YILMAZ",
+    "KAYA", "ÇELİK", "ÖZTÜRK", "POLAT", "DOĞAN", "MUTLU", "ERDEM", "TURAN",
+    "KOCAOĞLU", "BİLGİN", "BAYRAK", "DENİZ", "KAPLAN", "GÜLER", "YILDIRIM",
+    "AKTAŞ", "KILIÇ", "BOZKURT", "YAVUZ", "GÜZEL", "ORHAN", "ŞİMŞEK", "ÇETİN",
+    "AVCI", "YAMAN", "KESKİN", "ATEŞ", "ALTIN", "METİN", "GÜNDÜZ", "TOPRAK",
+    "BAŞARAN", "KARTAL", "KÖSE", "TEKİN", "SÖNMEZ", "BULUT", "DURAN", "COŞKUN",
+    "GÜNGÖR", "ÖZCAN", "GÜVEN", "BARIŞ", "KARA", "BEYAZ", "MAVİ", "YEŞİL",
+    "KIRMIZI", "ASLAN", "GÜÇLÜ", "ÖZKAN", "YALÇIN", "ERDOĞAN", "ÖZMEN", "AKSOY",
+    "ŞENSOY", "GÜL", "SEVGİ", "SEVİM", "GÜNDOĞDU", "AVRASYA", "AKDENİZ", "KARADENİZ",
+    "EGE", "MARMARA", "İÇANADOLU", "DOĞU", "BATI", "KUZEY", "GÜNEY", "TÜRKİYE",
+    "BAŞKENT", "BOĞAZİÇİ", "ÇUKUROVA", "TRAKYA", "MEZOPOTAMYA", "TOROS", "ULUDAĞ",
+    "ERCİYES", "GLOBAL", "VİZYON", "LİDER", "ÖNCÜ", "HEDEF", "BİRLİK", "MERKEZ",
+    "EVREN", "DÜNYA", "STAR", "MEGA", "MAKRO", "MİKRO", "DELTA", "ALFA", "BETA",
+    "PRİME", "PRESTİJ", "ELİT", "ÖZEL", "UZMAN", "PROFESYONEL", "MODERN", "ÇAĞDAŞ",
+    "İLERİ", "YENİ", "GENÇ", "DİNAMİK", "PROJE", "SİSTEM", "TEKNİK", "TEKNO",
+    "EKO", "BİO", "NATÜREL", "ORGANİK", "PLUS", "EXPRESS", "SÜPER", "HIZLI",
+    "SERİ", "SAĞLAM", "DOST", "KARDEŞLER", "ORTAKLAR", "GRUP", "HOLDİNG", "YATIRIM",
+    "GİRİŞİM", "İNŞAAT", "SANAYİ", "GIDA", "OTOMOTİV", "TEKSTİL", "TURİZM", "LOJİSTİK",
+    "TARIM", "ENERJİ", "SAĞLIK", "MEDİKAL", "KİMYA", "ELEKTRİK", "MADEN", "YAPI",
+    "MÜHENDİSLİK", "DANIŞMANLIK", "PETROL", "PLASTİK", "AMBALAJ", "NAKLİYAT", "TAŞIMACILIK",
+    "EĞİTİM", "GAYRİMENKUL", "BİLİŞİM", "YAZILIM", "DAĞITIM", "PAZARLAMA", "İTHALAT", "İHRACAT"
+]
+
 def load_keywords():
+    flat = list(HIGH_YIELD_UNVAN_KOKLERI)
     if TAXONOMY_FILE.exists():
         try:
             with open(TAXONOMY_FILE, "r", encoding="utf-8") as f:
                 d = json.load(f)
-            flat = []
             for grp, kw_list in d.get("sektor_gruplari", {}).items():
                 for kw in kw_list:
-                    if kw not in flat:
-                        flat.append(kw)
-            return flat
+                    kw_clean = kw.strip().upper()
+                    if len(kw_clean) >= 4 and kw_clean not in flat:
+                        flat.append(kw_clean)
         except Exception:
             pass
-    return ["İNŞAAT", "GIDA", "TEKSTİL", "OTOMOTİV", "TURİZM", "LOJİSTİK", "YAZILIM", "MEDİKAL"]
+    return flat
 
 def determine_company_type(unvan):
     u = unvan.upper()
