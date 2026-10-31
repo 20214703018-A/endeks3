@@ -1,6 +1,8 @@
 name: "Turkiye Vektor Katmanlari (40 Makine - Fay, Su, Elektrik, Yol, Sit, Orman, Sahil)"
 
 on:
+  schedule:
+    - cron: '0 5 1 1,4,7,10 *'   # üç ayda bir — fay, su, elektrik vektör katmanları (31 Eki 2026: toplama sürekliliği, kullanıcı onayı)
   workflow_dispatch:
     inputs:
       sektor_secimi:
@@ -42,8 +44,8 @@ jobs:
 
       - name: Sektör Vektörlerini Çıkar (Fay, Su, Elektrik, Yol, Sit, Orman, Sahil)
         run: |
-          if [ "${{ github.event.inputs.sektor_secimi }}" != "hepsi" ] && [ "${{ github.event.inputs.sektor_secimi }}" != "${{ matrix.sektor }}" ]; then
-            echo "Sektör ${{ matrix.sektor }} atlanıyor (Kullanıcı seçimi: ${{ github.event.inputs.sektor_secimi }})."
+          if [ "${{ github.event.inputs.sektor_secimi || 'hepsi' }}" != "hepsi" ] && [ "${{ github.event.inputs.sektor_secimi || 'hepsi' }}" != "${{ matrix.sektor }}" ]; then
+            echo "Sektör ${{ matrix.sektor }} atlanıyor (Kullanıcı seçimi: ${{ github.event.inputs.sektor_secimi || 'hepsi' }})."
             mkdir -p collector/data/cografya/vektor_sektorler/ extension/collector/data/cografya/vektor_sektorler/
             exit 0
           fi
