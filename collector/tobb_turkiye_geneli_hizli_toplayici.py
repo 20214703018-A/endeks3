@@ -326,23 +326,32 @@ def query_tsm_keyword(tsm_id, tsm_name, keyword, conn):
                 "TOBB_RESMI_GAZETE_TAM_SAYFA", now_iso
             ))
             
-    c = conn.cursor()
-    c.executemany("""
-        INSERT OR IGNORE INTO sirketler (
-            mersis_no, ticaret_sicil_no, tsm_adi, vkn, unvan,
-            sirket_turu, durum, sermaye_tl, kurulus_tarihi,
-            il, ilce, tam_adres, faaliyet_konusu, nace_kodu,
-            telefon, web_sitesi, kaynak, guncellenme_tarihi
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, sirket_batch)
-    
-    c.executemany("""
-        INSERT OR REPLACE INTO ticaret_sicil_gazetesi_ilanlari (
-            mersis_no, ticaret_sicil_no, tsm_adi, unvan,
-            ilan_tarihi, gazete_sayisi, sayfa_no, ilan_turu,
-            ilan_ozeti, ilan_metni, kaynak, guncellenme_tarihi
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, ilan_batch)
+    for retry in range(5):
+        try:
+            c = conn.cursor()
+            c.executemany("""
+                INSERT OR IGNORE INTO sirketler (
+                    mersis_no, ticaret_sicil_no, tsm_adi, vkn, unvan,
+                    sirket_turu, durum, sermaye_tl, kurulus_tarihi,
+                    il, ilce, tam_adres, faaliyet_konusu, nace_kodu,
+                    telefon, web_sitesi, kaynak, guncellenme_tarihi
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, sirket_batch)
+            
+            c.executemany("""
+                INSERT OR REPLACE INTO ticaret_sicil_gazetesi_ilanlari (
+                    mersis_no, ticaret_sicil_no, tsm_adi, unvan,
+                    ilan_tarihi, gazete_sayisi, sayfa_no, ilan_turu,
+                    ilan_ozeti, ilan_metni, kaynak, guncellenme_tarihi
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, ilan_batch)
+            conn.commit()
+            break
+        except sqlite3.OperationalError as e:
+            if "locked" in str(e).lower() and retry < 4:
+                time.sleep(1.0 + retry * 1.5)
+            else:
+                raise
     
     conn.commit()
     return len(sirket_batch), len(ilan_batch)
@@ -363,8 +372,9 @@ def main():
     print(f"📌 TSM Sayısı: {len(tsm_list)} | Kelime Sayısı: {len(keywords)}")
     print(f"📍 Başlangıç Konumu: TSM #{state.get('tsm_idx', 0)} | Kelime #{state.get('kw_idx', 0)}")
     
-    conn = sqlite3.connect(DB_PATH, timeout=60)
+    conn = sqlite3.connect(DB_PATH, timeout=120)
     conn.execute("PRAGMA journal_mode = WAL;")
+    conn.execute("PRAGMA busy_timeout = 60000;")
     
     tsm_idx = state.get("tsm_idx", 0)
     kw_idx = state.get("kw_idx", 0)
