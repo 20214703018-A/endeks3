@@ -241,10 +241,25 @@ def main():
     master_conn = sqlite3.connect(DB_PATH, timeout=60)
     update_conn = sqlite3.connect(shard_update_db_path, timeout=60)
 
-    # TOBB Oturumu aç
-    if not ensure_authenticated(cookie_file, cap_path):
-        print("❌ TOBB Yetkili Girişi yapılamadı.")
-        sys.exit(1)
+    # TOBB login çakışmalarını önlemek için rastgele 2 - 30 sn kademeli başlama
+    stagger_delay = (shard_id % 15) * 2.0 + random.uniform(1.0, 5.0)
+    print(f"⏳ [Shard {shard_id}] Kademeli başlama gecikmesi: {stagger_delay:.1f} sn...")
+    time.sleep(stagger_delay)
+
+    # TOBB Oturumu aç (3 deneme döngüsü)
+    auth_ok = False
+    for auth_try in range(3):
+        if ensure_authenticated(cookie_file, cap_path):
+            auth_ok = True
+            break
+        print(f"⚠️ [Shard {shard_id}] Giriş denemesi {auth_try + 1}/3 başarısız, 10 sn bekleniyor...")
+        time.sleep(10.0)
+
+    if not auth_ok:
+        print(f"⚠️ [Shard {shard_id}] TOBB Yetkili Girişi yapılamadı, mevcut durum kaydedilerek çıkılıyor.")
+        master_conn.close()
+        update_conn.close()
+        sys.exit(0)
 
     total_downloaded = 0
     current_bundle_files = []
