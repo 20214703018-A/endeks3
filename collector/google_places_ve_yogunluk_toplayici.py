@@ -553,9 +553,13 @@ def parse_pb_venue_dict(v, query, now_utc):
             elif lon is None and 25.0 <= fval <= 46.0 and len(str(fval)) > 6:
                 lon = fval
         elif isinstance(obj, list):
-            if len(obj) >= 2 and isinstance(obj[0], (int, float)) and isinstance(obj[1], (int, float)):
+            # 1 Kas 2026: eskiden her sayı çifti (ör. [35, 42]) koordinat sayılıyor ve son bulunan öncekinin üstüne yazılıyordu →
+            # kanonikte enlem/boylamı ikisi de tam derece kayıtlar (%2,5). Artık yalnız ondalıklı, hassas çift; ilk bulunan kalır.
+            if (len(obj) >= 2 and isinstance(obj[0], float) and isinstance(obj[1], float)
+                    and not (lat is not None and lon is not None)):
                 f0, f1 = float(obj[0]), float(obj[1])
-                if 35.0 <= f0 <= 43.0 and 25.0 <= f1 <= 46.0:
+                if (35.0 <= f0 <= 43.0 and 25.0 <= f1 <= 46.0 and f0 != int(f0) and f1 != int(f1)
+                        and len(repr(f0)) > 6 and len(repr(f1)) > 6):
                     lat, lon = f0, f1
             for it in obj:
                 extract_props(it)
@@ -581,6 +585,8 @@ def parse_pb_venue_dict(v, query, now_utc):
         pass
 
     if not lat or not lon:
+        return None
+    if float(lat).is_integer() and float(lon).is_integer():   # tam derece çift = yer tutucu, gerçek konum değil
         return None
 
     # --- Kimlik: Google'ın gerçek CID'si (1205891[0] = [ftid_ust, cid]). Eski sürüm
