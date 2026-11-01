@@ -433775,6 +433775,1986 @@
         "gabari": null,
         "kat_adedi": null
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77238,
+              37.51664
+            ],
+            [
+              29.77241,
+              37.51637
+            ],
+            [
+              29.77284,
+              37.5164
+            ],
+            [
+              29.77282,
+              37.51671
+            ],
+            [
+              29.77238,
+              37.51664
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 149,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "50",
+        "alan_m2": 1255.21,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77238,
+              37.5167
+            ],
+            [
+              29.77238,
+              37.51664
+            ],
+            [
+              29.77282,
+              37.51671
+            ],
+            [
+              29.77282,
+              37.51679
+            ],
+            [
+              29.77238,
+              37.5167
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 148,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "49",
+        "alan_m2": 319.47,
+        "nitelik": "Yol",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.772,
+              37.51596
+            ],
+            [
+              29.77162,
+              37.51594
+            ],
+            [
+              29.77158,
+              37.51632
+            ],
+            [
+              29.77157,
+              37.5165
+            ],
+            [
+              29.77017,
+              37.51626
+            ],
+            [
+              29.7706,
+              37.51574
+            ],
+            [
+              29.77079,
+              37.51579
+            ],
+            [
+              29.77096,
+              37.51585
+            ],
+            [
+              29.77124,
+              37.51589
+            ],
+            [
+              29.77129,
+              37.51561
+            ],
+            [
+              29.77131,
+              37.51539
+            ],
+            [
+              29.77133,
+              37.51521
+            ],
+            [
+              29.7717,
+              37.51526
+            ],
+            [
+              29.7717,
+              37.51542
+            ],
+            [
+              29.77167,
+              37.51567
+            ],
+            [
+              29.77204,
+              37.51569
+            ],
+            [
+              29.772,
+              37.51596
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 147,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "48",
+        "alan_m2": 10370.6,
+        "nitelik": "Betonarme Depo Ve Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.76963,
+              37.51617
+            ],
+            [
+              29.77016,
+              37.51562
+            ],
+            [
+              29.7706,
+              37.51574
+            ],
+            [
+              29.77017,
+              37.51626
+            ],
+            [
+              29.76963,
+              37.51617
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 146,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "47",
+        "alan_m2": 3078.68,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {},
+      "properties": {
+        "id": 145,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "46",
+        "alan_m2": 427.54,
+        "nitelik": "Yol",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77157,
+              37.5165
+            ],
+            [
+              29.77158,
+              37.51632
+            ],
+            [
+              29.77162,
+              37.51594
+            ],
+            [
+              29.772,
+              37.51596
+            ],
+            [
+              29.77217,
+              37.51597
+            ],
+            [
+              29.77243,
+              37.51599
+            ],
+            [
+              29.77322,
+              37.51606
+            ],
+            [
+              29.77335,
+              37.51608
+            ],
+            [
+              29.7734,
+              37.51608
+            ],
+            [
+              29.77333,
+              37.51642
+            ],
+            [
+              29.77322,
+              37.51678
+            ],
+            [
+              29.77282,
+              37.51671
+            ],
+            [
+              29.77284,
+              37.5164
+            ],
+            [
+              29.77241,
+              37.51637
+            ],
+            [
+              29.77238,
+              37.51664
+            ],
+            [
+              29.77233,
+              37.51663
+            ],
+            [
+              29.77157,
+              37.5165
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 144,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "45",
+        "alan_m2": 9777.84,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {},
+      "properties": {
+        "id": 143,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "44",
+        "alan_m2": 316.15,
+        "nitelik": "Yol",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {},
+      "properties": {
+        "id": 142,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "43",
+        "alan_m2": 624.52,
+        "nitelik": "Yol",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {},
+      "properties": {
+        "id": 141,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "42",
+        "alan_m2": 6758.2,
+        "nitelik": "Bağ",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {},
+      "properties": {
+        "id": 140,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "41",
+        "alan_m2": 1258.16,
+        "nitelik": "Yol",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77451,
+              37.51247
+            ],
+            [
+              29.77449,
+              37.51255
+            ],
+            [
+              29.77434,
+              37.51268
+            ],
+            [
+              29.77409,
+              37.5123
+            ],
+            [
+              29.77409,
+              37.51215
+            ],
+            [
+              29.77436,
+              37.51178
+            ],
+            [
+              29.77448,
+              37.51204
+            ],
+            [
+              29.77446,
+              37.51225
+            ],
+            [
+              29.77451,
+              37.51247
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 139,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "40",
+        "alan_m2": 2236.77,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {},
+      "properties": {
+        "id": 138,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "39",
+        "alan_m2": 8016.36,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77384,
+              37.51583
+            ],
+            [
+              29.77377,
+              37.51609
+            ],
+            [
+              29.7734,
+              37.51608
+            ],
+            [
+              29.77335,
+              37.51608
+            ],
+            [
+              29.77337,
+              37.5158
+            ],
+            [
+              29.77384,
+              37.51583
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 137,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "38",
+        "alan_m2": 1138.61,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77386,
+              37.51304
+            ],
+            [
+              29.77392,
+              37.51281
+            ],
+            [
+              29.77397,
+              37.51265
+            ],
+            [
+              29.7744,
+              37.51275
+            ],
+            [
+              29.77445,
+              37.51282
+            ],
+            [
+              29.77437,
+              37.51311
+            ],
+            [
+              29.77386,
+              37.51304
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 136,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "37",
+        "alan_m2": 1878.26,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77382,
+              37.51322
+            ],
+            [
+              29.77386,
+              37.51304
+            ],
+            [
+              29.77437,
+              37.51311
+            ],
+            [
+              29.77436,
+              37.51328
+            ],
+            [
+              29.77382,
+              37.51322
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 135,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "36",
+        "alan_m2": 926.83,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77382,
+              37.51322
+            ],
+            [
+              29.77436,
+              37.51328
+            ],
+            [
+              29.77436,
+              37.51348
+            ],
+            [
+              29.77379,
+              37.51337
+            ],
+            [
+              29.77382,
+              37.51322
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 134,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "35",
+        "alan_m2": 954.89,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77373,
+              37.51368
+            ],
+            [
+              29.77379,
+              37.51337
+            ],
+            [
+              29.77436,
+              37.51348
+            ],
+            [
+              29.77438,
+              37.51363
+            ],
+            [
+              29.77439,
+              37.51377
+            ],
+            [
+              29.77373,
+              37.51368
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 133,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "34",
+        "alan_m2": 1849.73,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77373,
+              37.51368
+            ],
+            [
+              29.77439,
+              37.51377
+            ],
+            [
+              29.77436,
+              37.51402
+            ],
+            [
+              29.7737,
+              37.51389
+            ],
+            [
+              29.77373,
+              37.51368
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 132,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "33",
+        "alan_m2": 1533.87,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77436,
+              37.51402
+            ],
+            [
+              29.77434,
+              37.5143
+            ],
+            [
+              29.77363,
+              37.51421
+            ],
+            [
+              29.77363,
+              37.51417
+            ],
+            [
+              29.7737,
+              37.51389
+            ],
+            [
+              29.77436,
+              37.51402
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 131,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "32",
+        "alan_m2": 2083.14,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.7731,
+              37.51399
+            ],
+            [
+              29.77258,
+              37.51376
+            ],
+            [
+              29.7727,
+              37.51368
+            ],
+            [
+              29.77296,
+              37.5135
+            ],
+            [
+              29.77326,
+              37.51327
+            ],
+            [
+              29.77384,
+              37.51279
+            ],
+            [
+              29.77397,
+              37.51265
+            ],
+            [
+              29.77392,
+              37.51281
+            ],
+            [
+              29.77386,
+              37.51304
+            ],
+            [
+              29.77382,
+              37.51322
+            ],
+            [
+              29.77379,
+              37.51337
+            ],
+            [
+              29.77373,
+              37.51368
+            ],
+            [
+              29.7737,
+              37.51389
+            ],
+            [
+              29.77363,
+              37.51417
+            ],
+            [
+              29.7731,
+              37.51399
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 130,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "31",
+        "alan_m2": 7988.0,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.7722,
+              37.5137
+            ],
+            [
+              29.77214,
+              37.51389
+            ],
+            [
+              29.77205,
+              37.51407
+            ],
+            [
+              29.77197,
+              37.51425
+            ],
+            [
+              29.77171,
+              37.51421
+            ],
+            [
+              29.77147,
+              37.51417
+            ],
+            [
+              29.77158,
+              37.51382
+            ],
+            [
+              29.77155,
+              37.5136
+            ],
+            [
+              29.77163,
+              37.51359
+            ],
+            [
+              29.77179,
+              37.51358
+            ],
+            [
+              29.7722,
+              37.5137
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 129,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "30",
+        "alan_m2": 3336.28,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77145,
+              37.51483
+            ],
+            [
+              29.77119,
+              37.51477
+            ],
+            [
+              29.77147,
+              37.51417
+            ],
+            [
+              29.77171,
+              37.51421
+            ],
+            [
+              29.77197,
+              37.51425
+            ],
+            [
+              29.77179,
+              37.51487
+            ],
+            [
+              29.77145,
+              37.51483
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 128,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "29",
+        "alan_m2": 3534.73,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77232,
+              37.51492
+            ],
+            [
+              29.77225,
+              37.51492
+            ],
+            [
+              29.77179,
+              37.51487
+            ],
+            [
+              29.77197,
+              37.51425
+            ],
+            [
+              29.77205,
+              37.51407
+            ],
+            [
+              29.77214,
+              37.51389
+            ],
+            [
+              29.7722,
+              37.5137
+            ],
+            [
+              29.7725,
+              37.51378
+            ],
+            [
+              29.77258,
+              37.51376
+            ],
+            [
+              29.77232,
+              37.51492
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 127,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "28",
+        "alan_m2": 5570.64,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77232,
+              37.51492
+            ],
+            [
+              29.77258,
+              37.51376
+            ],
+            [
+              29.7731,
+              37.51399
+            ],
+            [
+              29.77285,
+              37.51495
+            ],
+            [
+              29.77267,
+              37.51494
+            ],
+            [
+              29.77232,
+              37.51492
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 126,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "27",
+        "alan_m2": 5756.06,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77349,
+              37.515
+            ],
+            [
+              29.77338,
+              37.51499
+            ],
+            [
+              29.77285,
+              37.51495
+            ],
+            [
+              29.7731,
+              37.51399
+            ],
+            [
+              29.77363,
+              37.51417
+            ],
+            [
+              29.77363,
+              37.51421
+            ],
+            [
+              29.77349,
+              37.515
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 125,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "26",
+        "alan_m2": 5444.52,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77417,
+              37.51495
+            ],
+            [
+              29.77414,
+              37.51507
+            ],
+            [
+              29.77349,
+              37.515
+            ],
+            [
+              29.77363,
+              37.51421
+            ],
+            [
+              29.77434,
+              37.5143
+            ],
+            [
+              29.77417,
+              37.51495
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 124,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "25",
+        "alan_m2": 5331.65,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77407,
+              37.51557
+            ],
+            [
+              29.77325,
+              37.51553
+            ],
+            [
+              29.77338,
+              37.51499
+            ],
+            [
+              29.77349,
+              37.515
+            ],
+            [
+              29.77414,
+              37.51507
+            ],
+            [
+              29.77407,
+              37.51557
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 123,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "24",
+        "alan_m2": 3845.38,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77325,
+              37.51553
+            ],
+            [
+              29.77305,
+              37.51552
+            ],
+            [
+              29.77269,
+              37.5155
+            ],
+            [
+              29.77267,
+              37.51494
+            ],
+            [
+              29.77285,
+              37.51495
+            ],
+            [
+              29.77338,
+              37.51499
+            ],
+            [
+              29.77325,
+              37.51553
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 122,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "23",
+        "alan_m2": 3847.3,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77303,
+              37.51507
+            ],
+            [
+              29.77307,
+              37.51508
+            ],
+            [
+              29.77306,
+              37.51511
+            ],
+            [
+              29.77301,
+              37.5151
+            ],
+            [
+              29.77303,
+              37.51507
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 121,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "22",
+        "alan_m2": 15.65,
+        "nitelik": "Pilon Yeri",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77269,
+              37.5155
+            ],
+            [
+              29.77253,
+              37.5155
+            ],
+            [
+              29.77244,
+              37.5155
+            ],
+            [
+              29.77215,
+              37.51547
+            ],
+            [
+              29.7717,
+              37.51542
+            ],
+            [
+              29.7717,
+              37.51526
+            ],
+            [
+              29.77133,
+              37.51521
+            ],
+            [
+              29.77095,
+              37.51507
+            ],
+            [
+              29.77119,
+              37.51477
+            ],
+            [
+              29.77145,
+              37.51483
+            ],
+            [
+              29.77179,
+              37.51487
+            ],
+            [
+              29.77225,
+              37.51492
+            ],
+            [
+              29.77232,
+              37.51492
+            ],
+            [
+              29.77267,
+              37.51494
+            ],
+            [
+              29.77269,
+              37.5155
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 120,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "21",
+        "alan_m2": 7690.3,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77407,
+              37.51557
+            ],
+            [
+              29.77414,
+              37.51507
+            ],
+            [
+              29.77417,
+              37.51495
+            ],
+            [
+              29.77457,
+              37.51494
+            ],
+            [
+              29.77449,
+              37.51559
+            ],
+            [
+              29.77407,
+              37.51557
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 119,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "20",
+        "alan_m2": 2598.86,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77204,
+              37.51569
+            ],
+            [
+              29.77167,
+              37.51567
+            ],
+            [
+              29.7717,
+              37.51542
+            ],
+            [
+              29.77215,
+              37.51547
+            ],
+            [
+              29.77244,
+              37.5155
+            ],
+            [
+              29.77253,
+              37.5155
+            ],
+            [
+              29.77251,
+              37.51574
+            ],
+            [
+              29.77204,
+              37.51569
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 118,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "19",
+        "alan_m2": 1925.64,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.7706,
+              37.51574
+            ],
+            [
+              29.77016,
+              37.51562
+            ],
+            [
+              29.76994,
+              37.51555
+            ],
+            [
+              29.7703,
+              37.51516
+            ],
+            [
+              29.77052,
+              37.515
+            ],
+            [
+              29.77072,
+              37.51489
+            ],
+            [
+              29.77095,
+              37.51507
+            ],
+            [
+              29.7709,
+              37.51515
+            ],
+            [
+              29.7709,
+              37.51522
+            ],
+            [
+              29.77079,
+              37.51579
+            ],
+            [
+              29.7706,
+              37.51574
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 117,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "17",
+        "alan_m2": 4916.39,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77079,
+              37.51579
+            ],
+            [
+              29.7709,
+              37.51522
+            ],
+            [
+              29.7709,
+              37.51515
+            ],
+            [
+              29.77095,
+              37.51507
+            ],
+            [
+              29.77133,
+              37.51521
+            ],
+            [
+              29.77131,
+              37.51539
+            ],
+            [
+              29.77129,
+              37.51561
+            ],
+            [
+              29.77124,
+              37.51589
+            ],
+            [
+              29.77096,
+              37.51585
+            ],
+            [
+              29.77079,
+              37.51579
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 116,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "16",
+        "alan_m2": 3176.07,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {},
+      "properties": {
+        "id": 115,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "15",
+        "alan_m2": 3612.4,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77243,
+              37.51599
+            ],
+            [
+              29.77217,
+              37.51597
+            ],
+            [
+              29.772,
+              37.51596
+            ],
+            [
+              29.77204,
+              37.51569
+            ],
+            [
+              29.77251,
+              37.51574
+            ],
+            [
+              29.77243,
+              37.51599
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 114,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "14",
+        "alan_m2": 1172.17,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77322,
+              37.51606
+            ],
+            [
+              29.77243,
+              37.51599
+            ],
+            [
+              29.77251,
+              37.51574
+            ],
+            [
+              29.77337,
+              37.5158
+            ],
+            [
+              29.77335,
+              37.51608
+            ],
+            [
+              29.77322,
+              37.51606
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 113,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "13",
+        "alan_m2": 2356.49,
+        "nitelik": "Üzüm Bağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              29.77377,
+              37.51646
+            ],
+            [
+              29.77333,
+              37.51642
+            ],
+            [
+              29.7734,
+              37.51608
+            ],
+            [
+              29.77377,
+              37.51609
+            ],
+            [
+              29.77402,
+              37.51613
+            ],
+            [
+              29.77455,
+              37.51611
+            ],
+            [
+              29.77457,
+              37.51649
+            ],
+            [
+              29.77422,
+              37.51651
+            ],
+            [
+              29.77377,
+              37.51646
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 111,
+        "il": "Burdur",
+        "ilce": "Yeşilova",
+        "mahalle": "Koyunlarçeşme",
+        "ada_no": "45",
+        "parsel_no": "11",
+        "alan_m2": 4326.73,
+        "nitelik": "Bağ",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
     }
   ]
 }
