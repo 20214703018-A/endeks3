@@ -77,7 +77,10 @@ jobs:
             for b in warehouse/raw/bundles/*.tar.gz; do
               gh release upload warehouse-pdf-1 "$b" --clobber || \
               gh release upload warehouse-pdf-2 "$b" --clobber || \
-              gh release upload warehouse-pdf-3 "$b" --clobber || true
+              gh release upload warehouse-pdf-3 "$b" --clobber || \
+              gh release upload warehouse-pdf-4 "$b" --clobber || \
+              gh release upload warehouse-pdf-5 "$b" --clobber || \
+              gh release upload warehouse-pdf-6 "$b" --clobber || true
             done
           fi
 
