@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-GEOPROP - TOBB 40x Paralel Turbo Gazete PDF İndirici (Shard Worker v7 - Kesintisiz Cursor + 6 Kova)
-===================================================================================================
+GEOPROP - TOBB 40x Paralel Turbo Gazete PDF İndirici (Shard Worker v8 - CaptchaIlan Çözücü + 6 Kova)
+====================================================================================================
 GitHub Actions 40-Runner Matrisinde her bir bağımsız Microsoft Azure IP'sinde çalışır.
-Mimari Özellikler (v7):
-1. WAF-Uyumlu `curl -k -s` + PyMuPDF Optimize Sıkıştırma:
-   `ticaretsicil.gov.tr` üzerinde 55.000+ gerçek PDF sayfası indirmiş kanıtlı motor.
-2. Akıllı Oturum Tespiti (`FormUyeGirisi` kontrolü):
-   `pdf_goster.php` yanıtında PDF olmadığında yalnızca 27 KB'lık giriş sayfası (`FormUyeGirisi`)
-   döndüyse yeniden giriş yapar; ilanın PDF'i yoksa vakit kaybetmeden (0 sn) sıradaki ilana geçer.
+Mimari Özellikler (v8):
+1. Otomatik `FormGuvenlikKodu` (`CaptchaIlan` -> `guvenlikkodudogrula.php`) Çözücü:
+   TOBB `pdf_goster.php` her 4-5 sayfada bir oturumu kapatmadan `FormGuvenlikKodu` (ara captcha)
+   gösterir. v8 bu formu anında `/captcha/captcha.php` + Tesseract OCR ile `guvenlikkodudogrula.php`
+   üzerinden çözer ve aynı sayfayı hiç atlamadan (0 kayıp) indirir!
+2. HTTP Başlık (`curl -i`) ile Kesin Oturum Tespiti (`Location: girisyap.php`):
+   Oturum gerçekten düştüğünde (`302 Found -> Location: girisyap.php`) çerezi sıfırlayıp (`force=True`)
+   anında yeniden giriş yapar.
 3. Cursor-Paginated (`WHERE id < last_id`) İki Fazlı Tarama:
    Asla ilk 150 sayfada durmaz; 1.28+ Milyon ilanın tamamını Faz-1 (2000+ yılı, Sayı >= 4950)
    ve Faz-2 (2000 öncesi) olarak baştan sona eksiksiz tarar.
@@ -50,16 +52,19 @@ TESSERACT_BIN = (
 )
 
 
-def solve_captcha(cap_path: Path, cookie_file: Path):
+def solve_captcha(cap_path: Path, cookie_file: Path, captcha_url: str = "https://www.ticaretsicil.gov.tr/assets/captcha/captcha.php"):
     for _ in range(5):
         try:
+            sep = "&" if "?" in captcha_url else "?"
+            url = f"{captcha_url}{sep}{int(time.time() * 1000)}_{random.randint(100, 999)}"
             cmd_cap = [
                 "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
+                "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
                 "-c", str(cookie_file), "-b", str(cookie_file),
-                "https://www.ticaretsicil.gov.tr/assets/captcha/captcha.php"
+                url
             ]
             cap_bytes = subprocess.check_output(cmd_cap, stderr=subprocess.DEVNULL, timeout=10)
-            if not cap_bytes:
+            if not cap_bytes or len(cap_bytes) < 100:
                 continue
             with open(cap_path, "wb") as f:
                 f.write(cap_bytes)
@@ -81,22 +86,29 @@ def solve_captcha(cap_path: Path, cookie_file: Path):
                     cap_path.unlink()
                 except Exception:
                     pass
-        time.sleep(0.2)
+        time.sleep(0.15)
     return None
 
 
-def ensure_authenticated(cookie_file: Path, cap_path: Path) -> bool:
-    cmd_check = [
-        "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
-        "-c", str(cookie_file), "-b", str(cookie_file),
-        "https://www.ticaretsicil.gov.tr/index.php"
-    ]
-    try:
-        res = subprocess.check_output(cmd_check, stderr=subprocess.DEVNULL, timeout=10).decode("utf-8", errors="ignore")
-        if "cikis.php" in res.lower():
-            return True
-    except Exception:
-        pass
+def ensure_authenticated(cookie_file: Path, cap_path: Path, force: bool = False) -> bool:
+    if not force and cookie_file.exists():
+        cmd_check = [
+            "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
+            "-c", str(cookie_file), "-b", str(cookie_file),
+            "https://www.ticaretsicil.gov.tr/index.php"
+        ]
+        try:
+            res = subprocess.check_output(cmd_check, stderr=subprocess.DEVNULL, timeout=10).decode("utf-8", errors="ignore")
+            if "cikis.php" in res.lower():
+                return True
+        except Exception:
+            pass
+
+    if force and cookie_file.exists():
+        try:
+            cookie_file.unlink()
+        except Exception:
+            pass
 
     print("🔑 [TOBB Oturumu] Giriş yapılıyor...", flush=True)
     for attempt in range(8):
@@ -104,17 +116,19 @@ def ensure_authenticated(cookie_file: Path, cap_path: Path) -> bool:
             try:
                 subprocess.run([
                     "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
+                    "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
                     "-c", str(cookie_file), "https://www.ticaretsicil.gov.tr/view/hizlierisim/girisyap.php"
                 ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
             except Exception:
                 pass
 
-        code = solve_captcha(cap_path, cookie_file)
+        code = solve_captcha(cap_path, cookie_file, "https://www.ticaretsicil.gov.tr/assets/captcha/captcha.php")
         if not code:
             continue
 
         cmd_login = [
             "curl", "-k", "-s", "--connect-timeout", "6", "--max-time", "10",
+            "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
             "-c", str(cookie_file), "-b", str(cookie_file),
             "-d", f"LoginEmail={USER_EMAIL}&LoginSifre={USER_PASS}&Captcha={code}",
             "https://www.ticaretsicil.gov.tr/view/modal/uyegirisi_ok.php"
@@ -126,54 +140,98 @@ def ensure_authenticated(cookie_file: Path, cap_path: Path) -> bool:
                 return True
         except Exception:
             pass
-        time.sleep(0.4)
+        time.sleep(0.3)
 
     return False
 
 
-def download_page_pdf(guid: str, cookie_file: Path):
+def solve_ilan_captcha(cookie_file: Path, cap_path: Path) -> bool:
     """
-    Returns (pdf_bytes, status) where status in {"OK", "NO_PDF", "TIMEOUT", "LOGGED_OUT"}.
-    Not: pdf_goster.php başarılı olduğunda ~100 byte'lık `<embed src="/tmp_gazete/...pdf">` döner!
+    pdf_goster.php her 4-5 sayfada bir <form id="FormGuvenlikKodu"> (CaptchaIlan) çıkarır.
+    /captcha/captcha.php üzerinden 4 haneli kodu okuyup guvenlikkodudogrula.php'ye POST eder.
+    """
+    for _ in range(6):
+        code = solve_captcha(cap_path, cookie_file, "https://www.ticaretsicil.gov.tr/captcha/captcha.php")
+        if not code:
+            continue
+        cmd_verify = [
+            "curl", "-k", "-s", "--connect-timeout", "6", "--max-time", "10",
+            "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
+            "-H", "Referer: https://www.ticaretsicil.gov.tr/view/hizlierisim/pdf_goster.php",
+            "-c", str(cookie_file), "-b", str(cookie_file),
+            "-X", "POST", "-F", f"CaptchaIlan={code}",
+            "https://www.ticaretsicil.gov.tr/view/hizlierisim/guvenlikkodudogrula.php"
+        ]
+        try:
+            res = subprocess.check_output(cmd_verify, stderr=subprocess.DEVNULL, timeout=12).decode("utf-8", errors="ignore").strip()
+            if res == "1":
+                return True
+        except Exception:
+            pass
+    return False
+
+
+def download_page_pdf(guid: str, cookie_file: Path, cap_path: Path):
+    """
+    Returns (pdf_bytes, status) where status in {"OK", "NO_PDF", "TIMEOUT"}.
+    Oturum düşmüşse veya FormGuvenlikKodu (CaptchaIlan) çıkmışsa anında çözüp aynı Guid'i tekrar dener!
     """
     view_url = f"https://www.ticaretsicil.gov.tr/view/hizlierisim/pdf_goster.php?Guid={guid}"
-    cmd_view = [
-        "curl", "-k", "-s", "--connect-timeout", "8", "--max-time", "15",
-        "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
-        "-H", "Referer: https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php",
-        "-c", str(cookie_file), "-b", str(cookie_file),
-        view_url
-    ]
-    try:
-        html = subprocess.check_output(cmd_view, stderr=subprocess.DEVNULL, timeout=18).decode("utf-8", errors="ignore")
-    except Exception:
-        return None, "TIMEOUT"
 
-    if not html:
-        return None, "TIMEOUT"
+    for attempt in range(4):
+        cmd_view = [
+            "curl", "-k", "-i", "-s", "--connect-timeout", "8", "--max-time", "15",
+            "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
+            "-H", "Referer: https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php",
+            "-c", str(cookie_file), "-b", str(cookie_file),
+            view_url
+        ]
+        try:
+            raw_resp = subprocess.check_output(cmd_view, stderr=subprocess.DEVNULL, timeout=18).decode("utf-8", errors="ignore")
+        except Exception:
+            time.sleep(0.4)
+            continue
 
-    m_pdf = re.search(r'embed\s+src="([^"]+\.pdf)"', html) or re.search(r'src="(/tmp_gazete/[^"]+\.pdf)"', html)
-    if not m_pdf:
-        if "FormUyeGirisi" in html or "uyegirisi_ok.php" in html:
-            return None, "LOGGED_OUT"
-        return None, "NO_PDF"
+        if not raw_resp:
+            time.sleep(0.4)
+            continue
 
-    pdf_rel = m_pdf.group(1)
-    pdf_url = pdf_rel if pdf_rel.startswith("http") else f"https://www.ticaretsicil.gov.tr{pdf_rel}"
-    cmd_dl = [
-        "curl", "-k", "-s", "--connect-timeout", "8", "--max-time", "15",
-        "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-        "-c", str(cookie_file), "-b", str(cookie_file),
-        pdf_url
-    ]
-    try:
-        pdf_bytes = subprocess.check_output(cmd_dl, stderr=subprocess.DEVNULL, timeout=18)
-        if pdf_bytes and pdf_bytes.startswith(b"%PDF"):
-            return pdf_bytes, "OK"
-    except Exception:
-        return None, "TIMEOUT"
+        # 1. PDF Embed Linki Var mı?
+        m_pdf = re.search(r'embed\s+src="([^"]+\.pdf)"', raw_resp) or re.search(r'src="(/tmp_gazete/[^"]+\.pdf)"', raw_resp)
+        if m_pdf:
+            pdf_rel = m_pdf.group(1)
+            pdf_url = pdf_rel if pdf_rel.startswith("http") else f"https://www.ticaretsicil.gov.tr{pdf_rel}"
+            cmd_dl = [
+                "curl", "-k", "-s", "--connect-timeout", "8", "--max-time", "15",
+                "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36",
+                "-c", str(cookie_file), "-b", str(cookie_file),
+                pdf_url
+            ]
+            try:
+                pdf_bytes = subprocess.check_output(cmd_dl, stderr=subprocess.DEVNULL, timeout=18)
+                if pdf_bytes and pdf_bytes.startswith(b"%PDF"):
+                    return pdf_bytes, "OK"
+            except Exception:
+                time.sleep(0.4)
+                continue
 
-    return None, "NO_PDF"
+        # 2. Oturum Düşmüş mü? (HTTP 302 Location: girisyap.php)
+        if "Location: girisyap.php" in raw_resp or "location: girisyap.php" in raw_resp:
+            ensure_authenticated(cookie_file, cap_path, force=True)
+            continue
+
+        # 3. Ara Güvenlik Kodu (FormGuvenlikKodu / CaptchaIlan) Çıkmış mı?
+        if 'id="CaptchaIlan"' in raw_resp or '<form id="FormGuvenlikKodu">' in raw_resp:
+            if attempt == 0 and solve_ilan_captcha(cookie_file, cap_path):
+                continue
+            ensure_authenticated(cookie_file, cap_path, force=True)
+            continue
+
+        # 4. Sayfa 200 OK döndü, CaptchaIlan yok ve PDF linki yok -> Gerçekten PDF görüntüsü olmayan ilan
+        if "200 OK" in raw_resp:
+            return None, "NO_PDF"
+
+    return None, "TIMEOUT"
 
 
 def compress_pdf_bytes(pdf_bytes: bytes) -> bytes:
@@ -181,7 +239,7 @@ def compress_pdf_bytes(pdf_bytes: bytes) -> bytes:
         doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
         comp = doc.tobytes(garbage=4, deflate=True, clean=True, deflate_images=True, deflate_fonts=True)
         doc.close()
-        return comp
+        return comp if len(comp) < len(pdf_bytes) else pdf_bytes
     except Exception:
         return pdf_bytes
 
@@ -204,16 +262,20 @@ def upload_bundle_to_release(bundle_path: Path, shard_id: int) -> str:
     for bucket in buckets:
         print(f"  ☁️ [GitHub Release -> {bucket}] {bundle_path.name} yükleniyor...", flush=True)
         try:
-            res = subprocess.run([
-                "gh", "release", "upload", bucket, str(bundle_path), "--clobber"
-            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=180)
+            res = subprocess.run(
+                ["gh", "release", "upload", bucket, str(bundle_path), "--clobber"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=120
+            )
             if res.returncode == 0:
                 print(f"  ✅ {bundle_path.name} -> {bucket} kovasına kalıcı olarak kaydedildi!", flush=True)
                 return f"release://{bucket}/{bundle_path.name}"
             else:
-                print(f"  ⚠️ [{bucket}] Yükleme uyarısı: {res.stderr.strip()}", flush=True)
+                print(f"  ⚠️ {bucket} yükleme uyarısı: {res.stderr.strip()[:140]}", flush=True)
         except Exception as e:
-            print(f"  ⚠️ [{bucket}] Yükleme istisnası: {e}", flush=True)
+            print(f"  ⚠️ {bucket} yükleme istisnası: {e}", flush=True)
     return f"bundle://{bundle_path.name}"
 
 
@@ -295,11 +357,11 @@ def init_shard_update_db(db_path: Path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="GEOPROP TOBB 40x Shard Gazete PDF İndirici (v7)")
+    parser = argparse.ArgumentParser(description="GEOPROP TOBB 40x Shard Gazete PDF İndirici (v8)")
     parser.add_argument("--shard", type=int, required=True, help="Shard ID (1 - 40)")
     parser.add_argument("--num-shards", type=int, default=40, help="Toplam Shard Sayısı")
     parser.add_argument("--max-seconds", type=int, default=19000, help="Maksimum çalışma süresi (sn)")
-    parser.add_argument("--max-pdfs", type=int, default=25000, help="Bu shard'ın indirebileceği maksimum PDF")
+    parser.add_argument("--max-pdfs", type=int, default=25000, help="Bu shard'ın indirebileceği maksimum tekil PDF sayfası")
     args = parser.parse_args()
 
     shard_id = args.shard
@@ -308,7 +370,7 @@ def main():
     deadline = start_time + args.max_seconds
 
     print("=" * 78)
-    print(f"🚀 GEOPROP TOBB Gazete PDF Shard İşçisi #{shard_id}/{num_shards} (v7 Cursor + 6-Bucket)")
+    print(f"🚀 GEOPROP TOBB Gazete PDF Shard İşçisi #{shard_id}/{num_shards} (v8 CaptchaIlan Çözücü + 6-Kova)")
     print(f"📍 Zaman Limiti: {args.max_seconds/3600:.1f} saat | Hedef Kapasite: {args.max_pdfs:,} Tekil Sayfa")
     print("=" * 78, flush=True)
 
@@ -424,7 +486,6 @@ def main():
 
     seen_pages = set()
     cursor_state = {"pass": 1, "last_id": 999999999}
-    fail_streak = 0
 
     try:
         while time.time() < deadline and total_downloaded < args.max_pdfs:
@@ -452,36 +513,25 @@ def main():
                     continue
                 guid = m_guid.group(1).strip()
 
-                pdf_bytes, status = download_page_pdf(guid, cookie_file)
-                if status == "LOGGED_OUT" or (status == "TIMEOUT" and fail_streak >= 4):
-                    if ensure_authenticated(cookie_file, cap_path):
-                        pdf_bytes, status = download_page_pdf(guid, cookie_file)
-                        fail_streak = 0
-
-                if status == "TIMEOUT":
-                    fail_streak += 1
-                    time.sleep(0.3)
-                    continue
-                elif status != "OK" or not pdf_bytes:
-                    # NO_PDF: Oturum açık, sadece bu ilanın PDF görüntüsü yok -> 0 sn bekleme ile geç!
+                pdf_bytes, status = download_page_pdf(guid, cookie_file, cap_path)
+                if status != "OK" or not pdf_bytes:
                     continue
 
-                fail_streak = 0
                 compressed = compress_pdf_bytes(pdf_bytes)
                 safe_tsm = re.sub(r'[^a-zA-Z0-9]', '', tsm_adi or "TSM")
                 pdf_filename = f"{sayi}_{sayfa}_{safe_tsm}_{guid[:8]}.pdf"
-                pdf_dest = temp_bundle_dir / pdf_filename
+                local_pdf_path = temp_bundle_dir / pdf_filename
 
-                with open(pdf_dest, "wb") as f_out:
-                    f_out.write(compressed)
+                with open(local_pdf_path, "wb") as f:
+                    f.write(compressed)
 
-                current_bundle_files.append((rep_id, pdf_filename, sayi, sayfa))
+                current_bundle_files.append((rep_id, pdf_filename, str(sayi), str(sayfa)))
                 total_downloaded += 1
 
-                t_str = ilan_tarihi or "Tarih-Yok"
+                kb_size = len(compressed) / 1024.0
                 print(
-                    f"  📥 [Shard {shard_id}|#{total_downloaded}] [{t_str}] Sayı: {sayi} / Sayfa: {sayfa} "
-                    f"({safe_tsm}) - {len(compressed)/1024:.1f} KB -> {(unvan or '')[:35]}...",
+                    f"  📥 [Shard {shard_id}|#{total_downloaded}] [{ilan_tarihi}] "
+                    f"Sayı: {sayi} / Sayfa: {sayfa} ({safe_tsm[:10]}) - {kb_size:.1f} KB -> {unvan[:35]}...",
                     flush=True
                 )
 
@@ -489,14 +539,14 @@ def main():
                     flush_bundle(current_bundle_files, is_final=False)
                     current_bundle_files.clear()
 
-                time.sleep(random.uniform(0.15, 0.35))
+                time.sleep(random.uniform(0.20, 0.45))
 
         if current_bundle_files:
             flush_bundle(current_bundle_files, is_final=True)
             current_bundle_files.clear()
 
     except Exception as e:
-        print(f"⚠️ Shard #{shard_id} hatası: {e}", flush=True)
+        print(f"⚠️ Shard #{shard_id} çalışma hatası: {e}", flush=True)
     finally:
         master_conn.close()
         update_conn.close()
