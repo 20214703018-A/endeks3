@@ -485,6 +485,7 @@ def main():
         )
 
     seen_pages = set()
+    done_pages = set()
     cursor_state = {"pass": 1, "last_id": 999999999}
 
     try:
@@ -494,6 +495,14 @@ def main():
                 master_conn, shard_id, num_shards, seen_pages, cursor_state, limit=batch_limit
             )
             if not tasks:
+                if current_bundle_files:
+                    flush_bundle(current_bundle_files, is_final=False)
+                    current_bundle_files.clear()
+                if len(seen_pages) > len(done_pages) and (time.time() + 60 < deadline):
+                    print(f"🔄 [Shard {shard_id}] Tur tamamlandı; zaman aşımına uğrayan sayfalar için otomatik yeni tur başlatılıyor...", flush=True)
+                    seen_pages = set(done_pages)
+                    cursor_state = {"pass": 1, "last_id": 999999999}
+                    continue
                 print(f"✅ Shard #{shard_id} için indirilecek başka tekil gazete sayfası kalmadı!", flush=True)
                 break
 
@@ -508,14 +517,20 @@ def main():
                     break
 
                 rep_id, tsm_adi, unvan, sayi, sayfa, ilan_turu, ilan_metni, ilan_tarihi = row
+                page_key = (str(sayi).strip(), str(sayfa).strip())
                 m_guid = re.search(r'Guid:\s*([a-f0-9\-]+)', ilan_metni or "")
                 if not m_guid:
+                    done_pages.add(page_key)
                     continue
                 guid = m_guid.group(1).strip()
 
                 pdf_bytes, status = download_page_pdf(guid, cookie_file, cap_path)
+                if status == "NO_PDF":
+                    done_pages.add(page_key)
+                    continue
                 if status != "OK" or not pdf_bytes:
                     continue
+                done_pages.add(page_key)
 
                 compressed = compress_pdf_bytes(pdf_bytes)
                 safe_tsm = re.sub(r'[^a-zA-Z0-9]', '', tsm_adi or "TSM")

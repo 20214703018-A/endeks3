@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = REPO_ROOT / "warehouse" / "product" / "turkiye_ticaret_sicil_ve_sirketler.sqlite"
-COOKIE_FILE = REPO_ROOT / "collector" / "data" / "tobb_auth_cookies.txt"
+COOKIE_FILE = REPO_ROOT / "collector" / "data" / "tobb_turkiye_hizli_cookies.txt"
 STATE_FILE = REPO_ROOT / "collector" / "data" / "tobb_turkiye_geneli_state.json"
 TSM_FILE = REPO_ROOT / "collector" / "data" / "tobb_tsm_mudurlukleri.json"
 TAXONOMY_FILE = REPO_ROOT / "collector" / "data" / "sektor_anahtar_kelimeleri.json"
@@ -114,14 +114,64 @@ def load_tsm_list():
         
     return ordered
 
-def load_keywords():
+TUR_2_EK_KELIMELER = [
+    "AKIN", "AKBAŞ", "AKBULUT", "AKÇA", "AKÇAY", "AKDOĞAN", "AKGÜL", "AKGÜN", "AKMAN", "AKPINAR",
+    "AKSU", "AKTAŞ", "AKYÜZ", "ALBAYRAK", "ALKAN", "ALTUN", "ALTINTAŞ", "ARAS", "ARSLAN", "ATALAY",
+    "ATMACA", "ATAŞ", "AVŞAR", "AYAZ", "AYDOĞAN", "AYDOĞDU", "AYHAN", "AYKUT", "AYTEKİN", "BABA",
+    "BAHADIR", "BAKIR", "BALCI", "BARAN", "BAŞAK", "BAŞTÜRK", "BAYRAM", "BAYRAKTAR", "BEKTAŞ", "BERK",
+    "BEŞİKTAŞ", "BİLGİÇ", "BİLİR", "BİNGÖL", "BİRİNCİ", "BOZDAĞ", "BÖLÜKBAŞI", "BUDAK", "BURAK", "BÜLBÜL",
+    "BÜYÜK", "CANBOLAT", "CANDAN", "CANER", "CANSU", "CEYLAN", "CİHAN", "ÇAKIR", "ÇAKMAK", "ÇALIŞKAN",
+    "ÇAMLI", "ÇAVUŞ", "ÇAVUŞOĞLU", "ÇELEBİ", "ÇELİKKOL", "ÇENGEL", "ÇEVİK", "ÇİÇEK", "ÇİFTÇİ", "ÇINAR",
+    "ÇOŞKUN", "ÇOBAN", "ÇOLAK", "DAĞLI", "DALKILIÇ", "DAMLA", "DEMİRCİ", "DEMİREL", "DEMİRTAŞ", "DERE",
+    "DERYA", "DEVECİ", "DİLEK", "DİNÇ", "DİNÇER", "DOĞANAY", "DOĞRU", "DÖNMEZ", "DUMAN", "DURAK",
+    "DURMUŞ", "DURSUN", "DUYGU", "EFE", "EKİCİ", "EKİNCİ", "EKŞİ", "ELMAS", "EMİN", "EMİR",
+    "ENGİN", "ERCAN", "ERDAL", "ERDEN", "ERİM", "ERKek", "ERKAN", "EROL", "ERSOY", "ERTÜRK",
+    "ERYILMAZ", "ESEN", "ESKİ", "EVCİ", "EVREN", "FATİH", "FERHAT", "FIRAT", "FİDAN", "FİLİZ",
+    "GEDİK", "GENÇOĞLU", "GEZER", "GÖKÇE", "GÖKMEN", "GÖKSU", "GÖKTAŞ", "GÖKTÜRK", "GÖNÜL", "GÖRkem",
+    "GÜÇLÜ", "GÜLBAHAR", "GÜLCAN", "GÜLEÇ", "GÜLEN", "GÜLER", "GÜLSOY", "GÜLTEKİN", "GÜMÜŞ", "GÜNAY",
+    "GÜNAYDIN", "GÜNDOĞAN", "GÜNER", "GÜNEY", "GÜNGÖR", "GÜRSOY", "GÜVENÇ", "GÜZEL", "HACIOĞLU", "HAKKI",
+    "HALİL", "HAMZA", "HASAN", "HATİPOĞLU", "HAYAT", "HİLAL", "HİSAR", "HÜSEYİN", "IŞIK", "İBRAHİM",
+    "İHSAN", "İLHAN", "İLKAY", "İLKER", "İMAMOĞLU", "İNAN", "İNCE", "İPEK", "İSMAİL", " İZGI",
+    "KADİR", "KAHRAMAN", "KAHVECİ", "KALAYCI", "KALKAN", "KALYON", "KAMİL", "KANAT", "KANDEMİR", "KARAASLAN",
+    "KARACA", "KARADAĞ", "KARADUMAN", "KARAGÖZ", "KARAHAN", "KARAKAŞ", "KARAKAYA", "KARAKOÇ", "KARAMAN", "KARATAŞ",
+    "KARTAL", "KASAP", "KAVAK", "KAYNAK", "KAZAN", "KELEŞ", "KEMAL", "KENAN", "KERİM", "KESER",
+    "KILIÇOĞLU", "KIRAN", "KAYAALP", "KIZIL", "KIZILKAYA", "KİBAR", "KOÇAK", "KOÇYİĞİT", "KONAK", "KORKMAZ",
+    "KORU", "KOYUNCU", "KOZAN", "KÖKSAL", "KÖPRÜLÜ", "KÖROĞLU", "KUBİLAY", "KULA", "KULAK", "KUMRU",
+    "KURTULUŞ", "KURU", "KUŞÇU", "KUTLU", "KUZEY", "KÜÇÜK", "KÜLTÜR", "LEVENT", "MAHMUT", "MANav",
+    "MERCAN", "MERT", "MESUT", "MEYDAN", "MİMAR", "MİRZA", "MORAL", "MURAT", "MUSA", "MUSTAFA",
+    "MUTLU", "MÜFTÜOĞLU", "NALBANT", "NAMIK", "NARİN", "NASUH", "NAZLI", "NECATİ", "NEHİR", "NESİL",
+    "NEVZAT", "NİHAT", "NİLÜFER", "NİZAM", "NOKTA", "NURAN", "NURİ", "OCAK", "OĞUZ", "OKAN",
+    "OKTAY", "OKUR", "OLCAY", "OLGUN", "OMUR", "ONUR", "ORAL", "ORHAN", "ORMAN", "ORTA",
+    "OSMAN", "OZAN", "ÖLMEZ", "ÖMER", "ÖNDER", "ÖNER", "ÖRNEK", "ÖZALP", "ÖZAY", "ÖZBEK",
+    "ÖZBEY", "ÖZÇELİK", "ÖZDEN", "ÖZER", "ÖZGÜR", "ÖZHAN", "ÖZKAYA", "ÖZKOÇ", "ÖZLÜ", "ÖZTÜRK",
+    "ÖZYURT", "PALA", "PAMUK", "PARLAK", "PAŞA", "PEHLİVAN", "PEKER", "PELİT", "PINAR", "POLAT",
+    "POYRAZ", "RAMAZAN", "RECEP", "REİS", "RESUL", "RIDVAN", "RÜSTEM", "SABRİ", "SADIK", "SAFA",
+    "SAĞIR", "SAHİL", "SAKARYA", "SALİH", "SAMET", "SANCAK", "SARI", "SARICA", "SARIKAYA", "SARIYER",
+    "SAVAŞ", "SAYGI", "SAYGIN", "SAYIN", "SEÇKİN", "SEDA", "SEDEF", "SEFER", "SELÇUK", "SELİM",
+    "SELVİ", "SEMA", "SEMİH", "SENA", "SERBEST", "SERDAR", "SERHAT", "SERKAN", "SERT", "SERVET",
+    "SEVİNÇ", "SEYHAN", "SEZER", "SEZGİN", "SİNAN", "SİVRİ", "SOLU", "SONER", "SOYLU", "SÖNMEZ",
+    "SÖZEN", "SUAT", "SULTAN", "SUNA", "SUNGUR", "SÜLEYMAN", "SÜMER", "ŞABAN", "ŞAFAK", "ŞAHİNOĞLU",
+    "ŞANLI", "ŞARK", "ŞEKER", "ŞENEL", "ŞENER", "ŞENGÜL", "ŞENOL", "ŞENTÜRK", "ŞEREF", "ŞEVKET",
+    "ŞİMŞEK", "ŞİRİN", "TAHİR", "TALAT", "TAMER", "TANER", "TANRIVERDİ", "TARIK", "TAŞÇI", "TAŞDEMİR",
+    "TAŞKIN", "TAŞLI", "TATLI", "TAYFUN", "TAYLAN", "TEKİR", "TEMEL", "TEMİZ", "TEPE", "TERZİ",
+    "TEVFİK", "TİMUR", "TOKAT", "TOKGÖZ", "TOLGA", "TOPAL", "TOPÇU", "TOPKAPI", "TOPUZ", "TORUN",
+    "TOSUN", "TUFAN", "TUĞRA", "TUNA", "TUNCAY", "TUNCEL", "TUNCER", "TURGUT", "TURHAN", "TUTKU",
+    "TÜFEKÇİ", "TÜRK", "TÜRKER", "TÜRKMEN", "TÜRKOĞLU", "UÇAR", "UFUK", "UĞUR", "UĞURLU", "ULAŞ",
+    "ULUS", "ULUSOY", "UMUT", "USLU", "USTA", "UYAR", "UYGUN", "UYSAL", "UZUN", "ÜLKER",
+    "ÜMİT", "ÜNAL", "ÜNSAL", "ÜNVER", "ÜSTÜN", "VATAN", "VEDAT", "VELİ", "VEYSEL", "VOLKAN",
+    "VURAL", "YAĞCI", "YAĞMUR", "YAHYA", "YAKUP", "YAKUT", "YALÇINKAYA", "YALIN", "YAMAÇ", "YAPICI",
+    "YAREN", "YASEMİN", "YAŞAR", "YAVUZOĞLU", "YAZICI", "YELKEN", "YENİay", "YENİGÜN", "YERLİ", "YEŞİLOVA",
+    "YİĞİT", "YILDIRAN", "YILDIZLI", "YILMAZER", "YONCA", "YURDAKUL", "YURT", "YUSUF", "YÜCE", "YÜCEL",
+    "YÜKSEL", "ZAFER", "ZAMAN", "ZEKİ", "ZENGİN", "ZEYBEK", "ZEYNEP", "ZİRVEDE", "ZORLU", "ZÜMRÜT"
+]
+
+def load_keywords(tur=1):
+    flat = []
     if TAXONOMY_FILE.exists():
         try:
             with open(TAXONOMY_FILE, "r", encoding="utf-8") as f:
                 d = json.load(f)
-            flat = []
             sg = d.get("sektor_gruplari", {})
-            # Prioritize high-yield unvan roots first!
             priority_groups = [
                 "turkiye_unvan_kokleri_genel",
                 "turkiye_unvan_kokleri_cografi",
@@ -134,17 +184,27 @@ def load_keywords():
                     if len(kw_clean) >= 4 and kw_clean not in flat:
                         flat.append(kw_clean)
                         
-            # Then append standard sectoral taxonomy
             for grp, kw_list in sg.items():
                 if grp not in priority_groups:
                     for kw in kw_list:
                         kw_clean = kw.strip().upper()
                         if len(kw_clean) >= 4 and kw_clean not in flat:
                             flat.append(kw_clean)
-            return flat
         except Exception:
             pass
-    return ["DEMİR", "ANADOLU", "YILDIZ", "ÖZDEMİR", "GÜNEŞ", "ŞAHİN", "AYDIN", "YILMAZ", "ÇELİK", "ÖZTÜRK"]
+    if not flat:
+        flat = ["DEMİR", "ANADOLU", "YILDIZ", "ÖZDEMİR", "GÜNEŞ", "ŞAHİN", "AYDIN", "YILMAZ", "ÇELİK", "ÖZTÜRK"]
+
+    # Her zaman genişletilmiş 2. dalga kelimeleri de sonuna ekle ki Tur 1 biter bitmez veya Tur 2'de kesintisiz tarasın
+    for kw in TUR_2_EK_KELIMELER:
+        kw_clean = kw.strip().upper()
+        if len(kw_clean) >= 4 and kw_clean not in flat:
+            flat.append(kw_clean)
+
+    if tur >= 2:
+        # Tur 2 ve sonrasında sırayı kaydırarak önce yeni kelimeleri tara
+        pass
+    return flat
 
 def load_state():
     if STATE_FILE.exists():
@@ -192,28 +252,36 @@ def solve_captcha(cap_path):
         time.sleep(0.1)
     return None
 
-def ensure_authenticated():
-    cmd = [
-        "curl", "-k", "-s", "--connect-timeout", "4", "--max-time", "6",
-        "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
-        "https://www.ticaretsicil.gov.tr/index.php"
-    ]
-    try:
-        res = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode("utf-8", errors="ignore")
-        if "cikis.php" in res.lower() or "geoprop" in res.lower():
-            return True
-    except Exception:
-        pass
-        
+def ensure_authenticated(force=False):
+    if not force and COOKIE_FILE.exists():
+        cmd = [
+            "curl", "-k", "-s", "--connect-timeout", "4", "--max-time", "6",
+            "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
+            "https://www.ticaretsicil.gov.tr/index.php"
+        ]
+        try:
+            res = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode("utf-8", errors="ignore")
+            if "cikis.php" in res.lower():
+                return True
+        except Exception:
+            pass
+
+    if force and COOKIE_FILE.exists():
+        try:
+            COOKIE_FILE.unlink()
+        except Exception:
+            pass
+
     print("🔑 TOBB Oturumu yenileniyor...")
     cap_path = REPO_ROOT / "collector" / "data" / "tobb_login_cap_turkiye.png"
-    subprocess.run(["curl", "-k", "-s", "--connect-timeout", "4", "--max-time", "6", "-c", str(COOKIE_FILE), "https://www.ticaretsicil.gov.tr/view/hizlierisim/girisyap.php"], stdout=subprocess.DEVNULL)
-    
-    for attempt in range(4):
+    for attempt in range(6):
+        if attempt % 2 == 0:
+            subprocess.run(["curl", "-k", "-s", "--connect-timeout", "4", "--max-time", "6", "-c", str(COOKIE_FILE), "https://www.ticaretsicil.gov.tr/view/hizlierisim/girisyap.php"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
         code = solve_captcha(cap_path)
         if not code:
             continue
-            
+
         cmd_login = [
             "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
             "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
@@ -228,7 +296,7 @@ def ensure_authenticated():
         except Exception:
             pass
         time.sleep(0.3)
-        
+
     return False
 
 def determine_company_type(unvan):
@@ -246,25 +314,31 @@ def determine_company_type(unvan):
     else:
         return "SAHIS"
 
-def query_tsm_keyword(tsm_id, tsm_name, keyword, conn):
-    cmd_search = [
-        "curl", "-k", "-s", "--connect-timeout", "8", "--max-time", "25",
-        "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-        "-H", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        "-H", "Accept-Language: tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
-        "-H", "Referer: https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php",
-        "-H", "Origin: https://www.ticaretsicil.gov.tr",
-        "-H", "X-Requested-With: XMLHttpRequest",
-        "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
-        "-d", f"SicilMudurluguId={tsm_id}&TicSicNo=&TicaretUnvani={keyword}&BagliIlan=0&Tarih=0",
-        "https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme_ok.php"
-    ]
-    
-    try:
-        res = subprocess.check_output(cmd_search, stderr=subprocess.DEVNULL).decode("utf-8", errors="ignore")
-    except Exception as e:
-        print(f"  ⚠️ [{tsm_name} | {keyword}] Bağlantı zaman aşımı: {e}")
-        return 0, 0
+def query_tsm_keyword(tsm_id, tsm_name, keyword, conn, bagli_ilan=0):
+    for attempt in range(2):
+        cmd_search = [
+            "curl", "-k", "-i", "-s", "--connect-timeout", "8", "--max-time", "25",
+            "-H", "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+            "-H", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+            "-H", "Accept-Language: tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+            "-H", "Referer: https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php",
+            "-H", "Origin: https://www.ticaretsicil.gov.tr",
+            "-H", "X-Requested-With: XMLHttpRequest",
+            "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
+            "-d", f"SicilMudurluguId={tsm_id}&TicSicNo=&TicaretUnvani={keyword}&BagliIlan={bagli_ilan}&Tarih=0",
+            "https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme_ok.php"
+        ]
+
+        try:
+            res = subprocess.check_output(cmd_search, stderr=subprocess.DEVNULL).decode("utf-8", errors="ignore")
+        except Exception as e:
+            print(f"  ⚠️ [{tsm_name} | {keyword}] Bağlantı zaman aşımı: {e}")
+            return 0, 0
+
+        if "Location: girisyap.php" in res or "location: girisyap.php" in res:
+            ensure_authenticated(force=True)
+            continue
+        break
         
     if "table" not in res:
         return 0, 0
@@ -366,10 +440,11 @@ def main():
         return
         
     tsm_list = load_tsm_list()
-    keywords = load_keywords()
     state = load_state()
+    tur = state.get("tur", 1)
+    keywords = load_keywords(tur)
     
-    print(f"📌 TSM Sayısı: {len(tsm_list)} | Kelime Sayısı: {len(keywords)}")
+    print(f"📌 TSM Sayısı: {len(tsm_list)} | Kelime Sayısı: {len(keywords)} | Aktif Tur: #{tur}")
     print(f"📍 Başlangıç Konumu: TSM #{state.get('tsm_idx', 0)} | Kelime #{state.get('kw_idx', 0)}")
     
     conn = sqlite3.connect(DB_PATH, timeout=120)
@@ -384,43 +459,61 @@ def main():
     consecutive_empty = 0
     
     try:
-        while tsm_idx < len(tsm_list):
-            tsm_id, tsm_name = tsm_list[tsm_idx]
-            print(f"\n🏢 [{tsm_idx+1}/{len(tsm_list)}] {tsm_name} (ID: {tsm_id}) Taranıyor...")
-            
-            while kw_idx < len(keywords):
-                kw = keywords[kw_idx]
-                s_count, i_count = query_tsm_keyword(tsm_id, tsm_name, kw, conn)
+        while True:
+            bagli_ilan = 1 if (tur % 2 == 0) else 0
+            while tsm_idx < len(tsm_list):
+                tsm_id, tsm_name = tsm_list[tsm_idx]
+                print(f"\n🏢 [Tur #{tur} | {tsm_idx+1}/{len(tsm_list)}] {tsm_name} (ID: {tsm_id}) Taranıyor...")
                 
-                if s_count > 0:
-                    total_saved_sirket += s_count
-                    total_saved_ilan += i_count
-                    print(f"  ⚡ [{tsm_name}] '{kw}' -> +{s_count} şirket, +{i_count} ilan (Kümülatif Şirket: {total_saved_sirket:,})")
-                    consecutive_empty = 0
-                else:
-                    consecutive_empty += 1
+                while kw_idx < len(keywords):
+                    kw = keywords[kw_idx]
+                    s_count, i_count = query_tsm_keyword(tsm_id, tsm_name, kw, conn, bagli_ilan=bagli_ilan)
                     
-                kw_idx += 1
+                    if s_count > 0:
+                        total_saved_sirket += s_count
+                        total_saved_ilan += i_count
+                        print(f"  ⚡ [Tur #{tur} | {tsm_name}] '{kw}' -> +{s_count} şirket, +{i_count} ilan (Kümülatif Şirket: {total_saved_sirket:,})")
+                        consecutive_empty = 0
+                    else:
+                        consecutive_empty += 1
+                        if consecutive_empty >= 20:
+                            ensure_authenticated(force=True)
+                            consecutive_empty = 0
+                        
+                    kw_idx += 1
+                    state["tur"] = tur
+                    state["tsm_idx"] = tsm_idx
+                    state["kw_idx"] = kw_idx
+                    state["total_companies_saved"] = total_saved_sirket
+                    state["total_announcements_saved"] = total_saved_ilan
+                    save_state(state)
+                    
+                    # Hayalet / Stealth modu: İnsansı rastgele gecikme (1.2s - 2.2s)
+                    jitter = random.uniform(1.2, 2.2)
+                    if kw_idx % 25 == 0:
+                        jitter += random.uniform(3.0, 5.5)
+                    time.sleep(jitter)
+                    
+                # Completed all keywords for this TSM, move to next
+                kw_idx = 0
+                tsm_idx += 1
+                state["tur"] = tur
                 state["tsm_idx"] = tsm_idx
-                state["kw_idx"] = kw_idx
-                state["total_companies_saved"] = total_saved_sirket
-                state["total_announcements_saved"] = total_saved_ilan
+                state["kw_idx"] = 0
                 save_state(state)
-                
-                # Hayalet / Stealth modu: İnsansı rastgele gecikme (1.2s - 2.2s)
-                jitter = random.uniform(1.2, 2.2)
-                # Her 25 sorguda bir okuma molası simülasyonu (ekstra 3-5 saniye)
-                if kw_idx % 25 == 0:
-                    jitter += random.uniform(3.0, 5.5)
-                time.sleep(jitter)
-                
-            # Completed all keywords for this TSM, move to next
+                time.sleep(random.uniform(2.5, 4.5))
+
+            # 238/238 TSM bittiğinde durma! Otomatik olarak yeni tura baştan başla!
+            tur += 1
+            tsm_idx = 0
             kw_idx = 0
-            tsm_idx += 1
-            state["tsm_idx"] = tsm_idx
+            state["tur"] = tur
+            state["tsm_idx"] = 0
             state["kw_idx"] = 0
             save_state(state)
-            time.sleep(random.uniform(2.5, 4.5))
+            keywords = load_keywords(tur)
+            print(f"\n🔄 238 TSM Taraması Bitti! Durmadan Otomatik Olarak TUR #{tur} ({len(keywords)} kelime) Başlatılıyor...", flush=True)
+            time.sleep(5.0)
             
     except KeyboardInterrupt:
         print("\n🛑 Kullanıcı tarafından durduruldu.")

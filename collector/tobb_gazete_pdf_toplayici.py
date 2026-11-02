@@ -30,71 +30,107 @@ import pymupdf
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DB_PATH = REPO_ROOT / "warehouse" / "product" / "turkiye_ticaret_sicil_ve_sirketler.sqlite"
 RAW_DIR = REPO_ROOT / "warehouse" / "raw" / "gazete_sayfalari"
-COOKIE_FILE = REPO_ROOT / "collector" / "data" / "tobb_auth_cookies.txt"
-CAP_FILE = REPO_ROOT / "collector" / "data" / "tobb_auth_cap.png"
+COOKIE_FILE = REPO_ROOT / "collector" / "data" / "tobb_local_pdf_cookie.txt"
+CAP_FILE = REPO_ROOT / "collector" / "data" / "tobb_local_pdf_cap.png"
 TESSERACT_BIN = "/opt/homebrew/bin/tesseract"
 
 USER_EMAIL = "geoprop_bot1@yandex.com"
 USER_PASS = "Geoprop2026*"
 
-def ensure_auth():
+def solve_captcha_img(captcha_url="https://www.ticaretsicil.gov.tr/assets/captcha/captcha.php"):
+    for _ in range(5):
+        try:
+            sep = "&" if "?" in captcha_url else "?"
+            url = f"{captcha_url}{sep}{int(time.time() * 1000)}"
+            subprocess.run([
+                "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
+                "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+                "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
+                url, "-o", str(CAP_FILE)
+            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
+            if not CAP_FILE.exists() or CAP_FILE.stat().st_size < 100:
+                continue
+            out = subprocess.check_output([
+                TESSERACT_BIN, str(CAP_FILE), "stdout",
+                "--psm", "8",
+                "-c", "tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            ], stderr=subprocess.DEVNULL, timeout=8)
+            code = out.decode("utf-8", errors="ignore").strip()
+            if len(code) == 4 and code.isalnum() and "ERROR" not in code:
+                return code
+        except Exception:
+            pass
+    return None
+
+def solve_ilan_captcha():
+    for _ in range(5):
+        code = solve_captcha_img("https://www.ticaretsicil.gov.tr/captcha/captcha.php")
+        if not code:
+            continue
+        try:
+            res = subprocess.check_output([
+                "curl", "-k", "-s", "--connect-timeout", "6", "--max-time", "10",
+                "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+                "-H", "Referer: https://www.ticaretsicil.gov.tr/view/hizlierisim/pdf_goster.php",
+                "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
+                "-X", "POST", "-F", f"CaptchaIlan={code}",
+                "https://www.ticaretsicil.gov.tr/view/hizlierisim/guvenlikkodudogrula.php"
+            ], stderr=subprocess.DEVNULL, timeout=12).decode("utf-8", errors="ignore").strip()
+            if res == "1":
+                return True
+        except Exception:
+            pass
+    return False
+
+def ensure_auth(force=False):
     """TOBB oturumunun aktif olduğundan emin olur, gerekirse captcha çözüp giriş yapar."""
-    # Test session fast via lightweight index
-    if COOKIE_FILE.exists():
+    if not force and COOKIE_FILE.exists():
         try:
             cmd = [
                 "curl", "-k", "-s", "--connect-timeout", "4", "--max-time", "6",
                 "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
                 "https://www.ticaretsicil.gov.tr/index.php"
             ]
-            res = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode("utf-8", errors="ignore")
-            if "cikis.php" in res.lower() or "geoprop" in res.lower():
+            res = subprocess.check_output(cmd, stderr=subprocess.DEVNULL, timeout=8).decode("utf-8", errors="ignore")
+            if "cikis.php" in res.lower():
                 return True
         except Exception:
             pass
 
-    print("🔑 TOBB yetkili oturumu yenileniyor (Captcha çözülüyor)...")
-    for attempt in range(3):
+    if force and COOKIE_FILE.exists():
         try:
-            subprocess.run([
-                "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
-                "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-                "-H", "Connection: close",
-                "-c", str(COOKIE_FILE),
-                "https://www.ticaretsicil.gov.tr/view/hizlierisim/girisyap.php"
-            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            
-            subprocess.run([
-                "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
-                "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
-                "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
-                "https://www.ticaretsicil.gov.tr/assets/captcha/captcha.php",
-                "-o", str(CAP_FILE)
-            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            
-            out = subprocess.check_output([
-                TESSERACT_BIN, str(CAP_FILE), "stdout",
-                "--psm", "8",
-                "-c", "tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            ], stderr=subprocess.DEVNULL)
-            code = out.decode("utf-8").strip()
-            
-            if len(code) == 4 and code.isalnum():
+            COOKIE_FILE.unlink()
+        except Exception:
+            pass
+
+    print("🔑 TOBB yetkili oturumu yenileniyor (Captcha çözülüyor)...")
+    for attempt in range(6):
+        try:
+            if attempt % 2 == 0:
+                subprocess.run([
+                    "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
+                    "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                    "-c", str(COOKIE_FILE),
+                    "https://www.ticaretsicil.gov.tr/view/hizlierisim/girisyap.php"
+                ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
+
+            code = solve_captcha_img("https://www.ticaretsicil.gov.tr/assets/captcha/captcha.php")
+            if code:
                 cmd_login = [
                     "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
                     "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
-                    "-e", "https://www.ticaretsicil.gov.tr/index.php",
+                    "-e", "https://www.ticaretsicil.gov.tr/view/hizlierisim/girisyap.php",
                     "-d", f"LoginEmail={USER_EMAIL}&LoginSifre={USER_PASS}&Captcha={code}",
                     "https://www.ticaretsicil.gov.tr/view/modal/uyegirisi_ok.php"
                 ]
-                res = subprocess.check_output(cmd_login, stderr=subprocess.DEVNULL).decode("utf-8", errors="ignore").strip()
+                res = subprocess.check_output(cmd_login, stderr=subprocess.DEVNULL, timeout=10).decode("utf-8", errors="ignore").strip()
                 if res == "1":
                     print(f"  ✅ TOBB Girişi Başarılı! (Deneme #{attempt+1})")
                     return True
         except Exception:
             pass
         time.sleep(0.3)
-        
+
     return False
 
 def ocr_and_extract_metadata(pdf_path):
@@ -158,45 +194,51 @@ def download_gazette_pdf(guid, gazete_sayisi, sayfa_no):
         return str(pdf_path), False
         
     view_url = f"https://www.ticaretsicil.gov.tr/view/hizlierisim/pdf_goster.php?Guid={guid}"
-    cmd_view = [
-        "curl", "-k", "-s", "--connect-timeout", "6", "--max-time", "12",
-        "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
-        "-e", "https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php",
-        view_url
-    ]
-    try:
-        html = subprocess.check_output(cmd_view, stderr=subprocess.DEVNULL).decode("utf-8", errors="ignore")
-        m_pdf = re.search(r'(/tmp_gazete/[^\"]+\.pdf)', html)
-        if not m_pdf:
-            # Session might have expired
-            if "GİRİŞ" in html or "giriş yapmalısınız" in html.lower():
-                ensure_auth()
-                html = subprocess.check_output(cmd_view, stderr=subprocess.DEVNULL).decode("utf-8", errors="ignore")
-                m_pdf = re.search(r'(/tmp_gazete/[^\"]+\.pdf)', html)
-                
-        if not m_pdf:
-            return None, False
-            
-        pdf_url = f"https://www.ticaretsicil.gov.tr{m_pdf.group(1)}"
-        cmd_dl = [
-            "curl", "-k", "-s", "--connect-timeout", "8", "--max-time", "15",
+    for attempt in range(4):
+        cmd_view = [
+            "curl", "-k", "-i", "-s", "--connect-timeout", "6", "--max-time", "12",
+            "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
             "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
-            pdf_url
+            "-e", "https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php",
+            view_url
         ]
-        pdf_bytes = subprocess.check_output(cmd_dl, stderr=subprocess.DEVNULL)
-        if pdf_bytes.startswith(b"%PDF"):
-            try:
-                # Sıkıştırılmış optimize PDF formatında diske yaz (Garbage=4, Deflate=True)
-                doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
-                doc.save(pdf_path, garbage=4, deflate=True, clean=True, deflate_images=True, deflate_fonts=True)
-                doc.close()
-            except Exception:
-                with open(pdf_path, "wb") as f:
-                    f.write(pdf_bytes)
-            return str(pdf_path), True
-    except Exception:
-        pass
-        
+        try:
+            raw_resp = subprocess.check_output(cmd_view, stderr=subprocess.DEVNULL, timeout=14).decode("utf-8", errors="ignore")
+            m_pdf = re.search(r'(/tmp_gazete/[^\"]+\.pdf)', raw_resp)
+            if m_pdf:
+                pdf_url = f"https://www.ticaretsicil.gov.tr{m_pdf.group(1)}"
+                cmd_dl = [
+                    "curl", "-k", "-s", "--connect-timeout", "8", "--max-time", "15",
+                    "-H", "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
+                    "-c", str(COOKIE_FILE), "-b", str(COOKIE_FILE),
+                    pdf_url
+                ]
+                pdf_bytes = subprocess.check_output(cmd_dl, stderr=subprocess.DEVNULL, timeout=18)
+                if pdf_bytes.startswith(b"%PDF"):
+                    try:
+                        doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
+                        doc.save(pdf_path, garbage=4, deflate=True, clean=True, deflate_images=True, deflate_fonts=True)
+                        doc.close()
+                    except Exception:
+                        with open(pdf_path, "wb") as f:
+                            f.write(pdf_bytes)
+                    return str(pdf_path), True
+
+            if "Location: girisyap.php" in raw_resp or "location: girisyap.php" in raw_resp:
+                ensure_auth(force=True)
+                continue
+
+            if 'id="CaptchaIlan"' in raw_resp or '<form id="FormGuvenlikKodu">' in raw_resp:
+                if attempt == 0 and solve_ilan_captcha():
+                    continue
+                ensure_auth(force=True)
+                continue
+
+            if "200 OK" in raw_resp:
+                return None, False
+        except Exception:
+            time.sleep(0.3)
+
     return None, False
 
 def run_pdf_downloader_batch(batch_size=50, run_ocr_on_batch=3):
