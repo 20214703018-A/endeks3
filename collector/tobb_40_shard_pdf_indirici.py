@@ -45,8 +45,8 @@ DATA_DIR = REPO_ROOT / "collector" / "data"
 
 FALLBACK_EMAIL = "geoprop_bot1@yandex.com"
 USER_PASS = "Geoprop2026*"
-BUNDLE_SIZE = 100       # Her 100 tekil gazete sayfasında bir tar.gz paketi yap (~6 MB)
-WORKERS_PER_SHARD = 4   # Her bulut makinesinde 4 bağımsız hesap + 4 paralel indirme kolu
+BUNDLE_SIZE = 50        # Her 50 tekil gazete sayfasında bir tar.gz paketi yap (~3.5 MB)
+WORKERS_PER_SHARD = 2   # Her bulut makinesinde 2 bağımsız PHPSESSID oturumu (Toplam 80 paralel akış)
 
 TESSERACT_BIN = (
     shutil.which("tesseract")
@@ -98,7 +98,7 @@ def register_worker_account(email: str, shard_id: int, worker_id: int, cookie_fi
             "curl", "-k", "-s", "--connect-timeout", "6", "--max-time", "10",
             "-c", str(cookie_file), "-b", str(cookie_file),
             "-d", (
-                f"UyeTuru=1&Unvan=GEOPROP+VERI+{shard_id}+{worker_id}"
+                f"UyeTuru=1&Unvan=AHMET+YILMAZ"
                 f"&SicilNo=&Email={email}&Sifre={USER_PASS}&SifreTekrar={USER_PASS}&CaptchaUyeOl={code}"
             ),
             "https://www.ticaretsicil.gov.tr/view/modal/uyeol_ok.php"
@@ -106,6 +106,7 @@ def register_worker_account(email: str, shard_id: int, worker_id: int, cookie_fi
         try:
             res = subprocess.check_output(cmd_reg, stderr=subprocess.DEVNULL, timeout=12).decode("utf-8", errors="ignore").strip()
             if res.isdigit() and int(res) > 0:
+                print(f"  🆕 [Shard {shard_id}] Yeni TOBB hesabı açıldı: {email} (ID: {res})", flush=True)
                 return True
         except Exception:
             pass
@@ -114,7 +115,17 @@ def register_worker_account(email: str, shard_id: int, worker_id: int, cookie_fi
 
 
 def ensure_worker_authenticated(shard_id: int, worker_id: int, cookie_file: Path, cap_path: Path, registered_state: dict) -> bool:
-    worker_email = f"geoprop_s{shard_id}_w{worker_id}@yandex.com"
+    if cookie_file.exists():
+        try:
+            chk = subprocess.check_output([
+                "curl", "-k", "-s", "--connect-timeout", "5", "--max-time", "8",
+                "-c", str(cookie_file), "-b", str(cookie_file),
+                "https://www.ticaretsicil.gov.tr/index.php"
+            ], stderr=subprocess.DEVNULL, timeout=10).decode("utf-8", errors="ignore")
+            if "cikis.php" in chk.lower():
+                return True
+        except Exception:
+            pass
 
     try:
         subprocess.run([
@@ -124,12 +135,7 @@ def ensure_worker_authenticated(shard_id: int, worker_id: int, cookie_file: Path
     except Exception:
         pass
 
-    if not registered_state.get("tried_register"):
-        register_worker_account(worker_email, shard_id, worker_id, cookie_file, cap_path)
-        registered_state["tried_register"] = True
-
     for attempt in range(8):
-        target_email = worker_email if attempt < 5 else FALLBACK_EMAIL
         code = solve_captcha(cap_path, cookie_file)
         if not code:
             continue
@@ -137,7 +143,7 @@ def ensure_worker_authenticated(shard_id: int, worker_id: int, cookie_file: Path
         cmd_login = [
             "curl", "-k", "-s", "--connect-timeout", "6", "--max-time", "10",
             "-c", str(cookie_file), "-b", str(cookie_file),
-            "-d", f"LoginEmail={target_email}&LoginSifre={USER_PASS}&Captcha={code}",
+            "-d", f"LoginEmail={FALLBACK_EMAIL}&LoginSifre={USER_PASS}&Captcha={code}",
             "https://www.ticaretsicil.gov.tr/view/modal/uyegirisi_ok.php"
         ]
         try:
@@ -146,7 +152,7 @@ def ensure_worker_authenticated(shard_id: int, worker_id: int, cookie_file: Path
                 return True
         except Exception:
             pass
-        time.sleep(0.3)
+        time.sleep(0.25)
 
     return False
 
