@@ -435755,6 +435755,100 @@
         "gabari": null,
         "kat_adedi": null
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.87706,
+              41.0359
+            ],
+            [
+              28.87714,
+              41.03592
+            ],
+            [
+              28.8771,
+              41.03602
+            ],
+            [
+              28.87701,
+              41.036
+            ],
+            [
+              28.87706,
+              41.0359
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 154,
+        "il": "İstanbul",
+        "ilce": "Esenler",
+        "mahalle": "Güngören",
+        "ada_no": "82",
+        "parsel_no": "1",
+        "alan_m2": 90.0,
+        "nitelik": "Arsa",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.87809,
+              41.03605
+            ],
+            [
+              28.87803,
+              41.03618
+            ],
+            [
+              28.87792,
+              41.03614
+            ],
+            [
+              28.87798,
+              41.03602
+            ],
+            [
+              28.87809,
+              41.03605
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 153,
+        "il": "İstanbul",
+        "ilce": "Esenler",
+        "mahalle": "Güngören",
+        "ada_no": "82",
+        "parsel_no": "28",
+        "alan_m2": 139.0,
+        "nitelik": "Arsa",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
     }
   ]
 }
