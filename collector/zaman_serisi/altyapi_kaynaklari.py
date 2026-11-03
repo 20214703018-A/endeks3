@@ -37,7 +37,7 @@ def sarj_istasyon(dizin, tam=False):
     for x in veri:
         sid = x.get("id")
         if sid is None: continue
-        sok = [s.get("id") for s in x.get("sockets") or []]
+        sok = [s.get("id") for s in x.get("sockets") or [] if isinstance(s, dict)]   # API bazen soket listesinde null döndürüyor (31 Eki→)
         c.execute("""INSERT INTO istasyon VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT (istasyon_id) DO UPDATE SET lat=excluded.lat, lon=excluded.lon,
             marka=excluded.marka, ad=excluded.ad, yesil=excluded.yesil, soket_sayisi=excluded.soket_sayisi, soketler=excluded.soketler,
             son_gorulme=excluded.son_gorulme""", (sid, x.get("lat"), x.get("lng"), x.get("brand"), x.get("title"), x.get("green"), len(sok),
