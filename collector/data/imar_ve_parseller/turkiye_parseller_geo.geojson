@@ -435849,6 +435849,618 @@
         "gabari": null,
         "kat_adedi": null
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              43.60681,
+              39.42682
+            ],
+            [
+              43.60662,
+              39.42686
+            ],
+            [
+              43.60661,
+              39.42662
+            ],
+            [
+              43.60675,
+              39.4266
+            ],
+            [
+              43.60681,
+              39.42682
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 151,
+        "il": "Ağrı",
+        "ilce": "Diyadin",
+        "mahalle": "Yukarı Dalören",
+        "ada_no": "106",
+        "parsel_no": "1",
+        "alan_m2": 377.92,
+        "nitelik": "Sağlık Ocağı",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              43.62658,
+              39.42419
+            ],
+            [
+              43.62572,
+              39.42389
+            ],
+            [
+              43.62523,
+              39.42312
+            ],
+            [
+              43.62584,
+              39.42249
+            ],
+            [
+              43.62731,
+              39.42301
+            ],
+            [
+              43.62658,
+              39.42419
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 150,
+        "il": "Ağrı",
+        "ilce": "Diyadin",
+        "mahalle": "Yukarı Dalören",
+        "ada_no": "106",
+        "parsel_no": "86",
+        "alan_m2": 19687.55,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.39061,
+              40.46082
+            ],
+            [
+              34.39057,
+              40.46096
+            ],
+            [
+              34.39044,
+              40.46093
+            ],
+            [
+              34.39031,
+              40.46079
+            ],
+            [
+              34.39022,
+              40.46065
+            ],
+            [
+              34.39061,
+              40.46082
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 153,
+        "il": "Çorum",
+        "ilce": "Uğurludağ",
+        "mahalle": "Köpeç",
+        "ada_no": "123",
+        "parsel_no": "1",
+        "alan_m2": 434.97,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              34.39204,
+              40.46
+            ],
+            [
+              34.39202,
+              40.46007
+            ],
+            [
+              34.39197,
+              40.46011
+            ],
+            [
+              34.39194,
+              40.46018
+            ],
+            [
+              34.3919,
+              40.46022
+            ],
+            [
+              34.39185,
+              40.46026
+            ],
+            [
+              34.39183,
+              40.46029
+            ],
+            [
+              34.39182,
+              40.46033
+            ],
+            [
+              34.39183,
+              40.46038
+            ],
+            [
+              34.39181,
+              40.46043
+            ],
+            [
+              34.39175,
+              40.46048
+            ],
+            [
+              34.39165,
+              40.46056
+            ],
+            [
+              34.39148,
+              40.46067
+            ],
+            [
+              34.39136,
+              40.46074
+            ],
+            [
+              34.39127,
+              40.46078
+            ],
+            [
+              34.39121,
+              40.46081
+            ],
+            [
+              34.39115,
+              40.46083
+            ],
+            [
+              34.39108,
+              40.46083
+            ],
+            [
+              34.39099,
+              40.46082
+            ],
+            [
+              34.39075,
+              40.46077
+            ],
+            [
+              34.39048,
+              40.46068
+            ],
+            [
+              34.39038,
+              40.46064
+            ],
+            [
+              34.39032,
+              40.4606
+            ],
+            [
+              34.39028,
+              40.46059
+            ],
+            [
+              34.39053,
+              40.46044
+            ],
+            [
+              34.3908,
+              40.46032
+            ],
+            [
+              34.39088,
+              40.46027
+            ],
+            [
+              34.39086,
+              40.46015
+            ],
+            [
+              34.39081,
+              40.46
+            ],
+            [
+              34.39079,
+              40.45993
+            ],
+            [
+              34.39078,
+              40.45974
+            ],
+            [
+              34.39079,
+              40.45955
+            ],
+            [
+              34.39078,
+              40.45943
+            ],
+            [
+              34.39079,
+              40.45933
+            ],
+            [
+              34.39082,
+              40.45915
+            ],
+            [
+              34.39086,
+              40.45895
+            ],
+            [
+              34.39092,
+              40.45865
+            ],
+            [
+              34.39105,
+              40.45865
+            ],
+            [
+              34.39124,
+              40.45867
+            ],
+            [
+              34.39142,
+              40.45869
+            ],
+            [
+              34.39143,
+              40.45881
+            ],
+            [
+              34.39144,
+              40.45935
+            ],
+            [
+              34.39155,
+              40.45941
+            ],
+            [
+              34.39161,
+              40.45945
+            ],
+            [
+              34.39164,
+              40.45947
+            ],
+            [
+              34.39173,
+              40.45952
+            ],
+            [
+              34.39182,
+              40.45955
+            ],
+            [
+              34.39187,
+              40.45956
+            ],
+            [
+              34.39197,
+              40.45958
+            ],
+            [
+              34.392,
+              40.45958
+            ],
+            [
+              34.39204,
+              40.46
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 152,
+        "il": "Çorum",
+        "ilce": "Uğurludağ",
+        "mahalle": "Köpeç",
+        "ada_no": "123",
+        "parsel_no": "4",
+        "alan_m2": 18778.64,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              35.30829,
+              37.03771
+            ],
+            [
+              35.30793,
+              37.0376
+            ],
+            [
+              35.30807,
+              37.03732
+            ],
+            [
+              35.30845,
+              37.03743
+            ],
+            [
+              35.30839,
+              37.03753
+            ],
+            [
+              35.30829,
+              37.03771
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 152,
+        "il": "Adana",
+        "ilce": "Çukurova",
+        "mahalle": "Karalarbucağı",
+        "ada_no": "6017",
+        "parsel_no": "8",
+        "alan_m2": 1175.0,
+        "nitelik": "Arsa",
+        "zemin_durumu": "Kat İrtifak",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              35.30845,
+              37.03743
+            ],
+            [
+              35.30807,
+              37.03732
+            ],
+            [
+              35.30822,
+              37.03703
+            ],
+            [
+              35.30862,
+              37.03715
+            ],
+            [
+              35.30849,
+              37.03736
+            ],
+            [
+              35.30845,
+              37.03743
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 151,
+        "il": "Adana",
+        "ilce": "Çukurova",
+        "mahalle": "Karalarbucağı",
+        "ada_no": "6017",
+        "parsel_no": "7",
+        "alan_m2": 1256.0,
+        "nitelik": "1Zm.1Bd.11 Nor.Kat.Bina Ve Arsası",
+        "zemin_durumu": "Kat Mülkiyet",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              35.30862,
+              37.03715
+            ],
+            [
+              35.30822,
+              37.03703
+            ],
+            [
+              35.3083,
+              37.03687
+            ],
+            [
+              35.30832,
+              37.03685
+            ],
+            [
+              35.30834,
+              37.03684
+            ],
+            [
+              35.30837,
+              37.03684
+            ],
+            [
+              35.3084,
+              37.03684
+            ],
+            [
+              35.30872,
+              37.03698
+            ],
+            [
+              35.30862,
+              37.03715
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 150,
+        "il": "Adana",
+        "ilce": "Çukurova",
+        "mahalle": "Karalarbucağı",
+        "ada_no": "6017",
+        "parsel_no": "6",
+        "alan_m2": 911.0,
+        "nitelik": "Arsa",
+        "zemin_durumu": "Kat İrtifak",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              35.30887,
+              37.03748
+            ],
+            [
+              35.30849,
+              37.03736
+            ],
+            [
+              35.30862,
+              37.03715
+            ],
+            [
+              35.30872,
+              37.03698
+            ],
+            [
+              35.30901,
+              37.0371
+            ],
+            [
+              35.30904,
+              37.03712
+            ],
+            [
+              35.30906,
+              37.03714
+            ],
+            [
+              35.30906,
+              37.03716
+            ],
+            [
+              35.30905,
+              37.03719
+            ],
+            [
+              35.30887,
+              37.03748
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 149,
+        "il": "Adana",
+        "ilce": "Çukurova",
+        "mahalle": "Karalarbucaği",
+        "ada_no": "6017",
+        "parsel_no": "5",
+        "alan_m2": 1638.0,
+        "nitelik": "1 Bodrum, 1 Zemin, 7 Normal Katli Betonarme Bina Ve Arsasi",
+        "zemin_durumu": "Kat Mülkiyet",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
     }
   ]
 }
