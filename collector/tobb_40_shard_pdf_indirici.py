@@ -234,6 +234,9 @@ def download_page_pdf(guid: str, cookie_file: Path, cap_path: Path):
     return None, "TIMEOUT"
 
 
+from collector.tobb_pdf_adres_ocr_motoru import extract_records_from_pdf_bytes, apply_extracted_records_to_db
+
+
 def compress_pdf_bytes(pdf_bytes: bytes) -> bytes:
     try:
         doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
@@ -246,6 +249,12 @@ def compress_pdf_bytes(pdf_bytes: bytes) -> bytes:
 
 def get_release_bucket_for_shard(shard_id: int) -> list:
     all_buckets = [
+        "warehouse-pdf-7",
+        "warehouse-pdf-8",
+        "warehouse-pdf-9",
+        "warehouse-pdf-10",
+        "warehouse-pdf-11",
+        "warehouse-pdf-12",
         "warehouse-pdf-1",
         "warehouse-pdf-2",
         "warehouse-pdf-3",
@@ -350,6 +359,20 @@ def init_shard_update_db(db_path: Path):
             id INTEGER PRIMARY KEY,
             pdf_dosya_yolu TEXT NOT NULL,
             guncellenme_tarihi TEXT NOT NULL
+        )
+    """)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS sirket_adres_updates (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sayi TEXT,
+            sayfa TEXT,
+            mersis_no TEXT,
+            vkn TEXT,
+            sicil_no TEXT,
+            tam_adres TEXT,
+            ilce TEXT,
+            sermaye_tl REAL,
+            guncellenme_tarihi TEXT
         )
     """)
     conn.commit()
@@ -540,13 +563,32 @@ def main():
                 with open(local_pdf_path, "wb") as f:
                     f.write(compressed)
 
+                # OCR ile PDF sayfasındaki tüm şirketlerin Adres, MERSİS, VKN, İlçe ve Sermaye bilgilerini çıkar
+                ocr_png_path = DATA_DIR / f"tobb_shard_{shard_id}_ocr_page.png"
+                extracted_recs = extract_records_from_pdf_bytes(compressed, ocr_png_path)
+                if extracted_recs:
+                    now_iso_ocr = datetime.now(timezone.utc).isoformat()
+                    for rec in extracted_recs:
+                        if rec.get("tam_adres") or rec.get("mersis_no") or rec.get("sermaye_tl"):
+                            update_conn.execute("""
+                                INSERT INTO sirket_adres_updates
+                                (sayi, sayfa, mersis_no, vkn, sicil_no, tam_adres, ilce, sermaye_tl, guncellenme_tarihi)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                            """, (
+                                str(sayi), str(sayfa), rec.get("mersis_no"), rec.get("vkn"),
+                                rec.get("sicil_no"), rec.get("tam_adres"), rec.get("ilce"),
+                                rec.get("sermaye_tl"), now_iso_ocr
+                            ))
+                    apply_extracted_records_to_db(master_conn, extracted_recs, str(sayi), str(sayfa))
+
                 current_bundle_files.append((rep_id, pdf_filename, str(sayi), str(sayfa)))
                 total_downloaded += 1
 
                 kb_size = len(compressed) / 1024.0
+                addr_cnt = sum(1 for r in extracted_recs if r.get("tam_adres"))
                 print(
                     f"  📥 [Shard {shard_id}|#{total_downloaded}] [{ilan_tarihi}] "
-                    f"Sayı: {sayi} / Sayfa: {sayfa} ({safe_tsm[:10]}) - {kb_size:.1f} KB -> {unvan[:35]}...",
+                    f"Sayı: {sayi} / Sayfa: {sayfa} ({safe_tsm[:10]}) - {kb_size:.1f} KB (+{addr_cnt} Adres) -> {unvan[:32]}...",
                     flush=True
                 )
 

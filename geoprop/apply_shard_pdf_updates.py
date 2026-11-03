@@ -31,10 +31,20 @@ def merge_pdf_updates(updates_dir, master_db_path):
     c = conn.cursor()
     
     total_updated = 0
+    total_addr_updated = 0
+    from collector.tobb_pdf_adres_ocr_motoru import apply_extracted_records_to_db, backfill_vkn_from_mersis
+
     for u_file in sorted(update_files):
         try:
             u_conn = sqlite3.connect(u_file)
             rows = u_conn.execute("SELECT id, pdf_dosya_yolu, guncellenme_tarihi FROM gazete_pdf_updates").fetchall()
+            addr_rows = []
+            try:
+                addr_rows = u_conn.execute(
+                    "SELECT sayi, sayfa, mersis_no, vkn, sicil_no, tam_adres, ilce, sermaye_tl FROM sirket_adres_updates"
+                ).fetchall()
+            except Exception:
+                pass
             u_conn.close()
             
             if rows:
@@ -44,13 +54,28 @@ def merge_pdf_updates(updates_dir, master_db_path):
                     WHERE id = ?
                 """, [(r[1], r[2], r[0]) for r in rows])
                 total_updated += len(rows)
-                print(f"  ✅ {u_file.name}: +{len(rows)} sayfa bağlandı.")
+
+            if addr_rows:
+                for ar in addr_rows:
+                    rec = {
+                        "mersis_no": ar[2],
+                        "vkn": ar[3],
+                        "sicil_no": ar[4],
+                        "tam_adres": ar[5],
+                        "ilce": ar[6],
+                        "sermaye_tl": ar[7],
+                    }
+                    total_addr_updated += apply_extracted_records_to_db(conn, [rec], ar[0], ar[1])
+
+            if rows or addr_rows:
+                print(f"  ✅ {u_file.name}: +{len(rows)} sayfa bağlandı, +{len(addr_rows)} OCR adres kaydı işlendi.")
         except Exception as e:
             print(f"  ⚠️ {u_file.name} okuma hatası: {e}")
-            
+
+    backfill_vkn_from_mersis(conn)
     conn.commit()
     conn.close()
-    print(f"🎉 Toplam {total_updated} gazete PDF yolu master ambara kalıcı olarak işlendi.")
+    print(f"🎉 Toplam {total_updated} gazete PDF yolu ve {total_addr_updated} şirket adresi master ambara işlendi.")
     return True
 
 if __name__ == "__main__":
