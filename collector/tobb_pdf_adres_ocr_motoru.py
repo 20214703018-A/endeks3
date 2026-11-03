@@ -287,7 +287,7 @@ def apply_extracted_records_to_db(conn: sqlite3.Connection, records: list, sayi:
                     ilce = COALESCE(?, ilce),
                     vkn = COALESCE(?, vkn),
                     sermaye_tl = COALESCE(?, sermaye_tl),
-                    son_guncelleme = ?
+                    guncellenme_tarihi = ?
                 WHERE mersis_no = ?
             """, (addr, ilce, vkn, sermaye, now_iso, mersis))
             if cur.rowcount > 0:
@@ -303,7 +303,7 @@ def apply_extracted_records_to_db(conn: sqlite3.Connection, records: list, sayi:
                     mersis_no = CASE WHEN mersis_no LIKE 'TSM-%' AND ? IS NOT NULL THEN ? ELSE mersis_no END,
                     vkn = COALESCE(?, vkn),
                     sermaye_tl = COALESCE(?, sermaye_tl),
-                    son_guncelleme = ?
+                    guncellenme_tarihi = ?
                 WHERE ticaret_sicil_no = ?
             """, (addr, ilce, mersis, mersis, vkn, sermaye, now_iso, sicil))
             if cur.rowcount > 0:
@@ -325,7 +325,7 @@ def apply_extracted_records_to_db(conn: sqlite3.Connection, records: list, sayi:
                             mersis_no = CASE WHEN mersis_no LIKE 'TSM-%' AND ? IS NOT NULL THEN ? ELSE mersis_no END,
                             vkn = COALESCE(?, vkn),
                             sermaye_tl = COALESCE(?, sermaye_tl),
-                            son_guncelleme = ?
+                            guncellenme_tarihi = ?
                         WHERE ticaret_sicil_no = ? AND tsm_adi = ?
                     """, (addr, ilce, mersis, mersis, vkn, sermaye, now_iso, ann_sicil, ann_tsm))
                     if cur.rowcount > 0:

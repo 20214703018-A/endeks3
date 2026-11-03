@@ -15,6 +15,10 @@ permissions:
   contents: write
   actions: write
 
+concurrency:
+  group: tobb_ticaret_sicil_matrix
+  cancel-in-progress: false
+
 jobs:
   tobb_mining_shards:
     name: "TOBB & Ticaret Sicil Shard ${{ matrix.shard }}/40"

@@ -19,6 +19,10 @@ permissions:
   contents: write
   actions: write
 
+concurrency:
+  group: tobb_gazete_pdf_matrix
+  cancel-in-progress: false
+
 jobs:
   pdf_mining_shards:
     name: "PDF Shard ${{ matrix.shard }}/40"
@@ -75,6 +79,12 @@ jobs:
           if ls warehouse/raw/bundles/*.tar.gz 1> /dev/null 2>&1; then
             echo "📦 Kalan paketler GitHub Release havuzuna yükleniyor..."
             for b in warehouse/raw/bundles/*.tar.gz; do
+              gh release upload warehouse-pdf-7 "$b" --clobber || \
+              gh release upload warehouse-pdf-8 "$b" --clobber || \
+              gh release upload warehouse-pdf-9 "$b" --clobber || \
+              gh release upload warehouse-pdf-10 "$b" --clobber || \
+              gh release upload warehouse-pdf-11 "$b" --clobber || \
+              gh release upload warehouse-pdf-12 "$b" --clobber || \
               gh release upload warehouse-pdf-1 "$b" --clobber || \
               gh release upload warehouse-pdf-2 "$b" --clobber || \
               gh release upload warehouse-pdf-3 "$b" --clobber || \
