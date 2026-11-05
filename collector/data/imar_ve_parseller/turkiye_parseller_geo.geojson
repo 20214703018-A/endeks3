@@ -438973,6 +438973,386 @@
         "gabari": null,
         "kat_adedi": null
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              39.13936,
+              37.05481
+            ],
+            [
+              39.13911,
+              37.05469
+            ],
+            [
+              39.14127,
+              37.05468
+            ],
+            [
+              39.14113,
+              37.05559
+            ],
+            [
+              39.1409,
+              37.05564
+            ],
+            [
+              39.14,
+              37.05563
+            ],
+            [
+              39.13994,
+              37.05544
+            ],
+            [
+              39.13982,
+              37.05524
+            ],
+            [
+              39.13961,
+              37.05501
+            ],
+            [
+              39.13936,
+              37.05481
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 154,
+        "il": "Şanlıurfa",
+        "ilce": "Haliliye",
+        "mahalle": "Derinkuyu",
+        "ada_no": "123",
+        "parsel_no": "1",
+        "alan_m2": 14045.0,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              39.14436,
+              37.05495
+            ],
+            [
+              39.14113,
+              37.05559
+            ],
+            [
+              39.14127,
+              37.05468
+            ],
+            [
+              39.13911,
+              37.05469
+            ],
+            [
+              39.13895,
+              37.05461
+            ],
+            [
+              39.13928,
+              37.05412
+            ],
+            [
+              39.14116,
+              37.052
+            ],
+            [
+              39.14461,
+              37.05195
+            ],
+            [
+              39.14436,
+              37.05495
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 153,
+        "il": "Şanliurfa",
+        "ilce": "Haliliye",
+        "mahalle": "Derinkuyu",
+        "ada_no": "123",
+        "parsel_no": "2",
+        "alan_m2": 138581.0,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              43.6376,
+              39.36662
+            ],
+            [
+              43.6377,
+              39.36626
+            ],
+            [
+              43.63757,
+              39.36583
+            ],
+            [
+              43.63662,
+              39.36538
+            ],
+            [
+              43.63581,
+              39.36513
+            ],
+            [
+              43.63721,
+              39.36477
+            ],
+            [
+              43.6377,
+              39.36456
+            ],
+            [
+              43.63825,
+              39.36414
+            ],
+            [
+              43.63877,
+              39.36401
+            ],
+            [
+              43.63898,
+              39.36422
+            ],
+            [
+              43.63868,
+              39.36455
+            ],
+            [
+              43.63944,
+              39.36518
+            ],
+            [
+              43.6395,
+              39.36558
+            ],
+            [
+              43.64005,
+              39.36599
+            ],
+            [
+              43.64085,
+              39.36663
+            ],
+            [
+              43.64107,
+              39.36723
+            ],
+            [
+              43.6408,
+              39.36705
+            ],
+            [
+              43.63983,
+              39.36669
+            ],
+            [
+              43.63822,
+              39.36667
+            ],
+            [
+              43.6376,
+              39.36662
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 154,
+        "il": "Ağrı",
+        "ilce": "Diyadin",
+        "mahalle": "Yolcupınar",
+        "ada_no": "111",
+        "parsel_no": "4",
+        "alan_m2": 58678.5,
+        "nitelik": "Çayır",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              43.62928,
+              39.36108
+            ],
+            [
+              43.62926,
+              39.36171
+            ],
+            [
+              43.63007,
+              39.36229
+            ],
+            [
+              43.63103,
+              39.36268
+            ],
+            [
+              43.62776,
+              39.3635
+            ],
+            [
+              43.62718,
+              39.36292
+            ],
+            [
+              43.6273,
+              39.36231
+            ],
+            [
+              43.62652,
+              39.36187
+            ],
+            [
+              43.62755,
+              39.3615
+            ],
+            [
+              43.62795,
+              39.36118
+            ],
+            [
+              43.62928,
+              39.36108
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 153,
+        "il": "Ağri",
+        "ilce": "Diyadin",
+        "mahalle": "Yolcupinar",
+        "ada_no": "111",
+        "parsel_no": "50",
+        "alan_m2": 52798.24,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {},
+      "properties": {
+        "id": 156,
+        "il": "Manisa",
+        "ilce": "Salihli",
+        "mahalle": "Çamurhamamı",
+        "ada_no": "232",
+        "parsel_no": "3",
+        "alan_m2": 18294.78,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              28.11529,
+              38.43258
+            ],
+            [
+              28.11529,
+              38.43213
+            ],
+            [
+              28.11588,
+              38.43215
+            ],
+            [
+              28.11595,
+              38.43298
+            ],
+            [
+              28.11565,
+              38.43269
+            ],
+            [
+              28.11529,
+              38.43258
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 151,
+        "il": "Manisa",
+        "ilce": "Salihli",
+        "mahalle": "Bahçecik",
+        "ada_no": "166",
+        "parsel_no": "1",
+        "alan_m2": 3479.14,
+        "nitelik": "Tarla",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
     }
   ]
 }
