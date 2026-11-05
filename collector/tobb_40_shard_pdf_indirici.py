@@ -40,7 +40,6 @@ import requests
 import urllib3
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-import pymupdf
 
 urllib3.disable_warnings()
 
@@ -53,7 +52,7 @@ DATA_DIR = REPO_ROOT / "collector" / "data"
 
 USER_EMAIL = "geoprop_bot1@yandex.com"
 USER_PASS = "Geoprop2026*"
-BUNDLE_SIZE = 50  # Her 50 tekil gazete sayfasında bir tar.gz paketi yap
+BUNDLE_SIZE = 25  # Her 25 tekil gazete sayfasında bir tar.gz paketi yap (Hızlı serbest bırakma)
 
 TESSERACT_BIN = (
     shutil.which("tesseract")
@@ -193,16 +192,6 @@ class TOBBSessionManager:
         return None, "TIMEOUT"
 
 
-def compress_pdf_bytes(pdf_bytes: bytes) -> bytes:
-    try:
-        doc = pymupdf.open(stream=pdf_bytes, filetype="pdf")
-        comp = doc.tobytes(garbage=4, deflate=True, clean=True, deflate_images=True, deflate_fonts=True)
-        doc.close()
-        return comp if len(comp) < len(pdf_bytes) else pdf_bytes
-    except Exception:
-        return pdf_bytes
-
-
 def get_release_bucket_for_shard(shard_id: int) -> list:
     all_buckets = [f"warehouse-pdf-{i}" for i in range(1, 13)]
     primary_idx = (shard_id - 1) % len(all_buckets)
@@ -247,13 +236,10 @@ def get_shard_unique_page_tasks(
             query = """
                 SELECT id, tsm_adi, unvan, gazete_sayisi, sayfa_no, ilan_turu, ilan_metni, ilan_tarihi
                 FROM ticaret_sicil_gazetesi_ilanlari
-                WHERE id < ?
+                WHERE ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % 40) = ?
                   AND (pdf_dosya_yolu IS NULL OR pdf_dosya_yolu = '')
-                  AND ilan_metni LIKE '%Guid:%'
-                  AND gazete_sayisi IS NOT NULL AND gazete_sayisi != ''
-                  AND sayfa_no IS NOT NULL AND sayfa_no != ''
+                  AND id < ?
                   AND CAST(gazete_sayisi AS INT) >= 4950
-                  AND ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % ?) = ?
                 ORDER BY id DESC
                 LIMIT 800
             """
@@ -261,18 +247,15 @@ def get_shard_unique_page_tasks(
             query = """
                 SELECT id, tsm_adi, unvan, gazete_sayisi, sayfa_no, ilan_turu, ilan_metni, ilan_tarihi
                 FROM ticaret_sicil_gazetesi_ilanlari
-                WHERE id < ?
+                WHERE ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % 40) = ?
                   AND (pdf_dosya_yolu IS NULL OR pdf_dosya_yolu = '')
-                  AND ilan_metni LIKE '%Guid:%'
-                  AND gazete_sayisi IS NOT NULL AND gazete_sayisi != ''
-                  AND sayfa_no IS NOT NULL AND sayfa_no != ''
+                  AND id < ?
                   AND CAST(gazete_sayisi AS INT) < 4950
-                  AND ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % ?) = ?
                 ORDER BY id DESC
                 LIMIT 800
             """
 
-        c.execute(query, (last_id, num_shards, (shard_id - 1)))
+        c.execute(query, ((shard_id - 1), last_id))
         rows = c.fetchall()
 
         if not rows:
@@ -301,7 +284,7 @@ def main():
     parser.add_argument("--num-shards", type=int, default=40, help="Toplam Shard Sayısı")
     parser.add_argument("--max-seconds", type=int, default=19000, help="Maksimum çalışma süresi (sn)")
     parser.add_argument("--max-pdfs", type=int, default=50000, help="Bu shard'ın indirebileceği maksimum tekil PDF sayfası")
-    parser.add_argument("--threads", type=int, default=4, help="Paralel indirme iş parçacığı sayısı")
+    parser.add_argument("--threads", type=int, default=8, help="Paralel indirme iş parçacığı sayısı (Varsayılan: 8)")
     args = parser.parse_args()
 
     shard_id = args.shard
@@ -337,6 +320,15 @@ def main():
         sys.exit(1)
 
     master_conn = sqlite3.connect(DB_PATH, timeout=90)
+    try:
+        master_conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_gazete_shard_hash 
+            ON ticaret_sicil_gazetesi_ilanlari( ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % 40), id )
+            WHERE pdf_dosya_yolu IS NULL OR pdf_dosya_yolu = ''
+        """)
+        master_conn.commit()
+    except Exception:
+        pass
 
     mgr = TOBBSessionManager(USER_EMAIL, USER_PASS, TESSERACT_BIN)
     if not mgr.login():
@@ -429,16 +421,15 @@ def main():
         if status != "OK" or not pdf_bytes:
             return None
 
-        compressed = compress_pdf_bytes(pdf_bytes)
         safe_tsm = re.sub(r'[^a-zA-Z0-9]', '', tsm_adi or "TSM")
         pdf_filename = f"{sayi}_{sayfa}_{safe_tsm}_{guid[:8]}.pdf"
         local_pdf_path = temp_bundle_dir / pdf_filename
 
         with open(local_pdf_path, "wb") as f:
-            f.write(compressed)
+            f.write(pdf_bytes)
 
         ms = (time.time() - t0) * 1000
-        return (rep_id, pdf_filename, str(sayi), str(sayfa), ms, len(compressed), unvan[:28])
+        return (rep_id, pdf_filename, str(sayi), str(sayfa), ms, len(pdf_bytes), unvan[:28])
 
     seen_pages = set()
     cursor_state = {"pass": 1, "last_id": 999999999}

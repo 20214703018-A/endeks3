@@ -42,14 +42,14 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Sistem Paketlerini Kur (Tesseract OCR Türkçe & MuPDF)
+      - name: Sistem Paketlerini Kur (Tesseract OCR)
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y tesseract-ocr tesseract-ocr-tur libmupdf-dev
+          sudo apt-get install -y tesseract-ocr
 
       - name: Bağımlılıkları Yükle
         run: |
-          pip install beautifulsoup4 requests urllib3 pymupdf pillow
+          pip install beautifulsoup4 requests urllib3 pillow
 
       - name: Master SQLite Ambarını Geri Yükle (GitHub Release)
         env:
@@ -63,13 +63,13 @@ jobs:
             echo "✅ Master SQLite ambarı başarıyla geri yüklendi: $(ls -lh warehouse/product/*.sqlite)"
           fi
 
-      - name: Shard Gazete PDF İndirme Maratonunu Başlat (4x Keep-Alive Turbo)
+      - name: Shard Gazete PDF İndirme Maratonunu Başlat (8x Nitro Pool)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          MAX_PDFS="${{ github.event.inputs.max_pdfs || '25000' }}"
+          MAX_PDFS="${{ github.event.inputs.max_pdfs || '50000' }}"
           MAX_SECS="${{ github.event.inputs.max_seconds || '19000' }}"
-          python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds $MAX_SECS --max-pdfs $MAX_PDFS
+          python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds $MAX_SECS --max-pdfs $MAX_PDFS --threads 8
 
       - name: Kalan PDF Paketlerini GitHub Release Havuzuna Yükle
         if: always()
