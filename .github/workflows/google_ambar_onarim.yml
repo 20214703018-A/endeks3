@@ -1,0 +1,88 @@
+name: Google ambar onarımı (sağlam taban + arşivlenmemiş birleştirmeler → release)
+
+# 6 Kas 2026: warehouse-latest 1000 dosya sınırına dayandı; 4 Kas karo birleştirmesinin son parçası yüklenemedi, paketin sonu koptu ve
+# ambarı indiren bütün Google toplayıcıları düştü. Bu akış paketi kopuk dosyadan kurtarmaya çalışmaz: son sağlam tam kopyayı
+# (warehouse-karo-ek-18, 2.486.981 işletme) alır, ondan sonraki iki koşunun parçalarını sırayla ekler ve yeniden yükler.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  AMBAR_RELEASE: warehouse-latest
+  GH_TOKEN: ${{ github.token }}
+  DB: warehouse/product/google_places_ve_yogunluk.sqlite
+
+jobs:
+  onar:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: geoprop-40-node   # ambara yazan diğer iş akışlarıyla aynı anda yazmasın
+      cancel-in-progress: false
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+      - name: Karo parçaları (4 Kas koşusu)
+        uses: actions/download-artifact@v4
+        with:
+          pattern: shard-db-*
+          path: temp_karo/
+          run-id: 41606653559
+          github-token: ${{ github.token }}
+      - name: Ek karo parçaları (4 Kas koşusu)
+        uses: actions/download-artifact@v4
+        with:
+          pattern: shard-ek-db-*
+          path: temp_ek/
+          run-id: 41663317563
+          github-token: ${{ github.token }}
+      - name: Sağlam taban (2 Kas tam kopya)
+        uses: actions/download-artifact@v4
+        with:
+          name: warehouse-karo-ek-18
+          path: warehouse/product/
+          run-id: 41489738087
+          github-token: ${{ github.token }}
+      - name: Parça ve taban denetimi
+        run: |
+          df -h /; ls -la warehouse/product
+          echo "karo: $(find temp_karo -name '*.sqlite' | wc -l) · ek: $(find temp_ek -name '*.sqlite' | wc -l)"
+          [ "$(find temp_karo -name '*.sqlite' | wc -l)" = 29 ] && [ "$(find temp_ek -name '*.sqlite' | wc -l)" = 26 ]
+          N=$(python -c "import sqlite3,os; c=sqlite3.connect(os.environ['DB']); print(c.execute('select count(*) from google_places_ticari_yogunluk').fetchone()[0])")
+          echo "taban işletme: $N"; [ "$N" = 2486981 ]
+      - name: Sırayla birleştir (önce karo, sonra ek karo)
+        run: |
+          python geoprop/db_merger.py temp_karo/ warehouse/product/
+          python geoprop/db_merger.py temp_ek/ warehouse/product/
+          rm -rf temp_karo temp_ek
+          python - <<'PY'
+          import os, sqlite3
+          c = sqlite3.connect(os.environ["DB"])
+          c.execute("CREATE INDEX IF NOT EXISTS idx_gp_latlon ON google_places_ticari_yogunluk(lat, lon)")
+          c.commit()
+          n = c.execute("select count(*) from google_places_ticari_yogunluk").fetchone()[0]
+          print("ana ambar işletme:", n)
+          assert n >= 2489890, "4 Kas birleştirmesinin ulaştığı sayının altında"
+          PY
+      - name: Kategori tamamla
+        run: python geoprop/kategori_tamamla.py "$DB" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Dosya bütünlüğü
+        run: |
+          python - <<'PY'
+          import os, sqlite3
+          r = sqlite3.connect(os.environ["DB"]).execute("PRAGMA quick_check").fetchone()[0]
+          print("quick_check:", r); assert r == "ok"
+          PY
+      - name: Release'e yaz
+        run: |
+          ops/ambar_yukle.sh "$DB"
+          gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — ambar onarımı ${{ github.run_id }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: warehouse-onarim-${{ github.run_number }}
+          path: warehouse/product/google_places_ve_yogunluk.sqlite
+          retention-days: 14
+          compression-level: 1

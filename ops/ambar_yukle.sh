@@ -12,8 +12,17 @@ if [ "$SZ" -gt "$LIMIT" ]; then
   ( cd "$OUT" && split -b 1500m -d --suffix-length=2 "${NAME}.gz" "${NAME}.gz.part-" && rm -f "${NAME}.gz" )
 fi
 ls -la "$OUT"
-# mevcut ilgili asset'ler
-OLD=$(gh release view "$REL" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' | grep -F "${NAME}.gz" || true)
+# mevcut asset'ler (sayfalı: gh release view 1000'e yakın listede eksik dönebiliyor)
+RID=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$REL" --jq .id)
+ALL=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases/$RID/assets?per_page=100" --jq '.[].name')
+OLD=$(grep -F "${NAME}.gz" <<<"$ALL" || true)
+# 6 Kas 2026: release 1000 dosya sınırındaydı; ilk parçalar --clobber ile ezildi, son parça 422 aldı, paket sonu kopuk kaldı.
+# Eski parçaya dokunmadan ÖNCE yeni dosyaların sığdığı denetlenir.
+YENI=0; for f in "$OUT"/*; do grep -qxF "$(basename "$f")" <<<"$ALL" || YENI=$((YENI + 1)); done
+TOPLAM=$(grep -c . <<<"$ALL" || true)
+if [ $((TOPLAM + YENI)) -gt 1000 ]; then
+  echo "::error::$REL dosya sınırı: $TOPLAM mevcut + $YENI yeni > 1000; hiçbir parça değiştirilmedi"; rm -rf "$OUT"; exit 1
+fi
 # yeni parçaları yükle (aynı adlı varsa --clobber üstüne yazar)
 # GitHub ara sıra 500 verir (7 Eki 2026: detay yüklemesi kayboldu) → dosya başına 5 deneme, artan bekleme
 for f in "$OUT"/*; do
