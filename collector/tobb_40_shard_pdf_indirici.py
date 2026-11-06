@@ -8,6 +8,7 @@ uploads are recorded as completed; failed archives remain recoverable.
 """
 
 import os
+import json
 import sys
 import time
 import random
@@ -67,6 +68,7 @@ class TOBBSessionManager:
         self.renewing = False
         self.auth_deadline = None
         self.failed_renewal = None
+        self.reported_view_states = set()
 
     def _get_view(self, url):
         with self.request_gate:
@@ -235,14 +237,26 @@ class TOBBSessionManager:
                     time.sleep(0.15)
                     continue
 
-            if 'id="CaptchaIlan"' in raw_resp or '<form id="FormGuvenlikKodu">' in raw_resp:
+            # Attribute order, whitespace and quote style vary between pages.
+            ilan_form = re.search(r'\b(?:id|name)\s*=\s*[\"\'](?:CaptchaIlan|FormGuvenlikKodu)[\"\']', raw_resp, re.I)
+            form_ids = tuple(re.findall(r'<form\b[^>]*\bid\s*=\s*[\"\']([^\"\']+)', raw_resp, re.I))
+            fields = tuple(re.findall(r'<input\b[^>]*\bname\s*=\s*[\"\']([^\"\']+)', raw_resp, re.I)[:15])
+            signature = (r_view.status_code, form_ids, fields)
+            if signature not in self.reported_view_states and len(self.reported_view_states) < 5:
+                self.reported_view_states.add(signature)
+                # Only structural names are logged; never cookies, form values,
+                # challenge answers, credentials or the response HTML itself.
+                print('Viewer state: ' + json.dumps(dict(http=r_view.status_code,
+                      path=urlparse(r_view.url).path, forms=form_ids, fields=fields,
+                      ilan_form=bool(ilan_form))), flush=True)
+            if ilan_form:
                 if self._renew_session(generation, ilan=True):
                     continue
                 return None, "AUTH_REQUIRED"
 
             # Menu/footer links do not mean the user's session has ended.
-            if (urlparse(r_view.url).path.endswith('/girisyap.php') or
-                    re.search(r'name=[\"\']LoginEmail[\"\']', raw_resp)):
+            if (urlparse(r_view.url).path.lower().endswith('/girisyap.php') or
+                    re.search(r'(?:window\.)?location(?:\.href)?\s*=\s*[\"\'][^\"\']*girisyap\.php', raw_resp, re.I)):
                 self._renew_session(generation)
                 continue
 

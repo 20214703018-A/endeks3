@@ -83,7 +83,7 @@ python tools/benchmark_tobb_pdf_archive.py warehouse/raw/gazete_sayfalari \
   --step 16 --limit 100 --dpi 150 --report /tmp/tobb-pdf-benchmark.json
 ```
 
-26 test; yükleme hatası, bozuk PDF, imza, ek/metadata koruması, checksum,
+27 test; yükleme hatası, bozuk PDF, imza, ek/metadata koruması, checksum,
 shard dağılımı, master rollback, indirme/yükleme örtüşmesi, çalışan kova tercihi
 oturum yenileme tekrarlarının önlenmesi ve yavaş PDF'nin sonraki 200 görevlik grubu engellememesini kapsar.
 Benchmark için pikepdf ve PyMuPDF, testler için pikepdf/requests/pytest gerekir.

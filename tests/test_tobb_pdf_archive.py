@@ -476,3 +476,16 @@ def test_waiting_workers_do_not_repeat_a_failed_renewal(monkeypatch):
     assert not manager._renew_session(0, ilan=True)
     assert not manager._renew_session(0, ilan=True)
     assert calls == [0]
+
+
+def test_ilan_detection_accepts_single_quotes_and_extra_form_attributes(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    monkeypatch.setattr(manager.session, 'get', lambda url, **kw: SimpleNamespace(
+        url=url, text="<form class='security' id = 'FormGuvenlikKodu'><input name = 'CaptchaIlan'>", status_code=200))
+    calls = []
+    def renew(generation, ilan=False):
+        calls.append(ilan)
+        return False
+    monkeypatch.setattr(manager, '_renew_session', renew)
+    assert manager.download_pdf('fixture') == (None, 'AUTH_REQUIRED')
+    assert calls == [True]
