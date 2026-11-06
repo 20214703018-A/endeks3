@@ -49,6 +49,15 @@ Tar/gzip yalnızca özgün dosyaları bir arşiv paketine koyar.
   Daha az paralel işçi tek başına belirgin hız kazandırmadı. TOBB yanıtlarının
   bir süre sonra yavaşlaması belirleyiciydi; sürdürülebilir 40 runner hızı bu
   kısa ölçümleri kırkla çarparak doğrulanmış sayılamaz.
+- Yeni `be0f2c6` sürümünün `42193542274` kısa kontrolü: 15 + 12 = 27 özgün
+  PDF, 38 ilan bağlantısı kalıcı arşivlenip master'a birleştirildi. Arşivleme
+  hatası 0; son işçi logları 438 ve 356 PDF/saat. Canlı paketten 10 PDF'nin
+  SHA-256 değerleri manifestteki özgün/saklanan değerlerle birebir doğrulandı.
+- `42193540997` GitHub CI koşusunda 37 test geçti. `42194105241` tam 40 shard
+  koşusu aynı `be0f2c6` sürümüyle başlatıldı. 09:23 UTC anında 5 PDF işi aktif,
+  35'i kuyruktaydı; ayrı Google KARO koşusu 34 runner kullanıyordu. Tam 40
+  runner'ın sürdürülebilir toplam hızı henüz ölçülmedi. Google koşusunun ara
+  çıktıları yalnızca normal tamamlanmada yüklendiği için izinsiz iptal edilmedi.
 
 Yerel eski döngü servisi durduruldu ve kodu yalnızca gözlem yapar. Böylece eski
 commit'i yeniden başlatıp master'ı eski yerel snapshot ile ezmez. PDF'lere runner
