@@ -259,7 +259,10 @@ def test_slow_pdf_does_not_block_next_200_page_batch(tmp_path, monkeypatch):
     for rid in range(1, 202):
         insert(conn, rid, page=str(rid), text=f'Guid: {rid:08x}')
     conn.close()
-    data = optimize_pdf(make_pdf()).content
+    optimized = optimize_pdf(make_pdf())
+    data = optimized.content
+    # Exercise scheduling independently of machine-dependent PDF CPU/I/O time.
+    monkeypatch.setattr(worker, 'optimize_pdf', lambda content: optimized)
     next_batch_started = threading.Event()
     slow_finished = threading.Event()
     class Session:
@@ -323,7 +326,7 @@ def test_ilan_form_with_login_menu_link_does_not_trigger_relogin(monkeypatch):
     views, renewals = [], []
     def get(url, **kwargs):
         if url.endswith('.pdf'):
-            return SimpleNamespace(content=b'%PDF fixture')
+            return SimpleNamespace(content=b'%PDF fixture', status_code=200)
         views.append(url)
         html = ('<a href="girisyap.php">Giriş</a><form id="FormGuvenlikKodu">'
                 if len(views) == 1 else '<embed src="/tmp_gazete/fixture.pdf">')
@@ -508,3 +511,27 @@ def test_ilan_refresh_matches_form_protocol_and_finishes_redirect(monkeypatch):
     assert modes == [7]
     assert redirects == ['https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php']
     assert manager.session_generation == 1
+
+
+@pytest.mark.parametrize('stage', ['VIEW', 'PDF'])
+def test_source_timeouts_identify_the_slow_endpoint(monkeypatch, stage):
+    manager = worker.TOBBSessionManager('', '', '')
+    monkeypatch.setattr(worker.time, 'sleep', lambda seconds: None)
+    def get(url, **kwargs):
+        if stage == 'VIEW' or url.endswith('.pdf'):
+            raise worker.requests.Timeout('test timeout')
+        return SimpleNamespace(url=url, text='<embed src="/tmp_gazete/fixture.pdf">', status_code=200)
+    monkeypatch.setattr(manager.session, 'get', get)
+    assert manager.download_pdf('fixture') == (None, f'{stage}_TIMEOUT')
+
+
+@pytest.mark.parametrize('status,expected', [(429, 'SOURCE_THROTTLED'), (403, 'ACCESS_DENIED')])
+def test_explicit_source_limits_stop_without_retry_or_login(monkeypatch, status, expected):
+    manager = worker.TOBBSessionManager('', '', '')
+    calls = []
+    def get(url, **kwargs):
+        calls.append(url)
+        return SimpleNamespace(url=url, text='', status_code=status)
+    monkeypatch.setattr(manager.session, 'get', get)
+    assert manager.download_pdf('fixture') == (None, expected)
+    assert len(calls) == 1

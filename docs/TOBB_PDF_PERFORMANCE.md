@@ -1,6 +1,8 @@
 # TOBB PDF indirme ve kayıpsız arşivleme
 
-6 Kasım 2026 doğrulaması. Mevcut 40 runner ve runner başına 8 indirme işçisi korunur.
+6 Kasım 2026 doğrulaması. Mevcut 40 runner korunur. Runner başına indirme
+eşzamanlılığı 1/2/4/8 olarak seçilebilir; varsayılan 1'dir. Aynı TOBB oturumuna
+daha fazla paralel istek göndermek, kaynak yanıtlarının hızlanacağını garanti etmez.
 
 ## Hız değişiklikleri
 
@@ -85,12 +87,27 @@ python tools/benchmark_tobb_pdf_archive.py warehouse/raw/gazete_sayfalari \
   --step 16 --limit 100 --dpi 150 --report /tmp/tobb-pdf-benchmark.json
 ```
 
-28 test; yükleme hatası, bozuk PDF, imza, ek/metadata koruması, checksum,
+32 test; yükleme hatası, bozuk PDF, imza, ek/metadata koruması, checksum,
 shard dağılımı, master rollback, indirme/yükleme örtüşmesi, çalışan kova tercihi
 oturum yenileme tekrarlarının önlenmesi ve yavaş PDF'nin sonraki 200 görevlik grubu engellememesini kapsar.
 Benchmark için pikepdf ve PyMuPDF, testler için pikepdf/requests/pytest gerekir.
 Yeni CI kontrolü Python 3.11 Ubuntu üzerinde aynı testleri çalıştırır; TOBB'ye
 bağlanmaz ve Release arşivine dosya yüklemez.
+
+## Canlı geçiş kanıtı
+
+- Eski `42127049888` koşusunun 2.100 onaylı PDF bağlantısı kurtarılıp master'a
+  işlendi. Kesilen sonraki iki koşudan 171 + 759 ek PDF kalıcı yayımlandı;
+  toplam 930 ek PDF kurtarıldı. Bunlar tüm arşivin toplam sayısı değildir.
+- `42145868137` koşusunda iki runner, sekizer indirme işçisiyle 27 + 19 = 46
+  PDF'yi kalıcı arşivleyip master'a birleştirdi. Paketleme hatası yoktu.
+  İşçi logları 237 ve 178 PDF/saat gösterdi. İstekler bir süre sonra zaman
+  aşımına düştüğü için bu kısa ölçümün 40 katı sürdürülebilir hız sayılamaz.
+- Görüntüleyici isteği ve PDF isteği zaman aşımları ayrı raporlanır. Açık 429
+  veya 403 yanıtı shard'ı durdurur; mevcut dosyalar korunur, otomatik devam
+  başlatılmaz. Kaynak erişim kontrollerini aşmak için hesap/IP değiştirilmez.
+- Başarılı arşiv yüklemeleri, yeni indirme sonucu gelmese de yaklaşık beş
+  saniyelik kontrol aralığında güncelleme DB'sine işlenir.
 
 Kayıpsız sıkıştırma ayarları:
 [pikepdf resmi save belgeleri](https://pikepdf.readthedocs.io/en/stable/api/main.html#pikepdf.Pdf.save).

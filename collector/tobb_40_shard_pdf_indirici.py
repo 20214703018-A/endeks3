@@ -222,13 +222,25 @@ class TOBBSessionManager:
 
     def download_pdf(self, guid):
         view_url = f"https://www.ticaretsicil.gov.tr/view/hizlierisim/pdf_goster.php?Guid={guid}"
+        last_status = "RETRY_EXHAUSTED"
         for attempt in range(4):
             try:
                 r_view, generation = self._get_view(view_url)
                 raw_resp = r_view.text
-            except Exception:
+            except requests.Timeout:
+                last_status = "VIEW_TIMEOUT"
                 time.sleep(0.15)
                 continue
+            except requests.RequestException:
+                last_status = "VIEW_NETWORK_ERROR"
+                time.sleep(0.15)
+                continue
+
+            if r_view.status_code == 429:
+                return None, "SOURCE_THROTTLED"
+            if r_view.status_code == 403:
+                return None, "ACCESS_DENIED"
+            last_status = f"VIEW_HTTP_{r_view.status_code}"
 
             m_pdf = re.search(r'embed\s+src="([^"]+\.pdf)"', raw_resp) or re.search(r'src="(/tmp_gazete/[^"]+\.pdf)"', raw_resp)
             if m_pdf:
@@ -236,9 +248,19 @@ class TOBBSessionManager:
                 pdf_url = pdf_rel if pdf_rel.startswith("http") else f"https://www.ticaretsicil.gov.tr{pdf_rel}"
                 try:
                     r_pdf = self.session.get(pdf_url, verify=False, timeout=15)
+                    if r_pdf.status_code == 429:
+                        return None, "SOURCE_THROTTLED"
+                    if r_pdf.status_code == 403:
+                        return None, "ACCESS_DENIED"
                     if r_pdf.content and r_pdf.content.startswith(b"%PDF"):
                         return r_pdf.content, "OK"
-                except Exception:
+                    last_status = f"PDF_HTTP_{r_pdf.status_code}"
+                except requests.Timeout:
+                    last_status = "PDF_TIMEOUT"
+                    time.sleep(0.15)
+                    continue
+                except requests.RequestException:
+                    last_status = "PDF_NETWORK_ERROR"
                     time.sleep(0.15)
                     continue
 
@@ -268,7 +290,7 @@ class TOBBSessionManager:
             if r_view.status_code == 200:
                 return None, "NO_PDF"
 
-        return None, "TIMEOUT"
+        return None, last_status
 
 
 def get_release_bucket_for_shard(shard_id: int) -> list:
@@ -518,6 +540,9 @@ def main():
         exhausted = False
         try:
             while pending_downloads or (not exhausted and time.time() < deadline and total_downloaded < args.max_pdfs):
+                # Commit confirmed uploads even when the source is stalled.
+                while pending_bundles and pending_bundles[0].done():
+                    collect_bundle(pending_bundles.pop(0))
                 # Refill as each request finishes; one slow PDF no longer holds
                 # the next 200-page batch behind it. Bound queued work to 2x
                 # the worker count, including the final/deadline drain.
@@ -553,9 +578,10 @@ def main():
                         source_statuses[status] = source_statuses.get(status, 0) + 1
                         if source_statuses[status] <= 3 or source_statuses[status] % 10 == 0:
                             print(f"Source status {status}: {res['page']} (count={source_statuses[status]})", flush=True)
-                        if status == 'AUTH_REQUIRED' and source_statuses[status] >= 3:
+                        if (status in ('SOURCE_THROTTLED', 'ACCESS_DENIED') or
+                                status == 'AUTH_REQUIRED' and source_statuses[status] >= 3):
                             auth_blocked = True
-                            fatal_error = RuntimeError('TOBB session confirmation unavailable; PDFs retained')
+                            fatal_error = RuntimeError(f'TOBB access unavailable ({status}); PDFs retained')
                         continue
                     if res:
                         rep_id, pdf_fn, s_sayi, s_sayfa, ms, sz, unv, original_sz = res
