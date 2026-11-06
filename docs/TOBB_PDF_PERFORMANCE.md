@@ -177,8 +177,8 @@ GitHub CI aynı paketi Python 3.11 Ubuntu üzerinde çalıştırır.
 
 ## Yayımlanmış eğitim dizini ve güncel durum
 
-Son yerel birleştirme: 203.294 tekil gazete/sayfa PDF kaydı, 337.923 ilan bağlantısı;
-toplu dizinde 5.408 farklı arşiv. Ana DB ve dizin iki aşamalı yayınla yenilenir.
+Son yerel birleştirme: 203.636 tekil gazete/sayfa PDF kaydı, 338.396 ilan bağlantısı;
+toplu dizinde 5.521 farklı arşiv. Ana DB ve dizin iki aşamalı yayınla yenilenir.
 
 - Kurtarma toplam 19.591 eksik gazete/sayfa PDF bağlantısını doldurdu. Dosyalar
   zaten kalıcı paketlerdeydi; TOBB'den tekrar indirilmedi. 333.938 ilan referansının
@@ -201,3 +201,16 @@ toplu dizinde 5.408 farklı arşiv. Ana DB ve dizin iki aşamalı yayınla yenil
 5,5 saat, işçinin çalışma bütçesidir; sağlayıcının sürekli veri aktaracağına
 garanti değildir. Kaynakta hız/oturum sınırları sürmektedir. Üretim aktarımının
 tam 40 runner ile kesintisiz sürdüğü henüz kanıtlanmadı.
+
+7 Kasım 00:42 Türkiye ek kontrolü: 159 yeni GitHub paketi / 63.276.098 byte
+taramasında 537 PDF bütünlük kontrolünden geçti, hata 0. Bunların 342 farklı
+gazete/sayfası ve 473 ilan bağlantısı master'da eksikti; eklendi. Diğerleri zaten
+bağlıydı ve mevcut referanslar korundu. Kalıcı tarama kataloğu 2.315 paket /
+104.161 doğrulanmış PDF referansına ulaştı. Bu andaki uzun koşu 20 aktif,
+20 kuyruk, tamamlanmış hata 0 idi. `be80a2b` için `42298045992` GitHub CI geçti.
+
+Resmî [abonelik açıklamasında](https://www.ticaretsicil.gov.tr/view/hizlierisim/goster.php?Guid=4fb204d4-8b72-11e9-a292-54e058904e0d)
+tam günlük gazete ve web servis seçenekleri abonelik/talep hizmeti olarak
+sunuluyor. İncelenen normal sayfalarda ücretsiz tam gazete indirme yolu bulunmadı;
+bu, böyle bir yolun hiçbir yerde bulunmadığının kanıtı değildir. Kullanıcı adına
+satın alma veya başvuru yapılmadı.
