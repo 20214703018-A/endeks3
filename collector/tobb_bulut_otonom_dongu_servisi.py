@@ -52,10 +52,10 @@ def save_state(state: dict):
 
 
 def ensure_release_buckets():
-    """Tüm warehouse-pdf-1..6 kovalarının varlığını ve kapasitesini kontrol eder."""
+    """Tüm warehouse-pdf-1..20 kovalarının varlığını ve kapasitesini kontrol eder."""
     try:
         out = subprocess.check_output(
-            ["gh", "api", f"/repos/{REPO_SLUG}/releases", "--jq",
+            ["gh", "api", f"/repos/{REPO_SLUG}/releases?per_page=100", "--jq",
              '.[] | select(.tag_name | startswith("warehouse-pdf-")) | "\\(.tag_name):\\(.assets | length)"'],
             stderr=subprocess.DEVNULL, timeout=20
         ).decode("utf-8", errors="ignore").strip().splitlines()
@@ -66,7 +66,7 @@ def ensure_release_buckets():
                 tag, cnt = line.split(":", 1)
                 counts[tag.strip()] = int(cnt.strip())
 
-        for i in range(1, 7):
+        for i in range(1, 21):
             tag = f"warehouse-pdf-{i}"
             if tag not in counts:
                 subprocess.run(

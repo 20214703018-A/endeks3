@@ -1,23 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-GEOPROP - TOBB 40x Paralel Turbo Gazete PDF İndirici (Shard Worker v9 - Keep-Alive + 12 Kova + Multi-Thread)
-=============================================================================================================
-GitHub Actions 40-Runner Matrisinde her bir bağımsız Azure IP'sinde çalışır.
+"""TOBB 40-runner PDF worker with bounded asynchronous archival.
 
-v9 Mimari Hızlandırma Özellikleri:
-1. Persistent HTTP Keep-Alive Bağlantı Havuzu:
-   Subprocess curl yerine 'requests.Session' + 'HTTPAdapter' ile açık TCP/TLS soketleri kullanılır.
-   Sayfa başına ağ gecikmesi 2.000 ms'den 110 ms'ye düşürülmüştür (~18x-25x hızlanma).
-2. Paralel İş Parçacığı (Multi-Threaded Worker Pool - 4 Eşzamanlı İşçi):
-   Her runner içinde 4 iş parçacığı aynı anda farklı sayfaları çeker.
-3. Otomatik Bellek İçi CaptchaIlan Çözücü:
-   'FormGuvenlikKodu' çıktığında Tesseract bellekten okur, 'guvenlikkodudogrula.php'ye POST eder
-   ve milisaniyeler içinde indirmeye devam eder.
-4. 12 Dağıtık GitHub Release Kovası ('warehouse-pdf-1' .. 'warehouse-pdf-12'):
-   1.000 dosya sınırına takılmadan 12.000 paket (~600.000+ tekil sayfa) paralel arşivlenir.
-
-%100 Doğrulanmış Resmî Veri. Sıfır Sentetik.
+Eight existing download workers feed one archive/upload worker. Every PDF is
+losslessly optimized and verified before publication. Only confirmed Release
+uploads are recorded as completed; failed archives remain recoverable.
 """
 
 import os
@@ -27,13 +14,11 @@ import random
 import re
 import shutil
 import sqlite3
-import tarfile
 import subprocess
 import argparse
 import tempfile
 import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
@@ -47,12 +32,14 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from collector.tobb_pdf_archive import optimize_pdf, write_pdf, publish_bundle, record_published_bundle
+
 DB_PATH = REPO_ROOT / "warehouse" / "product" / "turkiye_ticaret_sicil_ve_sirketler.sqlite"
 DATA_DIR = REPO_ROOT / "collector" / "data"
 
 USER_EMAIL = "geoprop_bot1@yandex.com"
 USER_PASS = "Geoprop2026*"
-BUNDLE_SIZE = 25  # Her 25 tekil gazete sayfasında bir tar.gz paketi yap (Hızlı serbest bırakma)
+BUNDLE_SIZE = 100  # Fewer Release calls; one uploader, at most two pending bundles.
 
 TESSERACT_BIN = (
     shutil.which("tesseract")
@@ -193,7 +180,7 @@ class TOBBSessionManager:
 
 
 def get_release_bucket_for_shard(shard_id: int) -> list:
-    all_buckets = [f"warehouse-pdf-{i}" for i in range(1, 13)]
+    all_buckets = [f"warehouse-pdf-{i}" for i in range(1, 21)]
     primary_idx = (shard_id - 1) % len(all_buckets)
     return [all_buckets[primary_idx]] + [b for i, b in enumerate(all_buckets) if i != primary_idx]
 
@@ -225,6 +212,8 @@ def get_shard_unique_page_tasks(
     cursor_state: dict,
     limit: int = 150
 ):
+    if not 1 <= shard_id <= num_shards:
+        raise ValueError("shard must be between 1 and num_shards")
     c = conn.cursor()
     unique_tasks = []
 
@@ -233,22 +222,24 @@ def get_shard_unique_page_tasks(
         last_id = cursor_state["last_id"]
 
         if current_pass == 1:
-            query = """
+            query = f"""
                 SELECT id, tsm_adi, unvan, gazete_sayisi, sayfa_no, ilan_turu, ilan_metni, ilan_tarihi
                 FROM ticaret_sicil_gazetesi_ilanlari
-                WHERE ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % 40) = ?
+                WHERE ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % {num_shards}) = ?
                   AND (pdf_dosya_yolu IS NULL OR pdf_dosya_yolu = '')
+                  AND ilan_metni LIKE '%Guid:%'
                   AND id < ?
                   AND CAST(gazete_sayisi AS INT) >= 4950
                 ORDER BY id DESC
                 LIMIT 800
             """
         else:
-            query = """
+            query = f"""
                 SELECT id, tsm_adi, unvan, gazete_sayisi, sayfa_no, ilan_turu, ilan_metni, ilan_tarihi
                 FROM ticaret_sicil_gazetesi_ilanlari
-                WHERE ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % 40) = ?
+                WHERE ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % {num_shards}) = ?
                   AND (pdf_dosya_yolu IS NULL OR pdf_dosya_yolu = '')
+                  AND ilan_metni LIKE '%Guid:%'
                   AND id < ?
                   AND CAST(gazete_sayisi AS INT) < 4950
                 ORDER BY id DESC
@@ -278,14 +269,35 @@ def get_shard_unique_page_tasks(
     return unique_tasks
 
 
+def ensure_shard_index(db_path, num_shards):
+    # Build only when absent; then keep the large master read-only throughout
+    # downloads. Existing 40-way indexes remain usable without rebuilding.
+    with sqlite3.connect(db_path, timeout=90) as conn:
+        conn.execute(f"""
+            CREATE INDEX IF NOT EXISTS idx_gazete_shard_hash_{num_shards}
+            ON ticaret_sicil_gazetesi_ilanlari(
+                ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % {num_shards}), id)
+            WHERE pdf_dosya_yolu IS NULL OR pdf_dosya_yolu = ''
+        """ if num_shards != 40 else """
+            CREATE INDEX IF NOT EXISTS idx_gazete_shard_hash
+            ON ticaret_sicil_gazetesi_ilanlari(
+                ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % 40), id)
+            WHERE pdf_dosya_yolu IS NULL OR pdf_dosya_yolu = ''
+        """)
+
+
 def main():
-    parser = argparse.ArgumentParser(description="GEOPROP TOBB 40x Turbo Shard Gazete PDF İndirici (v9)")
+    parser = argparse.ArgumentParser(description="GEOPROP TOBB 40x Turbo Shard Gazete PDF İndirici (verified lossless archive)")
     parser.add_argument("--shard", type=int, required=True, help="Shard ID (1 - 40)")
     parser.add_argument("--num-shards", type=int, default=40, help="Toplam Shard Sayısı")
     parser.add_argument("--max-seconds", type=int, default=19000, help="Maksimum çalışma süresi (sn)")
     parser.add_argument("--max-pdfs", type=int, default=50000, help="Bu shard'ın indirebileceği maksimum tekil PDF sayfası")
     parser.add_argument("--threads", type=int, default=8, help="Paralel indirme iş parçacığı sayısı (Varsayılan: 8)")
+    parser.add_argument("--bundle-size", type=int, default=BUNDLE_SIZE)
     args = parser.parse_args()
+
+    if not 1 <= args.shard <= args.num_shards or min(args.threads, args.bundle_size, args.max_pdfs, args.max_seconds) < 1:
+        parser.error("shard/num-shards and limits must be positive and valid")
 
     shard_id = args.shard
     num_shards = args.num_shards
@@ -293,7 +305,7 @@ def main():
     deadline = start_time + args.max_seconds
 
     print("=" * 78)
-    print(f"🚀 GEOPROP TOBB Turbo PDF Shard İşçisi #{shard_id}/{num_shards} (v9 Keep-Alive + {args.threads} Threads)")
+    print(f"🚀 GEOPROP TOBB Turbo PDF Shard İşçisi #{shard_id}/{num_shards} ({args.threads} downloads + asynchronous archive)")
     print(f"📍 Zaman Limiti: {args.max_seconds/3600:.1f} saat | Hedef: {args.max_pdfs:,} Sayfa")
     print("=" * 78, flush=True)
 
@@ -319,16 +331,10 @@ def main():
         print(f"⚠️ Master SQLite bulunamadı: {DB_PATH}", flush=True)
         sys.exit(1)
 
-    master_conn = sqlite3.connect(DB_PATH, timeout=90)
-    try:
-        master_conn.execute("""
-            CREATE INDEX IF NOT EXISTS idx_gazete_shard_hash 
-            ON ticaret_sicil_gazetesi_ilanlari( ((CAST(gazete_sayisi AS INT) * 31 + CAST(sayfa_no AS INT)) % 40), id )
-            WHERE pdf_dosya_yolu IS NULL OR pdf_dosya_yolu = ''
-        """)
-        master_conn.commit()
-    except Exception:
-        pass
+    ensure_shard_index(DB_PATH, num_shards)
+    master_conn = sqlite3.connect(f"file:{DB_PATH}?mode=ro", uri=True, timeout=90)
+    # An index on (gazete_sayisi, sayfa_no) already supports page-to-announcement
+    # lookups. Read the master without changing its 40-runner snapshot.
 
     mgr = TOBBSessionManager(USER_EMAIL, USER_PASS, TESSERACT_BIN)
     if not mgr.login():
@@ -338,76 +344,32 @@ def main():
     total_downloaded = 0
     total_announcements_covered = 0
     current_bundle_files = []
-    bundle_counter = int(time.time()) % 10000
-    bundle_lock = threading.Lock()
+    pending_bundles = []
+    archive_errors = []
+    bytes_original = 0
+    bytes_stored = 0
+    download_errors = 0
 
-    def flush_bundle(bundle_items, is_final=False):
-        nonlocal bundle_counter, total_announcements_covered
-        if not bundle_items:
+    def collect_bundle(future):
+        nonlocal total_announcements_covered
+        try:
+            total_announcements_covered += record_published_bundle(
+                future.result(), master_conn, update_conn, temp_bundle_dir)
+        except Exception as exc:
+            archive_errors.append(str(exc))
+            print(f"❌ Archive retained; DB not marked complete: {exc}", flush=True)
+
+    def queue_bundle(executor):
+        if not current_bundle_files:
             return
-        suffix = "final" if is_final else f"{bundle_counter:04d}"
-        bundle_name = f"gazete_pdf_shard_{shard_id:02d}_{int(time.time())}_{suffix}.tar.gz"
-        bundle_path = bundles_dir / bundle_name
-
-        print(f"\n📦 [Shard {shard_id}] {len(bundle_items)} tekil sayfa paketleniyor: {bundle_name}...", flush=True)
-        with tarfile.open(bundle_path, "w:gz") as tar:
-            for _, p_name, _, _ in bundle_items:
-                fp = temp_bundle_dir / p_name
-                if fp.exists():
-                    tar.add(fp, arcname=p_name)
-
-        bundle_ref = upload_bundle_to_release(bundle_path, shard_id)
-        now_iso = datetime.now(timezone.utc).isoformat()
-
-        u_cur = update_conn.cursor()
-        m_cur = master_conn.cursor()
-        matched_rows = 0
-
-        for rep_id, p_name, s_sayi, s_sayfa in bundle_items:
-            ref_val = f"{bundle_ref}#{p_name}"
-            all_ids = m_cur.execute("""
-                SELECT id FROM ticaret_sicil_gazetesi_ilanlari
-                WHERE gazete_sayisi = ? AND sayfa_no = ?
-            """, (s_sayi, s_sayfa)).fetchall()
-            if not all_ids:
-                all_ids = [(rep_id,)]
-            for (target_id,) in all_ids:
-                u_cur.execute(
-                    "INSERT OR REPLACE INTO gazete_pdf_updates (id, pdf_dosya_yolu, guncellenme_tarihi) VALUES (?, ?, ?)",
-                    (target_id, ref_val, now_iso)
-                )
-                matched_rows += 1
-            m_cur.execute("""
-                UPDATE ticaret_sicil_gazetesi_ilanlari
-                SET pdf_dosya_yolu = ?, guncellenme_tarihi = ?
-                WHERE gazete_sayisi = ? AND sayfa_no = ?
-            """, (ref_val, now_iso, s_sayi, s_sayfa))
-
-        update_conn.commit()
-        master_conn.commit()
-        total_announcements_covered += matched_rows
-
-        for _, p_name, _, _ in bundle_items:
-            fp = temp_bundle_dir / p_name
-            if fp.exists():
-                try:
-                    fp.unlink()
-                except Exception:
-                    pass
-        if bundle_ref.startswith("release://") and bundle_path.exists():
-            try:
-                bundle_path.unlink()
-            except Exception:
-                pass
-
-        bundle_counter += 1
-        elapsed_min = max(0.1, (time.time() - start_time) / 60.0)
-        rate_hr = int((total_downloaded / elapsed_min) * 60)
-        print(
-            f"⚡ [Shard {shard_id}] Paket tamamlandı! Toplam Sayfa: {total_downloaded:,} "
-            f"| Hız: ~{rate_hr:,} sayfa/saat\n",
-            flush=True
-        )
+        # Bounded backpressure: at most two bundles queued, not an entire run.
+        if len(pending_bundles) >= 2:
+            collect_bundle(pending_bundles.pop(0))
+        items = list(current_bundle_files)
+        current_bundle_files.clear()
+        pending_bundles.append(executor.submit(
+            publish_bundle, items, temp_bundle_dir, bundles_dir,
+            shard_id, upload_bundle_to_release))
 
     def process_page_task(row):
         rep_id, tsm_adi, unvan, sayi, sayfa, ilan_turu, ilan_metni, ilan_tarihi = row
@@ -416,6 +378,8 @@ def main():
             return None
         guid = m_guid.group(1).strip()
 
+        if time.time() >= deadline:
+            return None
         t0 = time.time()
         pdf_bytes, status = mgr.download_pdf(guid)
         if status != "OK" or not pdf_bytes:
@@ -425,61 +389,69 @@ def main():
         pdf_filename = f"{sayi}_{sayfa}_{safe_tsm}_{guid[:8]}.pdf"
         local_pdf_path = temp_bundle_dir / pdf_filename
 
-        with open(local_pdf_path, "wb") as f:
-            f.write(pdf_bytes)
-
+        optimized = optimize_pdf(pdf_bytes)
+        write_pdf(local_pdf_path, optimized)
         ms = (time.time() - t0) * 1000
-        return (rep_id, pdf_filename, str(sayi), str(sayfa), ms, len(pdf_bytes), unvan[:28])
+        return (rep_id, pdf_filename, str(sayi), str(sayfa), ms,
+                len(optimized.content), (unvan or "")[:28], len(pdf_bytes))
 
     seen_pages = set()
     cursor_state = {"pass": 1, "last_id": 999999999}
 
-    try:
-        while time.time() < deadline and total_downloaded < args.max_pdfs:
-            batch_limit = min(200, args.max_pdfs - total_downloaded)
-            tasks = get_shard_unique_page_tasks(
-                master_conn, shard_id, num_shards, seen_pages, cursor_state, limit=batch_limit
-            )
-            if not tasks:
-                if current_bundle_files:
-                    flush_bundle(current_bundle_files, is_final=False)
-                    current_bundle_files.clear()
-                break
-
-            with ThreadPoolExecutor(max_workers=args.threads) as executor:
-                futures = [executor.submit(process_page_task, task) for task in tasks]
+    fatal_error = None
+    # Pools live for the whole run; packing/uploading does not block downloads.
+    with ThreadPoolExecutor(max_workers=args.threads) as downloads, ThreadPoolExecutor(max_workers=1) as archives:
+        try:
+            while time.time() < deadline and total_downloaded < args.max_pdfs:
+                batch_limit = min(200, args.max_pdfs - total_downloaded)
+                tasks = get_shard_unique_page_tasks(
+                    master_conn, shard_id, num_shards, seen_pages, cursor_state, limit=batch_limit)
+                if not tasks:
+                    break
+                futures = [downloads.submit(process_page_task, task) for task in tasks]
                 for fut in as_completed(futures):
-                    res = fut.result()
+                    try:
+                        res = fut.result()
+                    except Exception as exc:
+                        download_errors += 1
+                        print(f"⚠️ PDF validation/download failed; will retry next run: {exc}", flush=True)
+                        continue
                     if res:
-                        rep_id, pdf_fn, s_sayi, s_sayfa, ms, sz, unv = res
-                        with bundle_lock:
-                            current_bundle_files.append((rep_id, pdf_fn, s_sayi, s_sayfa))
-                            total_downloaded += 1
-                            if total_downloaded % 10 == 0 or total_downloaded == 1:
-                                print(
-                                    f"  ⚡ [Shard {shard_id}|#{total_downloaded:,}] {s_sayi}/{s_sayfa} "
-                                    f"({sz/1024:.1f} KB, {ms:.0f} ms) -> {unv}",
-                                    flush=True
-                                )
-                            if len(current_bundle_files) >= BUNDLE_SIZE:
-                                flush_bundle(current_bundle_files, is_final=False)
-                                current_bundle_files.clear()
-
-        if current_bundle_files:
-            flush_bundle(current_bundle_files, is_final=True)
-            current_bundle_files.clear()
-
-    except Exception as e:
-        print(f"⚠️ Shard #{shard_id} çalışma hatası: {e}", flush=True)
-    finally:
-        master_conn.close()
-        update_conn.close()
-        print(
-            f"🏁 Shard #{shard_id} tamamlandı. İndirilen Tekil Sayfa: {total_downloaded:,} | "
-            f"Kapsanan İlan: {total_announcements_covered:,}",
-            flush=True
-        )
+                        rep_id, pdf_fn, s_sayi, s_sayfa, ms, sz, unv, original_sz = res
+                        current_bundle_files.append((rep_id, pdf_fn, s_sayi, s_sayfa))
+                        total_downloaded += 1
+                        bytes_original += original_sz
+                        bytes_stored += sz
+                        if total_downloaded % 10 == 0 or total_downloaded == 1:
+                            print(f"  [Shard {shard_id}|#{total_downloaded:,}] {s_sayi}/{s_sayfa} "
+                                  f"({original_sz/1024:.1f} -> {sz/1024:.1f} KB, {ms:.0f} ms) {unv}", flush=True)
+                        if len(current_bundle_files) >= args.bundle_size:
+                            queue_bundle(archives)
+                    else:
+                        download_errors += 1
+                    while pending_bundles and pending_bundles[0].done():
+                        collect_bundle(pending_bundles.pop(0))
+                if archive_errors:
+                    raise RuntimeError("Archive publication failed; stopping downloads with files retained")
+        except Exception as exc:
+            fatal_error = exc
+            print(f"❌ Shard #{shard_id}: {exc}", flush=True)
+        finally:
+            queue_bundle(archives)
+            for future in pending_bundles:
+                collect_bundle(future)
+            master_conn.close()
+            update_conn.close()
+            elapsed = max(0.001, time.time() - start_time)
+            print(f"🏁 Shard #{shard_id}: {total_downloaded:,} pages, "
+                  f"{total_announcements_covered:,} announcements, "
+                  f"{bytes_original:,} -> {bytes_stored:,} PDF bytes, "
+                  f"{total_downloaded*3600/elapsed:.0f} pages/hour; "
+                  f"download_errors={download_errors}, archive_errors={len(archive_errors)}", flush=True)
+    if fatal_error or archive_errors:
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
