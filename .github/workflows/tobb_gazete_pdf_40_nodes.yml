@@ -17,7 +17,7 @@ on:
       max_seconds:
         description: 'Shard başına maksimum çalışma süresi (saniye)'
         required: true
-        default: '1200'
+        default: '19800'
       download_threads:
         description: 'Runner başına eşzamanlı indirme sayısı'
         type: choice
@@ -91,11 +91,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAX_PDFS: ${{ inputs.max_pdfs || '50000' }}
-          MAX_SECS: ${{ inputs.max_seconds || '1200' }}
+          MAX_SECS: ${{ inputs.max_seconds || '19800' }}
           DOWNLOAD_THREADS: ${{ inputs.download_threads || '8' }}
           REQUEST_INTERVAL: ${{ inputs.request_interval || '3' }}
         run: |
-          python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds "$MAX_SECS" --max-pdfs "$MAX_PDFS" --threads "$DOWNLOAD_THREADS" --bundle-size 100 --request-interval "$REQUEST_INTERVAL"
+          python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds "$MAX_SECS" --max-pdfs "$MAX_PDFS" --threads "$DOWNLOAD_THREADS" --bundle-size 100 --request-interval "$REQUEST_INTERVAL" --persistent-source
 
       - name: Yüklenemeyen PDF ve Paketleri Kurtarma Artifact'ine Kaydet
         if: always()
@@ -173,7 +173,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT_MAX_PDFS: ${{ inputs.max_pdfs || '50000' }}
-          NEXT_MAX_SECS: ${{ inputs.max_seconds || '1200' }}
+          NEXT_MAX_SECS: ${{ inputs.max_seconds || '19800' }}
           NEXT_THREADS: ${{ inputs.download_threads || '8' }}
           NEXT_INTERVAL: ${{ inputs.request_interval || '3' }}
           NEXT_PARALLEL: ${{ inputs.max_parallel || '40' }}

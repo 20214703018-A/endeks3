@@ -298,6 +298,34 @@ def test_worker_returns_failure_and_retains_unpublished_data(tmp_path, monkeypat
     assert list((tmp_path / 'warehouse/raw/bundles').glob('*.tar.gz'))
 
 
+def test_persistent_worker_retries_failed_pages_after_three_auth_results(tmp_path, monkeypatch):
+    product = tmp_path / 'warehouse/product'
+    product.mkdir(parents=True)
+    db = product / 'master.sqlite'
+    with database(db) as conn:
+        for rid in range(1, 5):
+            insert(conn, rid, page=str(rid), text=f'Guid: {rid:08x}')
+    data, calls = make_pdf(), []
+    class Session:
+        def __init__(self, *args):
+            self.network_gate = SimpleNamespace(interval=0, started=0)
+        def login(self):
+            return True
+        def download_pdf(self, guid):
+            calls.append(guid)
+            return (None, 'AUTH_REQUIRED') if len(calls) <= 3 else (data, 'OK')
+    monkeypatch.setattr(worker, 'REPO_ROOT', tmp_path)
+    monkeypatch.setattr(worker, 'DB_PATH', db)
+    monkeypatch.setattr(worker, 'TOBBSessionManager', Session)
+    monkeypatch.setattr(worker, 'upload_bundle_to_release', lambda path, shard: f'release://warehouse-pdf-1/{path.name}')
+    monkeypatch.setattr(sys, 'argv', ['worker', '--shard', '1', '--num-shards', '1', '--threads', '1',
+                                    '--max-pdfs', '4', '--persistent-source'])
+    assert worker.main() == 0
+    assert len(calls) == 7
+    with sqlite3.connect(product / 'shard_1_updates.sqlite') as conn:
+        assert conn.execute('SELECT count(*) FROM gazete_pdf_updates').fetchone() == (4,)
+
+
 def test_pdf_only_merge_needs_no_ocr_and_rolls_back_invalid_shard(tmp_path):
     master = tmp_path / 'master.sqlite'
     conn = database(master)
@@ -760,6 +788,49 @@ def test_transient_recovery_extends_to_configured_limit_with_capped_delays(monke
     assert len(calls) == 8
 
 
+@pytest.mark.parametrize('status,delay', [(429, 120), (503, 600)])
+def test_persistent_source_reopens_one_probe_after_required_cooldown(monkeypatch, status, delay):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.persistent_source = True
+    manager.max_failure_windows = 1
+    manager.view_interval = 0
+    now, calls = [1000.0], []
+    manager.download_deadline = 2000
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    monkeypatch.setattr(manager.request_gate, 'wait', lambda timeout: now.__setitem__(0, now[0] + timeout))
+    def get(*a, **kw):
+        calls.append(now[0])
+        if len(calls) == 1 and status == 503:
+            raise worker.requests.ConnectTimeout()
+        return SimpleNamespace(status_code=status if len(calls) == 1 else 200, headers={'Retry-After': '120'})
+    monkeypatch.setattr(manager, '_download_response', get)
+    if status == 503:
+        with pytest.raises(worker.requests.ConnectTimeout):
+            manager._get_view('fixture')
+    else:
+        assert manager._get_view('fixture')[0].status_code == 429
+    assert manager._get_view('fixture')[0].status_code == 200
+    assert calls == [1000, 1000 + delay]
+    assert manager.source_stopped is None
+
+
+def test_persistent_worker_suspends_denied_access_without_more_requests(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.persistent_source = True
+    now, calls = [1000.0], []
+    manager.download_deadline = 1010
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    monkeypatch.setattr(manager.request_gate, 'wait', lambda timeout: now.__setitem__(0, now[0] + timeout))
+    def get(*a, **kw):
+        calls.append(1)
+        return SimpleNamespace(status_code=403, headers={})
+    monkeypatch.setattr(manager, '_download_response', get)
+    assert manager._get_view('fixture')[0].status_code == 403
+    with pytest.raises(worker.requests.Timeout):
+        manager._get_view('fixture')
+    assert calls == [1]
+
+
 def test_parallel_pdf_sessions_do_not_mutate_viewer_cookies(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
     manager.session.cookies.set('authorized-session', 'fixture')
@@ -972,6 +1043,22 @@ def test_streamed_response_keeps_exact_bytes_and_releases_connection(monkeypatch
     result = manager._download_response('https://example.invalid/fixture.pdf', timeout=15)
     assert result.content == b'%PDF original bytes\x00\xff'
     assert released == [True]
+
+
+def test_source_cooldown_is_not_misclassified_as_slow_response_body(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    now = [0.0]
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    def get(*a, **kw):
+        now[0] = 60
+        response = worker.requests.Response()
+        response.status_code = 200
+        response.raw = io.BytesIO(b'%PDF original bytes')
+        response._tobb_pacing_delay = 60
+        return response
+    monkeypatch.setattr(manager.session, 'get', get)
+    assert manager._download_response('https://example.invalid/file.pdf', timeout=15, budget=45).content == b'%PDF original bytes'
+    assert manager.transport_errors == 0
 
 
 def test_trickling_response_cannot_hold_download_queue_forever(monkeypatch):

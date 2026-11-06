@@ -20,6 +20,7 @@ import argparse
 import tempfile
 import threading
 from html import unescape
+from email.utils import parsedate_to_datetime
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from collections import deque
 from pathlib import Path
@@ -62,7 +63,7 @@ class SourceUnavailable(requests.RequestException):
 class SourceRequestGate:
     """Pace every request, including redirects and session maintenance."""
 
-    def __init__(self, deadline, failure=None):
+    def __init__(self, deadline, failure=None, limit=None):
         self.interval = 0.0
         self.next_at = 0.0
         self.condition = threading.Condition()
@@ -70,6 +71,8 @@ class SourceRequestGate:
         self.started = 0
         self.pause_until = 0.0
         self.failure = failure
+        self.limit = limit
+        self.heartbeat_at = 0.0
 
     def wait(self):
         with self.condition:
@@ -84,6 +87,9 @@ class SourceRequestGate:
                     self.started += 1
                     return
                 delay = eligible_at - now
+                if delay > 5 and now >= self.heartbeat_at:
+                    print(f'Source gate waiting; HTTP requests started={self.started}', flush=True)
+                    self.heartbeat_at = now + 60
                 if stop_at is not None:
                     delay = min(delay, stop_at - now)
                 self.condition.wait(timeout=min(1, delay))
@@ -97,9 +103,15 @@ class PacedSession(requests.Session):
     def send(self, request, **kwargs):
         # requests calls send again for automatic redirects, so those share
         # the same quota as login, viewer and file requests on all threads.
+        wait_started = time.monotonic()
         self.gate.wait()
+        paced_wait = time.monotonic() - wait_started
         try:
-            return super().send(request, **kwargs)
+            response = super().send(request, **kwargs)
+            response._tobb_pacing_delay = getattr(response, '_tobb_pacing_delay', 0) + paced_wait
+            if response.status_code in (403, 429) and self.gate.limit:
+                self.gate.limit(response)
+            return response
         except requests.RequestException as exc:
             if self.gate.failure:
                 self.gate.failure(exc)
@@ -116,7 +128,7 @@ class TOBBSessionManager:
         self.lock = threading.Lock()
         self.download_deadline = None
         self.transport_errors = 0
-        self.network_gate = SourceRequestGate(lambda: self.download_deadline, self._transport_failure)
+        self.network_gate = SourceRequestGate(lambda: self.download_deadline, self._transport_failure, self._source_limit)
         self.session = self._create_session()
         self.is_authenticated = False
         self.session_generation = 0
@@ -138,6 +150,30 @@ class TOBBSessionManager:
         self.view_cooldown = 30
         self.view_interval = 1.0
         self.next_view_at = 0
+        self.persistent_source = False
+
+    def _source_limit(self, response):
+        if getattr(response, '_tobb_limit_handled', False):
+            return
+        response._tobb_limit_handled = True
+        with self.request_gate:
+            if response.status_code == 403:
+                self.source_stopped = 'ACCESS_DENIED'
+                self.retry_view_at = float('inf')
+                print('Source access denied; suspending requests pending authorized access', flush=True)
+            elif self.source_stopped != 'ACCESS_DENIED':
+                value = str(getattr(response, 'headers', {}).get('Retry-After', ''))
+                try:
+                    delay = float(int(value)) if value.isdigit() else parsedate_to_datetime(value).timestamp() - time.time()
+                    if not 0 < delay < float('inf'):
+                        delay = 300
+                except (ValueError, TypeError, OverflowError):
+                    delay = 300
+                self.source_stopped = 'SOURCE_THROTTLED'
+                self.retry_view_at = time.monotonic() + delay
+                print(f'Source requested cooldown: {delay:.0f}s; honoring Retry-After', flush=True)
+            self.network_gate.pause_until = self.retry_view_at
+            self.request_gate.notify_all()
 
     def _transport_failure(self, exc):
         if getattr(exc, '_tobb_paced', False):
@@ -180,6 +216,9 @@ class TOBBSessionManager:
             response = session.get(url, verify=False, stream=True,
                                    allow_redirects=False,
                                    timeout=(min(5, remaining), min(timeout, remaining)))
+            stop_at += getattr(response, '_tobb_pacing_delay', 0)
+            if self.download_deadline is not None:
+                stop_at = min(stop_at, self.download_deadline)
             try:
                 if response.is_redirect:
                     url = requests.compat.urljoin(url, response.headers['Location'])
@@ -203,12 +242,19 @@ class TOBBSessionManager:
         with self.request_gate:
             while True:
                 now = time.monotonic()
-                if self.source_stopped:
-                    raise SourceUnavailable(self.source_stopped)
                 if self.download_deadline is not None and now >= self.download_deadline:
                     raise requests.Timeout('Run deadline reached before viewer request')
+                if self.source_stopped:
+                    if not self.persistent_source:
+                        raise SourceUnavailable(self.source_stopped)
+                    if now < self.retry_view_at:
+                        self.request_gate.wait(timeout=1)
+                        continue
+                    print('Source recovery probe; same account and source endpoint', flush=True)
+                    self.source_stopped = None
+                    self.view_failures = self.failure_windows = 0
                 eligible_at = max(self.retry_view_at, self.next_view_at)
-                if (self.failed_renewal and len(self.failed_renewal) > 2 and self.failed_renewal[2] == 'network'
+                if (self.failed_renewal and (self.persistent_source or len(self.failed_renewal) > 2 and self.failed_renewal[2] == 'network')
                         and self.failed_renewal[0] == self.session_generation):
                     eligible_at = max(eligible_at, self.failed_renewal[1] + 60)
                 if not self.renewing and self.active_views == 0 and now >= eligible_at:
@@ -224,7 +270,7 @@ class TOBBSessionManager:
             response = self._download_response(url, timeout=45, budget=90)
             with self.request_gate:
                 if response.status_code in (403, 429):
-                    self.source_stopped = ('ACCESS_DENIED' if response.status_code == 403 else 'SOURCE_THROTTLED')
+                    self._source_limit(response)
                 elif response.status_code >= 500:
                     raise requests.HTTPError('Viewer server error')
                 else:
@@ -257,6 +303,7 @@ class TOBBSessionManager:
                         print(f'Source recovery request interval: {self.network_gate.interval:g}s', flush=True)
                     if self.failure_windows >= self.max_failure_windows:
                         self.source_stopped = 'SOURCE_UNAVAILABLE'
+                        self.retry_view_at = time.monotonic() + 600
                         print(f'Viewer unavailable after {self.max_failure_windows} recovery windows; preserving completed files', flush=True)
                     else:
                         cooldown = min(300, self.view_cooldown * 2**(self.failure_windows - 1))
@@ -440,8 +487,10 @@ class TOBBSessionManager:
                 try:
                     r_pdf = self._download_response(pdf_url, timeout=15, budget=90, pdf=True)
                     if r_pdf.status_code == 429:
+                        self._source_limit(r_pdf)
                         return None, "SOURCE_THROTTLED"
                     if r_pdf.status_code == 403:
+                        self._source_limit(r_pdf)
                         return None, "ACCESS_DENIED"
                     if r_pdf.content and r_pdf.content.startswith(b"%PDF"):
                         return r_pdf.content, "OK"
@@ -612,7 +661,7 @@ def main():
     parser = argparse.ArgumentParser(description="GEOPROP TOBB 40x Turbo Shard Gazete PDF İndirici (original PDF archive)")
     parser.add_argument("--shard", type=int, required=True, help="Shard ID (1 - 40)")
     parser.add_argument("--num-shards", type=int, default=40, help="Toplam Shard Sayısı")
-    parser.add_argument("--max-seconds", type=int, default=19000, help="Maksimum çalışma süresi (sn)")
+    parser.add_argument("--max-seconds", type=int, default=19800, help="Maksimum çalışma süresi (sn)")
     parser.add_argument("--max-pdfs", type=int, default=50000, help="Bu shard'ın indirebileceği maksimum tekil PDF sayfası")
     parser.add_argument("--threads", type=int, default=8, help="Paralel indirme iş parçacığı sayısı (Varsayılan: 8)")
     parser.add_argument("--bundle-size", type=int, default=BUNDLE_SIZE)
@@ -620,6 +669,8 @@ def main():
                         help="Minimum seconds between all TOBB requests on this runner")
     parser.add_argument("--recovery-windows", type=int, default=8,
                         help="Bounded recovery probes for transient source connection failures")
+    parser.add_argument("--persistent-source", action="store_true",
+                        help="Keep worker alive and recover transient source/archive failures within run budget")
     args = parser.parse_args()
 
     if not 1 <= args.shard <= args.num_shards or min(args.threads, args.bundle_size, args.max_pdfs, args.max_seconds) < 1:
@@ -671,10 +722,19 @@ def main():
     mgr.network_gate.interval = args.request_interval
     mgr.minimum_request_interval = args.request_interval
     mgr.max_failure_windows = args.recovery_windows
+    mgr.persistent_source = args.persistent_source
     print(f"Source request interval: {args.request_interval:g}s (all routes and redirects)", flush=True)
-    if not mgr.login():
-        print(f"❌ [Shard {shard_id}] TOBB Yetkili Girişi açılamadı, çıkılıyor.", flush=True)
-        sys.exit(1)
+    while True:
+        mgr.auth_deadline = min(time.monotonic() + 60, mgr.download_deadline)
+        if mgr.login():
+            break
+        if not args.persistent_source or time.time() >= deadline:
+            print(f"❌ [Shard {shard_id}] TOBB Yetkili Girişi açılamadı, çıkılıyor.", flush=True)
+            sys.exit(1)
+        print('Worker alive; initial session unavailable, retrying after 60s', flush=True)
+        stop_wait = min(mgr.download_deadline, time.monotonic() + 60)
+        while time.monotonic() < stop_wait:
+            time.sleep(min(1, stop_wait - time.monotonic()))
 
     total_downloaded = 0
     total_announcements_covered = 0
@@ -711,7 +771,17 @@ def main():
         current_bundle_bytes = 0
         pending_bundles.append(executor.submit(
             publish_bundle, items, temp_bundle_dir, bundles_dir,
-            shard_id, upload_bundle_to_release))
+            shard_id, durable_upload))
+
+    def durable_upload(path, shard):
+        while True:
+            ref = upload_bundle_to_release(path, shard)
+            if ref.startswith('release://') or not args.persistent_source or time.time() >= deadline:
+                return ref
+            print('Archive service unavailable; files retained, retrying after 60s', flush=True)
+            stop_wait = min(mgr.download_deadline, time.monotonic() + 60)
+            while time.monotonic() < stop_wait:
+                time.sleep(min(1, stop_wait - time.monotonic()))
 
     def process_page_task(row):
         rep_id, tsm_adi, unvan, sayi, sayfa, ilan_turu, ilan_metni, ilan_tarihi = row
@@ -725,7 +795,7 @@ def main():
         t0 = time.time()
         pdf_bytes, status = mgr.download_pdf(guid)
         if status != "OK" or not pdf_bytes:
-            return {"status": status, "page": f"{sayi}/{sayfa}"}
+            return {"status": status, "page": f"{sayi}/{sayfa}", "row": row}
 
         safe_tsm = re.sub(r'[^a-zA-Z0-9]', '', tsm_adi or "TSM")
         pdf_filename = f"{sayi}_{sayfa}_{safe_tsm}_{guid[:8]}.pdf"
@@ -745,13 +815,17 @@ def main():
     auth_blocked = False
     first_bundle_queued = False
     last_download_time = time.monotonic()
+    next_heartbeat = last_download_time + 60
     # Pools live for the whole run; packing/uploading does not block downloads.
     with ThreadPoolExecutor(max_workers=args.threads) as downloads, ThreadPoolExecutor(max_workers=1) as archives:
         backlog = deque()
         pending_downloads = set()
         exhausted = False
         try:
-            while pending_downloads or (not exhausted and time.time() < deadline and total_downloaded < args.max_pdfs):
+            while pending_downloads or ((backlog or not exhausted) and time.time() < deadline and total_downloaded < args.max_pdfs):
+                if time.monotonic() >= next_heartbeat:
+                    print(f'Worker heartbeat: downloaded={total_downloaded}; pending={len(pending_downloads)}; source={getattr(mgr, "source_stopped", None) or "active"}', flush=True)
+                    next_heartbeat = time.monotonic() + 60
                 # Commit confirmed uploads even when the source is stalled.
                 while pending_bundles and pending_bundles[0].done():
                     collect_bundle(pending_bundles.pop(0))
@@ -789,7 +863,13 @@ def main():
                         source_statuses[status] = source_statuses.get(status, 0) + 1
                         if source_statuses[status] <= 3 or source_statuses[status] % 10 == 0:
                             print(f"Source status {status}: {res['page']} (count={source_statuses[status]})", flush=True)
-                        if (status in ('SOURCE_THROTTLED', 'ACCESS_DENIED', 'SOURCE_UNAVAILABLE') or
+                        if (args.persistent_source and time.time() < deadline and
+                                status in ('AUTH_REQUIRED', 'VIEW_TIMEOUT', 'VIEW_NETWORK_ERROR', 'PDF_TIMEOUT',
+                                           'PDF_NETWORK_ERROR', 'SOURCE_RECOVERING', 'SOURCE_UNAVAILABLE', 'SOURCE_THROTTLED')):
+                            backlog.append(res['row'])
+                        if args.persistent_source and status == 'ACCESS_DENIED':
+                            fatal_error = RuntimeError('Source denied access; requests suspended, files retained')
+                        elif not args.persistent_source and (status in ('SOURCE_THROTTLED', 'ACCESS_DENIED', 'SOURCE_UNAVAILABLE') or
                                 status == 'AUTH_REQUIRED' and source_statuses[status] >= 3):
                             auth_blocked = True
                             fatal_error = RuntimeError(f'TOBB access unavailable ({status}); PDFs retained')
