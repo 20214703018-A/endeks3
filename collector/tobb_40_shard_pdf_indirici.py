@@ -35,7 +35,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from collector.tobb_pdf_archive import optimize_pdf, write_pdf, publish_bundle, record_published_bundle
+from collector.tobb_pdf_archive import preserve_pdf, write_pdf, publish_bundle, record_published_bundle
 
 DB_PATH = REPO_ROOT / "warehouse" / "product" / "turkiye_ticaret_sicil_ve_sirketler.sqlite"
 DATA_DIR = REPO_ROOT / "collector" / "data"
@@ -69,6 +69,35 @@ class TOBBSessionManager:
         self.auth_deadline = None
         self.failed_renewal = None
         self.reported_view_states = set()
+        self.download_deadline = None
+
+    def _download_response(self, url, timeout):
+        # A socket read timeout alone does not bound a trickling response or
+        # a redirect chain. Bound the whole response and release its socket.
+        stop_at = time.monotonic() + 45
+        if self.download_deadline is not None:
+            stop_at = min(stop_at, self.download_deadline)
+        for _ in range(6):
+            remaining = stop_at - time.monotonic()
+            if remaining <= 0:
+                raise requests.Timeout('Download response budget exhausted')
+            response = self.session.get(url, verify=False, stream=True,
+                                        allow_redirects=False, timeout=min(timeout, remaining))
+            try:
+                if response.is_redirect:
+                    url = requests.compat.urljoin(url, response.headers['Location'])
+                    continue
+                chunks = []
+                for chunk in response.iter_content(65536):
+                    if time.monotonic() >= stop_at:
+                        raise requests.Timeout('Download response budget exhausted')
+                    chunks.append(chunk)
+                response._content = b''.join(chunks)
+                response._content_consumed = True
+                return response
+            finally:
+                response.close()
+        raise requests.TooManyRedirects('Download redirect budget exhausted')
 
     def _get_view(self, url):
         with self.request_gate:
@@ -76,7 +105,7 @@ class TOBBSessionManager:
             generation = self.session_generation
             self.active_views += 1
         try:
-            return self.session.get(url, verify=False, timeout=12), generation
+            return self._download_response(url, timeout=12), generation
         finally:
             with self.request_gate:
                 self.active_views -= 1
@@ -228,13 +257,9 @@ class TOBBSessionManager:
                 r_view, generation = self._get_view(view_url)
                 raw_resp = r_view.text
             except requests.Timeout:
-                last_status = "VIEW_TIMEOUT"
-                time.sleep(0.15)
-                continue
+                return None, "VIEW_TIMEOUT"
             except requests.RequestException:
-                last_status = "VIEW_NETWORK_ERROR"
-                time.sleep(0.15)
-                continue
+                return None, "VIEW_NETWORK_ERROR"
 
             if r_view.status_code == 429:
                 return None, "SOURCE_THROTTLED"
@@ -247,7 +272,7 @@ class TOBBSessionManager:
                 pdf_rel = m_pdf.group(1)
                 pdf_url = pdf_rel if pdf_rel.startswith("http") else f"https://www.ticaretsicil.gov.tr{pdf_rel}"
                 try:
-                    r_pdf = self.session.get(pdf_url, verify=False, timeout=15)
+                    r_pdf = self._download_response(pdf_url, timeout=15)
                     if r_pdf.status_code == 429:
                         return None, "SOURCE_THROTTLED"
                     if r_pdf.status_code == 403:
@@ -256,13 +281,9 @@ class TOBBSessionManager:
                         return r_pdf.content, "OK"
                     last_status = f"PDF_HTTP_{r_pdf.status_code}"
                 except requests.Timeout:
-                    last_status = "PDF_TIMEOUT"
-                    time.sleep(0.15)
-                    continue
+                    return None, "PDF_TIMEOUT"
                 except requests.RequestException:
-                    last_status = "PDF_NETWORK_ERROR"
-                    time.sleep(0.15)
-                    continue
+                    return None, "PDF_NETWORK_ERROR"
 
             # Attribute order, whitespace and quote style vary between pages.
             ilan_form = re.search(r'\b(?:id|name)\s*=\s*[\"\'](?:CaptchaIlan|FormGuvenlikKodu)[\"\']', raw_resp, re.I)
@@ -410,7 +431,7 @@ def ensure_shard_index(db_path, num_shards):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="GEOPROP TOBB 40x Turbo Shard Gazete PDF İndirici (verified lossless archive)")
+    parser = argparse.ArgumentParser(description="GEOPROP TOBB 40x Turbo Shard Gazete PDF İndirici (original PDF archive)")
     parser.add_argument("--shard", type=int, required=True, help="Shard ID (1 - 40)")
     parser.add_argument("--num-shards", type=int, default=40, help="Toplam Shard Sayısı")
     parser.add_argument("--max-seconds", type=int, default=19000, help="Maksimum çalışma süresi (sn)")
@@ -463,6 +484,7 @@ def main():
     if not mgr.login():
         print(f"❌ [Shard {shard_id}] TOBB Yetkili Girişi açılamadı, çıkılıyor.", flush=True)
         sys.exit(1)
+    mgr.download_deadline = time.monotonic() + max(0, deadline - time.time())
 
     total_downloaded = 0
     total_announcements_covered = 0
@@ -519,7 +541,7 @@ def main():
         pdf_filename = f"{sayi}_{sayfa}_{safe_tsm}_{guid[:8]}.pdf"
         local_pdf_path = temp_bundle_dir / pdf_filename
 
-        optimized = optimize_pdf(pdf_bytes)
+        optimized = preserve_pdf(pdf_bytes)
         write_pdf(local_pdf_path, optimized)
         ms = (time.time() - t0) * 1000
         return (rep_id, pdf_filename, str(sayi), str(sayfa), ms,

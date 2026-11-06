@@ -129,6 +129,15 @@ The PDF writer's generated file ID/xref/Length are container bookkeeping.
     return True
 
 
+def preserve_pdf(data):
+    """Validate a source PDF and retain its exact bytes without rewriting it."""
+    with pikepdf.Pdf.open(io.BytesIO(data), attempt_recovery=False) as pdf:
+        if not pdf.pages or _syntax_issues(pdf):
+            raise ValueError('PDF failed structural validation')
+    digest = hashlib.sha256(data).hexdigest()
+    return OptimizedPDF(data, len(data), digest, digest, 'original')
+
+
 def optimize_pdf(data):
     original_hash = hashlib.sha256(data).hexdigest()
 

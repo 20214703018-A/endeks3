@@ -19,10 +19,10 @@ on:
         required: true
         default: '19000'
       download_threads:
-        description: 'Runner başına eşzamanlı indirme sayısı (TOBB oturumu için düşük başlayın)'
+        description: 'Runner başına eşzamanlı indirme sayısı'
         type: choice
         options: ['1', '2', '4', '8']
-        default: '1'
+        default: '8'
 
 permissions:
   contents: write
@@ -72,12 +72,12 @@ jobs:
             echo "✅ Master SQLite ambarı başarıyla geri yüklendi: $(ls -lh warehouse/product/*.sqlite)"
           fi
 
-      - name: Shard PDF İndirme ve Kayıpsız Arşivleme
+      - name: Shard PDF İndirme ve Özgün Dosyaları Arşivleme
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAX_PDFS: ${{ inputs.max_pdfs || '50000' }}
           MAX_SECS: ${{ inputs.max_seconds || '19000' }}
-          DOWNLOAD_THREADS: ${{ inputs.download_threads || '1' }}
+          DOWNLOAD_THREADS: ${{ inputs.download_threads || '8' }}
         run: |
           python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds "$MAX_SECS" --max-pdfs "$MAX_PDFS" --threads "$DOWNLOAD_THREADS" --bundle-size 100
 

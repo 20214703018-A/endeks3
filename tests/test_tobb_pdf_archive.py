@@ -16,7 +16,7 @@ import pytest
 from collector import tobb_40_shard_pdf_indirici as worker
 from collector import tobb_bulut_otonom_dongu_servisi as observer
 from collector.tobb_pdf_archive import (
-    _same_document, optimize_pdf, publish_bundle, record_published_bundle, write_pdf,
+    _same_document, optimize_pdf, preserve_pdf, publish_bundle, record_published_bundle, write_pdf,
 )
 from geoprop.apply_shard_pdf_updates import merge_pdf_updates
 from tools.recover_tobb_raw_artifacts import recover_raw
@@ -81,6 +81,17 @@ def test_signed_and_already_small_preserve_original_bytes():
 def test_malformed_pdf_is_not_accepted():
     with pytest.raises((pikepdf.PdfError, ValueError)):
         optimize_pdf(b'%PDF-1.4\ntruncated')
+
+
+def test_original_archive_never_rewrites_source_pdf(monkeypatch):
+    data = make_pdf()
+    monkeypatch.setattr(pikepdf.Pdf, 'save', lambda *a, **kw: pytest.fail('source PDF must not be rewritten'))
+    result = preserve_pdf(data)
+    assert result.content == data
+    assert result.original_sha256 == result.stored_sha256 == hashlib.sha256(data).hexdigest()
+    assert result.status == 'original'
+    with pytest.raises((pikepdf.PdfError, ValueError)):
+        preserve_pdf(b'%PDF-1.4\ntruncated')
 
 
 def test_failed_equivalence_preserves_original(monkeypatch):
@@ -262,7 +273,7 @@ def test_slow_pdf_does_not_block_next_200_page_batch(tmp_path, monkeypatch):
     optimized = optimize_pdf(make_pdf())
     data = optimized.content
     # Exercise scheduling independently of machine-dependent PDF CPU/I/O time.
-    monkeypatch.setattr(worker, 'optimize_pdf', lambda content: optimized)
+    monkeypatch.setattr(worker, 'preserve_pdf', lambda content: optimized)
     next_batch_started = threading.Event()
     slow_finished = threading.Event()
     class Session:
@@ -334,7 +345,7 @@ def test_ilan_form_with_login_menu_link_does_not_trigger_relogin(monkeypatch):
     def renew(generation, ilan=False):
         renewals.append(ilan)
         return True
-    monkeypatch.setattr(manager.session, 'get', get)
+    monkeypatch.setattr(manager, '_download_response', get)
     monkeypatch.setattr(manager, '_renew_session', renew)
     assert manager.download_pdf('fixture') == (b'%PDF fixture', 'OK')
     assert renewals == [True]
@@ -342,7 +353,7 @@ def test_ilan_form_with_login_menu_link_does_not_trigger_relogin(monkeypatch):
 
 def test_failed_ilan_renewal_returns_explicit_status_without_relogin(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
-    monkeypatch.setattr(manager.session, 'get', lambda url, **kw: SimpleNamespace(
+    monkeypatch.setattr(manager, '_download_response', lambda url, **kw: SimpleNamespace(
         url=url, text='<form id="FormGuvenlikKodu">', status_code=200))
     monkeypatch.setattr(manager, '_renew_session', lambda generation, ilan=False: False)
     assert manager.download_pdf('fixture') == (None, 'AUTH_REQUIRED')
@@ -372,7 +383,7 @@ def test_view_requests_drain_and_pause_while_session_is_renewed(monkeypatch):
         view_sent.set()
         return SimpleNamespace(text='response')
     monkeypatch.setattr(manager, 'solve_ilan_captcha', renew)
-    monkeypatch.setattr(manager.session, 'get', get)
+    monkeypatch.setattr(manager, '_download_response', get)
     with ThreadPoolExecutor(max_workers=2) as pool:
         maintenance = pool.submit(manager._renew_session, 0, True)
         with manager.request_gate:
@@ -483,7 +494,7 @@ def test_waiting_workers_do_not_repeat_a_failed_renewal(monkeypatch):
 
 def test_ilan_detection_accepts_single_quotes_and_extra_form_attributes(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
-    monkeypatch.setattr(manager.session, 'get', lambda url, **kw: SimpleNamespace(
+    monkeypatch.setattr(manager, '_download_response', lambda url, **kw: SimpleNamespace(
         url=url, text="<form class='security' id = 'FormGuvenlikKodu'><input name = 'CaptchaIlan'>", status_code=200))
     calls = []
     def renew(generation, ilan=False):
@@ -521,7 +532,7 @@ def test_source_timeouts_identify_the_slow_endpoint(monkeypatch, stage):
         if stage == 'VIEW' or url.endswith('.pdf'):
             raise worker.requests.Timeout('test timeout')
         return SimpleNamespace(url=url, text='<embed src="/tmp_gazete/fixture.pdf">', status_code=200)
-    monkeypatch.setattr(manager.session, 'get', get)
+    monkeypatch.setattr(manager, '_download_response', get)
     assert manager.download_pdf('fixture') == (None, f'{stage}_TIMEOUT')
 
 
@@ -532,6 +543,59 @@ def test_explicit_source_limits_stop_without_retry_or_login(monkeypatch, status,
     def get(url, **kwargs):
         calls.append(url)
         return SimpleNamespace(url=url, text='', status_code=status)
-    monkeypatch.setattr(manager.session, 'get', get)
+    monkeypatch.setattr(manager, '_download_response', get)
     assert manager.download_pdf('fixture') == (None, expected)
     assert len(calls) == 1
+
+
+def test_streamed_response_keeps_exact_bytes_and_releases_connection(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    response = worker.requests.Response()
+    response.status_code = 200
+    released = []
+    class Raw(io.BytesIO):
+        def release_conn(self):
+            released.append(True)
+    response.raw = Raw(b'%PDF original bytes\x00\xff')
+    monkeypatch.setattr(manager.session, 'get', lambda *a, **kw: response)
+    result = manager._download_response('https://example.invalid/fixture.pdf', timeout=15)
+    assert result.content == b'%PDF original bytes\x00\xff'
+    assert released == [True]
+
+
+def test_trickling_response_cannot_hold_download_queue_forever(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    now, closed = [0], []
+    def chunks(size):
+        yield b'%PDF'
+        now[0] = 46
+        yield b'late data'
+    response = SimpleNamespace(is_redirect=False, iter_content=chunks, close=lambda: closed.append(True))
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    monkeypatch.setattr(manager.session, 'get', lambda *a, **kw: response)
+    with pytest.raises(worker.requests.Timeout):
+        manager._download_response('https://example.invalid/fixture.pdf', timeout=15)
+    assert closed == [True]
+
+
+def test_redirect_chain_shares_one_response_budget(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    now, closed, calls = [0], [], []
+    def get(url, **kwargs):
+        assert kwargs['allow_redirects'] is False
+        calls.append(url)
+        now[0] += 15
+        return SimpleNamespace(is_redirect=True, headers={'Location': '/next'}, close=lambda: closed.append(True))
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    monkeypatch.setattr(manager.session, 'get', get)
+    with pytest.raises(worker.requests.Timeout):
+        manager._download_response('https://example.invalid/start', timeout=12)
+    assert len(calls) == len(closed) == 3
+
+
+def test_run_deadline_stops_new_download_requests(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.download_deadline = time.monotonic() - 1
+    monkeypatch.setattr(manager.session, 'get', lambda *a, **kw: pytest.fail('run deadline exceeded'))
+    with pytest.raises(worker.requests.Timeout):
+        manager._download_response('https://example.invalid/fixture.pdf', timeout=15)
