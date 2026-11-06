@@ -5,6 +5,8 @@ import sqlite3
 import sys
 import tarfile
 import threading
+import time
+from concurrent.futures import ThreadPoolExecutor
 from types import SimpleNamespace
 from pathlib import Path
 
@@ -16,6 +18,7 @@ from collector.tobb_pdf_archive import (
     _same_document, optimize_pdf, publish_bundle, record_published_bundle, write_pdf,
 )
 from geoprop.apply_shard_pdf_updates import merge_pdf_updates
+from tools.recover_tobb_raw_artifacts import recover_raw
 
 
 def make_pdf(signature=False):
@@ -311,3 +314,112 @@ def test_successful_login_advances_generation_for_waiting_workers(monkeypatch):
     # A second worker received its redirect before the first renewed.
     assert manager.login(expected_generation=0)
     assert calls == [1]
+
+
+def test_ilan_form_with_login_menu_link_does_not_trigger_relogin(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.is_authenticated = True
+    views, renewals = [], []
+    def get(url, **kwargs):
+        if url.endswith('.pdf'):
+            return SimpleNamespace(content=b'%PDF fixture')
+        views.append(url)
+        html = ('<a href="girisyap.php">Giriş</a><form id="FormGuvenlikKodu">'
+                if len(views) == 1 else '<embed src="/tmp_gazete/fixture.pdf">')
+        return SimpleNamespace(url=url, text=html, status_code=200)
+    def renew(generation, ilan=False):
+        renewals.append(ilan)
+        return True
+    monkeypatch.setattr(manager.session, 'get', get)
+    monkeypatch.setattr(manager, '_renew_session', renew)
+    assert manager.download_pdf('fixture') == (b'%PDF fixture', 'OK')
+    assert renewals == [True]
+
+
+def test_failed_ilan_renewal_returns_explicit_status_without_relogin(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    monkeypatch.setattr(manager.session, 'get', lambda url, **kw: SimpleNamespace(
+        url=url, text='<form id="FormGuvenlikKodu">', status_code=200))
+    monkeypatch.setattr(manager, '_renew_session', lambda generation, ilan=False: False)
+    assert manager.download_pdf('fixture') == (None, 'AUTH_REQUIRED')
+
+
+def test_expired_renewal_budget_performs_no_network_requests(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.auth_deadline = time.monotonic() - 1
+    monkeypatch.setattr(manager.session, 'get', lambda *a, **kw: pytest.fail('expired auth budget'))
+    assert not manager.login()
+
+
+def test_view_requests_drain_and_pause_while_session_is_renewed(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.is_authenticated = True
+    manager.active_views = 1
+    maintenance_entered = threading.Event()
+    release_maintenance = threading.Event()
+    view_sent = threading.Event()
+    def renew(expected_generation=None):
+        assert manager.active_views == 0
+        maintenance_entered.set()
+        assert release_maintenance.wait(3)
+        manager.session_generation += 1
+        return True
+    def get(*args, **kwargs):
+        view_sent.set()
+        return SimpleNamespace(text='response')
+    monkeypatch.setattr(manager, 'solve_ilan_captcha', renew)
+    monkeypatch.setattr(manager.session, 'get', get)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        maintenance = pool.submit(manager._renew_session, 0, True)
+        with manager.request_gate:
+            assert manager.request_gate.wait_for(lambda: manager.renewing, timeout=2)
+            assert not maintenance_entered.is_set()
+            manager.active_views = 0
+            manager.request_gate.notify_all()
+        assert maintenance_entered.wait(2)
+        view = pool.submit(manager._get_view, 'https://example.invalid/view')
+        assert not view_sent.is_set()
+        release_maintenance.set()
+        assert maintenance.result(timeout=2)
+        assert view.result(timeout=2)[1] == 1
+    assert view_sent.is_set()
+
+
+def test_cancelled_runner_raw_files_are_published_and_linked(tmp_path):
+    raw = tmp_path / 'raw/temp_bundle_1'
+    raw.mkdir(parents=True)
+    write_pdf(raw / '5000_1_TSM_abcdef01.pdf', optimize_pdf(make_pdf()))
+    master = tmp_path / 'master.sqlite'
+    conn = database(master)
+    insert(conn, 1)
+    insert(conn, 2)
+    conn.close()
+    updates = tmp_path / 'updates/shard_0_updates.sqlite'
+    result = recover_raw(tmp_path / 'raw', master, updates, tmp_path / 'bundles',
+                         lambda path, shard: f'release://warehouse-pdf-1/{path.name}')
+    assert result['published_pdf_files'] == 1
+    assert result['announcement_links'] == 2
+    with sqlite3.connect(updates) as conn:
+        assert conn.execute('SELECT count(*) FROM gazete_pdf_updates').fetchone()[0] == 2
+    assert not list(raw.glob('*.pdf'))
+
+
+def test_raw_recovery_reuses_known_archive_and_retains_incomplete_downloads(tmp_path):
+    raw = tmp_path / 'raw/temp_bundle_1'
+    raw.mkdir(parents=True)
+    write_pdf(raw / '5000_1_TSM_abcdef01.pdf', optimize_pdf(make_pdf()))
+    (raw / '5000_2_TSM_abcdef02.pdf').write_bytes(b'%PDF incomplete')
+    master = tmp_path / 'master.sqlite'
+    conn = database(master)
+    insert(conn, 1)
+    insert(conn, 2)
+    conn.execute('UPDATE ticaret_sicil_gazetesi_ilanlari SET pdf_dosya_yolu=? WHERE id=1',
+                 ('release://warehouse-pdf-1/already.tar.gz#page.pdf',))
+    conn.commit()
+    conn.close()
+    updates = tmp_path / 'updates/shard_0_updates.sqlite'
+    result = recover_raw(tmp_path / 'raw', master, updates, tmp_path / 'bundles',
+                         lambda *args: pytest.fail('already archived page must not upload again'))
+    assert result['reused_pdf_files'] == 1
+    assert len(result['skipped_incomplete_files']) == 1
+    assert (raw / '5000_2_TSM_abcdef02.pdf').exists()

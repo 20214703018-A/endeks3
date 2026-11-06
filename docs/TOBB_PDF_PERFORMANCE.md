@@ -24,6 +24,12 @@ Mevcut çalışmalar eski commit ile devam eder; kod değişikliği çalışan r
 kendiliğinden uygulanmaz. Tamamlanma süresi veya tüm arşivin saatler içinde
 biteceği henüz canlı ölçümle kanıtlanmış değildir.
 
+İlk 10 PDF erken arşivlenir. Kaynak yanıtları durursa eldeki tamamlanmış PDF'ler
+30 saniye sonra ayrıca arşivlenir. Bakım sırasında yeni viewer istekleri durur;
+oturum yenileme için nominal 60 saniyelik toplam deneme bütçesi uygulanır. İç içe
+ağ okuma tekrarları kaldırılmıştır. Genel menüdeki giriş bağlantısı oturum
+kapanması olarak değerlendirilmez.
+
 ## İçerik koruması
 
 Görüntü yeniden kodlama, DPI düşürme, OCR, font/ek/metadata silme uygulanmaz.
@@ -72,7 +78,7 @@ python tools/benchmark_tobb_pdf_archive.py warehouse/raw/gazete_sayfalari \
   --step 16 --limit 100 --dpi 150 --report /tmp/tobb-pdf-benchmark.json
 ```
 
-15 test; yükleme hatası, bozuk PDF, imza, ek/metadata koruması, checksum,
+21 test; yükleme hatası, bozuk PDF, imza, ek/metadata koruması, checksum,
 shard dağılımı, master rollback, indirme/yükleme örtüşmesi, çalışan kova tercihi
 oturum yenileme tekrarlarının önlenmesi ve yavaş PDF'nin sonraki 200 görevlik grubu engellememesini kapsar.
 Benchmark için pikepdf ve PyMuPDF, testler için pikepdf/requests/pytest gerekir.

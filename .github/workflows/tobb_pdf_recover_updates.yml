@@ -3,6 +3,10 @@ name: TOBB PDF Confirmed Updates Recovery
 on:
   workflow_dispatch:
     inputs:
+      recover_raw:
+        description: Also publish unfinished PDF files from recovery artifacts
+        type: boolean
+        default: false
       source_run:
         description: Completed PDF run containing shard-pdf-update artifacts
         required: true
@@ -41,6 +45,12 @@ jobs:
           gh release download warehouse-pdf-1 -p turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --dir warehouse/product
           gh run download "$SOURCE_RUN" --pattern 'shard-pdf-update-*' --dir recovered_updates
           gunzip warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+      - name: Recover unfinished PDF files
+        if: inputs.recover_raw
+        run: |
+          pip install requests 'pikepdf>=10,<11'
+          gh run download "$SOURCE_RUN" --pattern 'shard-pdf-recovery-*' --dir raw_recovered
+          python tools/recover_tobb_raw_artifacts.py raw_recovered warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite recovered_updates/raw/shard_0_updates.sqlite
       - name: Merge only confirmed release references
         run: |
           python - <<'PY'
@@ -91,6 +101,9 @@ jobs:
           name: tobb-pdf-recovery-${{ inputs.source_run }}
           path: |
             recovered_updates/
+            raw_recovered/
+            recovered_bundles/
+            raw_recovery_summary.json
             recovery_summary.json
             source_run.json
             release_before.json

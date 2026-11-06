@@ -7,6 +7,7 @@ on:
       - 'collector/tobb_pdf_archive.py'
       - 'geoprop/apply_shard_pdf_updates.py'
       - 'tests/test_tobb_pdf_archive.py'
+      - 'tools/recover_tobb_raw_artifacts.py'
       - '.github/workflows/tobb_pdf_archive_checks.yml'
   pull_request:
     paths:
@@ -14,6 +15,7 @@ on:
       - 'collector/tobb_pdf_archive.py'
       - 'geoprop/apply_shard_pdf_updates.py'
       - 'tests/test_tobb_pdf_archive.py'
+      - 'tools/recover_tobb_raw_artifacts.py'
       - '.github/workflows/tobb_pdf_archive_checks.yml'
   workflow_dispatch:
 

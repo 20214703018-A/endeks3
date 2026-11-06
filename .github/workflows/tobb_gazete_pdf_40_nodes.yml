@@ -6,6 +6,10 @@ on:
     - cron: '0 0,6,12,18 * * *'
   workflow_dispatch:
     inputs:
+      canary:
+        description: 'Run only shards 1 and 2 for bounded validation'
+        type: boolean
+        default: false
       max_pdfs:
         description: 'Shard başına maksimum tekil PDF sayfası sayısı'
         required: true
@@ -31,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+        shard: ${{ fromJSON(inputs.canary && '[1,2]' || '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]') }}
     steps:
       - name: Repoyu Klonla
         uses: actions/checkout@v4
@@ -140,7 +144,7 @@ jobs:
           echo "✅ Master SQLite başarıyla güncellendi."
 
       - name: Bir Sonraki Koşuyu Başlat (Otonom Kesintisiz Döngü)
-        if: success() && needs.pdf_mining_shards.result == 'success'
+        if: success() && needs.pdf_mining_shards.result == 'success' && !inputs.canary
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

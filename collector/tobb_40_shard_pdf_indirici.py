@@ -21,6 +21,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from collections import deque
 from pathlib import Path
+from urllib.parse import urlparse
 
 import requests
 import urllib3
@@ -61,19 +62,62 @@ class TOBBSessionManager:
         self.session = self._create_session()
         self.is_authenticated = False
         self.session_generation = 0
+        self.request_gate = threading.Condition()
+        self.active_views = 0
+        self.renewing = False
+        self.auth_deadline = None
+
+    def _get_view(self, url):
+        with self.request_gate:
+            self.request_gate.wait_for(lambda: not self.renewing)
+            generation = self.session_generation
+            self.active_views += 1
+        try:
+            return self.session.get(url, verify=False, timeout=12), generation
+        finally:
+            with self.request_gate:
+                self.active_views -= 1
+                self.request_gate.notify_all()
+
+    def _renew_session(self, generation, ilan=False):
+        # Drain viewer requests before renewing. Concurrent viewer requests can
+        # otherwise change server-side session state during renewal.
+        with self.request_gate:
+            self.request_gate.wait_for(lambda: not self.renewing)
+            if generation != self.session_generation:
+                return True
+            self.renewing = True
+            self.request_gate.wait_for(lambda: self.active_views == 0)
+        try:
+            self.auth_deadline = time.monotonic() + 60
+            started = time.monotonic()
+            print(f"Session maintenance started: {'ilan' if ilan else 'login'}", flush=True)
+            if ilan:
+                return self.solve_ilan_captcha(expected_generation=generation)
+            return self.login(expected_generation=generation)
+        finally:
+            print(f"Session maintenance ended after {time.monotonic()-started:.1f}s", flush=True)
+            with self.request_gate:
+                self.renewing = False
+                self.request_gate.notify_all()
 
     def _create_session(self):
         s = requests.Session()
         s.headers.update({
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36"
         })
-        adapter = HTTPAdapter(pool_connections=20, pool_maxsize=20, max_retries=Retry(total=3, backoff_factor=0.2))
+        # Outer loops already retry requests. Retrying slow reads again inside
+        # urllib3 multiplied renewal stalls into many minutes per PDF.
+        adapter = HTTPAdapter(pool_connections=20, pool_maxsize=20,
+                              max_retries=Retry(total=1, connect=1, read=0, status=0, backoff_factor=0.2))
         s.mount("https://", adapter)
         s.mount("http://", adapter)
         return s
 
     def solve_ocr_captcha(self, captcha_url):
         for _ in range(5):
+            if self.auth_deadline and time.monotonic() >= self.auth_deadline:
+                return None
             try:
                 sep = "&" if "?" in captcha_url else "?"
                 url = f"{captcha_url}{sep}{int(time.time() * 1000)}_{random.randint(100, 999)}"
@@ -109,7 +153,11 @@ class TOBBSessionManager:
             if (expected_generation is not None and self.is_authenticated
                     and expected_generation != self.session_generation):
                 return True
+            if self.auth_deadline is None:
+                self.auth_deadline = time.monotonic() + 60
             for attempt in range(8):
+                if time.monotonic() >= self.auth_deadline:
+                    return False
                 try:
                     self.session.get("https://www.ticaretsicil.gov.tr/view/hizlierisim/girisyap.php", verify=False, timeout=8)
                     code = self.solve_ocr_captcha("https://www.ticaretsicil.gov.tr/assets/captcha/captcha.php")
@@ -138,6 +186,8 @@ class TOBBSessionManager:
                     and expected_generation != self.session_generation):
                 return True
             for _ in range(6):
+                if self.auth_deadline and time.monotonic() >= self.auth_deadline:
+                    return False
                 code = self.solve_ocr_captcha("https://www.ticaretsicil.gov.tr/captcha/captcha.php")
                 if not code:
                     continue
@@ -158,9 +208,8 @@ class TOBBSessionManager:
     def download_pdf(self, guid):
         view_url = f"https://www.ticaretsicil.gov.tr/view/hizlierisim/pdf_goster.php?Guid={guid}"
         for attempt in range(4):
-            generation = self.session_generation
             try:
-                r_view = self.session.get(view_url, verify=False, timeout=12)
+                r_view, generation = self._get_view(view_url)
                 raw_resp = r_view.text
             except Exception:
                 time.sleep(0.15)
@@ -178,14 +227,15 @@ class TOBBSessionManager:
                     time.sleep(0.15)
                     continue
 
-            if "girisyap.php" in r_view.url or "girisyap.php" in raw_resp:
-                self.login(expected_generation=generation)
-                continue
-
             if 'id="CaptchaIlan"' in raw_resp or '<form id="FormGuvenlikKodu">' in raw_resp:
-                if self.solve_ilan_captcha(expected_generation=generation):
+                if self._renew_session(generation, ilan=True):
                     continue
-                self.login(expected_generation=generation)
+                return None, "AUTH_REQUIRED"
+
+            # Menu/footer links do not mean the user's session has ended.
+            if (urlparse(r_view.url).path.endswith('/girisyap.php') or
+                    re.search(r'name=[\"\']LoginEmail[\"\']', raw_resp)):
+                self._renew_session(generation)
                 continue
 
             if r_view.status_code == 200:
@@ -201,19 +251,23 @@ def get_release_bucket_for_shard(shard_id: int) -> list:
 
 
 def upload_bundle_to_release(bundle_path: Path, shard_id: int) -> str:
+    upload_deadline = time.monotonic() + 300
     buckets = get_release_bucket_for_shard(shard_id)
     preferred = _preferred_release_bucket.get(shard_id)
     if preferred in buckets:
         buckets.remove(preferred)
         buckets.insert(0, preferred)
     for bucket in buckets:
+        remaining = upload_deadline - time.monotonic()
+        if remaining <= 0:
+            break
         try:
             res = subprocess.run(
                 ["gh", "release", "upload", bucket, str(bundle_path), "--clobber"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                timeout=120
+                timeout=min(90, remaining)
             )
             if res.returncode == 0:
                 _preferred_release_bucket[shard_id] = bucket
@@ -410,7 +464,7 @@ def main():
         t0 = time.time()
         pdf_bytes, status = mgr.download_pdf(guid)
         if status != "OK" or not pdf_bytes:
-            return None
+            return {"status": status, "page": f"{sayi}/{sayfa}"}
 
         safe_tsm = re.sub(r'[^a-zA-Z0-9]', '', tsm_adi or "TSM")
         pdf_filename = f"{sayi}_{sayfa}_{safe_tsm}_{guid[:8]}.pdf"
@@ -426,6 +480,10 @@ def main():
     cursor_state = {"pass": 1, "last_id": 999999999}
 
     fatal_error = None
+    source_statuses = {}
+    auth_blocked = False
+    first_bundle_queued = False
+    last_bundle_time = time.monotonic()
     # Pools live for the whole run; packing/uploading does not block downloads.
     with ThreadPoolExecutor(max_workers=args.threads) as downloads, ThreadPoolExecutor(max_workers=1) as archives:
         backlog = deque()
@@ -436,7 +494,7 @@ def main():
                 # Refill as each request finishes; one slow PDF no longer holds
                 # the next 200-page batch behind it. Bound queued work to 2x
                 # the worker count, including the final/deadline drain.
-                while (not archive_errors and time.time() < deadline
+                while (not archive_errors and not auth_blocked and time.time() < deadline
                        and len(pending_downloads) < args.threads * 2
                        and total_downloaded + len(pending_downloads) < args.max_pdfs):
                     if not backlog and not exhausted:
@@ -450,13 +508,27 @@ def main():
                     pending_downloads.add(downloads.submit(process_page_task, backlog.popleft()))
                 if not pending_downloads:
                     break
-                completed, pending_downloads = wait(pending_downloads, return_when=FIRST_COMPLETED)
+                completed, pending_downloads = wait(pending_downloads, timeout=5, return_when=FIRST_COMPLETED)
+                if not completed and current_bundle_files and time.monotonic()-last_bundle_time >= 30:
+                    queue_bundle(archives)
+                    first_bundle_queued = True
+                    last_bundle_time = time.monotonic()
                 for fut in completed:
                     try:
                         res = fut.result()
                     except Exception as exc:
                         download_errors += 1
                         print(f"⚠️ PDF validation/download failed; will retry next run: {exc}", flush=True)
+                        continue
+                    if isinstance(res, dict):
+                        download_errors += 1
+                        status = res['status']
+                        source_statuses[status] = source_statuses.get(status, 0) + 1
+                        if source_statuses[status] <= 3 or source_statuses[status] % 10 == 0:
+                            print(f"Source status {status}: {res['page']} (count={source_statuses[status]})", flush=True)
+                        if status == 'AUTH_REQUIRED' and source_statuses[status] >= 3:
+                            auth_blocked = True
+                            fatal_error = RuntimeError('TOBB session confirmation unavailable; PDFs retained')
                         continue
                     if res:
                         rep_id, pdf_fn, s_sayi, s_sayfa, ms, sz, unv, original_sz = res
@@ -468,9 +540,12 @@ def main():
                         if total_downloaded % 10 == 0 or total_downloaded == 1:
                             print(f"  [Shard {shard_id}|#{total_downloaded:,}] {s_sayi}/{s_sayfa} "
                                   f"({original_sz/1024:.1f} -> {sz/1024:.1f} KB, {ms:.0f} ms) {unv}", flush=True)
-                        if (len(current_bundle_files) >= args.bundle_size or
+                        if ((not first_bundle_queued and len(current_bundle_files) >= 10) or
+                                len(current_bundle_files) >= args.bundle_size or
                                 current_bundle_bytes >= MAX_BUNDLE_BYTES):
                             queue_bundle(archives)
+                            first_bundle_queued = True
+                            last_bundle_time = time.monotonic()
                     else:
                         download_errors += 1
                     while pending_bundles and pending_bundles[0].done():
@@ -492,6 +567,7 @@ def main():
                   f"{bytes_original:,} -> {bytes_stored:,} PDF bytes, "
                   f"{total_downloaded*3600/elapsed:.0f} pages/hour; "
                   f"download_errors={download_errors}, archive_errors={len(archive_errors)}", flush=True)
+            print(f"Source status totals: {source_statuses}", flush=True)
     if fatal_error or archive_errors:
         return 1
     return 0
