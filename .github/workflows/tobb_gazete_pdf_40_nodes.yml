@@ -49,7 +49,7 @@ jobs:
 
       - name: Bağımlılıkları Yükle
         run: |
-          pip install beautifulsoup4 requests urllib3 pillow
+          pip install beautifulsoup4 requests urllib3 pillow "pikepdf>=10,<11"
 
       - name: Master SQLite Ambarını Geri Yükle (GitHub Release)
         env:
@@ -63,36 +63,25 @@ jobs:
             echo "✅ Master SQLite ambarı başarıyla geri yüklendi: $(ls -lh warehouse/product/*.sqlite)"
           fi
 
-      - name: Shard Gazete PDF İndirme Maratonunu Başlat (8x Nitro Pool)
+      - name: Shard PDF İndirme ve Kayıpsız Arşivleme (8 İşçi)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MAX_PDFS: ${{ inputs.max_pdfs || '50000' }}
+          MAX_SECS: ${{ inputs.max_seconds || '19000' }}
         run: |
-          MAX_PDFS="${{ github.event.inputs.max_pdfs || '50000' }}"
-          MAX_SECS="${{ github.event.inputs.max_seconds || '19000' }}"
-          python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds $MAX_SECS --max-pdfs $MAX_PDFS --threads 8
+          python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds "$MAX_SECS" --max-pdfs "$MAX_PDFS" --threads 8 --bundle-size 100
 
-      - name: Kalan PDF Paketlerini GitHub Release Havuzuna Yükle
+      - name: Yüklenemeyen PDF ve Paketleri Kurtarma Artifact'ine Kaydet
         if: always()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if ls warehouse/raw/bundles/*.tar.gz 1> /dev/null 2>&1; then
-            echo "📦 Kalan paketler GitHub Release havuzuna yükleniyor..."
-            for b in warehouse/raw/bundles/*.tar.gz; do
-              gh release upload warehouse-pdf-7 "$b" --clobber || \
-              gh release upload warehouse-pdf-8 "$b" --clobber || \
-              gh release upload warehouse-pdf-9 "$b" --clobber || \
-              gh release upload warehouse-pdf-10 "$b" --clobber || \
-              gh release upload warehouse-pdf-11 "$b" --clobber || \
-              gh release upload warehouse-pdf-12 "$b" --clobber || \
-              gh release upload warehouse-pdf-1 "$b" --clobber || \
-              gh release upload warehouse-pdf-2 "$b" --clobber || \
-              gh release upload warehouse-pdf-3 "$b" --clobber || \
-              gh release upload warehouse-pdf-4 "$b" --clobber || \
-              gh release upload warehouse-pdf-5 "$b" --clobber || \
-              gh release upload warehouse-pdf-6 "$b" --clobber || true
-            done
-          fi
+        uses: actions/upload-artifact@v4
+        with:
+          name: shard-pdf-recovery-${{ matrix.shard }}
+          path: |
+            warehouse/raw/bundles/
+            warehouse/raw/temp_bundle_${{ matrix.shard }}/
+          if-no-files-found: ignore
+          compression-level: 0
+          retention-days: 30
 
       - name: Shard Güncelleme Veritabanını Yükle
         if: always()
@@ -101,7 +90,7 @@ jobs:
           name: shard-pdf-update-${{ matrix.shard }}
           path: warehouse/product/shard_${{ matrix.shard }}_updates.sqlite
           if-no-files-found: ignore
-          retention-days: 1
+          retention-days: 30
 
   merge_and_sync:
     name: "40 Shard PDF Güncellemelerini Birleştir ve Kalıcı Arşivle"
@@ -132,6 +121,7 @@ jobs:
       - name: Tüm Shard Güncelleme Artifact'lerini İndir
         uses: actions/download-artifact@v4
         with:
+          pattern: shard-pdf-update-*
           path: temp_artifacts/
 
       - name: Shard Güncellemelerini Master Ambara Birleştir
@@ -145,11 +135,12 @@ jobs:
           echo "📦 Master SQLite sıkıştırılıyor..."
           gzip -6 -c warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
           echo "☁️ GitHub Release 'warehouse-pdf-1' ve 'warehouse-latest' içine yükleniyor..."
-          gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
-          gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
+          gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
+          gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
           echo "✅ Master SQLite başarıyla güncellendi."
 
       - name: Bir Sonraki Koşuyu Başlat (Otonom Kesintisiz Döngü)
+        if: success() && needs.pdf_mining_shards.result == 'success'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

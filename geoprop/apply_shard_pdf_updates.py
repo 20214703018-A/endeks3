@@ -9,9 +9,12 @@ SQLite WAL modunda yıldırım hızında uygular.
 """
 
 import sys
-import glob
 import sqlite3
 from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 def merge_pdf_updates(updates_dir, master_db_path):
     master_path = Path(master_db_path)
@@ -32,11 +35,10 @@ def merge_pdf_updates(updates_dir, master_db_path):
     
     total_updated = 0
     total_addr_updated = 0
-    from collector.tobb_pdf_adres_ocr_motoru import apply_extracted_records_to_db, backfill_vkn_from_mersis
 
     for u_file in sorted(update_files):
         try:
-            u_conn = sqlite3.connect(u_file)
+            u_conn = sqlite3.connect(f"file:{u_file}?mode=ro", uri=True)
             rows = u_conn.execute("SELECT id, pdf_dosya_yolu, guncellenme_tarihi FROM gazete_pdf_updates").fetchall()
             addr_rows = []
             try:
@@ -56,6 +58,7 @@ def merge_pdf_updates(updates_dir, master_db_path):
                 total_updated += len(rows)
 
             if addr_rows:
+                from collector.tobb_pdf_adres_ocr_motoru import apply_extracted_records_to_db
                 for ar in addr_rows:
                     rec = {
                         "mersis_no": ar[2],
@@ -70,9 +73,14 @@ def merge_pdf_updates(updates_dir, master_db_path):
             if rows or addr_rows:
                 print(f"  ✅ {u_file.name}: +{len(rows)} sayfa bağlandı, +{len(addr_rows)} OCR adres kaydı işlendi.")
         except Exception as e:
-            print(f"  ⚠️ {u_file.name} okuma hatası: {e}")
+            conn.rollback()
+            conn.close()
+            print(f"❌ {u_file.name} birleştirme hatası; master güncellemeleri geri alındı: {e}")
+            return False
 
-    backfill_vkn_from_mersis(conn)
+    if total_addr_updated:
+        from collector.tobb_pdf_adres_ocr_motoru import backfill_vkn_from_mersis
+        backfill_vkn_from_mersis(conn)
     conn.commit()
     conn.close()
     print(f"🎉 Toplam {total_updated} gazete PDF yolu ve {total_addr_updated} şirket adresi master ambara işlendi.")
@@ -81,4 +89,4 @@ def merge_pdf_updates(updates_dir, master_db_path):
 if __name__ == "__main__":
     up_dir = sys.argv[1] if len(sys.argv) > 1 else "temp_artifacts"
     m_db = sys.argv[2] if len(sys.argv) > 2 else "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite"
-    merge_pdf_updates(up_dir, m_db)
+    sys.exit(0 if merge_pdf_updates(up_dir, m_db) else 1)

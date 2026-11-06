@@ -18,7 +18,8 @@ import subprocess
 import argparse
 import tempfile
 import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
+from collections import deque
 from pathlib import Path
 
 import requests
@@ -40,6 +41,8 @@ DATA_DIR = REPO_ROOT / "collector" / "data"
 USER_EMAIL = "geoprop_bot1@yandex.com"
 USER_PASS = "Geoprop2026*"
 BUNDLE_SIZE = 100  # Fewer Release calls; one uploader, at most two pending bundles.
+MAX_BUNDLE_BYTES = 128 * 1024 * 1024
+_preferred_release_bucket = {}
 
 TESSERACT_BIN = (
     shutil.which("tesseract")
@@ -187,6 +190,10 @@ def get_release_bucket_for_shard(shard_id: int) -> list:
 
 def upload_bundle_to_release(bundle_path: Path, shard_id: int) -> str:
     buckets = get_release_bucket_for_shard(shard_id)
+    preferred = _preferred_release_bucket.get(shard_id)
+    if preferred in buckets:
+        buckets.remove(preferred)
+        buckets.insert(0, preferred)
     for bucket in buckets:
         try:
             res = subprocess.run(
@@ -197,6 +204,7 @@ def upload_bundle_to_release(bundle_path: Path, shard_id: int) -> str:
                 timeout=120
             )
             if res.returncode == 0:
+                _preferred_release_bucket[shard_id] = bucket
                 print(f"  ☁️ [{bucket}] {bundle_path.name} kalıcı olarak yüklendi!", flush=True)
                 return f"release://{bucket}/{bundle_path.name}"
         except Exception:
@@ -344,6 +352,7 @@ def main():
     total_downloaded = 0
     total_announcements_covered = 0
     current_bundle_files = []
+    current_bundle_bytes = 0
     pending_bundles = []
     archive_errors = []
     bytes_original = 0
@@ -355,11 +364,16 @@ def main():
         try:
             total_announcements_covered += record_published_bundle(
                 future.result(), master_conn, update_conn, temp_bundle_dir)
+            elapsed = max(0.001, time.time() - start_time)
+            print(f"☁️ Confirmed archive: {total_announcements_covered:,} announcements; "
+                  f"{total_downloaded*3600/elapsed:.0f} pages/hour; "
+                  f"PDF bytes saved={bytes_original-bytes_stored:,}", flush=True)
         except Exception as exc:
             archive_errors.append(str(exc))
             print(f"❌ Archive retained; DB not marked complete: {exc}", flush=True)
 
     def queue_bundle(executor):
+        nonlocal current_bundle_bytes
         if not current_bundle_files:
             return
         # Bounded backpressure: at most two bundles queued, not an entire run.
@@ -367,6 +381,7 @@ def main():
             collect_bundle(pending_bundles.pop(0))
         items = list(current_bundle_files)
         current_bundle_files.clear()
+        current_bundle_bytes = 0
         pending_bundles.append(executor.submit(
             publish_bundle, items, temp_bundle_dir, bundles_dir,
             shard_id, upload_bundle_to_release))
@@ -401,15 +416,30 @@ def main():
     fatal_error = None
     # Pools live for the whole run; packing/uploading does not block downloads.
     with ThreadPoolExecutor(max_workers=args.threads) as downloads, ThreadPoolExecutor(max_workers=1) as archives:
+        backlog = deque()
+        pending_downloads = set()
+        exhausted = False
         try:
-            while time.time() < deadline and total_downloaded < args.max_pdfs:
-                batch_limit = min(200, args.max_pdfs - total_downloaded)
-                tasks = get_shard_unique_page_tasks(
-                    master_conn, shard_id, num_shards, seen_pages, cursor_state, limit=batch_limit)
-                if not tasks:
+            while pending_downloads or (not exhausted and time.time() < deadline and total_downloaded < args.max_pdfs):
+                # Refill as each request finishes; one slow PDF no longer holds
+                # the next 200-page batch behind it. Bound queued work to 2x
+                # the worker count, including the final/deadline drain.
+                while (not archive_errors and time.time() < deadline
+                       and len(pending_downloads) < args.threads * 2
+                       and total_downloaded + len(pending_downloads) < args.max_pdfs):
+                    if not backlog and not exhausted:
+                        tasks = get_shard_unique_page_tasks(
+                            master_conn, shard_id, num_shards, seen_pages, cursor_state,
+                            limit=min(200, args.max_pdfs - total_downloaded))
+                        backlog.extend(tasks)
+                        exhausted = not tasks
+                    if not backlog:
+                        break
+                    pending_downloads.add(downloads.submit(process_page_task, backlog.popleft()))
+                if not pending_downloads:
                     break
-                futures = [downloads.submit(process_page_task, task) for task in tasks]
-                for fut in as_completed(futures):
+                completed, pending_downloads = wait(pending_downloads, return_when=FIRST_COMPLETED)
+                for fut in completed:
                     try:
                         res = fut.result()
                     except Exception as exc:
@@ -419,19 +449,21 @@ def main():
                     if res:
                         rep_id, pdf_fn, s_sayi, s_sayfa, ms, sz, unv, original_sz = res
                         current_bundle_files.append((rep_id, pdf_fn, s_sayi, s_sayfa))
+                        current_bundle_bytes += sz
                         total_downloaded += 1
                         bytes_original += original_sz
                         bytes_stored += sz
                         if total_downloaded % 10 == 0 or total_downloaded == 1:
                             print(f"  [Shard {shard_id}|#{total_downloaded:,}] {s_sayi}/{s_sayfa} "
                                   f"({original_sz/1024:.1f} -> {sz/1024:.1f} KB, {ms:.0f} ms) {unv}", flush=True)
-                        if len(current_bundle_files) >= args.bundle_size:
+                        if (len(current_bundle_files) >= args.bundle_size or
+                                current_bundle_bytes >= MAX_BUNDLE_BYTES):
                             queue_bundle(archives)
                     else:
                         download_errors += 1
                     while pending_bundles and pending_bundles[0].done():
                         collect_bundle(pending_bundles.pop(0))
-                if archive_errors:
+                if archive_errors and not pending_downloads:
                     raise RuntimeError("Archive publication failed; stopping downloads with files retained")
         except Exception as exc:
             fatal_error = exc
