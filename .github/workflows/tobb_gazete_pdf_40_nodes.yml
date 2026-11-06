@@ -18,6 +18,11 @@ on:
         description: 'Shard başına maksimum çalışma süresi (saniye)'
         required: true
         default: '19000'
+      download_threads:
+        description: 'Runner başına eşzamanlı indirme sayısı (TOBB oturumu için düşük başlayın)'
+        type: choice
+        options: ['1', '2', '4', '8']
+        default: '1'
 
 permissions:
   contents: write
@@ -67,13 +72,14 @@ jobs:
             echo "✅ Master SQLite ambarı başarıyla geri yüklendi: $(ls -lh warehouse/product/*.sqlite)"
           fi
 
-      - name: Shard PDF İndirme ve Kayıpsız Arşivleme (8 İşçi)
+      - name: Shard PDF İndirme ve Kayıpsız Arşivleme
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAX_PDFS: ${{ inputs.max_pdfs || '50000' }}
           MAX_SECS: ${{ inputs.max_seconds || '19000' }}
+          DOWNLOAD_THREADS: ${{ inputs.download_threads || '1' }}
         run: |
-          python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds "$MAX_SECS" --max-pdfs "$MAX_PDFS" --threads 8 --bundle-size 100
+          python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds "$MAX_SECS" --max-pdfs "$MAX_PDFS" --threads "$DOWNLOAD_THREADS" --bundle-size 100
 
       - name: Yüklenemeyen PDF ve Paketleri Kurtarma Artifact'ine Kaydet
         if: always()
