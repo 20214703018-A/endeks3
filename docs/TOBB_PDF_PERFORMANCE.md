@@ -101,7 +101,8 @@ kapasitesi ayırmak için metadata toplama matrisi geçici olarak duraklatıldı
 python -m pytest -q tests/test_tobb_pdf_archive.py
 ```
 
-66 test: özgün byte/hash koruması, bozuk PDF reddi, yükleme hatasında dosya koruma,
+76 test: hesapların shard'lara sabit ve farklı atanması, yapılandırma hatasında
+ortak hesaba dönmeme, günlüklerde kimlik bilgilerinin gizlenmesi; özgün byte/hash koruması, bozuk PDF reddi, yükleme hatasında dosya koruma,
 manifest checksum, shard dağılımı, master rollback ve sayfa kimliği, eşzamanlı
 indirme/yükleme, oturum yenilemelerini birleştirme, ağ yanıtı/yönlendirme bütçesi,
 koşu bitişi ve açık kaynak erişim sınırları. Önceki isteğe bağlı kayıpsız PDF
@@ -214,3 +215,43 @@ tam günlük gazete ve web servis seçenekleri abonelik/talep hizmeti olarak
 sunuluyor. İncelenen normal sayfalarda ücretsiz tam gazete indirme yolu bulunmadı;
 bu, böyle bir yolun hiçbir yerde bulunmadığının kanıtı değildir. Kullanıcı adına
 satın alma veya başvuru yapılmadı.
+
+## 7 Kasım: eski hesap düzeninin bulunması ve geri alınması
+
+- `555bfc9` (2 Kasım) işçi başına deterministik ayrı hesaplar kullanmayı
+  deniyordu: 40 runner × 4 işçi. `41478934672` koşusunun loglarında 146 işçi
+  oturum durumu, 89 AÇIK bildirimi var. Bu sürüm beş başarısız hesap denemesinden
+  sonra ortak hesaba dönebildiği için AÇIK bildirimi tek başına ayrı hesabın
+  kullanıldığına kanıt değildir. Koşu yaklaşık dokuz dakika sonra iptal edilmişti.
+- Sonraki `dc0e035` işçi hesabı yerine doğrudan `FALLBACK_EMAIL` kullanıyor;
+  `6ebf681` tekrar tek `USER_EMAIL` yapılandırmasına dönüyor. Mevcut PDF motoru
+  bu tek hesaplı düzeni devralmıştı. Kullanıcının eski çok hesaplı düzeni
+  hatırlatması üzerine geçmiş ve gerçek hesap erişimi ayrıca incelendi.
+- Eski iki hesabın (ham e-posta/şifre kayda yazılmadan) ayrı girişleri 18,1 ve
+  21,1 saniyede doğrulandı. Yeni hesap açılmadı, ortak hesap kullanılmadı. Sonraki
+  kontrolde toplam 30 farklı eski hesaba giriş doğrulandı. Kalan kontrol sırasında
+  curl ve requests aynı normal giriş sayfasına TCP bağlantısı kuramadı; bu durum
+  yanlış şifre ya da kesin IP engeli olarak sınıflandırılmadı.
+- 40 sabit, farklı hesap `TOBB_ACCOUNTS_JSON` GitHub secret'ına yerleştirildi.
+  İlk 30 slot canlı doğrulandı; 31–40 eski loglarda açık görünen diğer hesaplardan
+  seçildi ve ayrıca bulut kontrolüne ayrıldı. Tam 40'ı doğrulanmadan 40 canlı
+  giriş kanıtı olduğu söylenmez. Gizli değerler yeni kodda veya loglarda yoktur.
+- `collector/tobb_accounts.py` bütün havuzu doğrular, aynı hesabın iki shard'a
+  atanmasını ve eksik/geçersiz yapılandırmayı reddeder. Üretim workflow'u havuz
+  gerektirir; yapılandırma yoksa ortak hesaba dönmez. Hesap koşu boyunca sabittir.
+  Kaynak erişim/hız reddinde hesap değiştirme veya otomatik kayıt eklenmedi.
+- Soğuk başlangıçta istek aralığı en az 3 saniyedir. Elli başarılı görüntüleyici
+  ve beş dakikalık kararlılıktan sonra mevcut geri bildirim döngüsü seçilen
+  asgari aralığa doğru hızlanır. Bir saniyelik kısa kontrolde ilk paket hızlı olsa
+  da sonra bağlantı/oturum kesintisi görüldüğü için başlangıç doğrudan hızlandırılmaz.
+- Ayrı hesaplı iki gerçek PDF kontrolü: shard 17, 12 sayfa / 15 ilan /
+  1.348.507 özgün byte, son hız 144 PDF/saat; shard 29, 4 sayfa / 5 ilan /
+  368.136 özgün byte, son hız 355 PDF/saat. Arşivleme hatası 0. İlk paketteki
+  1.194 PDF/saat kısa patlamadır; toplam 16 PDF'lik bu kontrol sürdürülebilir
+  hız artışını kanıtlamaz. Bağlantı ve oturum sorunları devam etti.
+- `TOBB Existing Account Checks` yalnızca mevcut sabit hesaplara normal giriş
+  kontrolü yapar. Kaynak reddi veya bağlantı kesintisinde kalan hesap kontrolleri
+  askıya alınır. Çıktı hesap slotu ve hash içerir; parola/e-posta içermez.
+- Çalışan `42293357087` eski commit ile açıldığı için yeni gizli havuzu okumaz.
+  Yeniden başlatmadan süreç içindeki hesabı değiştirilemez; bu koşunun kesildiği
+  veya yeni havuza geçtiği henüz iddia edilmez.

@@ -38,6 +38,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from collector.tobb_pdf_archive import preserve_pdf, write_pdf, publish_bundle, record_published_bundle
+from collector.tobb_accounts import select_account
 
 DB_PATH = REPO_ROOT / "warehouse" / "product" / "turkiye_ticaret_sicil_ve_sirketler.sqlite"
 DATA_DIR = REPO_ROOT / "collector" / "data"
@@ -682,6 +683,10 @@ def main():
 
     shard_id = args.shard
     num_shards = args.num_shards
+    try:
+        account = select_account(shard_id, num_shards, legacy=(USER_EMAIL, USER_PASS))
+    except ValueError as exc:
+        parser.error(str(exc))
     start_time = time.time()
     deadline = start_time + args.max_seconds
 
@@ -689,6 +694,8 @@ def main():
     print(f"🚀 GEOPROP TOBB Turbo PDF Shard İşçisi #{shard_id}/{num_shards} ({args.threads} downloads + asynchronous archive)")
     print(f"📍 Zaman Limiti: {args.max_seconds/3600:.1f} saat | Hedef: {args.max_pdfs:,} Sayfa")
     print("=" * 78, flush=True)
+    print(f"Account allocation: {'fixed per shard' if account.pooled else 'shared legacy'}; "
+          f"slot={account.slot}; account_id={account.identifier}", flush=True)
 
     temp_bundle_dir = REPO_ROOT / "warehouse" / "raw" / f"temp_bundle_{shard_id}"
     bundles_dir = REPO_ROOT / "warehouse" / "raw" / "bundles"
@@ -717,13 +724,16 @@ def main():
     # An index on (gazete_sayisi, sayfa_no) already supports page-to-announcement
     # lookups. Read the master without changing its 40-runner snapshot.
 
-    mgr = TOBBSessionManager(USER_EMAIL, USER_PASS, TESSERACT_BIN)
+    mgr = TOBBSessionManager(account.email, account.password, TESSERACT_BIN)
     mgr.download_deadline = time.monotonic() + max(0, deadline - time.time())
-    mgr.network_gate.interval = args.request_interval
+    # Live 1s cold starts stalled after a short burst; 3s controls completed.
+    # The existing stability feedback lowers this toward the requested minimum.
+    mgr.network_gate.interval = max(3.0, args.request_interval)
     mgr.minimum_request_interval = args.request_interval
     mgr.max_failure_windows = args.recovery_windows
     mgr.persistent_source = args.persistent_source
-    print(f"Source request interval: {args.request_interval:g}s (all routes and redirects)", flush=True)
+    print(f"Source request interval: {mgr.network_gate.interval:g}s; minimum={args.request_interval:g}s "
+          "(all routes and redirects)", flush=True)
     while True:
         mgr.auth_deadline = min(time.monotonic() + 60, mgr.download_deadline)
         if mgr.login():

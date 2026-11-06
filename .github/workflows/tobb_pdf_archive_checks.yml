@@ -6,8 +6,10 @@ on:
       - 'collector/tobb_40_shard_pdf_indirici.py'
       - 'collector/tobb_bulut_otonom_dongu_servisi.py'
       - 'collector/tobb_pdf_archive.py'
+      - 'collector/tobb_accounts.py'
       - 'geoprop/apply_shard_pdf_updates.py'
       - 'tests/test_tobb_pdf_archive.py'
+      - 'tests/test_tobb_accounts.py'
       - 'tools/recover_tobb_raw_artifacts.py'
       - 'tools/index_tobb_release_archives.py'
       - '.github/workflows/tobb_pdf_archive_checks.yml'
@@ -16,8 +18,10 @@ on:
       - 'collector/tobb_40_shard_pdf_indirici.py'
       - 'collector/tobb_bulut_otonom_dongu_servisi.py'
       - 'collector/tobb_pdf_archive.py'
+      - 'collector/tobb_accounts.py'
       - 'geoprop/apply_shard_pdf_updates.py'
       - 'tests/test_tobb_pdf_archive.py'
+      - 'tests/test_tobb_accounts.py'
       - 'tools/recover_tobb_raw_artifacts.py'
       - 'tools/index_tobb_release_archives.py'
       - '.github/workflows/tobb_pdf_archive_checks.yml'
@@ -36,4 +40,4 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install requests 'pikepdf>=10,<11' pytest
-      - run: python -m pytest -q tests/test_tobb_pdf_archive.py
+      - run: python -m pytest -q tests/test_tobb_pdf_archive.py tests/test_tobb_accounts.py

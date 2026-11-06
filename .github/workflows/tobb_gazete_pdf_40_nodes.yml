@@ -29,7 +29,7 @@ on:
         options: ['1', '2', '3', '5', '10']
         default: '3'
       max_parallel:
-        description: 'Aynı anda çalışan shard sayısı (aynı TOBB hesabı)'
+        description: 'Aynı anda çalışan shard sayısı (yapılandırılmış sabit hesaplar)'
         type: choice
         options: ['1', '2', '4', '8', '40']
         default: '40'
@@ -90,6 +90,8 @@ jobs:
       - name: Shard PDF İndirme ve Özgün Dosyaları Arşivleme
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOBB_ACCOUNTS_JSON: ${{ secrets.TOBB_ACCOUNTS_JSON }}
+          TOBB_REQUIRE_ACCOUNT_POOL: '1'
           MAX_PDFS: ${{ inputs.max_pdfs || '50000' }}
           MAX_SECS: ${{ inputs.max_seconds || '19800' }}
           DOWNLOAD_THREADS: ${{ inputs.download_threads || '8' }}

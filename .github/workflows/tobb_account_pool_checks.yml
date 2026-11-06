@@ -1,0 +1,45 @@
+name: TOBB Existing Account Checks
+
+on:
+  workflow_dispatch:
+    inputs:
+      slots:
+        description: 'Existing account slots to verify, comma separated'
+        required: true
+        default: '31,32,33,34,35,36,37,38,39,40'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tobb-existing-account-checks
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CHECK_SLOTS: ${{ inputs.slots }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          if ! command -v tesseract >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y tesseract-ocr
+          fi
+          pip install requests 'pikepdf>=10,<11'
+      - run: python tools/check_tobb_account_pool.py --slots "$CHECK_SLOTS"
+        env:
+          TOBB_ACCOUNTS_JSON: ${{ secrets.TOBB_ACCOUNTS_JSON }}
+          TOBB_REQUIRE_ACCOUNT_POOL: '1'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tobb-account-pool-check
+          path: account_pool_check.json
+          retention-days: 30
+          if-no-files-found: warn

@@ -238,12 +238,15 @@ def test_worker_overlaps_downloads_and_uploads_and_merges_confirmed_only(tmp_pat
     downloading_while_uploading = threading.Event()
     upload_started = threading.Event()
     calls = []
+    identities = []
 
     class Session:
         def __init__(self, *args):
+            identities.append(args[:2])
             self.network_gate = SimpleNamespace(interval=0, started=0)
 
         def login(self):
+            assert self.network_gate.interval == 3
             return True
 
         def download_pdf(self, guid):
@@ -262,9 +265,13 @@ def test_worker_overlaps_downloads_and_uploads_and_merges_confirmed_only(tmp_pat
     monkeypatch.setattr(worker, 'DB_PATH', db)
     monkeypatch.setattr(worker, 'TOBBSessionManager', Session)
     monkeypatch.setattr(worker, 'upload_bundle_to_release', upload)
+    monkeypatch.setenv('TOBB_ACCOUNTS_JSON', json.dumps({
+        '1': {'email': 'shard1@example.test', 'password': 'fixture-password'}}))
     monkeypatch.setattr(sys, 'argv', ['worker', '--shard', '1', '--num-shards', '1',
-                                    '--threads', '1', '--bundle-size', '2', '--max-pdfs', '6'])
+                                    '--threads', '1', '--bundle-size', '2', '--max-pdfs', '6',
+                                    '--request-interval', '1'])
     assert worker.main() == 0
+    assert identities == [('shard1@example.test', 'fixture-password')]
     with sqlite3.connect(product / 'shard_1_updates.sqlite') as updates:
         assert updates.execute('SELECT count(*) FROM gazete_pdf_updates').fetchone()[0] == 6
         assert updates.execute("SELECT count(*) FROM gazete_pdf_updates WHERE pdf_dosya_yolu LIKE 'release://%' ").fetchone()[0] == 6
