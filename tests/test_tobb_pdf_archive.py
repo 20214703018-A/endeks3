@@ -921,6 +921,44 @@ def test_source_gate_does_not_start_a_request_past_run_deadline(monkeypatch):
     assert now == [102]
 
 
+def test_pdf_connection_error_pauses_all_routes_and_slows_the_shared_gate(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.network_gate.interval = manager.minimum_request_interval = 1
+    calls = []
+    class Adapter(worker.requests.adapters.BaseAdapter):
+        def send(self, *a, **kw):
+            calls.append(1)
+            raise worker.requests.ConnectionError('fixture')
+        def close(self):
+            pass
+    manager._pdf_session().mount('https://', Adapter())
+    with pytest.raises(worker.requests.ConnectionError):
+        manager._download_response('https://example.invalid/file.pdf', timeout=15, pdf=True)
+    assert manager.transport_errors == 1
+    assert manager.network_gate.interval == 2
+    assert manager.network_gate.pause_until > time.monotonic() + 28
+    manager.download_deadline = time.monotonic() + 0.05
+    manager.session.mount('https://', Adapter())
+    with pytest.raises(worker.requests.Timeout):
+        manager.session.get('https://example.invalid/maintenance')
+    assert calls == [1]
+
+
+def test_network_failure_during_renewal_is_recovering_not_invalid_auth(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    monkeypatch.setattr(manager, '_download_response', lambda url, **kw: SimpleNamespace(
+        url=url, text='<form id="FormGuvenlikKodu">', status_code=200))
+    def fail(expected_generation=None):
+        manager._transport_failure(worker.requests.ConnectionError('fixture'))
+        return False
+    monkeypatch.setattr(manager, 'solve_ilan_captcha', fail)
+    assert manager.download_pdf('fixture') == (None, 'SOURCE_RECOVERING')
+    assert manager.failed_renewal[2] == 'network'
+    manager.download_deadline = time.monotonic() + 0.05
+    with pytest.raises(worker.requests.Timeout):
+        manager._get_view('next-fixture')
+
+
 def test_streamed_response_keeps_exact_bytes_and_releases_connection(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
     response = worker.requests.Response()

@@ -62,12 +62,14 @@ class SourceUnavailable(requests.RequestException):
 class SourceRequestGate:
     """Pace every request, including redirects and session maintenance."""
 
-    def __init__(self, deadline):
+    def __init__(self, deadline, failure=None):
         self.interval = 0.0
         self.next_at = 0.0
         self.condition = threading.Condition()
         self.deadline = deadline
         self.started = 0
+        self.pause_until = 0.0
+        self.failure = failure
 
     def wait(self):
         with self.condition:
@@ -76,11 +78,12 @@ class SourceRequestGate:
                 stop_at = self.deadline()
                 if stop_at is not None and now >= stop_at:
                     raise requests.Timeout('Run deadline reached before source request')
-                if now >= self.next_at:
+                eligible_at = max(self.next_at, self.pause_until)
+                if now >= eligible_at:
                     self.next_at = now + self.interval
                     self.started += 1
                     return
-                delay = self.next_at - now
+                delay = eligible_at - now
                 if stop_at is not None:
                     delay = min(delay, stop_at - now)
                 self.condition.wait(timeout=min(1, delay))
@@ -95,7 +98,12 @@ class PacedSession(requests.Session):
         # requests calls send again for automatic redirects, so those share
         # the same quota as login, viewer and file requests on all threads.
         self.gate.wait()
-        return super().send(request, **kwargs)
+        try:
+            return super().send(request, **kwargs)
+        except requests.RequestException as exc:
+            if self.gate.failure:
+                self.gate.failure(exc)
+            raise
 
 
 class TOBBSessionManager:
@@ -107,7 +115,8 @@ class TOBBSessionManager:
         self.tesseract_bin = tesseract_bin
         self.lock = threading.Lock()
         self.download_deadline = None
-        self.network_gate = SourceRequestGate(lambda: self.download_deadline)
+        self.transport_errors = 0
+        self.network_gate = SourceRequestGate(lambda: self.download_deadline, self._transport_failure)
         self.session = self._create_session()
         self.is_authenticated = False
         self.session_generation = 0
@@ -129,6 +138,20 @@ class TOBBSessionManager:
         self.view_cooldown = 30
         self.view_interval = 1.0
         self.next_view_at = 0
+
+    def _transport_failure(self, exc):
+        if getattr(exc, '_tobb_paced', False):
+            return
+        if self.download_deadline is not None and time.monotonic() >= self.download_deadline:
+            return
+        exc._tobb_paced = True
+        with self.network_gate.condition:
+            self.transport_errors += 1
+            self.network_gate.interval = max(self.minimum_request_interval, min(10, self.network_gate.interval * 2))
+            self.network_gate.pause_until = time.monotonic() + 30
+            self.last_pace_change = time.monotonic()
+            self.successful_views = 0
+            print(f'Source transport failure: {type(exc).__name__}; all routes paused 30s; request interval {self.network_gate.interval:g}s', flush=True)
 
     def _pdf_session(self):
         # Do not let parallel file responses mutate the authenticated viewer's
@@ -169,6 +192,9 @@ class TOBBSessionManager:
                 response._content = b''.join(chunks)
                 response._content_consumed = True
                 return response
+            except requests.RequestException as exc:
+                self._transport_failure(exc)
+                raise
             finally:
                 response.close()
         raise requests.TooManyRedirects('Download redirect budget exhausted')
@@ -182,6 +208,9 @@ class TOBBSessionManager:
                 if self.download_deadline is not None and now >= self.download_deadline:
                     raise requests.Timeout('Run deadline reached before viewer request')
                 eligible_at = max(self.retry_view_at, self.next_view_at)
+                if (self.failed_renewal and len(self.failed_renewal) > 2 and self.failed_renewal[2] == 'network'
+                        and self.failed_renewal[0] == self.session_generation):
+                    eligible_at = max(eligible_at, self.failed_renewal[1] + 60)
                 if not self.renewing and self.active_views == 0 and now >= eligible_at:
                     self.next_view_at = now + self.view_interval
                     break
@@ -221,7 +250,8 @@ class TOBBSessionManager:
                     self.view_failures = 0
                     self.successful_views = 0
                     previous_interval = self.network_gate.interval
-                    self.network_gate.interval = max(self.minimum_request_interval, min(10, previous_interval * 2))
+                    if not getattr(exc, '_tobb_paced', False):
+                        self.network_gate.interval = max(self.minimum_request_interval, min(10, previous_interval * 2))
                     self.last_pace_change = time.monotonic()
                     if self.network_gate.interval != previous_interval:
                         print(f'Source recovery request interval: {self.network_gate.interval:g}s', flush=True)
@@ -256,13 +286,17 @@ class TOBBSessionManager:
             self.auth_deadline = min(time.monotonic() + 60,
                                      self.download_deadline or float('inf'))
             started = time.monotonic()
+            network_errors_before = self.transport_errors
             print(f"Session maintenance started: {'ilan' if ilan else 'login'}", flush=True)
             if ilan:
                 result = self.solve_ilan_captcha(expected_generation=generation)
             else:
                 result = self.login(expected_generation=generation)
             if not result:
-                self.failed_renewal = (generation, time.monotonic())
+                self.failed_renewal = (generation, time.monotonic(),
+                                       'network' if self.transport_errors > network_errors_before else 'auth')
+            else:
+                self.failed_renewal = None
             return result
         finally:
             print(f"Session maintenance ended after {time.monotonic()-started:.1f}s", flush=True)
@@ -432,6 +466,8 @@ class TOBBSessionManager:
             if ilan_form:
                 if self._renew_session(generation, ilan=True):
                     continue
+                if self.failed_renewal and len(self.failed_renewal) > 2 and self.failed_renewal[2] == 'network':
+                    return None, 'SOURCE_RECOVERING'
                 return None, "AUTH_REQUIRED"
 
             # The official viewer also returns HTTP 200 with a visible login
@@ -445,6 +481,8 @@ class TOBBSessionManager:
                     re.search(r'(?:window\.)?location(?:\.href)?\s*=\s*[\"\'][^\"\']*girisyap\.php', raw_resp, re.I) or
                     login_notice):
                 if not self._renew_session(generation):
+                    if self.failed_renewal and len(self.failed_renewal) > 2 and self.failed_renewal[2] == 'network':
+                        return None, 'SOURCE_RECOVERING'
                     return None, 'AUTH_REQUIRED'
                 continue
 
