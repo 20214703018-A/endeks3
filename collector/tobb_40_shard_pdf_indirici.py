@@ -734,7 +734,7 @@ def main():
         print('Worker alive; initial session unavailable, retrying after 60s', flush=True)
         stop_wait = min(mgr.download_deadline, time.monotonic() + 60)
         while time.monotonic() < stop_wait:
-            time.sleep(min(1, stop_wait - time.monotonic()))
+            time.sleep(max(0, min(1, stop_wait - time.monotonic())))
 
     total_downloaded = 0
     total_announcements_covered = 0
@@ -781,7 +781,7 @@ def main():
             print('Archive service unavailable; files retained, retrying after 60s', flush=True)
             stop_wait = min(mgr.download_deadline, time.monotonic() + 60)
             while time.monotonic() < stop_wait:
-                time.sleep(min(1, stop_wait - time.monotonic()))
+                time.sleep(max(0, min(1, stop_wait - time.monotonic())))
 
     def process_page_task(row):
         rep_id, tsm_adi, unvan, sayi, sayfa, ilan_turu, ilan_metni, ilan_tarihi = row

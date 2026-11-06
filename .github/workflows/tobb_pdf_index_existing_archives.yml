@@ -103,6 +103,7 @@ jobs:
         run: python tools/index_tobb_release_archives.py merge indices turkiye_ticaret_sicil_ve_sirketler.sqlite tobb_pdf_archive_catalog.sqlite --summary archive_recovery_summary.json
       - name: Guard concurrent writes and publish
         run: |
+          python tools/export_tobb_training_index.py turkiye_ticaret_sicil_ve_sirketler.sqlite training_index
           gzip -6 -c turkiye_ticaret_sicil_ve_sirketler.sqlite > turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
           gzip -6 -c tobb_pdf_archive_catalog.sqlite > tobb_pdf_archive_catalog.sqlite.gz
           gh api "repos/$GITHUB_REPOSITORY/releases/tags/warehouse-pdf-1" > release_now.json
@@ -115,7 +116,7 @@ jobs:
           PY
           gh release upload warehouse-pdf-1 turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
           gh release upload warehouse-latest turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
-          gh release upload warehouse-pdf-20 tobb_pdf_archive_catalog.sqlite.gz --clobber
+          gh release upload warehouse-pdf-20 tobb_pdf_archive_catalog.sqlite.gz training_index/tobb_training_pages.jsonl.gz training_index/tobb_training_archives.jsonl.gz training_index/tobb_training_index_summary.json --clobber
       - uses: actions/upload-artifact@v4
         if: always()
         with:

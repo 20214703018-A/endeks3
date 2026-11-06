@@ -1,13 +1,13 @@
 # TOBB hızlı ve toplu PDF indirme
 
-6 Kasım 2026. Kullanıcının güncel tercihi gereği üretimde PDF küçültme kapalıdır.
+7 Kasım 2026 (Türkiye). Kullanıcının güncel tercihi gereği üretimde PDF küçültme kapalıdır.
 PDF dosyaları yeniden yazılmadan, kaynaktan gelen byte dizisiyle saklanır.
 PDF bütünlüğü pikepdf ile kontrol edilir; özgün ve saklanan SHA-256 eşittir.
 Tar/gzip yalnızca özgün dosyaları bir arşiv paketine koyar.
 
 ## İndirme akışı
 
-- 40 runner; runner başına 1/2/4/8 eşzamanlı dosya indirme seçilebilir
+- 40 shard; runner başına 1/2/4/8 eşzamanlı dosya indirme seçilebilir
   (varsayılan 8). Aynı oturumda PDF hazırlayan görüntüleyici isteği tek sırada
   ilerler; PDF dosyaları ayrı, işçiye özel bağlantı havuzlarıyla paralel indirilir.
   Dosya yanıtlarının çerezleri görüntüleyicinin yetkili oturumunu değiştirmez.
@@ -21,13 +21,16 @@ Tar/gzip yalnızca özgün dosyaları bir arşiv paketine koyar.
   Alttaki HTTP adaptöründe tekrar yoktur. Görüntüleyici için veri bekleme süresi
   12'den 45 saniyeye çıkarılmıştır; hazırlanmakta olan PDF'ye ait istek art arda
   yarıda bırakılmaz. Son blok okuması soket zaman aşımı kadar
-  uzayabilir. Koşu bitiş zamanı da yeni istekleri ve içerik okumalarını sınırlar.
+  uzayabilir. Planlanmış hız sınırı/bekleme süreleri yanıtın ağ bütçesinden ayrıdır;
+  başarılı yanıt, öncesindeki bekleme nedeniyle zaman aşımı sayılmaz. Koşu bitiş
+  zamanı yeni istekleri ve içerik okumalarını sınırlar.
 - Görüntüleyici başlangıçları arasında en az 1 saniye bırakılır; dosya aktarımı
   bu aralık tarafından serileştirilmez. TCP bağlantısı kurulamıyorsa hemen, diğer
   bağlantı hatalarında üç ardışık başarısızlık sonrasında 30 saniye beklenir; ardından tek
   istekle yeniden denenir. Sonraki hata penceresinde 60 saniye beklenir. Üçüncü
-  hata penceresi de başarısızsa kaynak erişilemez olarak durulur. Bekleyen işçiler
-  yüzlerce yeni istek göndermez. Başarılı yanıt hata sayaçlarını sıfırlar.
+  hata penceresi de başarısızsa kısa kontrol kipinde kaynak erişilemez olarak durulur.
+  Üretim kipi aşağıdaki sekiz pencere ve kalıcı toparlanma akışını kullanır.
+  Bekleyen işçiler yüzlerce yeni istek göndermez. Başarılı yanıt hata sayaçlarını sıfırlar.
 - Oturum yenilemeleri ortak sürüm sayacıyla birleştirilir; yenilemeden önce
   mevcut görüntüleyici istekleri boşaltılır. İlan doğrulamasının normal form
   gönderimi ve başarılı yönlendirmesi tamamlanır.
@@ -35,8 +38,19 @@ Tar/gzip yalnızca özgün dosyaları bir arşiv paketine koyar.
   bildirimi de oturum yenilemesi başlatır. Sadece menüdeki giriş bağlantısı,
   ortak giriş modalı veya script içindeki metin oturum kaybı sayılmaz.
   Yenileme başarısızsa `AUTH_REQUIRED` raporlanır; `NO_PDF` olarak gizlenmez.
-- Açık 429/403 yanıtında shard durur; erişim kontrolü nedeniyle başarısız koşu
-  kendiliğinden yeniden başlatılmaz.
+- Üretimde `--persistent-source`: işçi bütçesi 19.800 saniye (5,5 saat).
+  Geçici bağlantı ve oturum hataları sayfayı yeniden kuyruğa alır. İlk ağ bağlantısı
+  kurulamazsa başlangıç girişi tekrar denenir; geçici Release yükleme arızasında
+  dosyalar tutulur ve tekrar yüklenir. Bir dakikalık heartbeat ilerlemeyi gösterir.
+- Tüm HTTP yolları ve otomatik yönlendirmeler ortak hız sınırını kullanır.
+  TCP/okuma hatasında bütün yollar 30 saniye duraklar, istek aralığı artırılır.
+  50 başarılı görüntüleyici isteği ve en az 5 dakikalık kararlılıktan sonra
+  aralık seçilmiş alt sınıra doğru düşer. Üretim alt sınırı 1 saniye seçilmiştir.
+- Sekiz geçici hata penceresinden sonra 10 dakikalık toparlanma aralığı açılır;
+  ardından aynı hesap/uç noktayla tek kontrol yapılır. 429 yanıtında `Retry-After`
+  uygulanır (yoksa 300 saniye). 403 yanıtında yeni istekler askıya alınır ve koşu
+  sonunda erişim hatası raporlanır. Açık kalan işçi, erişim reddinde PDF indirdiği
+  anlamına gelmez. Bu akış sağlayıcı erişim denetimini kaldırmaz.
 
 ## Toplu arşivleme
 
@@ -44,7 +58,8 @@ Tar/gzip yalnızca özgün dosyaları bir arşiv paketine koyar.
   bekler. İndirme işçileri her yüklemenin tamamlanmasını beklemez.
 - Eski 25 yerine 100 PDF/paket: aynı PDF sayısında yaklaşık %75 daha az
   Release yükleme çağrısı. 128 MiB'de paket erken kapatılır.
-- İlk 10 PDF erken yüklenir. Kaynak durursa eldeki dosyalar 30 saniye sonra
+- İlk 10 PDF erken yüklenir. Son başarılı indirmeden itibaren 30 saniye geçerse
+  (normal, yavaş akışta her 30 saniyede bir değil) eldeki dosyalar
   küçük paketle arşivlenir. Çalışan Release kovası sonraki pakette önce denenir.
 - Master DB indirmelerde salt okunur; küçük shard DB'leri sonradan birleştirilir.
   Gazete/sayfa kimliği kullanılır; farklı snapshot'lardaki sayısal ID'lere güvenilmez.
@@ -86,7 +101,7 @@ kapasitesi ayırmak için metadata toplama matrisi geçici olarak duraklatıldı
 python -m pytest -q tests/test_tobb_pdf_archive.py
 ```
 
-50 test: özgün byte/hash koruması, bozuk PDF reddi, yükleme hatasında dosya koruma,
+66 test: özgün byte/hash koruması, bozuk PDF reddi, yükleme hatasında dosya koruma,
 manifest checksum, shard dağılımı, master rollback ve sayfa kimliği, eşzamanlı
 indirme/yükleme, oturum yenilemelerini birleştirme, ağ yanıtı/yönlendirme bütçesi,
 koşu bitişi ve açık kaynak erişim sınırları. Önceki isteğe bağlı kayıpsız PDF
@@ -124,5 +139,65 @@ GitHub CI aynı paketi Python 3.11 Ubuntu üzerinde çalıştırır.
   başarılı yenilemeyi, başarısız yenilemeyi ve ortak menü/script ayrımını kapsar.
   Bu düzeltme TCP kesintisinin çözülmüş olduğunu göstermez.
 - Aynı hatayla tekrar 40 runner başlatılmaması için PDF workflow'u
-  `disabled_manually` durumuna alındı. Sürekli toplu indirme sorunu açıktır;
-  doğrulanmış bir CAPTCHA/erişim kontrolü aşımı veya sınırsız indirme iddiası yoktur.
+  o aşamada `disabled_manually` durumuna alınmıştı. Aşağıdaki yeni sürümle açıldı.
+
+## 7 Kasım: uzun koşu ve mevcut paketlerden kurtarma
+
+- `42287735936`, tüm HTTP istekleri arasında 3 saniye kullanan 15 dakikalık
+  tek-runner kontrolüdür: 95 özgün PDF, 120 ilan bağlantısı, 380 PDF/saat,
+  arşivleme hatası 0. İlk 64 dosyanın manifest/hash değerleri bağımsız indirilmeyle
+  doğrulandı. Sonda koşu bütçesine ulaşan istekler ve bir PDF ağ hatası vardır;
+  önceki kalıcı TCP kesintisi bu kontrolde tekrarlanmadı. Bu sonuç 40 ile çarpılarak
+  doğrulanmış toplam hız sayılmaz.
+- `42290375218` daha hızlı, 1 saniyelik 40-shard geçişidir. Bir işçi dosya ağ
+  hatalarından sonra oturum hatasıyla erken durdu. Sonraki `8f23b6a` sürümü dosya
+  ve giriş yollarının taşıma hatalarını da ortak toparlanmaya ekledi.
+- `eaa8f53`: 5,5 saatlik kalıcı çalışma, geçici hata sonrası aynı sayfayı yeniden
+  seçme, kaynak sınırlarına uygun toparlanma ve yükleme tekrarları. Yerelde ve
+  `42293236079` GitHub CI koşusunda 66 test geçti. Bu, 5,5 saat boyunca kesintisiz
+  veri aktarımının canlı olarak doğrulandığı iddiası değildir.
+- `42293357087` bu sürümün 40-shard, 19.800 saniyelik yeni koşusudur.
+  Fiziksel eşzamanlı runner sayısı hesabın diğer aktif işleriyle paylaşılan
+  GitHub kapasitesine bağlıdır. Kaynak koşularının parametreleri devam koşusuna
+  aktarılır; master yayımlamaları kurtarma işlemleriyle aynı kilidi kullanır.
+- 6 Kasım 23:04:30 Türkiye zamanlı ana snapshot'ta 183.556 tekil gazete/sayfa
+  PDF kaydı ve 310.356 ilan bağlantısı vardı; GUID bulunan eksik tekil sayfa
+  sayısı 687.669 idi. Sonraki koşular bu sayıları değiştirmiş olabilir.
+- Release envanterinde master'da referansı olmayan 2.117 paket / 12.278.875.512
+  byte bulundu. Altı gerçek paketteki 300 PDF'nin 21'i master'da eksik sayılıyordu.
+  `tools/index_tobb_release_archives.py` PDF'leri açıp SHA-256/manifesti denetler,
+  yalnızca boş bağlantıları doldurur; mevcut PDF referanslarını değiştirmez.
+- `42289333954` taramasının tamamlanmış 24 parçası artifact olarak korunmuştur.
+  16.958 sayfa / 23.448 ilan bağlantısı bu parçaların birleştirilmesiyle kurtarıldı.
+  Kalan 884 paket (4.859.510.028 byte), yerelde sekiz işçiyle tamamlandı; 41.148
+  PDF doğrulandı, tarama hatası 0. Bu bölüm 2.633 sayfa / 3.901 bağlantı ekledi.
+  macOS kurtarma workflow'u yedek olarak eklendi; canlı tamamlamada kullanılmadı.
+  Kalıcı katalog 2.156 paket / 103.624 doğrulanmış PDF referansı içeriyor; bu sayı
+  yinelenen PDF'leri kapsar ve tekil master sayısı değildir.
+
+## Yayımlanmış eğitim dizini ve güncel durum
+
+Son yerel birleştirme: 203.294 tekil gazete/sayfa PDF kaydı, 337.923 ilan bağlantısı;
+toplu dizinde 5.408 farklı arşiv. Ana DB ve dizin iki aşamalı yayınla yenilenir.
+
+- Kurtarma toplam 19.591 eksik gazete/sayfa PDF bağlantısını doldurdu. Dosyalar
+  zaten kalıcı paketlerdeydi; TOBB'den tekrar indirilmedi. 333.938 ilan referansının
+  kimlik kontrolünde gazete/sayfa ile PDF dosya adı arasında uyuşmazlık 0 idi.
+- 7 Kasım 00:32 Türkiye kontrolü: yerel işçi 40 yeni PDF / 84 ilan bağlantısını
+  özgün 3.693.038 byte ile arşivledi. Son hız 293 PDF/saat, bir oturum yenileme
+  hatası, arşiv hatası 0. Bu, 5,5 saatlik sürdürülebilir hız ölçümü değildir.
+- `42293357087` uzun koşusunda 00:20 Türkiye anına kadar 94 yeni pakette 222
+  farklı PDF bağımsız hash kontrolüyle doğrulandı. Çalışan/kuyruktaki işçi sayısı
+  anlıktır: 00:34 kontrolünde 12 aktif, 28 kuyruk, tamamlanmış hata 0. Aynı
+  hesapta Market Fiyatı 20, Google KARO 8 runner kullanıyordu.
+- Toplu indirme dizini, tekil gazete/sayfayı GitHub arşiv URL'si ve paket içindeki
+  dosya adıyla eşler. Aynı paket bir kez indirilerek içerdiği PDF'ler alınabilir.
+  `tools/export_tobb_training_index.py` bu dizinleri master'dan üretir; yeni
+  indirme/birleştirme ve otomatik arşiv uzlaştırma workflow'ları dizini günceller.
+- [Sayfa dizini](https://github.com/20214703018-A/endeks3/releases/download/warehouse-pdf-20/tobb_training_pages.jsonl.gz)
+- [Toplu paket dizini](https://github.com/20214703018-A/endeks3/releases/download/warehouse-pdf-20/tobb_training_archives.jsonl.gz)
+- [Dizin sayıları](https://github.com/20214703018-A/endeks3/releases/download/warehouse-pdf-20/tobb_training_index_summary.json)
+
+5,5 saat, işçinin çalışma bütçesidir; sağlayıcının sürekli veri aktaracağına
+garanti değildir. Kaynakta hız/oturum sınırları sürmektedir. Üretim aktarımının
+tam 40 runner ile kesintisiz sürdüğü henüz kanıtlanmadı.

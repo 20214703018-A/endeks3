@@ -154,8 +154,21 @@ jobs:
           path: temp_artifacts/
 
       - name: Shard Güncellemelerini Master Ambara Birleştir
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          python - <<'PY'
+          import json,os,subprocess,sys
+          repository=os.environ['GITHUB_REPOSITORY']
+          run=os.environ['GITHUB_RUN_ID']
+          response=json.loads(subprocess.check_output(['gh','api',f'repos/{repository}/actions/runs/{run}/artifacts?per_page=100']))
+          if any(a['name'].startswith('shard-pdf-recovery-') for a in response['artifacts']):
+              subprocess.run(['gh','run','download',run,'--pattern','shard-pdf-recovery-*','--dir','raw_recovered'],check=True)
+              subprocess.run([sys.executable,'-m','pip','install','requests','pikepdf>=10,<11'],check=True)
+              subprocess.run([sys.executable,'tools/recover_tobb_raw_artifacts.py','raw_recovered','warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite','temp_artifacts/raw/shard_0_updates.sqlite'],check=True)
+          PY
           python geoprop/apply_shard_pdf_updates.py temp_artifacts/ warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
+          python tools/export_tobb_training_index.py warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite training_index
 
       - name: Güncellenmiş Master SQLite'ı Sıkıştır ve GitHub Release'e Yükle
         env:
@@ -166,7 +179,8 @@ jobs:
           echo "☁️ GitHub Release 'warehouse-pdf-1' ve 'warehouse-latest' içine yükleniyor..."
           gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
           gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
-          echo "✅ Master SQLite başarıyla güncellendi."
+          gh release upload warehouse-pdf-20 training_index/tobb_training_pages.jsonl.gz training_index/tobb_training_archives.jsonl.gz training_index/tobb_training_index_summary.json --clobber
+          echo "✅ Master SQLite ve toplu eğitim dizini güncellendi."
 
       - name: Bir Sonraki Koşuyu Başlat (Otonom Kesintisiz Döngü)
         if: success() && needs.pdf_mining_shards.result == 'success' && !inputs.canary
