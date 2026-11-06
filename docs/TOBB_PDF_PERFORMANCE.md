@@ -178,8 +178,8 @@ GitHub CI aynı paketi Python 3.11 Ubuntu üzerinde çalıştırır.
 
 ## Yayımlanmış eğitim dizini ve güncel durum
 
-Son yerel birleştirme: 203.636 tekil gazete/sayfa PDF kaydı, 338.396 ilan bağlantısı;
-toplu dizinde 5.521 farklı arşiv. Ana DB ve dizin iki aşamalı yayınla yenilenir.
+Son yerel birleştirme: 203.652 tekil gazete/sayfa PDF kaydı, 338.416 ilan bağlantısı;
+toplu dizinde 5.524 farklı arşiv. Ana DB ve dizin iki aşamalı yayınla yenilenir.
 
 - Kurtarma toplam 19.591 eksik gazete/sayfa PDF bağlantısını doldurdu. Dosyalar
   zaten kalıcı paketlerdeydi; TOBB'den tekrar indirilmedi. 333.938 ilan referansının
@@ -255,3 +255,20 @@ satın alma veya başvuru yapılmadı.
 - Çalışan `42293357087` eski commit ile açıldığı için yeni gizli havuzu okumaz.
   Yeniden başlatmadan süreç içindeki hesabı değiştirilemez; bu koşunun kesildiği
   veya yeni havuza geçtiği henüz iddia edilmez.
+
+Sürüm geçişi kontrol noktası (7 Kasım 01:20 Türkiye):
+
+- `5d626b9`: sabit hesap havuzu, kaynak başlangıcında 3 saniyelik aralık ve
+  mevcut kararlılık ölçümüne göre hızlanma; yerelde 76 test geçti.
+- `42303340191`: yeni sürümün GitHub CI koşusu, kapasite kuyruğundaydı.
+- `42303349483`: son 10 hesabın giriş kontrolü, kapasite kuyruğundaydı.
+- `42303809207`: 40 sabit hesap / 4 indirme işçisi / 19.800 saniye bütçeli
+  yeni dalga, eski dalganın ardına sıraya alındı. İstek alt sınırı 1 saniye
+  seçildi; yeni kod önce 3 saniye ile başlar, kararlıysa hızlanır.
+- Eski `42293357087`: 32 aktif / 8 kuyruk / tamamlanmış hata 0; hâlâ eski
+  tek hesaplı kodla çalışıyor. Kullanıcının 5,5 saat kesilmemesi talimatı korunuyor.
+  Hemen geçiş için eski dalgayı veri kurtarmayla kapatma seçimi kullanıcıya soruldu;
+  yanıt gelmeden çalışan dalga iptal edilmez.
+- İki hesaplı kontroldeki 16 PDF / 20 ilan bağlantısı doğal gazete/sayfa
+  anahtarıyla master'a birleştirildi; toplam 203.652 sayfa / 338.416 bağlantı.
+  Koşunun canlı olması aktarımın kesintisiz olduğu anlamına gelmez.
