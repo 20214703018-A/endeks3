@@ -281,3 +281,33 @@ def test_slow_pdf_does_not_block_next_200_page_batch(tmp_path, monkeypatch):
     assert slow_finished.is_set()
     with sqlite3.connect(product / 'shard_1_updates.sqlite') as updates:
         assert updates.execute('SELECT count(*) FROM gazete_pdf_updates').fetchone()[0] == 201
+
+
+def test_stale_auth_responses_do_not_repeat_completed_session_renewal(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.is_authenticated = True
+    manager.session_generation = 2
+    def forbidden(*args, **kwargs):
+        pytest.fail('stale response must not trigger network/session renewal')
+    monkeypatch.setattr(manager.session, 'get', forbidden)
+    monkeypatch.setattr(manager.session, 'post', forbidden)
+    monkeypatch.setattr(manager, 'solve_ocr_captcha', forbidden)
+    assert manager.login(expected_generation=1)
+    assert manager.solve_ilan_captcha(expected_generation=1)
+    assert manager.session_generation == 2
+
+
+def test_successful_login_advances_generation_for_waiting_workers(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    calls = []
+    monkeypatch.setattr(manager.session, 'get', lambda *a, **k: None)
+    monkeypatch.setattr(manager, 'solve_ocr_captcha', lambda *a: 'fixture')
+    def post(*args, **kwargs):
+        calls.append(1)
+        return SimpleNamespace(text='1')
+    monkeypatch.setattr(manager.session, 'post', post)
+    assert manager.login(expected_generation=0)
+    assert manager.session_generation == 1
+    # A second worker received its redirect before the first renewed.
+    assert manager.login(expected_generation=0)
+    assert calls == [1]

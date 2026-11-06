@@ -60,6 +60,7 @@ class TOBBSessionManager:
         self.lock = threading.Lock()
         self.session = self._create_session()
         self.is_authenticated = False
+        self.session_generation = 0
 
     def _create_session(self):
         s = requests.Session()
@@ -101,8 +102,13 @@ class TOBBSessionManager:
             time.sleep(0.1)
         return None
 
-    def login(self):
+    def login(self, expected_generation=None):
         with self.lock:
+            # Another worker may have renewed the session while this worker
+            # was waiting for the lock with an older HTTP response.
+            if (expected_generation is not None and self.is_authenticated
+                    and expected_generation != self.session_generation):
+                return True
             for attempt in range(8):
                 try:
                     self.session.get("https://www.ticaretsicil.gov.tr/view/hizlierisim/girisyap.php", verify=False, timeout=8)
@@ -118,6 +124,7 @@ class TOBBSessionManager:
                         self.session.get("https://www.ticaretsicil.gov.tr/index.php", verify=False, timeout=8)
                         self.session.headers["Referer"] = "https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php"
                         self.is_authenticated = True
+                        self.session_generation += 1
                         print("  ✅ TOBB Turbo Oturumu Başarıyla Açıldı!", flush=True)
                         return True
                 except Exception:
@@ -125,8 +132,11 @@ class TOBBSessionManager:
                 time.sleep(0.3)
             return False
 
-    def solve_ilan_captcha(self):
+    def solve_ilan_captcha(self, expected_generation=None):
         with self.lock:
+            if (expected_generation is not None and self.is_authenticated
+                    and expected_generation != self.session_generation):
+                return True
             for _ in range(6):
                 code = self.solve_ocr_captcha("https://www.ticaretsicil.gov.tr/captcha/captcha.php")
                 if not code:
@@ -138,6 +148,7 @@ class TOBBSessionManager:
                         verify=False, timeout=8
                     )
                     if r.text.strip() == "1":
+                        self.session_generation += 1
                         return True
                 except Exception:
                     pass
@@ -147,6 +158,7 @@ class TOBBSessionManager:
     def download_pdf(self, guid):
         view_url = f"https://www.ticaretsicil.gov.tr/view/hizlierisim/pdf_goster.php?Guid={guid}"
         for attempt in range(4):
+            generation = self.session_generation
             try:
                 r_view = self.session.get(view_url, verify=False, timeout=12)
                 raw_resp = r_view.text
@@ -167,13 +179,13 @@ class TOBBSessionManager:
                     continue
 
             if "girisyap.php" in r_view.url or "girisyap.php" in raw_resp:
-                self.login()
+                self.login(expected_generation=generation)
                 continue
 
             if 'id="CaptchaIlan"' in raw_resp or '<form id="FormGuvenlikKodu">' in raw_resp:
-                if self.solve_ilan_captcha():
+                if self.solve_ilan_captcha(expected_generation=generation):
                     continue
-                self.login()
+                self.login(expected_generation=generation)
                 continue
 
             if r_view.status_code == 200:
