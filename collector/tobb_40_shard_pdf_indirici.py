@@ -120,6 +120,7 @@ class TOBBSessionManager:
         self.pdf_sessions = threading.local()
         self.view_failures = 0
         self.failure_windows = 0
+        self.max_failure_windows = 3
         self.retry_view_at = 0
         self.source_stopped = None
         self.view_cooldown = 30
@@ -208,11 +209,11 @@ class TOBBSessionManager:
                 if self.view_failures >= failure_limit:
                     self.failure_windows += 1
                     self.view_failures = 0
-                    if self.failure_windows >= 3:
+                    if self.failure_windows >= self.max_failure_windows:
                         self.source_stopped = 'SOURCE_UNAVAILABLE'
-                        print('Viewer unavailable after three recovery windows; preserving completed files', flush=True)
+                        print(f'Viewer unavailable after {self.max_failure_windows} recovery windows; preserving completed files', flush=True)
                     else:
-                        cooldown = self.view_cooldown * 2**(self.failure_windows - 1)
+                        cooldown = min(300, self.view_cooldown * 2**(self.failure_windows - 1))
                         self.retry_view_at = time.monotonic() + cooldown
                         print(f'Viewer cooldown: {cooldown}s; only one probe follows', flush=True)
             raise
@@ -563,12 +564,16 @@ def main():
     parser.add_argument("--bundle-size", type=int, default=BUNDLE_SIZE)
     parser.add_argument("--request-interval", type=float, default=3.0,
                         help="Minimum seconds between all TOBB requests on this runner")
+    parser.add_argument("--recovery-windows", type=int, default=8,
+                        help="Bounded recovery probes for transient source connection failures")
     args = parser.parse_args()
 
     if not 1 <= args.shard <= args.num_shards or min(args.threads, args.bundle_size, args.max_pdfs, args.max_seconds) < 1:
         parser.error("shard/num-shards and limits must be positive and valid")
     if not 0 < args.request_interval <= 60:
         parser.error("request-interval must be between 0 and 60 seconds")
+    if not 1 <= args.recovery_windows <= 32:
+        parser.error("recovery-windows must be between 1 and 32")
 
     shard_id = args.shard
     num_shards = args.num_shards
@@ -610,6 +615,7 @@ def main():
     mgr = TOBBSessionManager(USER_EMAIL, USER_PASS, TESSERACT_BIN)
     mgr.download_deadline = time.monotonic() + max(0, deadline - time.time())
     mgr.network_gate.interval = args.request_interval
+    mgr.max_failure_windows = args.recovery_windows
     print(f"Source request interval: {args.request_interval:g}s (all routes and redirects)", flush=True)
     if not mgr.login():
         print(f"❌ [Shard {shard_id}] TOBB Yetkili Girişi açılamadı, çıkılıyor.", flush=True)

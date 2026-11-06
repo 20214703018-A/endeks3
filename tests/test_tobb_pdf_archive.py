@@ -669,6 +669,29 @@ def test_successful_view_resets_source_failure_windows(monkeypatch):
     assert manager.source_stopped is None
 
 
+def test_transient_recovery_extends_to_configured_limit_with_capped_delays(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.max_failure_windows = 8
+    manager.view_interval = 0
+    now, calls = [100.0], []
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    def fail(*args, **kwargs):
+        calls.append(1)
+        raise worker.requests.ConnectTimeout()
+    monkeypatch.setattr(manager, '_download_response', fail)
+    for cooldown in [30, 60, 120, 240, 300, 300, 300]:
+        with pytest.raises(worker.requests.ConnectTimeout):
+            manager._get_view('fixture')
+        assert manager.source_stopped is None
+        assert manager.retry_view_at == now[0] + cooldown
+        now[0] += cooldown
+    with pytest.raises(worker.requests.ConnectTimeout):
+        manager._get_view('fixture')
+    assert manager.source_stopped == 'SOURCE_UNAVAILABLE'
+    assert manager.download_pdf('fixture') == (None, 'SOURCE_UNAVAILABLE')
+    assert len(calls) == 8
+
+
 def test_parallel_pdf_sessions_do_not_mutate_viewer_cookies(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
     manager.session.cookies.set('authorized-session', 'fixture')
