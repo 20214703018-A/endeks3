@@ -82,6 +82,8 @@ class TOBBSessionManager:
         self.retry_view_at = 0
         self.source_stopped = None
         self.view_cooldown = 30
+        self.view_interval = 1.0
+        self.next_view_at = 0
 
     def _pdf_session(self):
         # Do not let parallel file responses mutate the authenticated viewer's
@@ -134,9 +136,11 @@ class TOBBSessionManager:
                     raise SourceUnavailable(self.source_stopped)
                 if self.download_deadline is not None and now >= self.download_deadline:
                     raise requests.Timeout('Run deadline reached before viewer request')
-                if not self.renewing and self.active_views == 0 and now >= self.retry_view_at:
+                eligible_at = max(self.retry_view_at, self.next_view_at)
+                if not self.renewing and self.active_views == 0 and now >= eligible_at:
+                    self.next_view_at = now + self.view_interval
                     break
-                wait_for = max(0.01, self.retry_view_at - now) if now < self.retry_view_at else 1
+                wait_for = max(0.01, eligible_at - now) if now < eligible_at else 1
                 self.request_gate.wait(timeout=min(1, wait_for))
             generation = self.session_generation
             self.active_views += 1

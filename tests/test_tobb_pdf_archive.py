@@ -595,6 +595,7 @@ def test_source_cooldown_does_not_send_waiting_requests(monkeypatch):
 def test_persistent_source_failure_stops_all_waiting_workers(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
     manager.view_cooldown = 0
+    manager.view_interval = 0
     calls = []
     def fail(url, **kwargs):
         calls.append(url)
@@ -610,6 +611,7 @@ def test_persistent_source_failure_stops_all_waiting_workers(monkeypatch):
 def test_successful_view_resets_source_failure_windows(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
     manager.view_cooldown = 0
+    manager.view_interval = 0
     def fail(url, **kwargs):
         raise worker.requests.Timeout()
     monkeypatch.setattr(manager, '_download_response', fail)
@@ -643,6 +645,7 @@ def test_parallel_pdf_sessions_do_not_mutate_viewer_cookies(monkeypatch):
 
 def test_pdf_transfers_overlap_after_serialized_viewer_preparation(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
+    manager.view_interval = 0
     both_transferring = threading.Event()
     release = threading.Event()
     transfers = []
@@ -699,6 +702,22 @@ def test_run_deadline_prevents_starting_more_session_maintenance(monkeypatch):
     monkeypatch.setattr(manager, 'solve_ilan_captcha', lambda **kw: pytest.fail('run already ended'))
     assert not manager._renew_session(0, ilan=True)
     assert not manager.renewing
+
+
+def test_viewer_starts_are_paced_without_serializing_file_transfers(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    now, starts = [100.0], []
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    def wait(timeout=None):
+        now[0] += timeout
+    def get(*args, **kwargs):
+        starts.append(now[0])
+        return SimpleNamespace(status_code=200)
+    monkeypatch.setattr(manager.request_gate, 'wait', wait)
+    monkeypatch.setattr(manager, '_download_response', get)
+    manager._get_view('first')
+    manager._get_view('second')
+    assert starts == [100.0, 101.0]
 
 
 def test_streamed_response_keeps_exact_bytes_and_releases_connection(monkeypatch):
