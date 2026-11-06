@@ -1,22 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-GEOPROP - 7/24 Otonom Bulut & Lokal Kesintisiz Tarama Döngü Servisi
-===================================================================
-Görevleri:
-1. GitHub Actions 40-Node PDF Matrisini (`tobb_gazete_pdf_40_nodes.yml`) izler:
-   - Mevcut koşu bittiği anda (`status == "completed"`):
-     a) Tamamlanan koşunun shard SQLite güncellemelerini (`shard-pdf-update-*`) indirip
-        lokal master `turkiye_ticaret_sicil_ve_sirketler.sqlite` veritabanına birleştirir.
-     b) Lokalde yeni toplanan şirket/ilan kayıtlarını içeren güncel SQLite ambarını
-        online `.backup` ile sıkıştırıp `warehouse-pdf-1` kovasına yükler.
-     c) Durmadan bir sonraki 40-Node matris koşusunu (`gh workflow run tobb_gazete_pdf_40_nodes.yml`)
-        otomatik olarak ateşler!
-2. GitHub Release PDF Kovalarını (`warehouse-pdf-1` .. `warehouse-pdf-N`) izler:
-   - Herhangi bir kova 850 pakete ulaştığında yeni kovaları (`warehouse-pdf-7`, `8`...) otomatik açar.
-3. Lokal Türkiye Geneli Şirket & İlan Toplayıcısını (`tobb_turkiye_geneli_hizli_toplayici.py`) izler:
-   - Tur bittiğinde zaten kendi içinde `Tur #2, #3...` olarak baştan başlar; eğer süreç
-     herhangi bir sebeple kapanırsa anında yeniden başlatır.
+"""Local TOBB status observer.
+
+GitHub's PDF workflow owns automatic chaining and master publication. This
+observer must never restart cancelled/canary runs or publish a local master.
 """
 
 import os
@@ -82,39 +69,10 @@ def ensure_release_buckets():
 
 def sync_local_master_db_to_cloud():
     """Lokal SQLite veritabanını kilitlemeden yedekler, sıkıştırır ve warehouse-pdf-1'e yükler."""
-    if not DB_PATH.exists():
-        return False
-    tmp_db = REPO_ROOT / "warehouse" / "product" / "temp_cloud_sync.sqlite"
-    tmp_gz = REPO_ROOT / "warehouse" / "product" / "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz"
-    try:
-        print("🔄 [Otonom Döngü] Lokal Master SQLite çevrimiçi yedekleniyor (.backup)...", flush=True)
-        src = sqlite3.connect(DB_PATH, timeout=120)
-        dst = sqlite3.connect(tmp_db)
-        src.backup(dst)
-        dst.close()
-        src.close()
-
-        print("📦 [Otonom Döngü] Master SQLite gzip ile sıkıştırılıyor...", flush=True)
-        with open(tmp_db, "rb") as f_in, gzip.open(tmp_gz, "wb", compresslevel=6) as f_out:
-            shutil.copyfileobj(f_in, f_out)
-
-        print("☁️ [Otonom Döngü] Güncel Master SQLite warehouse-pdf-1 kovasına yükleniyor...", flush=True)
-        subprocess.run(
-            ["gh", "release", "upload", "warehouse-pdf-1", str(tmp_gz), "-R", REPO_SLUG, "--clobber"],
-            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=180
-        )
-        print("✅ [Otonom Döngü] Bulut Master SQLite başarıyla güncellendi!", flush=True)
-        return True
-    except Exception as e:
-        print(f"⚠️ [Otonom Döngü] SQLite bulut senkronizasyon uyarısı: {e}", flush=True)
-        return False
-    finally:
-        for p in (tmp_db, tmp_gz):
-            if p.exists():
-                try:
-                    p.unlink()
-                except Exception:
-                    pass
+    # GitHub merge/recovery workflows own the canonical master. Publishing a
+    # local snapshot here races with those workflows and can erase newer links.
+    print("Local master publication disabled; use the guarded GitHub recovery workflow.", flush=True)
+    return False
 
 
 def merge_completed_run_artifacts(run_id: int):
@@ -154,7 +112,7 @@ def check_and_retrigger_cloud_matrix(state: dict):
 
     if not runs:
         print("🚀 [Otonom Döngü] Hiç koşu bulunamadı, 40-Node PDF Matrisi başlatılıyor...", flush=True)
-        subprocess.run(["gh", "workflow", "run", WORKFLOW_FILE, "-R", REPO_SLUG, "--ref", "main"], timeout=20)
+        print("GitHub workflow controls restarts; local watcher is observational.", flush=True)
         return
 
     active_runs = [r for r in runs if r.get("status") in ("in_progress", "queued", "waiting", "requested", "pending")]
@@ -174,25 +132,9 @@ def check_and_retrigger_cloud_matrix(state: dict):
         )
         return
 
-    # Aktif çalışan koşu yok! Biten son koşuyu birleştir ve yenisini anında ateşle!
-    print(f"🔔 [{now_str}] Run #{latest_id} tamamlandı ({latest.get('conclusion')}). Otomatik yeni tarama hazırlanıyor...", flush=True)
-    if state.get("last_merged_run_id") != latest_id:
-        merge_completed_run_artifacts(latest_id)
-        sync_local_master_db_to_cloud()
-        state["last_merged_run_id"] = latest_id
-        save_state(state)
-
-    print("🚀 [Otonom Döngü] Yeni 40-Node TOBB Gazete PDF Matrisi otomatik olarak ateşleniyor!", flush=True)
-    res = subprocess.run(
-        ["gh", "workflow", "run", WORKFLOW_FILE, "-R", REPO_SLUG, "--ref", "main"],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=25
-    )
-    if res.returncode == 0:
-        state["restarts_triggered"] = state.get("restarts_triggered", 0) + 1
-        save_state(state)
-        print(f"✅ [Otonom Döngü] Yeni 40-Node matris koşusu başarıyla başlatıldı! (Toplam Otomatik Başlatma: #{state['restarts_triggered']})", flush=True)
-    else:
-        print(f"⚠️ [Otonom Döngü] Başlatma hatası: {res.stderr}", flush=True)
+    # A cancelled/failed/canary run must never be revived by a second writer.
+    print(f"Run #{latest_id} finished ({latest.get('conclusion')}); "
+          "GitHub workflow controls restart and merge. Local watcher made no changes.", flush=True)
 
 
 def main():

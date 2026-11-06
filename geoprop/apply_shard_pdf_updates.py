@@ -10,6 +10,7 @@ SQLite WAL modunda yıldırım hızında uygular.
 
 import sys
 import sqlite3
+import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -50,12 +51,30 @@ def merge_pdf_updates(updates_dir, master_db_path):
             u_conn.close()
             
             if rows:
-                c.executemany("""
-                    UPDATE ticaret_sicil_gazetesi_ilanlari
-                    SET pdf_dosya_yolu = ?, guncellenme_tarihi = ?
-                    WHERE id = ?
-                """, [(r[1], r[2], r[0]) for r in rows])
-                total_updated += len(rows)
+                pages, legacy = {}, []
+                for rid, ref, timestamp in rows:
+                    filename = ref.rsplit('#', 1)[-1]
+                    match = re.fullmatch(r'(\d+)_(\d+)_[A-Za-z0-9]*_[a-f0-9]+\.pdf', filename)
+                    if match:
+                        key = match.groups()
+                        if key not in pages or timestamp >= pages[key][1]:
+                            pages[key] = (ref, timestamp)
+                    else:
+                        legacy.append((ref, timestamp, rid))
+                # Page identity remains stable even when local and cloud DBs
+                # assign different announcement IDs. Never bind a PDF to an
+                # unrelated announcement solely because its numeric ID matches.
+                for (sayi, sayfa), (ref, timestamp) in pages.items():
+                    c.execute('''UPDATE ticaret_sicil_gazetesi_ilanlari
+                        SET pdf_dosya_yolu=?, guncellenme_tarihi=?
+                        WHERE gazete_sayisi=? AND sayfa_no=?''',
+                        (ref, timestamp, sayi, sayfa))
+                    if c.rowcount == 0:
+                        raise ValueError(f'Archived page absent from master: {sayi}/{sayfa}')
+                    total_updated += c.rowcount
+                c.executemany('''UPDATE ticaret_sicil_gazetesi_ilanlari
+                    SET pdf_dosya_yolu=?, guncellenme_tarihi=? WHERE id=?''', legacy)
+                total_updated += len(legacy)
 
             if addr_rows:
                 from collector.tobb_pdf_adres_ocr_motoru import apply_extracted_records_to_db

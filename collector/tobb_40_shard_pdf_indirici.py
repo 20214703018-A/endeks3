@@ -66,6 +66,7 @@ class TOBBSessionManager:
         self.active_views = 0
         self.renewing = False
         self.auth_deadline = None
+        self.failed_renewal = None
 
     def _get_view(self, url):
         with self.request_gate:
@@ -86,6 +87,9 @@ class TOBBSessionManager:
             self.request_gate.wait_for(lambda: not self.renewing)
             if generation != self.session_generation:
                 return True
+            if (self.failed_renewal is not None and self.failed_renewal[0] == generation
+                    and time.monotonic() - self.failed_renewal[1] < 60):
+                return False
             self.renewing = True
             self.request_gate.wait_for(lambda: self.active_views == 0)
         try:
@@ -93,8 +97,12 @@ class TOBBSessionManager:
             started = time.monotonic()
             print(f"Session maintenance started: {'ilan' if ilan else 'login'}", flush=True)
             if ilan:
-                return self.solve_ilan_captcha(expected_generation=generation)
-            return self.login(expected_generation=generation)
+                result = self.solve_ilan_captcha(expected_generation=generation)
+            else:
+                result = self.login(expected_generation=generation)
+            if not result:
+                self.failed_renewal = (generation, time.monotonic())
+            return result
         finally:
             print(f"Session maintenance ended after {time.monotonic()-started:.1f}s", flush=True)
             with self.request_gate:

@@ -14,6 +14,7 @@ import pikepdf
 import pytest
 
 from collector import tobb_40_shard_pdf_indirici as worker
+from collector import tobb_bulut_otonom_dongu_servisi as observer
 from collector.tobb_pdf_archive import (
     _same_document, optimize_pdf, publish_bundle, record_published_bundle, write_pdf,
 )
@@ -423,3 +424,55 @@ def test_raw_recovery_reuses_known_archive_and_retains_incomplete_downloads(tmp_
     assert result['reused_pdf_files'] == 1
     assert len(result['skipped_incomplete_files']) == 1
     assert (raw / '5000_2_TSM_abcdef02.pdf').exists()
+
+
+@pytest.mark.parametrize('runs', [[], [{'databaseId': 1, 'status': 'completed', 'conclusion': 'cancelled'}]])
+def test_local_observer_never_restarts_or_overwrites_master(monkeypatch, runs):
+    monkeypatch.setattr(observer.subprocess, 'check_output', lambda *a, **k: json.dumps(runs).encode())
+    monkeypatch.setattr(observer, 'ensure_release_buckets', lambda: {})
+    monkeypatch.setattr(observer.subprocess, 'run', lambda *a, **k: pytest.fail('local watcher must not dispatch or publish'))
+    monkeypatch.setattr(observer, 'merge_completed_run_artifacts', lambda *a: pytest.fail('local watcher must not merge'))
+    assert observer.check_and_retrigger_cloud_matrix({}) is None
+    assert not observer.sync_local_master_db_to_cloud()
+
+
+def test_merge_uses_page_identity_when_announcement_ids_differ(tmp_path):
+    master = tmp_path / 'master.sqlite'
+    conn = database(master)
+    insert(conn, 1, sayi='5000', page='1')
+    insert(conn, 2, sayi='6000', page='2')
+    insert(conn, 3, sayi='6000', page='2')
+    conn.close()
+    ref = 'release://warehouse-pdf-1/bundle.tar.gz#6000_2_TSM_abcdef01.pdf'
+    with sqlite3.connect(tmp_path / 'shard_1_updates.sqlite') as updates:
+        updates.execute('CREATE TABLE gazete_pdf_updates (id INTEGER, pdf_dosya_yolu TEXT, guncellenme_tarihi TEXT)')
+        updates.execute('INSERT INTO gazete_pdf_updates VALUES (1, ?, ?)', (ref, '2026-11-06'))
+    assert merge_pdf_updates(tmp_path, master)
+    with sqlite3.connect(master) as conn:
+        assert conn.execute('SELECT id,pdf_dosya_yolu FROM ticaret_sicil_gazetesi_ilanlari ORDER BY id').fetchall() == [(1, ''), (2, ref), (3, ref)]
+
+
+def test_merge_rejects_archive_page_absent_from_master(tmp_path):
+    master = tmp_path / 'master.sqlite'
+    conn = database(master)
+    insert(conn, 1)
+    conn.close()
+    ref = 'release://warehouse-pdf-1/bundle.tar.gz#7000_9_TSM_abcdef01.pdf'
+    with sqlite3.connect(tmp_path / 'shard_1_updates.sqlite') as updates:
+        updates.execute('CREATE TABLE gazete_pdf_updates (id INTEGER, pdf_dosya_yolu TEXT, guncellenme_tarihi TEXT)')
+        updates.execute('INSERT INTO gazete_pdf_updates VALUES (1, ?, ?)', (ref, '2026-11-06'))
+    assert not merge_pdf_updates(tmp_path, master)
+    with sqlite3.connect(master) as conn:
+        assert conn.execute('SELECT pdf_dosya_yolu FROM ticaret_sicil_gazetesi_ilanlari').fetchone()[0] == ''
+
+
+def test_waiting_workers_do_not_repeat_a_failed_renewal(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    calls = []
+    def fail(expected_generation=None):
+        calls.append(expected_generation)
+        return False
+    monkeypatch.setattr(manager, 'solve_ilan_captcha', fail)
+    assert not manager._renew_session(0, ilan=True)
+    assert not manager._renew_session(0, ilan=True)
+    assert calls == [0]
