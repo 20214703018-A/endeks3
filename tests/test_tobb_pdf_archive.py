@@ -778,6 +778,28 @@ def test_parallel_pdf_sessions_do_not_mutate_viewer_cookies(monkeypatch):
     assert manager._pdf_session().cookies.get('authorized-session') == 'fixture'
 
 
+def test_source_pacing_slows_on_connection_failure_and_recovers_after_stability(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.view_interval = 0
+    manager.network_gate.interval = manager.minimum_request_interval = 1
+    now = [1000.0]
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    def fail(*args, **kwargs):
+        raise worker.requests.ConnectTimeout()
+    monkeypatch.setattr(manager, '_download_response', fail)
+    with pytest.raises(worker.requests.ConnectTimeout):
+        manager._get_view('fixture')
+    assert manager.network_gate.interval == 2
+    manager.retry_view_at = 0
+    monkeypatch.setattr(manager, '_download_response', lambda *a, **kw: SimpleNamespace(status_code=200))
+    for _ in range(50):
+        manager._get_view('fixture')
+    assert manager.network_gate.interval == 2, 'success burst must not immediately restore a failing rate'
+    now[0] += 300
+    manager._get_view('fixture')
+    assert manager.network_gate.interval == 1
+
+
 def test_pdf_transfers_overlap_after_serialized_viewer_preparation(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
     manager.view_interval = 0

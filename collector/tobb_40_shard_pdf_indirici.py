@@ -121,6 +121,9 @@ class TOBBSessionManager:
         self.view_failures = 0
         self.failure_windows = 0
         self.max_failure_windows = 3
+        self.minimum_request_interval = 0.0
+        self.successful_views = 0
+        self.last_pace_change = time.monotonic()
         self.retry_view_at = 0
         self.source_stopped = None
         self.view_cooldown = 30
@@ -198,6 +201,13 @@ class TOBBSessionManager:
                 else:
                     self.view_failures = 0
                     self.failure_windows = 0
+                    self.successful_views += 1
+                    if (self.successful_views >= 50 and time.monotonic() - self.last_pace_change >= 300
+                            and self.network_gate.interval > self.minimum_request_interval):
+                        self.network_gate.interval = max(self.minimum_request_interval, self.network_gate.interval / 2)
+                        self.last_pace_change = time.monotonic()
+                        self.successful_views = 0
+                        print(f'Source recovered; request interval now {self.network_gate.interval:g}s', flush=True)
             return response, generation
         except requests.RequestException as exc:
             with self.request_gate:
@@ -209,6 +219,12 @@ class TOBBSessionManager:
                 if self.view_failures >= failure_limit:
                     self.failure_windows += 1
                     self.view_failures = 0
+                    self.successful_views = 0
+                    previous_interval = self.network_gate.interval
+                    self.network_gate.interval = max(self.minimum_request_interval, min(10, previous_interval * 2))
+                    self.last_pace_change = time.monotonic()
+                    if self.network_gate.interval != previous_interval:
+                        print(f'Source recovery request interval: {self.network_gate.interval:g}s', flush=True)
                     if self.failure_windows >= self.max_failure_windows:
                         self.source_stopped = 'SOURCE_UNAVAILABLE'
                         print(f'Viewer unavailable after {self.max_failure_windows} recovery windows; preserving completed files', flush=True)
@@ -615,6 +631,7 @@ def main():
     mgr = TOBBSessionManager(USER_EMAIL, USER_PASS, TESSERACT_BIN)
     mgr.download_deadline = time.monotonic() + max(0, deadline - time.time())
     mgr.network_gate.interval = args.request_interval
+    mgr.minimum_request_interval = args.request_interval
     mgr.max_failure_windows = args.recovery_windows
     print(f"Source request interval: {args.request_interval:g}s (all routes and redirects)", flush=True)
     if not mgr.login():
@@ -689,7 +706,7 @@ def main():
     source_statuses = {}
     auth_blocked = False
     first_bundle_queued = False
-    last_bundle_time = time.monotonic()
+    last_download_time = time.monotonic()
     # Pools live for the whole run; packing/uploading does not block downloads.
     with ThreadPoolExecutor(max_workers=args.threads) as downloads, ThreadPoolExecutor(max_workers=1) as archives:
         backlog = deque()
@@ -718,10 +735,9 @@ def main():
                 if not pending_downloads:
                     break
                 completed, pending_downloads = wait(pending_downloads, timeout=5, return_when=FIRST_COMPLETED)
-                if not completed and current_bundle_files and time.monotonic()-last_bundle_time >= 30:
+                if not completed and current_bundle_files and time.monotonic()-last_download_time >= 30:
                     queue_bundle(archives)
                     first_bundle_queued = True
-                    last_bundle_time = time.monotonic()
                 for fut in completed:
                     try:
                         res = fut.result()
@@ -741,6 +757,7 @@ def main():
                             fatal_error = RuntimeError(f'TOBB access unavailable ({status}); PDFs retained')
                         continue
                     if res:
+                        last_download_time = time.monotonic()
                         rep_id, pdf_fn, s_sayi, s_sayfa, ms, sz, unv, original_sz = res
                         current_bundle_files.append((rep_id, pdf_fn, s_sayi, s_sayfa))
                         current_bundle_bytes += sz
@@ -755,7 +772,6 @@ def main():
                                 current_bundle_bytes >= MAX_BUNDLE_BYTES):
                             queue_bundle(archives)
                             first_bundle_queued = True
-                            last_bundle_time = time.monotonic()
                     else:
                         download_errors += 1
                     while pending_bundles and pending_bundles[0].done():
