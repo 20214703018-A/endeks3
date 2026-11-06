@@ -52,6 +52,12 @@ TESSERACT_BIN = (
 )
 
 
+class SourceUnavailable(requests.RequestException):
+    def __init__(self, status='SOURCE_UNAVAILABLE'):
+        self.status = status
+        super().__init__(status)
+
+
 class TOBBSessionManager:
     """Yüksek hızlı persistent Keep-Alive TOBB oturum yöneticisi."""
 
@@ -70,19 +76,39 @@ class TOBBSessionManager:
         self.failed_renewal = None
         self.reported_view_states = set()
         self.download_deadline = None
+        self.pdf_sessions = threading.local()
+        self.view_failures = 0
+        self.failure_windows = 0
+        self.retry_view_at = 0
+        self.source_stopped = None
+        self.view_cooldown = 30
 
-    def _download_response(self, url, timeout):
+    def _pdf_session(self):
+        # Do not let parallel file responses mutate the authenticated viewer's
+        # shared cookie jar. Reuse connections separately in each file worker.
+        if not hasattr(self.pdf_sessions, 'session'):
+            self.pdf_sessions.session = self._create_session()
+            self.pdf_sessions.generation = -1
+        if self.pdf_sessions.generation != self.session_generation:
+            with self.lock:
+                self.pdf_sessions.session.headers.update(self.session.headers)
+                self.pdf_sessions.session.cookies = self.session.cookies.copy()
+                self.pdf_sessions.generation = self.session_generation
+        return self.pdf_sessions.session
+
+    def _download_response(self, url, timeout, budget=45, pdf=False):
         # A socket read timeout alone does not bound a trickling response or
         # a redirect chain. Bound the whole response and release its socket.
-        stop_at = time.monotonic() + 45
+        stop_at = time.monotonic() + budget
+        session = self._pdf_session() if pdf else self.session
         if self.download_deadline is not None:
             stop_at = min(stop_at, self.download_deadline)
         for _ in range(6):
             remaining = stop_at - time.monotonic()
             if remaining <= 0:
                 raise requests.Timeout('Download response budget exhausted')
-            response = self.session.get(url, verify=False, stream=True,
-                                        allow_redirects=False, timeout=min(timeout, remaining))
+            response = session.get(url, verify=False, stream=True,
+                                   allow_redirects=False, timeout=min(timeout, remaining))
             try:
                 if response.is_redirect:
                     url = requests.compat.urljoin(url, response.headers['Location'])
@@ -101,11 +127,46 @@ class TOBBSessionManager:
 
     def _get_view(self, url):
         with self.request_gate:
-            self.request_gate.wait_for(lambda: not self.renewing)
+            while True:
+                now = time.monotonic()
+                if self.source_stopped:
+                    raise SourceUnavailable(self.source_stopped)
+                if self.download_deadline is not None and now >= self.download_deadline:
+                    raise requests.Timeout('Run deadline reached before viewer request')
+                if not self.renewing and self.active_views == 0 and now >= self.retry_view_at:
+                    break
+                wait_for = max(0.01, self.retry_view_at - now) if now < self.retry_view_at else 1
+                self.request_gate.wait(timeout=min(1, wait_for))
             generation = self.session_generation
             self.active_views += 1
         try:
-            return self._download_response(url, timeout=12), generation
+            # PDF preparation can take longer than static file transfer. A
+            # short socket timeout used to abandon preparation repeatedly.
+            response = self._download_response(url, timeout=45, budget=90)
+            with self.request_gate:
+                if response.status_code in (403, 429):
+                    self.source_stopped = ('ACCESS_DENIED' if response.status_code == 403 else 'SOURCE_THROTTLED')
+                elif response.status_code >= 500:
+                    raise requests.HTTPError('Viewer server error')
+                else:
+                    self.view_failures = 0
+                    self.failure_windows = 0
+            return response, generation
+        except requests.RequestException as exc:
+            with self.request_gate:
+                self.view_failures += 1
+                print(f'Viewer connection failure: {type(exc).__name__}; consecutive={self.view_failures}', flush=True)
+                if self.view_failures >= 3:
+                    self.failure_windows += 1
+                    self.view_failures = 0
+                    if self.failure_windows >= 3:
+                        self.source_stopped = 'SOURCE_UNAVAILABLE'
+                        print('Viewer unavailable after three recovery windows; preserving completed files', flush=True)
+                    else:
+                        cooldown = self.view_cooldown * 2**(self.failure_windows - 1)
+                        self.retry_view_at = time.monotonic() + cooldown
+                        print(f'Viewer cooldown: {cooldown}s; only one probe follows', flush=True)
+            raise
         finally:
             with self.request_gate:
                 self.active_views -= 1
@@ -256,6 +317,8 @@ class TOBBSessionManager:
             try:
                 r_view, generation = self._get_view(view_url)
                 raw_resp = r_view.text
+            except SourceUnavailable as exc:
+                return None, exc.status
             except requests.Timeout:
                 return None, "VIEW_TIMEOUT"
             except requests.RequestException:
@@ -272,7 +335,7 @@ class TOBBSessionManager:
                 pdf_rel = m_pdf.group(1)
                 pdf_url = pdf_rel if pdf_rel.startswith("http") else f"https://www.ticaretsicil.gov.tr{pdf_rel}"
                 try:
-                    r_pdf = self._download_response(pdf_url, timeout=15)
+                    r_pdf = self._download_response(pdf_url, timeout=15, budget=90, pdf=True)
                     if r_pdf.status_code == 429:
                         return None, "SOURCE_THROTTLED"
                     if r_pdf.status_code == 403:
@@ -600,7 +663,7 @@ def main():
                         source_statuses[status] = source_statuses.get(status, 0) + 1
                         if source_statuses[status] <= 3 or source_statuses[status] % 10 == 0:
                             print(f"Source status {status}: {res['page']} (count={source_statuses[status]})", flush=True)
-                        if (status in ('SOURCE_THROTTLED', 'ACCESS_DENIED') or
+                        if (status in ('SOURCE_THROTTLED', 'ACCESS_DENIED', 'SOURCE_UNAVAILABLE') or
                                 status == 'AUTH_REQUIRED' and source_statuses[status] >= 3):
                             auth_blocked = True
                             fatal_error = RuntimeError(f'TOBB access unavailable ({status}); PDFs retained')

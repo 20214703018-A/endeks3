@@ -381,7 +381,7 @@ def test_view_requests_drain_and_pause_while_session_is_renewed(monkeypatch):
         return True
     def get(*args, **kwargs):
         view_sent.set()
-        return SimpleNamespace(text='response')
+        return SimpleNamespace(text='response', status_code=200)
     monkeypatch.setattr(manager, 'solve_ilan_captcha', renew)
     monkeypatch.setattr(manager, '_download_response', get)
     with ThreadPoolExecutor(max_workers=2) as pool:
@@ -545,7 +545,100 @@ def test_explicit_source_limits_stop_without_retry_or_login(monkeypatch, status,
         return SimpleNamespace(url=url, text='', status_code=status)
     monkeypatch.setattr(manager, '_download_response', get)
     assert manager.download_pdf('fixture') == (None, expected)
+    assert manager.download_pdf('next-fixture') == (None, expected)
     assert len(calls) == 1
+
+
+def test_one_viewer_request_per_session_with_parallel_download_workers(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    entered = threading.Event()
+    release = threading.Event()
+    second_entered = threading.Event()
+    calls = []
+    def get(url, **kwargs):
+        calls.append(url)
+        if len(calls) == 1:
+            entered.set()
+            assert release.wait(3)
+        else:
+            second_entered.set()
+        return SimpleNamespace(status_code=200)
+    monkeypatch.setattr(manager, '_download_response', get)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first = pool.submit(manager._get_view, 'first')
+        assert entered.wait(2)
+        second = pool.submit(manager._get_view, 'second')
+        assert not second_entered.wait(0.05)
+        release.set()
+        first.result(timeout=2)
+        second.result(timeout=2)
+    assert calls == ['first', 'second']
+
+
+def test_source_cooldown_does_not_send_waiting_requests(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    calls = []
+    def fail(url, **kwargs):
+        calls.append(url)
+        raise worker.requests.Timeout()
+    monkeypatch.setattr(manager, '_download_response', fail)
+    for _ in range(3):
+        with pytest.raises(worker.requests.Timeout):
+            manager._get_view('fixture')
+    assert manager.retry_view_at > time.monotonic() + 28
+    manager.download_deadline = time.monotonic() + 0.05
+    with pytest.raises(worker.requests.Timeout):
+        manager._get_view('queued')
+    assert len(calls) == 3
+
+
+def test_persistent_source_failure_stops_all_waiting_workers(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.view_cooldown = 0
+    calls = []
+    def fail(url, **kwargs):
+        calls.append(url)
+        raise worker.requests.Timeout()
+    monkeypatch.setattr(manager, '_download_response', fail)
+    for _ in range(9):
+        assert manager.download_pdf('fixture') == (None, 'VIEW_TIMEOUT')
+    for _ in range(16):
+        assert manager.download_pdf('queued') == (None, 'SOURCE_UNAVAILABLE')
+    assert len(calls) == 9
+
+
+def test_successful_view_resets_source_failure_windows(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.view_cooldown = 0
+    def fail(url, **kwargs):
+        raise worker.requests.Timeout()
+    monkeypatch.setattr(manager, '_download_response', fail)
+    for _ in range(3):
+        with pytest.raises(worker.requests.Timeout):
+            manager._get_view('fixture')
+    assert manager.failure_windows == 1
+    monkeypatch.setattr(manager, '_download_response', lambda *a, **kw: SimpleNamespace(status_code=200))
+    manager._get_view('recovered')
+    assert manager.failure_windows == manager.view_failures == 0
+    assert manager.source_stopped is None
+
+
+def test_parallel_pdf_sessions_do_not_mutate_viewer_cookies(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.session.cookies.set('authorized-session', 'fixture')
+    manager.session.headers['Referer'] = 'https://example.invalid/viewer'
+    first = manager._pdf_session()
+    assert first is manager._pdf_session()
+    assert first is not manager.session
+    assert first.cookies.get('authorized-session') == 'fixture'
+    first.cookies.set('authorized-session', 'file-response')
+    assert manager.session.cookies.get('authorized-session') == 'fixture'
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        second = pool.submit(manager._pdf_session).result()
+    assert second is not first
+    assert second.cookies.get('authorized-session') == 'fixture'
+    manager.session_generation += 1
+    assert manager._pdf_session().cookies.get('authorized-session') == 'fixture'
 
 
 def test_streamed_response_keeps_exact_bytes_and_releases_connection(monkeypatch):
