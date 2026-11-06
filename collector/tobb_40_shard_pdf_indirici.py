@@ -108,7 +108,8 @@ class TOBBSessionManager:
             if remaining <= 0:
                 raise requests.Timeout('Download response budget exhausted')
             response = session.get(url, verify=False, stream=True,
-                                   allow_redirects=False, timeout=min(timeout, remaining))
+                                   allow_redirects=False,
+                                   timeout=(min(5, remaining), min(timeout, remaining)))
             try:
                 if response.is_redirect:
                     url = requests.compat.urljoin(url, response.headers['Location'])
@@ -156,7 +157,10 @@ class TOBBSessionManager:
             with self.request_gate:
                 self.view_failures += 1
                 print(f'Viewer connection failure: {type(exc).__name__}; consecutive={self.view_failures}', flush=True)
-                if self.view_failures >= 3:
+                # A failed TCP connection means the endpoint cannot currently
+                # be reached. Do not open more connections before cooling down.
+                failure_limit = 1 if isinstance(exc, requests.ConnectTimeout) else 3
+                if self.view_failures >= failure_limit:
                     self.failure_windows += 1
                     self.view_failures = 0
                     if self.failure_windows >= 3:
@@ -179,13 +183,16 @@ class TOBBSessionManager:
             self.request_gate.wait_for(lambda: not self.renewing)
             if generation != self.session_generation:
                 return True
+            if self.download_deadline is not None and time.monotonic() >= self.download_deadline:
+                return False
             if (self.failed_renewal is not None and self.failed_renewal[0] == generation
                     and time.monotonic() - self.failed_renewal[1] < 60):
                 return False
             self.renewing = True
             self.request_gate.wait_for(lambda: self.active_views == 0)
         try:
-            self.auth_deadline = time.monotonic() + 60
+            self.auth_deadline = min(time.monotonic() + 60,
+                                     self.download_deadline or float('inf'))
             started = time.monotonic()
             print(f"Session maintenance started: {'ilan' if ilan else 'login'}", flush=True)
             if ilan:
@@ -209,7 +216,7 @@ class TOBBSessionManager:
         # Outer loops already retry requests. Retrying slow reads again inside
         # urllib3 multiplied renewal stalls into many minutes per PDF.
         adapter = HTTPAdapter(pool_connections=20, pool_maxsize=20,
-                              max_retries=Retry(total=1, connect=1, read=0, status=0, backoff_factor=0.2))
+                              max_retries=Retry(total=0, connect=0, read=0, status=0))
         s.mount("https://", adapter)
         s.mount("http://", adapter)
         return s

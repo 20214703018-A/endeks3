@@ -641,6 +641,66 @@ def test_parallel_pdf_sessions_do_not_mutate_viewer_cookies(monkeypatch):
     assert manager._pdf_session().cookies.get('authorized-session') == 'fixture'
 
 
+def test_pdf_transfers_overlap_after_serialized_viewer_preparation(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    both_transferring = threading.Event()
+    release = threading.Event()
+    transfers = []
+    def get(url, **kwargs):
+        if kwargs.get('pdf'):
+            transfers.append(url)
+            if len(transfers) == 2:
+                both_transferring.set()
+            assert release.wait(3)
+            return SimpleNamespace(status_code=200, content=b'%PDF fixture')
+        return SimpleNamespace(status_code=200, url=url,
+                               text='<embed src="/tmp_gazete/fixture.pdf">')
+    monkeypatch.setattr(manager, '_download_response', get)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first = pool.submit(manager.download_pdf, 'first')
+        second = pool.submit(manager.download_pdf, 'second')
+        try:
+            assert both_transferring.wait(2), 'file transfer blocked the viewer slot'
+        finally:
+            release.set()
+        assert first.result(timeout=2) == second.result(timeout=2) == (b'%PDF fixture', 'OK')
+
+
+def test_connect_budget_is_separate_from_pdf_preparation_budget(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    def get(url, **kwargs):
+        assert kwargs['timeout'] == (5, 45)
+        response = worker.requests.Response()
+        response.status_code = 200
+        response.raw = io.BytesIO(b'viewer response')
+        return response
+    monkeypatch.setattr(manager.session, 'get', get)
+    assert manager._download_response('https://example.invalid/view', timeout=45, budget=90).content == b'viewer response'
+    retries = manager.session.get_adapter('https://').max_retries
+    assert retries.total == retries.connect == retries.read == 0
+
+
+def test_failed_tcp_connection_cools_down_before_any_more_connections(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    calls = []
+    def fail(*args, **kwargs):
+        calls.append(1)
+        raise worker.requests.ConnectTimeout()
+    monkeypatch.setattr(manager, '_download_response', fail)
+    assert manager.download_pdf('fixture') == (None, 'VIEW_TIMEOUT')
+    assert manager.failure_windows == 1
+    assert manager.retry_view_at > time.monotonic() + 28
+    assert len(calls) == 1
+
+
+def test_run_deadline_prevents_starting_more_session_maintenance(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.download_deadline = time.monotonic() - 1
+    monkeypatch.setattr(manager, 'solve_ilan_captcha', lambda **kw: pytest.fail('run already ended'))
+    assert not manager._renew_session(0, ilan=True)
+    assert not manager.renewing
+
+
 def test_streamed_response_keeps_exact_bytes_and_releases_connection(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
     response = worker.requests.Response()
