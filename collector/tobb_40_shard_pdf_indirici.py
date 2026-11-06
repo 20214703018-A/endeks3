@@ -59,6 +59,45 @@ class SourceUnavailable(requests.RequestException):
         super().__init__(status)
 
 
+class SourceRequestGate:
+    """Pace every request, including redirects and session maintenance."""
+
+    def __init__(self, deadline):
+        self.interval = 0.0
+        self.next_at = 0.0
+        self.condition = threading.Condition()
+        self.deadline = deadline
+        self.started = 0
+
+    def wait(self):
+        with self.condition:
+            while True:
+                now = time.monotonic()
+                stop_at = self.deadline()
+                if stop_at is not None and now >= stop_at:
+                    raise requests.Timeout('Run deadline reached before source request')
+                if now >= self.next_at:
+                    self.next_at = now + self.interval
+                    self.started += 1
+                    return
+                delay = self.next_at - now
+                if stop_at is not None:
+                    delay = min(delay, stop_at - now)
+                self.condition.wait(timeout=min(1, delay))
+
+
+class PacedSession(requests.Session):
+    def __init__(self, gate):
+        super().__init__()
+        self.gate = gate
+
+    def send(self, request, **kwargs):
+        # requests calls send again for automatic redirects, so those share
+        # the same quota as login, viewer and file requests on all threads.
+        self.gate.wait()
+        return super().send(request, **kwargs)
+
+
 class TOBBSessionManager:
     """Yüksek hızlı persistent Keep-Alive TOBB oturum yöneticisi."""
 
@@ -67,6 +106,8 @@ class TOBBSessionManager:
         self.user_pass = user_pass
         self.tesseract_bin = tesseract_bin
         self.lock = threading.Lock()
+        self.download_deadline = None
+        self.network_gate = SourceRequestGate(lambda: self.download_deadline)
         self.session = self._create_session()
         self.is_authenticated = False
         self.session_generation = 0
@@ -76,7 +117,6 @@ class TOBBSessionManager:
         self.auth_deadline = None
         self.failed_renewal = None
         self.reported_view_states = set()
-        self.download_deadline = None
         self.pdf_sessions = threading.local()
         self.view_failures = 0
         self.failure_windows = 0
@@ -214,7 +254,7 @@ class TOBBSessionManager:
                 self.request_gate.notify_all()
 
     def _create_session(self):
-        s = requests.Session()
+        s = PacedSession(self.network_gate)
         s.headers.update({
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0.0.0 Safari/537.36"
         })
@@ -521,10 +561,14 @@ def main():
     parser.add_argument("--max-pdfs", type=int, default=50000, help="Bu shard'ın indirebileceği maksimum tekil PDF sayfası")
     parser.add_argument("--threads", type=int, default=8, help="Paralel indirme iş parçacığı sayısı (Varsayılan: 8)")
     parser.add_argument("--bundle-size", type=int, default=BUNDLE_SIZE)
+    parser.add_argument("--request-interval", type=float, default=3.0,
+                        help="Minimum seconds between all TOBB requests on this runner")
     args = parser.parse_args()
 
     if not 1 <= args.shard <= args.num_shards or min(args.threads, args.bundle_size, args.max_pdfs, args.max_seconds) < 1:
         parser.error("shard/num-shards and limits must be positive and valid")
+    if not 0 < args.request_interval <= 60:
+        parser.error("request-interval must be between 0 and 60 seconds")
 
     shard_id = args.shard
     num_shards = args.num_shards
@@ -564,10 +608,12 @@ def main():
     # lookups. Read the master without changing its 40-runner snapshot.
 
     mgr = TOBBSessionManager(USER_EMAIL, USER_PASS, TESSERACT_BIN)
+    mgr.download_deadline = time.monotonic() + max(0, deadline - time.time())
+    mgr.network_gate.interval = args.request_interval
+    print(f"Source request interval: {args.request_interval:g}s (all routes and redirects)", flush=True)
     if not mgr.login():
         print(f"❌ [Shard {shard_id}] TOBB Yetkili Girişi açılamadı, çıkılıyor.", flush=True)
         sys.exit(1)
-    mgr.download_deadline = time.monotonic() + max(0, deadline - time.time())
 
     total_downloaded = 0
     total_announcements_covered = 0
@@ -726,6 +772,7 @@ def main():
                   f"{total_downloaded*3600/elapsed:.0f} pages/hour; "
                   f"download_errors={download_errors}, archive_errors={len(archive_errors)}", flush=True)
             print(f"Source status totals: {source_statuses}", flush=True)
+            print(f"Source HTTP requests started: {mgr.network_gate.started}", flush=True)
     if fatal_error or archive_errors:
         return 1
     return 0

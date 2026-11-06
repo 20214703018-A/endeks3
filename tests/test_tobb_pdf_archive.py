@@ -173,7 +173,7 @@ def test_worker_overlaps_downloads_and_uploads_and_merges_confirmed_only(tmp_pat
 
     class Session:
         def __init__(self, *args):
-            pass
+            self.network_gate = SimpleNamespace(interval=0, started=0)
 
         def login(self):
             return True
@@ -213,7 +213,7 @@ def test_worker_returns_failure_and_retains_unpublished_data(tmp_path, monkeypat
     data = make_pdf()
     class Session:
         def __init__(self, *args):
-            pass
+            self.network_gate = SimpleNamespace(interval=0, started=0)
         def login(self):
             return True
         def download_pdf(self, guid):
@@ -278,7 +278,7 @@ def test_slow_pdf_does_not_block_next_200_page_batch(tmp_path, monkeypatch):
     slow_finished = threading.Event()
     class Session:
         def __init__(self, *args):
-            pass
+            self.network_gate = SimpleNamespace(interval=0, started=0)
         def login(self):
             return True
         def download_pdf(self, guid):
@@ -762,6 +762,50 @@ def test_viewer_starts_are_paced_without_serializing_file_transfers(monkeypatch)
     manager._get_view('first')
     manager._get_view('second')
     assert starts == [100.0, 101.0]
+
+
+def test_source_gate_covers_auth_redirects_and_separate_pdf_connections(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.network_gate.interval = 3
+    now, starts = [100.0], []
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    monkeypatch.setattr(manager.network_gate.condition, 'wait', lambda timeout: now.__setitem__(0, now[0] + timeout))
+    class Adapter(worker.requests.adapters.BaseAdapter):
+        def send(self, request, **kwargs):
+            starts.append((request.method, request.url, now[0]))
+            response = worker.requests.Response()
+            response.request = request
+            response.url = request.url
+            response.status_code = 302 if request.url.endswith('/redirect') else 200
+            response.headers['Location'] = '/final'
+            response._content = b''
+            response._content_consumed = True
+            return response
+        def close(self):
+            pass
+    manager.session.mount('https://', Adapter())
+    pdf_session = manager._pdf_session()
+    pdf_session.mount('https://', Adapter())
+    manager.session.get('https://example.invalid/redirect')
+    pdf_session.get('https://example.invalid/file.pdf')
+    manager.session.post('https://example.invalid/maintenance', data={'fixture': 'test'})
+    assert [item[2] for item in starts] == [100, 103, 106, 109]
+    assert [item[0] for item in starts] == ['GET', 'GET', 'GET', 'POST']
+    assert manager.network_gate.started == 4
+    assert pdf_session.gate is manager.session.gate
+
+
+def test_source_gate_does_not_start_a_request_past_run_deadline(monkeypatch):
+    now = [100.0]
+    gate = worker.SourceRequestGate(lambda: 102)
+    gate.interval = 3
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    monkeypatch.setattr(gate.condition, 'wait', lambda timeout: now.__setitem__(0, now[0] + timeout))
+    gate.wait()
+    with pytest.raises(worker.requests.Timeout):
+        gate.wait()
+    assert gate.started == 1
+    assert now == [102]
 
 
 def test_streamed_response_keeps_exact_bytes_and_releases_connection(monkeypatch):
