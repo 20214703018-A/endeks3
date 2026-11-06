@@ -7,17 +7,34 @@ Tar/gzip yalnızca özgün dosyaları bir arşiv paketine koyar.
 
 ## İndirme akışı
 
-- 40 runner; runner başına 1/2/4/8 eşzamanlı indirme seçilebilir (varsayılan 8).
+- 40 runner; runner başına 1/2/4/8 eşzamanlı dosya indirme seçilebilir
+  (varsayılan 8). Aynı oturumda PDF hazırlayan görüntüleyici isteği tek sırada
+  ilerler; PDF dosyaları ayrı, işçiye özel bağlantı havuzlarıyla paralel indirilir.
+  Dosya yanıtlarının çerezleri görüntüleyicinin yetkili oturumunu değiştirmez.
 - Eski 200 isteğin tamamlanmasını bekleyen bariyer kaldırıldı. Her tamamlanan
   isteğin yerine hemen yeni iş verilir; kuyruk işçi sayısının iki katıyla sınırlıdır.
 - Ağ zaman aşımında aynı PDF üzerinde dört kez beklenmez; diğer PDF'lere geçilir.
   Başarısız dosya DB'de tamamlandı sayılmaz ve sonraki koşuda yeniden seçilebilir.
 - Her görüntüleyici/PDF yanıtı, yönlendirmeleri ve parça parça gelen içeriği
-  kapsayan 45 saniyelik bütçeye tabidir. Son blok okuması soket zaman aşımı kadar
+  kapsayan 90 saniyelik bütçeye tabidir. TCP bağlantısı için 5 saniye, görüntüleyici
+  yanıtı için 45 saniye, PDF veri okuması için 15 saniye soket süreleri ayrıdır.
+  Alttaki HTTP adaptöründe tekrar yoktur. Görüntüleyici için veri bekleme süresi
+  12'den 45 saniyeye çıkarılmıştır; hazırlanmakta olan PDF'ye ait istek art arda
+  yarıda bırakılmaz. Son blok okuması soket zaman aşımı kadar
   uzayabilir. Koşu bitiş zamanı da yeni istekleri ve içerik okumalarını sınırlar.
+- Görüntüleyici başlangıçları arasında en az 1 saniye bırakılır; dosya aktarımı
+  bu aralık tarafından serileştirilmez. TCP bağlantısı kurulamıyorsa hemen, diğer
+  bağlantı hatalarında üç ardışık başarısızlık sonrasında 30 saniye beklenir; ardından tek
+  istekle yeniden denenir. Sonraki hata penceresinde 60 saniye beklenir. Üçüncü
+  hata penceresi de başarısızsa kaynak erişilemez olarak durulur. Bekleyen işçiler
+  yüzlerce yeni istek göndermez. Başarılı yanıt hata sayaçlarını sıfırlar.
 - Oturum yenilemeleri ortak sürüm sayacıyla birleştirilir; yenilemeden önce
   mevcut görüntüleyici istekleri boşaltılır. İlan doğrulamasının normal form
   gönderimi ve başarılı yönlendirmesi tamamlanır.
+- Görüntüleyicinin HTTP 200 içinde döndürdüğü görünür “Giriş yapmalısınız”
+  bildirimi de oturum yenilemesi başlatır. Sadece menüdeki giriş bağlantısı,
+  ortak giriş modalı veya script içindeki metin oturum kaybı sayılmaz.
+  Yenileme başarısızsa `AUTH_REQUIRED` raporlanır; `NO_PDF` olarak gizlenmez.
 - Açık 429/403 yanıtında shard durur; erişim kontrolü nedeniyle başarısız koşu
   kendiliğinden yeniden başlatılmaz.
 
@@ -69,10 +86,43 @@ kapasitesi ayırmak için metadata toplama matrisi geçici olarak duraklatıldı
 python -m pytest -q tests/test_tobb_pdf_archive.py
 ```
 
-37 test: özgün byte/hash koruması, bozuk PDF reddi, yükleme hatasında dosya koruma,
+50 test: özgün byte/hash koruması, bozuk PDF reddi, yükleme hatasında dosya koruma,
 manifest checksum, shard dağılımı, master rollback ve sayfa kimliği, eşzamanlı
 indirme/yükleme, oturum yenilemelerini birleştirme, ağ yanıtı/yönlendirme bütçesi,
 koşu bitişi ve açık kaynak erişim sınırları. Önceki isteğe bağlı kayıpsız PDF
 optimizasyonunun testleri de regresyon amacıyla bulunur; üretim işçisi bu
 optimizasyonu çağırmaz. Testler TOBB'ye bağlanmaz veya Release'e dosya yüklemez.
 GitHub CI aynı paketi Python 3.11 Ubuntu üzerinde çalıştırır.
+
+## 6 Kasım akşam bağlantı düzeltmesi
+
+- Eksik PDF bağlantılı 895.124 ilan kaydının GUID biçimi tarandı; tamamı geçerli
+  UUID idi. Sayı tekil PDF sayısı değil, incelenen ilan kaydı sayısıdır.
+- Eski `42228495645` koşusu durduruldu; birleştirme işi `128110503929` başarıyla
+  tamamlandı. Kurtarılmamış PDF artifact'i yoktu. Master 19:38:13 UTC'de yayımlandı.
+- `afca571` sürümü için `42282414201` CI koşusunda 42 test geçti.
+- Aynı işçi istemcisiyle anonim ana sayfa kontrolü HTTP 200 / 0,27 saniyeydi.
+  Genel site kesintisi veya IP engeli teşhisi konulmadı. Oturum/görüntüleyici
+  erişim kontrolünü aşan hesap, IP veya istemci kimliği değiştirme eklenmedi.
+
+- İlk seri görüntüleyici kontrolü `42282416927`: 10 + 12 = 22 PDF arşivlendi.
+  `ConnectTimeout` hatalarının 45 saniyelik birleşik timeout, iki DNS adresi ve
+  adaptör tekrarı nedeniyle yaklaşık 180 saniyeye uzadığı logda görüldü. Bu
+  kontrol, sürekli indirme sorununu çözmüş sayılmadı.
+- `52a4fdd`: bağlantı/okuma süreleri ayrıldı; adaptör tekrarları kaldırıldı,
+  koşu bitişi oturum bakımını da sınırlar. `ea5b5db`: görüntüleyici hazırlığı
+  saniyede birle sınırlı; dosya aktarımları paralel. `42284507569` CI geçti
+  (47 test).
+- `42284507548` canlı kontrolü: 11 + 12 = 23 PDF, 30 ilan bağlantısı kalıcı
+  arşivlendi. Arşivleme hatası 0. İki runner da ilk dosyalardan sonra TCP
+  bağlantısı kuramadı ve üç toparlanma penceresi sonunda `SOURCE_UNAVAILABLE`
+  ile durdu. Birleştirme işi `128123657478` başarılı; genel koşu başarısızdır.
+  Kısa loglardaki 280 PDF/saat sürdürülebilir hız veya 40 runner tahmini değildir.
+- Tekil, anonim GUID kontrolünde resmî görüntüleyici HTTP 200 ile “Giriş
+  yapmalısınız” bildirimi döndürdü. GUID tek başına PDF erişimi sağlamadı.
+  Bu yanıtı `NO_PDF` sayan oturum sınıflandırması düzeltildi; üç yeni test
+  başarılı yenilemeyi, başarısız yenilemeyi ve ortak menü/script ayrımını kapsar.
+  Bu düzeltme TCP kesintisinin çözülmüş olduğunu göstermez.
+- Aynı hatayla tekrar 40 runner başlatılmaması için PDF workflow'u
+  `disabled_manually` durumuna alındı. Sürekli toplu indirme sorunu açıktır;
+  doğrulanmış bir CAPTCHA/erişim kontrolü aşımı veya sınırsız indirme iddiası yoktur.

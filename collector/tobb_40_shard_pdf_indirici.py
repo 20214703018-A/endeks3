@@ -3,7 +3,7 @@
 """TOBB 40-runner PDF worker with bounded asynchronous archival.
 
 Eight existing download workers feed one archive/upload worker. Every PDF is
-losslessly optimized and verified before publication. Only confirmed Release
+preserved byte-for-byte and verified before publication. Only confirmed Release
 uploads are recorded as completed; failed archives remain recoverable.
 """
 
@@ -19,6 +19,7 @@ import subprocess
 import argparse
 import tempfile
 import threading
+from html import unescape
 from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
 from collections import deque
 from pathlib import Path
@@ -376,10 +377,18 @@ class TOBBSessionManager:
                     continue
                 return None, "AUTH_REQUIRED"
 
-            # Menu/footer links do not mean the user's session has ended.
+            # The official viewer also returns HTTP 200 with a visible login
+            # notice instead of redirecting. Ignore scripts and static menu or
+            # modal markup: their mere presence does not indicate expired auth.
+            visible_text = unescape(re.sub(r'<[^>]+>', ' ', re.sub(
+                r'<(script|style)\b[^>]*>.*?</\1\s*>', ' ', raw_resp,
+                flags=re.I | re.S)))
+            login_notice = re.search(r'\bgiriş\s+yapmalısınız\b', visible_text, re.I)
             if (urlparse(r_view.url).path.lower().endswith('/girisyap.php') or
-                    re.search(r'(?:window\.)?location(?:\.href)?\s*=\s*[\"\'][^\"\']*girisyap\.php', raw_resp, re.I)):
-                self._renew_session(generation)
+                    re.search(r'(?:window\.)?location(?:\.href)?\s*=\s*[\"\'][^\"\']*girisyap\.php', raw_resp, re.I) or
+                    login_notice):
+                if not self._renew_session(generation):
+                    return None, 'AUTH_REQUIRED'
                 continue
 
             if r_view.status_code == 200:

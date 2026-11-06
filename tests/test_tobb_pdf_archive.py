@@ -359,6 +359,50 @@ def test_failed_ilan_renewal_returns_explicit_status_without_relogin(monkeypatch
     assert manager.download_pdf('fixture') == (None, 'AUTH_REQUIRED')
 
 
+def test_http_200_login_notice_renews_session_before_retrying_guid(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    renewals, views = [], []
+    def get(url, **kwargs):
+        if url.endswith('.pdf'):
+            return SimpleNamespace(content=b'%PDF fixture', status_code=200)
+        views.append(url)
+        html = ('<h2>GİRİŞ YAPMALISINIZ</h2><p>İlan görüntülemek ve ilan alımı '
+                'için giriş yapmalısınız.</p>' if len(views) == 1 else
+                '<embed src="/tmp_gazete/fixture.pdf">')
+        return SimpleNamespace(url=url, text=html, status_code=200)
+    def renew(generation, ilan=False):
+        renewals.append(ilan)
+        return True
+    monkeypatch.setattr(manager, '_download_response', get)
+    monkeypatch.setattr(manager, '_renew_session', renew)
+    assert manager.download_pdf('fixture') == (b'%PDF fixture', 'OK')
+    assert renewals == [False]
+    assert len(views) == 2
+
+
+def test_static_login_menu_and_script_notice_do_not_trigger_renewal(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    html = ('<a href="girisyap.php">Giriş Yap</a><form id="FormUyeGirisi"></form>'
+            '<script>const help="GİRİŞ YAPMALISINIZ";</script>PDF bulunamadı')
+    monkeypatch.setattr(manager, '_download_response', lambda url, **kw: SimpleNamespace(
+        url=url, text=html, status_code=200))
+    monkeypatch.setattr(manager, '_renew_session', lambda *a, **kw: pytest.fail('static login markup'))
+    assert manager.download_pdf('fixture') == (None, 'NO_PDF')
+
+
+def test_failed_http_200_login_renewal_is_auth_required_not_missing_pdf(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    monkeypatch.setattr(manager, '_download_response', lambda url, **kw: SimpleNamespace(
+        url=url, text='<h2>GİRİŞ <span>YAPMALISINIZ</span></h2>', status_code=200))
+    renewals = []
+    def renew(generation, ilan=False):
+        renewals.append(ilan)
+        return False
+    monkeypatch.setattr(manager, '_renew_session', renew)
+    assert manager.download_pdf('fixture') == (None, 'AUTH_REQUIRED')
+    assert renewals == [False]
+
+
 def test_expired_renewal_budget_performs_no_network_requests(monkeypatch):
     manager = worker.TOBBSessionManager('', '', '')
     manager.auth_deadline = time.monotonic() - 1
