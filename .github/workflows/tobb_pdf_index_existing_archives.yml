@@ -1,0 +1,112 @@
+name: TOBB PDF Existing Archive Recovery
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tobb_gazete_pdf_matrix
+  cancel-in-progress: false
+
+jobs:
+  inventory:
+    runs-on: macos-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Inventory existing unindexed archives
+        run: |
+          gh release download warehouse-pdf-1 -p turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          gunzip turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          gh release download warehouse-pdf-20 -p tobb_pdf_archive_catalog.sqlite.gz || true
+          if [ -f tobb_pdf_archive_catalog.sqlite.gz ]; then gunzip tobb_pdf_archive_catalog.sqlite.gz; fi
+          python tools/index_tobb_release_archives.py inventory turkiye_ticaret_sicil_ve_sirketler.sqlite archive_inventory.json --previous tobb_pdf_archive_catalog.sqlite
+      - uses: actions/upload-artifact@v4
+        with:
+          name: archive-inventory
+          path: archive_inventory.json
+          retention-days: 30
+
+  scan:
+    needs: inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        shard: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests 'pikepdf>=10,<11'
+      - uses: actions/download-artifact@v4
+        with:
+          name: archive-inventory
+      - name: Validate PDFs and build page index
+        run: python tools/index_tobb_release_archives.py scan archive_inventory.json archive_index_${{ matrix.shard }}.sqlite --shard ${{ matrix.shard }} --shards 40
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: archive-index-${{ matrix.shard }}
+          path: archive_index_*
+          retention-days: 30
+
+  merge:
+    needs: [inventory, scan]
+    if: always() && needs.inventory.result == 'success'
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: archive-index-*
+          path: indices
+      - name: Restore current master and catalog
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/warehouse-pdf-1" > release_before.json
+          gh release download warehouse-pdf-1 -p turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          gunzip turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          gh release download warehouse-pdf-20 -p tobb_pdf_archive_catalog.sqlite.gz || true
+          if [ -f tobb_pdf_archive_catalog.sqlite.gz ]; then gunzip tobb_pdf_archive_catalog.sqlite.gz; fi
+      - name: Fill only missing references from validated PDF files
+        run: python tools/index_tobb_release_archives.py merge indices turkiye_ticaret_sicil_ve_sirketler.sqlite tobb_pdf_archive_catalog.sqlite --summary archive_recovery_summary.json
+      - name: Guard concurrent writes and publish
+        run: |
+          gzip -6 -c turkiye_ticaret_sicil_ve_sirketler.sqlite > turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          gzip -6 -c tobb_pdf_archive_catalog.sqlite > tobb_pdf_archive_catalog.sqlite.gz
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/warehouse-pdf-1" > release_now.json
+          python - <<'PY'
+          import json
+          def identity(path):
+              a=next(a for a in json.load(open(path))['assets'] if a['name']=='turkiye_ticaret_sicil_ve_sirketler.sqlite.gz')
+              return a['id'],a['size'],a['updated_at']
+          assert identity('release_before.json')==identity('release_now.json'),'Master changed; refusing overwrite'
+          PY
+          gh release upload warehouse-pdf-1 turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
+          gh release upload warehouse-latest turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
+          gh release upload warehouse-pdf-20 tobb_pdf_archive_catalog.sqlite.gz --clobber
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: archive-recovery-summary
+          path: |
+            archive_recovery_summary.json
+            release_before.json
+            indices/**/*.json
+          retention-days: 30

@@ -17,7 +17,7 @@ permissions:
   actions: read
 
 concurrency:
-  group: tobb-pdf-master-recovery
+  group: tobb_gazete_pdf_matrix
   cancel-in-progress: false
 
 jobs:

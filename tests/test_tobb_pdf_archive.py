@@ -20,6 +20,7 @@ from collector.tobb_pdf_archive import (
 )
 from geoprop.apply_shard_pdf_updates import merge_pdf_updates
 from tools.recover_tobb_raw_artifacts import recover_raw
+from tools import index_tobb_release_archives as archive_index
 
 
 def make_pdf(signature=False):
@@ -34,6 +35,73 @@ def make_pdf(signature=False):
         out = io.BytesIO()
         pdf.save(out, compress_streams=False)
         return out.getvalue()
+
+
+def existing_archive(path, files, bad_manifest=False):
+    with tarfile.open(path, 'w:gz') as archive:
+        manifest = []
+        for name, content in files:
+            member = tarfile.TarInfo(name)
+            member.size = len(content)
+            archive.addfile(member, io.BytesIO(content))
+            manifest.append(dict(file=name, stored_sha256='invalid' if bad_manifest else hashlib.sha256(content).hexdigest()))
+        raw = json.dumps(dict(files=manifest)).encode()
+        member = tarfile.TarInfo('manifest.json')
+        member.size = len(raw)
+        archive.addfile(member, io.BytesIO(raw))
+
+
+def test_archive_index_fills_missing_pages_without_replacing_existing_references(tmp_path):
+    source = tmp_path / 'source.tar.gz'
+    data = make_pdf()
+    existing_archive(source, [('5000_1_TSM_abcdef01.pdf', data), ('5000_2_TSM_abcdef02.pdf', data)])
+    indices = tmp_path / 'indices'
+    indices.mkdir()
+    asset = dict(asset_id=1, bucket='warehouse-pdf-7', name='gazete_pdf_shard_1_fixture.tar.gz', byte_size=source.stat().st_size, updated_at='2026-11-06')
+    with archive_index.catalog(indices / 'archive_index_1.sqlite') as conn:
+        assert archive_index.index_archive(source, asset, conn) == 2
+    master = tmp_path / 'master.sqlite'
+    with database(master) as conn:
+        insert(conn, 1)
+        insert(conn, 2)
+        insert(conn, 3, page='2')
+        conn.execute("UPDATE ticaret_sicil_gazetesi_ilanlari SET pdf_dosya_yolu='existing-confirmed-reference' WHERE id=3")
+    output = tmp_path / 'catalog.sqlite'
+    result = archive_index.merge(indices, master, output)
+    assert result['added_unique_pages'] == 1
+    assert result['added_announcement_links'] == 2
+    with sqlite3.connect(master) as conn:
+        assert conn.execute('SELECT pdf_dosya_yolu FROM ticaret_sicil_gazetesi_ilanlari WHERE id=3').fetchone() == ('existing-confirmed-reference',)
+        assert conn.execute("SELECT count(*) FROM ticaret_sicil_gazetesi_ilanlari WHERE pdf_dosya_yolu LIKE 'release://warehouse-pdf-7/%'").fetchone()[0] == 2
+    assert archive_index.merge(indices, master, output)['added_unique_pages'] == 0
+
+
+@pytest.mark.parametrize('failure', ['checksum', 'path', 'invalid_pdf'])
+def test_archive_index_rejects_bad_archive_without_partial_catalog_entries(tmp_path, failure):
+    path = tmp_path / 'source.tar.gz'
+    data = b'not a PDF' if failure == 'invalid_pdf' else make_pdf()
+    name = '../5000_1_TSM_abcdef01.pdf' if failure == 'path' else '5000_1_TSM_abcdef01.pdf'
+    existing_archive(path, [(name, data)], bad_manifest=failure == 'checksum')
+    asset = dict(asset_id=1, bucket='warehouse-pdf-7', name='source.tar.gz', byte_size=path.stat().st_size, updated_at='2026-11-06')
+    with archive_index.catalog(tmp_path / 'catalog.sqlite') as conn:
+        with pytest.raises((ValueError, pikepdf.PdfError)):
+            archive_index.index_archive(path, asset, conn)
+        assert conn.execute('SELECT count(*) FROM pages').fetchone() == (0,)
+        assert conn.execute('SELECT count(*) FROM archives').fetchone() == (0,)
+
+
+def test_archive_inventory_skips_previously_scanned_immutable_assets(tmp_path, monkeypatch):
+    master = tmp_path / 'master.sqlite'
+    database(master).close()
+    previous = tmp_path / 'catalog.sqlite'
+    with archive_index.catalog(previous) as conn:
+        conn.execute('INSERT INTO archives VALUES (1,?,?,?,?,?)', ('warehouse-pdf-1', 'gazete_pdf_shard_1_fixture.tar.gz', 123, '2026-11-06', 1))
+    def metadata(argv):
+        assets = [dict(id=i, name=f'gazete_pdf_shard_1_{i}.tar.gz', size=123, updated_at='2026-11-06', browser_download_url='fixture') for i in [1,2]] if argv[-1].endswith('/warehouse-pdf-1') else []
+        return json.dumps(dict(assets=assets)).encode()
+    monkeypatch.setattr(archive_index.subprocess, 'check_output', metadata)
+    result = archive_index.inventory(master, tmp_path / 'inventory.json', previous)
+    assert [a['asset_id'] for a in result] == [2]
 
 
 def database(path=':memory:'):
