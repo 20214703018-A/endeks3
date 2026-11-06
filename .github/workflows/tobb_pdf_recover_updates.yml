@@ -1,0 +1,97 @@
+name: TOBB PDF Confirmed Updates Recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: Completed PDF run containing shard-pdf-update artifacts
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: tobb-pdf-master-recovery
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    # A separate runner class keeps recovery independent of Linux mining slots.
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SOURCE_RUN: ${{ inputs.source_run }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate source run
+        run: |
+          python -c 'import os; assert os.environ["SOURCE_RUN"].isdigit()'
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN" > source_run.json
+          python -c 'import json; d=json.load(open("source_run.json")); assert d["status"]=="completed"; assert d["path"]==".github/workflows/tobb_gazete_pdf_40_nodes.yml"'
+      - name: Restore exact current master and confirmed shard updates
+        run: |
+          mkdir -p warehouse/product
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/warehouse-pdf-1" > release_before.json
+          gh release download warehouse-pdf-1 -p turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --dir warehouse/product
+          gh run download "$SOURCE_RUN" --pattern 'shard-pdf-update-*' --dir recovered_updates
+          gunzip warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+      - name: Merge only confirmed release references
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import sqlite3
+          updates=list(Path('recovered_updates').rglob('shard_*_updates.sqlite'))
+          assert updates, 'No shard updates to recover'
+          for path in updates:
+              with sqlite3.connect(path) as conn:
+                  rows=conn.execute('SELECT pdf_dosya_yolu FROM gazete_pdf_updates').fetchall()
+                  assert all(ref.startswith('release://') for (ref,) in rows), path
+          PY
+          python geoprop/apply_shard_pdf_updates.py recovered_updates warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
+          python - <<'PY'
+          from pathlib import Path
+          import sqlite3,json
+          expected={}
+          for path in Path('recovered_updates').rglob('shard_*_updates.sqlite'):
+              with sqlite3.connect(path) as conn:
+                  expected.update(conn.execute('SELECT id,pdf_dosya_yolu FROM gazete_pdf_updates'))
+          with sqlite3.connect('warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite') as master:
+              for rid,ref in expected.items():
+                  assert master.execute('SELECT pdf_dosya_yolu FROM ticaret_sicil_gazetesi_ilanlari WHERE id=?',(rid,)).fetchone()==(ref,),rid
+              assert master.execute('PRAGMA quick_check').fetchone()==('ok',)
+          summary={'announcement_links':len(expected),'unique_pdf_files':len(set(expected.values()))}
+          Path('recovery_summary.json').write_text(json.dumps(summary,indent=2))
+          print(summary)
+          PY
+      - name: Guard against concurrent master replacement and publish
+        run: |
+          gzip -6 -c warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/warehouse-pdf-1" > release_now.json
+          python - <<'PY'
+          import json
+          name='turkiye_ticaret_sicil_ve_sirketler.sqlite.gz'
+          def identity(path):
+              assets=json.load(open(path))['assets']
+              asset=next(a for a in assets if a['name']==name)
+              return asset['id'],asset['size'],asset['updated_at']
+          assert identity('release_before.json')==identity('release_now.json'),'Master changed concurrently; refusing overwrite'
+          PY
+          gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
+          gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
+      - name: Preserve recovery evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tobb-pdf-recovery-${{ inputs.source_run }}
+          path: |
+            recovered_updates/
+            recovery_summary.json
+            source_run.json
+            release_before.json
+          retention-days: 30
