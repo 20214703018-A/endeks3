@@ -2,6 +2,9 @@ name: TOBB PDF Existing Archive Recovery
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ['GEOPROP TOBB 40x Gazete PDF Arşiv Matrisi']
+    types: [completed]
 
 permissions:
   contents: write
@@ -12,8 +15,12 @@ concurrency:
 
 jobs:
   inventory:
+    if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: macos-latest
     timeout-minutes: 15
+    outputs:
+      shards: ${{ steps.plan.outputs.shards }}
+      shard_count: ${{ steps.plan.outputs.shard_count }}
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -22,12 +29,20 @@ jobs:
         with:
           python-version: '3.11'
       - name: Inventory existing unindexed archives
+        id: plan
         run: |
           gh release download warehouse-pdf-1 -p turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
           gunzip turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
           gh release download warehouse-pdf-20 -p tobb_pdf_archive_catalog.sqlite.gz || true
           if [ -f tobb_pdf_archive_catalog.sqlite.gz ]; then gunzip tobb_pdf_archive_catalog.sqlite.gz; fi
           python tools/index_tobb_release_archives.py inventory turkiye_ticaret_sicil_ve_sirketler.sqlite archive_inventory.json --previous tobb_pdf_archive_catalog.sqlite
+          python - <<'PY'
+          import json,os
+          count=min(40,max(1,len(json.load(open('archive_inventory.json')))))
+          with open(os.environ['GITHUB_OUTPUT'],'a') as output:
+              print('shard_count='+str(count),file=output)
+              print('shards='+json.dumps(list(range(1,count+1))),file=output)
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: archive-inventory
@@ -42,7 +57,7 @@ jobs:
       fail-fast: false
       max-parallel: 8
       matrix:
-        shard: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
+        shard: ${{ fromJSON(needs.inventory.outputs.shards) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -53,7 +68,7 @@ jobs:
         with:
           name: archive-inventory
       - name: Validate PDFs and build page index
-        run: python tools/index_tobb_release_archives.py scan archive_inventory.json archive_index_${{ matrix.shard }}.sqlite --shard ${{ matrix.shard }} --shards 40
+        run: python tools/index_tobb_release_archives.py scan archive_inventory.json archive_index_${{ matrix.shard }}.sqlite --shard ${{ matrix.shard }} --shards ${{ needs.inventory.outputs.shard_count }}
       - uses: actions/upload-artifact@v4
         if: always()
         with:
