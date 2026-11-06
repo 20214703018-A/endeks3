@@ -28,7 +28,9 @@ biteceği henüz canlı ölçümle kanıtlanmış değildir.
 30 saniye sonra ayrıca arşivlenir. Bakım sırasında yeni viewer istekleri durur;
 oturum yenileme için nominal 60 saniyelik toplam deneme bütçesi uygulanır. İç içe
 ağ okuma tekrarları kaldırılmıştır. Genel menüdeki giriş bağlantısı oturum
-kapanması olarak değerlendirilmez.
+kapanması olarak değerlendirilmez. Giriş görselinde mevcut tek kelime okuması
+(PSM 8), farklı düzende olan ilan görselinde tek satır okuması (PSM 7) kullanılır;
+ilan formunun multipart/XHR isteği ve başarılı yönlendirmesi tamamlanır.
 
 ## İçerik koruması
 
@@ -83,7 +85,7 @@ python tools/benchmark_tobb_pdf_archive.py warehouse/raw/gazete_sayfalari \
   --step 16 --limit 100 --dpi 150 --report /tmp/tobb-pdf-benchmark.json
 ```
 
-27 test; yükleme hatası, bozuk PDF, imza, ek/metadata koruması, checksum,
+28 test; yükleme hatası, bozuk PDF, imza, ek/metadata koruması, checksum,
 shard dağılımı, master rollback, indirme/yükleme örtüşmesi, çalışan kova tercihi
 oturum yenileme tekrarlarının önlenmesi ve yavaş PDF'nin sonraki 200 görevlik grubu engellememesini kapsar.
 Benchmark için pikepdf ve PyMuPDF, testler için pikepdf/requests/pytest gerekir.

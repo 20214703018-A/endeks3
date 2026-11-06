@@ -124,7 +124,7 @@ class TOBBSessionManager:
         s.mount("http://", adapter)
         return s
 
-    def solve_ocr_captcha(self, captcha_url):
+    def solve_ocr_captcha(self, captcha_url, psm=8):
         for _ in range(5):
             if self.auth_deadline and time.monotonic() >= self.auth_deadline:
                 return None
@@ -140,7 +140,7 @@ class TOBBSessionManager:
                 try:
                     out = subprocess.check_output([
                         self.tesseract_bin, tmp_p, "stdout",
-                        "--psm", "8",
+                        "--psm", str(psm),
                         "-c", "tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     ], stderr=subprocess.DEVNULL, timeout=8).decode("utf-8", errors="ignore").strip()
                     if len(out) == 4 and out.isalnum() and "ERROR" not in out:
@@ -198,16 +198,21 @@ class TOBBSessionManager:
             for _ in range(6):
                 if self.auth_deadline and time.monotonic() >= self.auth_deadline:
                     return False
-                code = self.solve_ocr_captcha("https://www.ticaretsicil.gov.tr/captcha/captcha.php")
+                code = self.solve_ocr_captcha("https://www.ticaretsicil.gov.tr/captcha/captcha.php", psm=7)
                 if not code:
                     continue
                 try:
                     r = self.session.post(
                         "https://www.ticaretsicil.gov.tr/view/hizlierisim/guvenlikkodudogrula.php",
-                        data={"CaptchaIlan": code},
+                        files={"CaptchaIlan": (None, code)},
+                        headers={"X-Requested-With": "XMLHttpRequest"},
                         verify=False, timeout=8
                     )
                     if r.text.strip() == "1":
+                        # Match the official form's successful redirect before
+                        # resuming viewer requests against the renewed session.
+                        self.session.get("https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php",
+                                         verify=False, timeout=8)
                         self.session_generation += 1
                         return True
                 except Exception:

@@ -489,3 +489,22 @@ def test_ilan_detection_accepts_single_quotes_and_extra_form_attributes(monkeypa
     monkeypatch.setattr(manager, '_renew_session', renew)
     assert manager.download_pdf('fixture') == (None, 'AUTH_REQUIRED')
     assert calls == [True]
+
+
+def test_ilan_refresh_matches_form_protocol_and_finishes_redirect(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    modes, redirects = [], []
+    def read_code(url, psm=8):
+        modes.append(psm)
+        return 'ABCD'
+    def post(url, **kwargs):
+        assert kwargs['files'] == {'CaptchaIlan': (None, 'ABCD')}
+        assert kwargs['headers']['X-Requested-With'] == 'XMLHttpRequest'
+        return SimpleNamespace(text='1')
+    monkeypatch.setattr(manager, 'solve_ocr_captcha', read_code)
+    monkeypatch.setattr(manager.session, 'post', post)
+    monkeypatch.setattr(manager.session, 'get', lambda url, **kw: redirects.append(url))
+    assert manager.solve_ilan_captcha()
+    assert modes == [7]
+    assert redirects == ['https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php']
+    assert manager.session_generation == 1
