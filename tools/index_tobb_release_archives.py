@@ -43,8 +43,12 @@ def inventory(master, output, previous=None):
         with catalog(previous) as conn:
             scanned = set(conn.execute('SELECT asset_id,byte_size,updated_at FROM archives'))
     assets = []
-    for number in range(1, 21):
-        bucket = f'warehouse-pdf-{number}'
+    releases = json.loads(subprocess.check_output(
+        ['gh', 'release', 'list', '--repo', REPO, '--limit', '1000', '--json', 'tagName']))
+    buckets = sorted({r['tagName'] for r in releases
+                      if re.fullmatch(r'warehouse-pdf-\d+', r['tagName'])},
+                     key=lambda name: int(name.rsplit('-', 1)[-1]))
+    for bucket in buckets:
         release = json.loads(subprocess.check_output(
             ['gh', 'api', f'repos/{REPO}/releases/tags/{bucket}']))
         for asset in release['assets']:

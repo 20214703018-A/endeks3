@@ -48,6 +48,7 @@ USER_PASS = "Geoprop2026*"
 BUNDLE_SIZE = 100  # Fewer Release calls; one uploader, at most two pending bundles.
 MAX_BUNDLE_BYTES = 128 * 1024 * 1024
 _preferred_release_bucket = {}
+_full_release_buckets = set()
 
 TESSERACT_BIN = (
     shutil.which("tesseract")
@@ -543,36 +544,88 @@ class TOBBSessionManager:
 
 
 def get_release_bucket_for_shard(shard_id: int) -> list:
-    all_buckets = [f"warehouse-pdf-{i}" for i in range(1, 21)]
-    primary_idx = (shard_id - 1) % len(all_buckets)
-    return [all_buckets[primary_idx]] + [b for i, b in enumerate(all_buckets) if i != primary_idx]
+    # Preserve master/catalog replacement slots; existing PDF assets stay put.
+    all_buckets = [f"warehouse-pdf-{i}" for i in range(2, 42) if i != 20]
+    primary_number = shard_id + 1
+    if primary_number == 20:
+        primary_number += 40
+    primary = f'warehouse-pdf-{primary_number}'
+    return [primary] + [bucket for bucket in all_buckets if bucket != primary]
 
 
 def upload_bundle_to_release(bundle_path: Path, shard_id: int) -> str:
     upload_deadline = time.monotonic() + 300
-    buckets = get_release_bucket_for_shard(shard_id)
+    buckets = deque(get_release_bucket_for_shard(shard_id))
     preferred = _preferred_release_bucket.get(shard_id)
-    if preferred in buckets:
-        buckets.remove(preferred)
-        buckets.insert(0, preferred)
-    for bucket in buckets:
+    if (preferred and re.fullmatch(r'warehouse-pdf-\d+', preferred)
+            and preferred not in {'warehouse-pdf-1', 'warehouse-pdf-20'}):
+        if preferred in buckets:
+            buckets.remove(preferred)
+        buckets.appendleft(preferred)
+    attempted = set()
+    generation = 1
+    capacity_failure = False
+    transient_failure = False
+    while True:
         remaining = upload_deadline - time.monotonic()
         if remaining <= 0:
             break
+        if buckets:
+            bucket = buckets.popleft()
+        elif capacity_failure and not transient_failure:
+            # Each shard grows its own series (2,42,82,... for shard 1).
+            # Preferred buckets outside the initial range are reused above.
+            bucket = f'warehouse-pdf-{shard_id + 1 + 40 * generation}'
+            generation += 1
+        else:
+            break
+        if bucket in attempted:
+            continue
+        attempted.add(bucket)
+        if bucket in _full_release_buckets:
+            capacity_failure = True
+            continue
         try:
-            res = subprocess.run(
-                ["gh", "release", "upload", bucket, str(bundle_path), "--clobber"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                timeout=min(90, remaining)
-            )
+            def upload():
+                budget = upload_deadline - time.monotonic()
+                if budget <= 0:
+                    raise TimeoutError('Archive upload budget exhausted')
+                return subprocess.run(
+                    ["gh", "release", "upload", bucket, str(bundle_path), "--clobber"],
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                    timeout=min(90, budget))
+            res = upload()
+            error = str(getattr(res, 'stderr', '')).lower()
+            if res.returncode and ('release not found' in error or 'http 404' in error):
+                budget = upload_deadline - time.monotonic()
+                if budget <= 0:
+                    break
+                # Creating an already-created tag may lose a harmless race.
+                # The following upload checks whether a usable release exists.
+                subprocess.run(
+                    ['gh', 'release', 'create', bucket, '--latest=false',
+                     '--title', f'TOBB PDF archive {bucket}',
+                     '--notes', 'Validated original TOBB PDF archive packages.'],
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                    timeout=min(30, budget))
+                res = upload()
+                error = str(getattr(res, 'stderr', '')).lower()
+                if res.returncode and ('release not found' in error or 'http 404' in error):
+                    break
             if res.returncode == 0:
                 _preferred_release_bucket[shard_id] = bucket
                 print(f"  ☁️ [{bucket}] {bundle_path.name} kalıcı olarak yüklendi!", flush=True)
                 return f"release://{bucket}/{bundle_path.name}"
+            if 'file_count' in error or 'maximum number of release assets' in error:
+                _full_release_buckets.add(bucket)
+                capacity_failure = True
+                print(f'Archive bucket full: {bucket}; preserving existing files', flush=True)
+            elif any(code in error for code in ('http 401', 'http 403', 'http 429', 'rate limit')):
+                break
+            else:
+                transient_failure = True
         except Exception:
-            pass
+            transient_failure = True
     return f"bundle://{bundle_path.name}"
 
 

@@ -178,7 +178,7 @@ GitHub CI aynı paketi Python 3.11 Ubuntu üzerinde çalıştırır.
 
 ## Yayımlanmış eğitim dizini ve güncel durum
 
-Son yerel birleştirme: 203.652 tekil gazete/sayfa PDF kaydı, 338.416 ilan bağlantısı;
+7 Kasım 01:20 Türkiye yerel kontrol noktası: 203.652 tekil gazete/sayfa PDF kaydı, 338.416 ilan bağlantısı;
 toplu dizinde 5.524 farklı arşiv. Ana DB ve dizin iki aşamalı yayınla yenilenir.
 
 - Kurtarma toplam 19.591 eksik gazete/sayfa PDF bağlantısını doldurdu. Dosyalar
@@ -272,3 +272,42 @@ Sürüm geçişi kontrol noktası (7 Kasım 01:20 Türkiye):
 - İki hesaplı kontroldeki 16 PDF / 20 ilan bağlantısı doğal gazete/sayfa
   anahtarıyla master'a birleştirildi; toplam 203.652 sayfa / 338.416 bağlantı.
   Koşunun canlı olması aktarımın kesintisiz olduğu anlamına gelmez.
+
+## 7 Kasım 15:45 Türkiye: yeni sürümün gerçek sonucu ve arşiv kapasitesi
+
+- Kullanıcının “yeni sürümü koştur” onayıyla eski `42293357087` dalgası
+  kurtarma artifact'leri korunarak kapatıldı; birleştirme işi `128199456765`
+  başarılıdır. Önceki onay bekleme durumu artık geçerli değildir.
+- `42303340191` CI başarılı (76 test). Son on hesabın kontrolünde 31–39 giriş
+  yaptı; 40. slotta taşıma zaman aşımı vardı. Bu yanlış şifre kanıtı değildir.
+  Sonraki tam dalgada 40. slot 408 PDF indirdi; böylece 40 sabit hesabın tümü
+  gerçek üretim koşusunda doğrulandı.
+- `42337106558` tamamlandı: 40 kaynak işi ve birleştirme başarılı. İndirilen
+  40 güncelleme DB'sinin doğal gazete/sayfa anahtarıyla sayımı **15.301 farklı
+  PDF / 19.498 ilan bağlantısı** verdi. Yaklaşık 5 saat 46 dakikalık dalga
+  süresine göre toplam hız **2.650 PDF/saat** civarındadır. Kaynak ağ/oturum
+  kesintileri sürdüğünden bu sonuç kesintisiz aktarım garantisi değildir.
+- 09:54:49 UTC'de yayımlanan eğitim dizini **223.566 tekil gazete/sayfa PDF
+  kaydı / 14.977 farklı arşiv** içeriyor. Önceki 203.652 kontrol noktasından
+  artış 19.914 sayfadır; bu artış önceki birleştirme/kurtarmaları da kapsar.
+- `42361706113` yeni kaynak dalgası 09:54:50 UTC'de başladı; 12:43 UTC
+  kontrolünde 27 işçi aktif, 13 işçi kapasite kuyruğunda, tamamlanmış hata 0.
+  Bunlar yayımlanmış PDF sayısı değildir. Diğer Google/Market işleri iptal edilmedi.
+- `42307435577` eski ham artifact kurtarmasında dosyalar korundu ve doğrulandı;
+  yayın GitHub release başına 1.000 dosya sınırında HTTP 422 ile başarısız oldu.
+  `tobb-pdf-recovery-42293357087` artifact'i ve kaynak ham dosyalar korunuyor.
+  Eski yerel master güncel bulut verisinin yerine yayımlanamaz; kurtarma güncel
+  master ve ortak yazıcı kilidiyle tekrar uzlaştırılmalıdır.
+- İlk 20 arşiv bölümünde 16.720 asset vardı; kalan 3.280 yuva sınırlıydı.
+  Yeni kod her shard'a ayrı başlangıç bölümü verir, dolan bölümleri hatırlar,
+  gerektiğinde yeni release açar ve çalışan bölümü tekrar kullanır. Mevcut
+  paketleri silmez veya taşımaz; özgün PDF byte'ları korunur. Master bölümü 1
+  ve katalog/eğitim dizini bölümü 20 yeni PDF yüklemelerine ayrılmaz.
+  GitHub erişim/hız reddinde yeni bölüm denemeyi durdurur.
+- Paket dizinleyicisi artık `warehouse-pdf-N` bölümlerini dinamik bulur.
+  Yerelde kapasite, yeni bölüm oluşturma, yeniden kullanım, erişim reddi ve
+  envanter keşfi dahil **80 test geçti**. Bu düzeltme çalışan süreçlerin kodunu
+  değiştirmez; sonraki dalgaya uygulanır. Güncel dalga kesilmeden korunur.
+- Gerçek kapasite pilotu: önceden doğrulanmış 4 özgün PDF içeren 298.366 byte
+  paket yeni `warehouse-pdf-21` bölümüne yedeklendi. GitHub asset `720678997`
+  boyutu ve SHA-256 değeri yerel paketle aynıdır. Bu yeni sayfa kazanımı değildir.

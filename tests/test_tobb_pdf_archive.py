@@ -97,6 +97,8 @@ def test_archive_inventory_skips_previously_scanned_immutable_assets(tmp_path, m
     with archive_index.catalog(previous) as conn:
         conn.execute('INSERT INTO archives VALUES (1,?,?,?,?,?)', ('warehouse-pdf-1', 'gazete_pdf_shard_1_fixture.tar.gz', 123, '2026-11-06', 1))
     def metadata(argv):
+        if argv[1:3] == ['release', 'list']:
+            return json.dumps([{'tagName':'warehouse-pdf-1'}]).encode()
         assets = [dict(id=i, name=f'gazete_pdf_shard_1_{i}.tar.gz', size=123, updated_at='2026-11-06', browser_download_url='fixture') for i in [1,2]] if argv[-1].endswith('/warehouse-pdf-1') else []
         return json.dumps(dict(assets=assets)).encode()
     monkeypatch.setattr(archive_index.subprocess, 'check_output', metadata)
@@ -356,13 +358,69 @@ def test_pdf_only_merge_needs_no_ocr_and_rolls_back_invalid_shard(tmp_path):
 def test_reuses_working_bucket_instead_of_retrying_full_buckets(monkeypatch, tmp_path):
     calls = []
     worker._preferred_release_bucket.clear()
+    monkeypatch.setattr(worker, '_full_release_buckets', set())
     def run(command, **kwargs):
         calls.append(command[3])
-        return SimpleNamespace(returncode=0 if command[3] == 'warehouse-pdf-2' else 1)
+        return SimpleNamespace(returncode=0 if command[3] == 'warehouse-pdf-3' else 1)
     monkeypatch.setattr(worker.subprocess, 'run', run)
     assert worker.upload_bundle_to_release(tmp_path / '1.tar.gz', 1).startswith('release://')
     assert worker.upload_bundle_to_release(tmp_path / '2.tar.gz', 1).startswith('release://')
-    assert calls == ['warehouse-pdf-1', 'warehouse-pdf-2', 'warehouse-pdf-2']
+    assert calls == ['warehouse-pdf-2', 'warehouse-pdf-3', 'warehouse-pdf-3']
+
+
+def test_full_archives_grow_and_reuse_a_new_bucket_without_deleting_files(monkeypatch, tmp_path):
+    calls = []
+    created = set()
+    monkeypatch.setattr(worker, '_preferred_release_bucket', {})
+    monkeypatch.setattr(worker, '_full_release_buckets', set())
+    monkeypatch.setattr(worker, 'get_release_bucket_for_shard', lambda _: ['warehouse-pdf-2'])
+    def run(command, **kwargs):
+        calls.append(command)
+        operation, bucket = command[2:4]
+        if operation == 'create':
+            created.add(bucket)
+            return SimpleNamespace(returncode=0, stderr='')
+        if bucket == 'warehouse-pdf-2':
+            return SimpleNamespace(returncode=1, stderr='file_count limited to 1000 assets per release')
+        if bucket not in created:
+            return SimpleNamespace(returncode=1, stderr='release not found')
+        return SimpleNamespace(returncode=0, stderr='')
+    monkeypatch.setattr(worker.subprocess, 'run', run)
+    for name in ['first.tar.gz','second.tar.gz']:
+        assert worker.upload_bundle_to_release(tmp_path/name, 1) == f'release://warehouse-pdf-42/{name}'
+    assert sum(c[2]=='create' for c in calls) == 1
+    assert sum(c[2]=='upload' and c[3]=='warehouse-pdf-2' for c in calls) == 1
+    assert all('delete' not in c for c in calls)
+
+
+def test_archive_access_denial_does_not_create_another_bucket(monkeypatch, tmp_path):
+    calls = []
+    monkeypatch.setattr(worker, '_preferred_release_bucket', {})
+    monkeypatch.setattr(worker, '_full_release_buckets', set())
+    def run(command, **kwargs):
+        calls.append(command)
+        return SimpleNamespace(returncode=1, stderr='HTTP 403: rate limit')
+    monkeypatch.setattr(worker.subprocess, 'run', run)
+    assert worker.upload_bundle_to_release(tmp_path/'file.tar.gz', 1) == 'bundle://file.tar.gz'
+    assert len(calls) == 1
+
+
+def test_pdf_uploads_reserve_master_and_catalog_capacity_for_all_forty_shards():
+    assignments=[worker.get_release_bucket_for_shard(i) for i in range(1,41)]
+    assert len({buckets[0] for buckets in assignments})==40
+    assert all(not {'warehouse-pdf-1','warehouse-pdf-20'}.intersection(buckets) for buckets in assignments)
+
+
+def test_inventory_discovers_grown_archive_buckets(tmp_path, monkeypatch):
+    master=tmp_path/'master.sqlite';database(master).close()
+    def metadata(argv):
+        if argv[1:3] == ['release','list']:
+            return json.dumps([{'tagName':'warehouse-pdf-42'},{'tagName':'unrelated'}]).encode()
+        assert argv[-1].endswith('/warehouse-pdf-42')
+        return json.dumps({'assets':[dict(id=42,name='gazete_pdf_shard_1_fixture.tar.gz',size=123,updated_at='fixture',browser_download_url='fixture')]}).encode()
+    monkeypatch.setattr(archive_index.subprocess, 'check_output', metadata)
+    result=archive_index.inventory(master,tmp_path/'inventory.json')
+    assert len(result)==1 and result[0]['bucket']=='warehouse-pdf-42'
 
 
 def test_slow_pdf_does_not_block_next_200_page_batch(tmp_path, monkeypatch):
