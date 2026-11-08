@@ -958,7 +958,7 @@ def main():
                 if not pending_downloads:
                     break
                 completed, pending_downloads = wait(pending_downloads, timeout=5, return_when=FIRST_COMPLETED)
-                if not completed and current_bundle_files and time.monotonic()-last_download_time >= 30:
+                if not completed and len(current_bundle_files) >= 25 and time.monotonic()-last_download_time >= 300:
                     queue_bundle(archives)
                     first_bundle_queued = True
                 for fut in completed:
@@ -996,8 +996,7 @@ def main():
                         if total_downloaded % 10 == 0 or total_downloaded == 1:
                             print(f"  [Shard {shard_id}|#{total_downloaded:,}] {s_sayi}/{s_sayfa} "
                                   f"({original_sz/1024:.1f} -> {sz/1024:.1f} KB, {ms:.0f} ms) {unv}", flush=True)
-                        if ((not first_bundle_queued and len(current_bundle_files) >= 10) or
-                                len(current_bundle_files) >= args.bundle_size or
+                        if (len(current_bundle_files) >= args.bundle_size or
                                 current_bundle_bytes >= MAX_BUNDLE_BYTES):
                             queue_bundle(archives)
                             first_bundle_queued = True
