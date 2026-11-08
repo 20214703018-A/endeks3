@@ -248,7 +248,7 @@ def test_worker_overlaps_downloads_and_uploads_and_merges_confirmed_only(tmp_pat
             self.network_gate = SimpleNamespace(interval=0, started=0)
 
         def login(self):
-            assert self.network_gate.interval == 3
+            assert self.network_gate.interval == 1
             return True
 
         def download_pdf(self, guid):
@@ -1162,3 +1162,69 @@ def test_run_deadline_stops_new_download_requests(monkeypatch):
     monkeypatch.setattr(manager.session, 'get', lambda *a, **kw: pytest.fail('run deadline exceeded'))
     with pytest.raises(worker.requests.Timeout):
         manager._download_response('https://example.invalid/fixture.pdf', timeout=15)
+
+
+def test_stale_pooled_keepalive_socket_retries_once_without_transport_penalty(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.network_gate.interval = manager.minimum_request_interval = 1
+    calls, closed = [], []
+
+    class Adapter(worker.requests.adapters.BaseAdapter):
+        def send(self, request, **kwargs):
+            calls.append(request.url)
+            if len(calls) == 2:
+                raise worker.requests.ConnectionError('RemoteDisconnected stale keep-alive')
+            response = worker.requests.Response()
+            response.request = request
+            response.url = request.url
+            response.status_code = 200
+            response.raw = io.BytesIO(b'%PDF original bytes')
+            return response
+
+        def close(self):
+            closed.append(True)
+
+    pdf_session = manager._pdf_session()
+    pdf_session.mount('https://', Adapter())
+    first = manager._download_response('https://example.invalid/first.pdf', timeout=15, pdf=True)
+    second = manager._download_response('https://example.invalid/second.pdf', timeout=15, pdf=True)
+    assert first.content == second.content == b'%PDF original bytes'
+    assert len(calls) == 3
+    assert closed
+    assert manager.transport_errors == 0
+    assert manager.network_gate.interval == 1
+
+
+def test_fast_scope_accelerates_captcha_renewal_and_prepared_pdf_fetches(monkeypatch):
+    manager = worker.TOBBSessionManager('', '', '')
+    manager.network_gate.interval = 3
+    now, starts = [100.0], []
+    monkeypatch.setattr(worker.time, 'monotonic', lambda: now[0])
+    monkeypatch.setattr(manager.network_gate.condition, 'wait', lambda timeout: now.__setitem__(0, now[0] + timeout))
+
+    class Adapter(worker.requests.adapters.BaseAdapter):
+        def send(self, request, **kwargs):
+            starts.append((request.url, round(now[0], 2)))
+            response = worker.requests.Response()
+            response.request = request
+            response.url = request.url
+            response.status_code = 200
+            if request.url.endswith('.pdf'):
+                response.raw = io.BytesIO(b'%PDF fast bytes')
+            else:
+                response.raw = io.BytesIO(b'<embed src="/tmp_gazete/fast.pdf">')
+            return response
+
+        def close(self):
+            pass
+
+    manager.session.mount('https://', Adapter())
+    manager._pdf_session().mount('https://', Adapter())
+    pdf_bytes, status = manager.download_pdf('fast-guid')
+    assert status == 'OK'
+    assert pdf_bytes == b'%PDF fast bytes'
+    assert starts == [
+        ('https://www.ticaretsicil.gov.tr/view/hizlierisim/pdf_goster.php?Guid=fast-guid', 100.0),
+        ('https://www.ticaretsicil.gov.tr/tmp_gazete/fast.pdf', 100.15),
+    ]
+

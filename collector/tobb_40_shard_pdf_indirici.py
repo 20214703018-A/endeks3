@@ -17,6 +17,7 @@ import shutil
 import sqlite3
 import subprocess
 import argparse
+import contextlib
 import tempfile
 import threading
 from html import unescape
@@ -67,7 +68,9 @@ class SourceRequestGate:
 
     def __init__(self, deadline, failure=None, limit=None):
         self.interval = 0.0
+        self.fast_interval = 0.15
         self.next_at = 0.0
+        self.last_at = 0.0
         self.condition = threading.Condition()
         self.deadline = deadline
         self.started = 0
@@ -75,17 +78,37 @@ class SourceRequestGate:
         self.failure = failure
         self.limit = limit
         self.heartbeat_at = 0.0
+        self._local = threading.local()
 
-    def wait(self):
+    @contextlib.contextmanager
+    def fast_scope(self):
+        prev = getattr(self._local, 'fast', False)
+        self._local.fast = True
+        try:
+            yield
+        finally:
+            self._local.fast = prev
+
+    def wait(self, fast=False):
+        is_fast = fast or getattr(self._local, 'fast', False)
         with self.condition:
             while True:
                 now = time.monotonic()
                 stop_at = self.deadline()
                 if stop_at is not None and now >= stop_at:
                     raise requests.Timeout('Run deadline reached before source request')
-                eligible_at = max(self.next_at, self.pause_until)
+                if is_fast:
+                    step = min(self.interval, self.fast_interval)
+                    base_at = self.last_at + step if self.started > 0 else 0.0
+                    eligible_at = max(base_at, self.pause_until)
+                else:
+                    eligible_at = max(self.next_at, self.pause_until)
                 if now >= eligible_at:
-                    self.next_at = now + self.interval
+                    self.last_at = now
+                    if is_fast:
+                        self.next_at = max(self.next_at, now + min(self.interval, self.fast_interval))
+                    else:
+                        self.next_at = now + self.interval
                     self.started += 1
                     return
                 delay = eligible_at - now
@@ -101,20 +124,40 @@ class PacedSession(requests.Session):
     def __init__(self, gate):
         super().__init__()
         self.gate = gate
+        self._has_pooled_socket = False
+        self.last_used = 0.0
+
+    def close(self):
+        self._has_pooled_socket = False
+        super().close()
 
     def send(self, request, **kwargs):
         # requests calls send again for automatic redirects, so those share
         # the same quota as login, viewer and file requests on all threads.
+        if self._has_pooled_socket and time.monotonic() - self.last_used >= 10.0:
+            self.close()
         wait_started = time.monotonic()
         self.gate.wait()
         paced_wait = time.monotonic() - wait_started
+        had_pooled_socket = self._has_pooled_socket
         try:
-            response = super().send(request, **kwargs)
+            try:
+                response = super().send(request, **kwargs)
+            except requests.ConnectionError as exc:
+                if isinstance(exc, requests.Timeout) or not had_pooled_socket:
+                    raise
+                # A pooled keep-alive socket closed by the peer while idle is
+                # not a server outage; discard the dead pool and retry once.
+                self.close()
+                response = super().send(request, **kwargs)
+            self._has_pooled_socket = True
+            self.last_used = time.monotonic()
             response._tobb_pacing_delay = getattr(response, '_tobb_pacing_delay', 0) + paced_wait
             if response.status_code in (403, 429) and self.gate.limit:
                 self.gate.limit(response)
             return response
         except requests.RequestException as exc:
+            self._has_pooled_socket = False
             if self.gate.failure:
                 self.gate.failure(exc)
             raise
@@ -185,7 +228,7 @@ class TOBBSessionManager:
         exc._tobb_paced = True
         with self.network_gate.condition:
             self.transport_errors += 1
-            self.network_gate.interval = max(self.minimum_request_interval, min(10, self.network_gate.interval * 2))
+            self.network_gate.interval = max(self.minimum_request_interval, min(5, self.network_gate.interval * 2))
             self.network_gate.pause_until = time.monotonic() + 30
             self.last_pace_change = time.monotonic()
             self.successful_views = 0
@@ -199,6 +242,8 @@ class TOBBSessionManager:
             self.pdf_sessions.generation = -1
         if self.pdf_sessions.generation != self.session_generation:
             with self.lock:
+                if self.pdf_sessions.generation >= 0:
+                    self.pdf_sessions.session.close()
                 self.pdf_sessions.session.headers.update(self.session.headers)
                 self.pdf_sessions.session.cookies = self.session.cookies.copy()
                 self.pdf_sessions.generation = self.session_generation
@@ -279,7 +324,7 @@ class TOBBSessionManager:
                     self.view_failures = 0
                     self.failure_windows = 0
                     self.successful_views += 1
-                    if (self.successful_views >= 50 and time.monotonic() - self.last_pace_change >= 300
+                    if (self.successful_views >= 15 and time.monotonic() - self.last_pace_change >= 60
                             and self.network_gate.interval > self.minimum_request_interval):
                         self.network_gate.interval = max(self.minimum_request_interval, self.network_gate.interval / 2)
                         self.last_pace_change = time.monotonic()
@@ -299,7 +344,7 @@ class TOBBSessionManager:
                     self.successful_views = 0
                     previous_interval = self.network_gate.interval
                     if not getattr(exc, '_tobb_paced', False):
-                        self.network_gate.interval = max(self.minimum_request_interval, min(10, previous_interval * 2))
+                        self.network_gate.interval = max(self.minimum_request_interval, min(5, previous_interval * 2))
                     self.last_pace_change = time.monotonic()
                     if self.network_gate.interval != previous_interval:
                         print(f'Source recovery request interval: {self.network_gate.interval:g}s', flush=True)
@@ -367,39 +412,42 @@ class TOBBSessionManager:
         return s
 
     def solve_ocr_captcha(self, captcha_url, psm=8):
-        for _ in range(5):
-            if self.auth_deadline and time.monotonic() >= self.auth_deadline:
-                return None
-            try:
-                sep = "&" if "?" in captcha_url else "?"
-                url = f"{captcha_url}{sep}{int(time.time() * 1000)}_{random.randint(100, 999)}"
-                r = self.session.get(url, verify=False, timeout=8)
-                if not r.content or len(r.content) < 100:
-                    continue
-                with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tf:
-                    tf.write(r.content)
-                    tmp_p = tf.name
+        with self.network_gate.fast_scope():
+            for _ in range(5):
+                if self.auth_deadline and time.monotonic() >= self.auth_deadline:
+                    return None
                 try:
-                    out = subprocess.check_output([
-                        self.tesseract_bin, tmp_p, "stdout",
-                        "--psm", str(psm),
-                        "-c", "tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    ], stderr=subprocess.DEVNULL, timeout=8).decode("utf-8", errors="ignore").strip()
-                    if len(out) == 4 and out.isalnum() and "ERROR" not in out:
-                        return out
-                finally:
-                    if os.path.exists(tmp_p):
-                        try:
-                            os.unlink(tmp_p)
-                        except Exception:
-                            pass
-            except Exception:
-                pass
-            time.sleep(0.1)
+                    sep = "&" if "?" in captcha_url else "?"
+                    url = f"{captcha_url}{sep}{int(time.time() * 1000)}_{random.randint(100, 999)}"
+                    r = self.session.get(url, verify=False, timeout=8)
+                    if not r.content or len(r.content) < 100:
+                        continue
+                    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tf:
+                        tf.write(r.content)
+                        tmp_p = tf.name
+                    try:
+                        for candidate_psm in (psm, 7 if psm != 7 else 8):
+                            out = subprocess.check_output([
+                                self.tesseract_bin, tmp_p, "stdout",
+                                "--psm", str(candidate_psm),
+                                "-c", "tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                            ], stderr=subprocess.DEVNULL, timeout=8).decode("utf-8", errors="ignore").strip()
+                            cleaned = re.sub(r'[^0-9A-Z]', '', out.upper())
+                            if len(cleaned) == 4 and "ERROR" not in out.upper():
+                                return cleaned
+                    finally:
+                        if os.path.exists(tmp_p):
+                            try:
+                                os.unlink(tmp_p)
+                            except Exception:
+                                pass
+                except Exception:
+                    pass
+                time.sleep(0.05)
         return None
 
     def login(self, expected_generation=None):
-        with self.lock:
+        with self.lock, self.network_gate.fast_scope():
             # Another worker may have renewed the session while this worker
             # was waiting for the lock with an older HTTP response.
             if (expected_generation is not None and self.is_authenticated
@@ -429,15 +477,15 @@ class TOBBSessionManager:
                         return True
                 except Exception:
                     pass
-                time.sleep(0.3)
+                time.sleep(0.1)
             return False
 
     def solve_ilan_captcha(self, expected_generation=None):
-        with self.lock:
+        with self.lock, self.network_gate.fast_scope():
             if (expected_generation is not None and self.is_authenticated
                     and expected_generation != self.session_generation):
                 return True
-            for _ in range(6):
+            for _ in range(8):
                 if self.auth_deadline and time.monotonic() >= self.auth_deadline:
                     return False
                 code = self.solve_ocr_captcha("https://www.ticaretsicil.gov.tr/captcha/captcha.php", psm=7)
@@ -459,7 +507,7 @@ class TOBBSessionManager:
                         return True
                 except Exception:
                     pass
-                time.sleep(0.1)
+                time.sleep(0.05)
             return False
 
     def download_pdf(self, guid):
@@ -487,7 +535,8 @@ class TOBBSessionManager:
                 pdf_rel = m_pdf.group(1)
                 pdf_url = pdf_rel if pdf_rel.startswith("http") else f"https://www.ticaretsicil.gov.tr{pdf_rel}"
                 try:
-                    r_pdf = self._download_response(pdf_url, timeout=15, budget=90, pdf=True)
+                    with self.network_gate.fast_scope():
+                        r_pdf = self._download_response(pdf_url, timeout=15, budget=90, pdf=True)
                     if r_pdf.status_code == 429:
                         self._source_limit(r_pdf)
                         return None, "SOURCE_THROTTLED"
@@ -719,7 +768,7 @@ def main():
     parser.add_argument("--max-pdfs", type=int, default=50000, help="Bu shard'ın indirebileceği maksimum tekil PDF sayfası")
     parser.add_argument("--threads", type=int, default=8, help="Paralel indirme iş parçacığı sayısı (Varsayılan: 8)")
     parser.add_argument("--bundle-size", type=int, default=BUNDLE_SIZE)
-    parser.add_argument("--request-interval", type=float, default=3.0,
+    parser.add_argument("--request-interval", type=float, default=1.0,
                         help="Minimum seconds between all TOBB requests on this runner")
     parser.add_argument("--recovery-windows", type=int, default=8,
                         help="Bounded recovery probes for transient source connection failures")
@@ -779,10 +828,9 @@ def main():
 
     mgr = TOBBSessionManager(account.email, account.password, TESSERACT_BIN)
     mgr.download_deadline = time.monotonic() + max(0, deadline - time.time())
-    # Live 1s cold starts stalled after a short burst; 3s controls completed.
-    # The existing stability feedback lowers this toward the requested minimum.
-    mgr.network_gate.interval = max(3.0, args.request_interval)
+    mgr.network_gate.interval = args.request_interval
     mgr.minimum_request_interval = args.request_interval
+    mgr.view_interval = min(1.0, args.request_interval)
     mgr.max_failure_windows = args.recovery_windows
     mgr.persistent_source = args.persistent_source
     print(f"Source request interval: {mgr.network_gate.interval:g}s; minimum={args.request_interval:g}s "

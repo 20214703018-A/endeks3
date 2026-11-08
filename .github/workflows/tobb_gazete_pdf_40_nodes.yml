@@ -27,7 +27,7 @@ on:
         description: 'Runner başına tüm TOBB HTTP istekleri arasındaki asgari saniye'
         type: choice
         options: ['1', '2', '3', '5', '10']
-        default: '3'
+        default: '1'
       max_parallel:
         description: 'Aynı anda çalışan shard sayısı (yapılandırılmış sabit hesaplar)'
         type: choice
@@ -95,7 +95,7 @@ jobs:
           MAX_PDFS: ${{ inputs.max_pdfs || '50000' }}
           MAX_SECS: ${{ inputs.max_seconds || '19800' }}
           DOWNLOAD_THREADS: ${{ inputs.download_threads || '8' }}
-          REQUEST_INTERVAL: ${{ inputs.request_interval || '3' }}
+          REQUEST_INTERVAL: ${{ inputs.request_interval || '1' }}
         run: |
           python collector/tobb_40_shard_pdf_indirici.py --shard ${{ matrix.shard }} --num-shards 40 --max-seconds "$MAX_SECS" --max-pdfs "$MAX_PDFS" --threads "$DOWNLOAD_THREADS" --bundle-size 100 --request-interval "$REQUEST_INTERVAL" --persistent-source
 
@@ -191,7 +191,7 @@ jobs:
           NEXT_MAX_PDFS: ${{ inputs.max_pdfs || '50000' }}
           NEXT_MAX_SECS: ${{ inputs.max_seconds || '19800' }}
           NEXT_THREADS: ${{ inputs.download_threads || '8' }}
-          NEXT_INTERVAL: ${{ inputs.request_interval || '3' }}
+          NEXT_INTERVAL: ${{ inputs.request_interval || '1' }}
           NEXT_PARALLEL: ${{ inputs.max_parallel || '40' }}
         run: |
           echo "🚀 Mevcut koşu verileri arşivlendi. Bir sonraki 40-Runner matris koşusu tetikleniyor..."
