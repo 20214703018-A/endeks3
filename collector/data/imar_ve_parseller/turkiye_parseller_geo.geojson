@@ -447071,6 +447071,239 @@
         "gabari": null,
         "kat_adedi": null
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              41.55739,
+              39.86407
+            ],
+            [
+              41.55883,
+              39.86445
+            ],
+            [
+              41.55903,
+              39.86517
+            ],
+            [
+              41.55942,
+              39.86556
+            ],
+            [
+              41.55991,
+              39.86572
+            ],
+            [
+              41.5603,
+              39.86582
+            ],
+            [
+              41.56085,
+              39.86595
+            ],
+            [
+              41.56088,
+              39.86618
+            ],
+            [
+              41.56078,
+              39.86663
+            ],
+            [
+              41.56012,
+              39.86648
+            ],
+            [
+              41.55983,
+              39.86639
+            ],
+            [
+              41.55995,
+              39.86661
+            ],
+            [
+              41.55941,
+              39.8666
+            ],
+            [
+              41.55938,
+              39.86632
+            ],
+            [
+              41.55905,
+              39.86586
+            ],
+            [
+              41.55761,
+              39.86509
+            ],
+            [
+              41.55714,
+              39.86452
+            ],
+            [
+              41.55704,
+              39.86433
+            ],
+            [
+              41.55739,
+              39.86407
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 151,
+        "il": "Erzurum",
+        "ilce": "Pasinler",
+        "mahalle": "Taşağıl",
+        "ada_no": "103",
+        "parsel_no": "54",
+        "alan_m2": 31375.8,
+        "nitelik": "Çayır",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              35.70119,
+              39.11935
+            ],
+            [
+              35.70122,
+              39.11897
+            ],
+            [
+              35.70143,
+              39.11904
+            ],
+            [
+              35.70155,
+              39.11908
+            ],
+            [
+              35.70198,
+              39.11924
+            ],
+            [
+              35.70179,
+              39.11945
+            ],
+            [
+              35.70149,
+              39.11987
+            ],
+            [
+              35.70117,
+              39.11966
+            ],
+            [
+              35.70119,
+              39.11935
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 154,
+        "il": "Kayseri",
+        "ilce": "Özvatan",
+        "mahalle": "Yenimahalle",
+        "ada_no": "555",
+        "parsel_no": "1",
+        "alan_m2": 4007.04,
+        "nitelik": "Bahçe",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              35.70433,
+              39.1198
+            ],
+            [
+              35.70415,
+              39.11963
+            ],
+            [
+              35.70403,
+              39.11952
+            ],
+            [
+              35.70442,
+              39.11927
+            ],
+            [
+              35.70475,
+              39.11906
+            ],
+            [
+              35.705,
+              39.11947
+            ],
+            [
+              35.7052,
+              39.1198
+            ],
+            [
+              35.70481,
+              39.12011
+            ],
+            [
+              35.70467,
+              39.12002
+            ],
+            [
+              35.70433,
+              39.1198
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "id": 153,
+        "il": "Kayseri",
+        "ilce": "Özvatan",
+        "mahalle": "Yenimahalle",
+        "ada_no": "555",
+        "parsel_no": "29",
+        "alan_m2": 6045.1,
+        "nitelik": "Bahçe",
+        "zemin_durumu": "Ana Taşınmaz",
+        "imar_durumu": null,
+        "plan_fonksiyon": null,
+        "kaks_emsal": null,
+        "taks": null,
+        "gabari": null,
+        "kat_adedi": null
+      }
     }
   ]
 }
