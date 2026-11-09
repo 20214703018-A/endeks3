@@ -68,7 +68,7 @@ class SourceRequestGate:
 
     def __init__(self, deadline, failure=None, limit=None):
         self.interval = 0.0
-        self.fast_interval = 0.35
+        self.fast_interval = 0.15
         self.next_at = 0.0
         self.last_at = 0.0
         self.condition = threading.Condition()
@@ -78,7 +78,6 @@ class SourceRequestGate:
         self.failure = failure
         self.limit = limit
         self.heartbeat_at = 0.0
-        self.authenticated = False
         self._local = threading.local()
 
     @contextlib.contextmanager
@@ -135,10 +134,12 @@ class PacedSession(requests.Session):
     def send(self, request, **kwargs):
         # requests calls send again for automatic redirects, so those share
         # the same quota as login, viewer and file requests on all threads.
+        if self._has_pooled_socket and time.monotonic() - self.last_used >= 10.0:
+            self.close()
         wait_started = time.monotonic()
         self.gate.wait()
         paced_wait = time.monotonic() - wait_started
-        had_pooled_socket = self._has_pooled_socket or getattr(self.gate, 'authenticated', False)
+        had_pooled_socket = self._has_pooled_socket
         try:
             try:
                 response = super().send(request, **kwargs)
@@ -173,8 +174,6 @@ class TOBBSessionManager:
         self.download_deadline = None
         self.transport_errors = 0
         self.network_gate = SourceRequestGate(lambda: self.download_deadline, self._transport_failure, self._source_limit)
-        self._shared_adapter = HTTPAdapter(pool_connections=4, pool_maxsize=4,
-                                           max_retries=Retry(total=0, connect=0, read=0, status=0))
         self.session = self._create_session()
         self.is_authenticated = False
         self.session_generation = 0
@@ -229,13 +228,11 @@ class TOBBSessionManager:
         exc._tobb_paced = True
         with self.network_gate.condition:
             self.transport_errors += 1
-            max_interval = 3 if self.is_authenticated else 5
-            pause_secs = 5 if (self.is_authenticated and not isinstance(exc, requests.Timeout)) else 30
-            self.network_gate.interval = max(self.minimum_request_interval, min(max_interval, self.network_gate.interval * 2))
-            self.network_gate.pause_until = time.monotonic() + pause_secs
+            self.network_gate.interval = max(self.minimum_request_interval, min(5, self.network_gate.interval * 2))
+            self.network_gate.pause_until = time.monotonic() + 30
             self.last_pace_change = time.monotonic()
             self.successful_views = 0
-            print(f'Source transport failure: {type(exc).__name__}; all routes paused {pause_secs}s; request interval {self.network_gate.interval:g}s', flush=True)
+            print(f'Source transport failure: {type(exc).__name__}; all routes paused 30s; request interval {self.network_gate.interval:g}s', flush=True)
 
     def _pdf_session(self):
         # Do not let parallel file responses mutate the authenticated viewer's
@@ -245,6 +242,8 @@ class TOBBSessionManager:
             self.pdf_sessions.generation = -1
         if self.pdf_sessions.generation != self.session_generation:
             with self.lock:
+                if self.pdf_sessions.generation >= 0:
+                    self.pdf_sessions.session.close()
                 self.pdf_sessions.session.headers.update(self.session.headers)
                 self.pdf_sessions.session.cookies = self.session.cookies.copy()
                 self.pdf_sessions.generation = self.session_generation
@@ -325,9 +324,7 @@ class TOBBSessionManager:
                     self.view_failures = 0
                     self.failure_windows = 0
                     self.successful_views += 1
-                    min_views = 8 if self.is_authenticated else 15
-                    min_elapsed = 20 if self.is_authenticated else 60
-                    if (self.successful_views >= min_views and time.monotonic() - self.last_pace_change >= min_elapsed
+                    if (self.successful_views >= 15 and time.monotonic() - self.last_pace_change >= 60
                             and self.network_gate.interval > self.minimum_request_interval):
                         self.network_gate.interval = max(self.minimum_request_interval, self.network_gate.interval / 2)
                         self.last_pace_change = time.monotonic()
@@ -408,8 +405,10 @@ class TOBBSessionManager:
         })
         # Outer loops already retry requests. Retrying slow reads again inside
         # urllib3 multiplied renewal stalls into many minutes per PDF.
-        s.mount("https://", self._shared_adapter)
-        s.mount("http://", self._shared_adapter)
+        adapter = HTTPAdapter(pool_connections=20, pool_maxsize=20,
+                              max_retries=Retry(total=0, connect=0, read=0, status=0))
+        s.mount("https://", adapter)
+        s.mount("http://", adapter)
         return s
 
     def solve_ocr_captcha(self, captcha_url, psm=8):
@@ -473,7 +472,6 @@ class TOBBSessionManager:
                         self.session.get("https://www.ticaretsicil.gov.tr/index.php", verify=False, timeout=8)
                         self.session.headers["Referer"] = "https://www.ticaretsicil.gov.tr/view/hizlierisim/ilangoruntuleme.php"
                         self.is_authenticated = True
-                        self.network_gate.authenticated = True
                         self.session_generation += 1
                         print("  ✅ TOBB Turbo Oturumu Başarıyla Açıldı!", flush=True)
                         return True

@@ -1225,6 +1225,6 @@ def test_fast_scope_accelerates_captcha_renewal_and_prepared_pdf_fetches(monkeyp
     assert pdf_bytes == b'%PDF fast bytes'
     assert starts == [
         ('https://www.ticaretsicil.gov.tr/view/hizlierisim/pdf_goster.php?Guid=fast-guid', 100.0),
-        ('https://www.ticaretsicil.gov.tr/tmp_gazete/fast.pdf', 100.35),
+        ('https://www.ticaretsicil.gov.tr/tmp_gazete/fast.pdf', 100.15),
     ]
 
