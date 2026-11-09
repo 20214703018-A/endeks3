@@ -185,7 +185,7 @@ jobs:
           echo "✅ Master SQLite ve toplu eğitim dizini güncellendi."
 
       - name: Bir Sonraki Koşuyu Başlat (Otonom Kesintisiz Döngü)
-        if: success() && needs.pdf_mining_shards.result == 'success' && !inputs.canary
+        if: success() && needs.pdf_mining_shards.result != 'cancelled' && !inputs.canary
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEXT_MAX_PDFS: ${{ inputs.max_pdfs || '50000' }}
