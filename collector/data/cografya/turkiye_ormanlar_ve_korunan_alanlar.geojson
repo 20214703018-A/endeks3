@@ -420,8 +420,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          36.23854,
-          37.31639
+          36.25361,
+          37.29556
         ]
       },
       "properties": {
@@ -429,7 +429,7 @@
         "ad": "Karatepe Aslantaşı Milli Parkı",
         "tur": "Milli Park / Tabiat Parkı",
         "kategori": "ORMAN_VE_KORUMA_ALANI",
-        "rakim_metre": 210,
+        "rakim_metre": 94,
         "il_plaka": "91"
       }
     },

@@ -241848,6 +241848,24 @@
         "rakim_metre": 2394,
         "il_plaka": "12"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.61609,
+          40.00134
+        ]
+      },
+      "properties": {
+        "id": 13732114,
+        "ad": "Başlıkuvası",
+        "tur": "Tepe",
+        "kategori": "DAG_VE_TEPE",
+        "rakim_metre": 1226,
+        "il_plaka": "19"
+      }
     }
   ]
 }

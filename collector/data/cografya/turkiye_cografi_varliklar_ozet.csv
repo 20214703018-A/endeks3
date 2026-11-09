@@ -8825,6 +8825,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 10917370,Kel Tepe,Tepe,DAG_VE_TEPE,38.17724,31.81299,1226,71
 10933605,İmamönü Tepesi,Tepe,DAG_VE_TEPE,40.70518,35.27581,1226,05
 12675719,Evliya Tepesi,Tepe,DAG_VE_TEPE,36.39504,32.44245,1226,07
+13732114,Başlıkuvası,Tepe,DAG_VE_TEPE,40.00134,34.61609,1226,19
 322150,Balıklıavı Kanalı,Nehir / Akarsu,SU_KUTLESI,37.26987,32.28237,1225,71
 6611224,Kılıboğan Tepe,Tepe,DAG_VE_TEPE,38.53789,40.43153,1225,12
 10015119,Kara Dere,Nehir / Akarsu,SU_KUTLESI,39.34181,39.35316,1225,62
@@ -9286,6 +9287,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 13178074,Kızılbelen Tepesi,Dağ,DAG_VE_TEPE,36.74109,32.08306,1183,07
 13178084,Bozburun Tepesi,Dağ,DAG_VE_TEPE,36.7338,32.07597,1183,07
 13729444,Sarıyatak Tepesi,Dağ,DAG_VE_TEPE,40.92692,36.43714,1183,55
+13732013,Valley of Sarıkale,Vadi,YAYLA_VE_OVA,40.01287,34.61402,1183,19
 303198,Osman Dağı,Dağ,DAG_VE_TEPE,36.85314,31.94668,1182,07
 436882,Kabırlibel Tepesi,Dağ,DAG_VE_TEPE,36.69222,36.27222,1182,31
 438881,Avyar Deresi,Nehir / Akarsu,SU_KUTLESI,37.58132,42.73752,1182,80
@@ -18308,7 +18310,6 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 12552404,Kuşyuvası Tepesi,Tepe,DAG_VE_TEPE,36.09482,33.08588,211,32
 13711425,Kızıl Tepe,Tepe,DAG_VE_TEPE,36.65138,30.54529,211,07
 743533,Keller Tepesi,Dağ,DAG_VE_TEPE,41.48333,36.01667,210,55
-7633187,Karatepe Aslantaşı Milli Parkı,Milli Park / Tabiat Parkı,ORMAN_VE_KORUMA_ALANI,37.31639,36.23854,210,91
 9985368,Yarandağı Tepe,Tepe,DAG_VE_TEPE,38.26261,26.40846,210,35
 10800875,Yassıalan Deresi,Nehir / Akarsu,SU_KUTLESI,41.41808,35.07402,210,57
 10869796,Çandır Çayı,Nehir / Akarsu,SU_KUTLESI,36.81271,30.47086,210,07
@@ -19214,6 +19215,7 @@ id,ad,tur,kategori,enlem,boylam,rakim_m,il_plaka
 436500,Pemuklukır Tepesi,Tepe,DAG_VE_TEPE,36.92861,36.14333,94,31
 437702,Fındık Çayı,Nehir / Akarsu,SU_KUTLESI,36.43722,36.01583,94,31
 437978,Sori Ova Suyu,Nehir / Akarsu,SU_KUTLESI,36.37083,36.55306,94,31
+7633187,Karatepe Aslantaşı Milli Parkı,Milli Park / Tabiat Parkı,ORMAN_VE_KORUMA_ALANI,37.29556,36.25361,94,91
 10306809,Çayırlar Deresi,Nehir / Akarsu,SU_KUTLESI,40.78861,27.03308,94,59
 10307337,Höyük Deresi,Nehir / Akarsu,SU_KUTLESI,41.4823,27.42387,94,39
 10410244,Değirmen Deresi,Nehir / Akarsu,SU_KUTLESI,40.16707,26.97673,94,17
