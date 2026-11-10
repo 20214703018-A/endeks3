@@ -226,14 +226,11 @@ class TOBBSessionManager:
         exc._tobb_paced = True
         with self.network_gate.condition:
             self.transport_errors += 1
-            fast_recover = self.is_authenticated and not isinstance(exc, requests.Timeout)
-            max_interval = 2 if fast_recover else 5
-            pause_secs = 5 if fast_recover else 30
-            self.network_gate.interval = max(self.minimum_request_interval, min(max_interval, self.network_gate.interval * 2))
-            self.network_gate.pause_until = time.monotonic() + pause_secs
+            self.network_gate.interval = max(self.minimum_request_interval, min(5, self.network_gate.interval * 2))
+            self.network_gate.pause_until = time.monotonic() + 30
             self.last_pace_change = time.monotonic()
             self.successful_views = 0
-            print(f'Source transport failure: {type(exc).__name__}; all routes paused {pause_secs}s; request interval {self.network_gate.interval:g}s', flush=True)
+            print(f'Source transport failure: {type(exc).__name__}; all routes paused 30s; request interval {self.network_gate.interval:g}s', flush=True)
 
     def _pdf_session(self):
         # Do not let parallel file responses mutate the authenticated viewer's
@@ -323,9 +320,9 @@ class TOBBSessionManager:
                     self.view_failures = 0
                     self.failure_windows = 0
                     self.successful_views += 1
-                    req_views = 8 if self.is_authenticated else 15
-                    req_secs = 20 if self.is_authenticated else 60
-                    if (self.successful_views >= req_views and time.monotonic() - self.last_pace_change >= req_secs
+                    if self.is_authenticated and self.successful_views % 35 == 0:
+                        self.next_view_at = max(self.next_view_at, time.monotonic() + 3.5)
+                    if (self.successful_views >= 15 and time.monotonic() - self.last_pace_change >= 60
                             and self.network_gate.interval > self.minimum_request_interval):
                         self.network_gate.interval = max(self.minimum_request_interval, self.network_gate.interval / 2)
                         self.last_pace_change = time.monotonic()
