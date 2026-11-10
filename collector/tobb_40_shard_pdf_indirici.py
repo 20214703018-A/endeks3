@@ -134,8 +134,6 @@ class PacedSession(requests.Session):
     def send(self, request, **kwargs):
         # requests calls send again for automatic redirects, so those share
         # the same quota as login, viewer and file requests on all threads.
-        if self._has_pooled_socket and time.monotonic() - self.last_used >= 10.0:
-            self.close()
         wait_started = time.monotonic()
         self.gate.wait()
         paced_wait = time.monotonic() - wait_started
@@ -228,11 +226,14 @@ class TOBBSessionManager:
         exc._tobb_paced = True
         with self.network_gate.condition:
             self.transport_errors += 1
-            self.network_gate.interval = max(self.minimum_request_interval, min(5, self.network_gate.interval * 2))
-            self.network_gate.pause_until = time.monotonic() + 30
+            fast_recover = self.is_authenticated and not isinstance(exc, requests.Timeout)
+            max_interval = 2 if fast_recover else 5
+            pause_secs = 5 if fast_recover else 30
+            self.network_gate.interval = max(self.minimum_request_interval, min(max_interval, self.network_gate.interval * 2))
+            self.network_gate.pause_until = time.monotonic() + pause_secs
             self.last_pace_change = time.monotonic()
             self.successful_views = 0
-            print(f'Source transport failure: {type(exc).__name__}; all routes paused 30s; request interval {self.network_gate.interval:g}s', flush=True)
+            print(f'Source transport failure: {type(exc).__name__}; all routes paused {pause_secs}s; request interval {self.network_gate.interval:g}s', flush=True)
 
     def _pdf_session(self):
         # Do not let parallel file responses mutate the authenticated viewer's
@@ -242,8 +243,6 @@ class TOBBSessionManager:
             self.pdf_sessions.generation = -1
         if self.pdf_sessions.generation != self.session_generation:
             with self.lock:
-                if self.pdf_sessions.generation >= 0:
-                    self.pdf_sessions.session.close()
                 self.pdf_sessions.session.headers.update(self.session.headers)
                 self.pdf_sessions.session.cookies = self.session.cookies.copy()
                 self.pdf_sessions.generation = self.session_generation
@@ -324,7 +323,9 @@ class TOBBSessionManager:
                     self.view_failures = 0
                     self.failure_windows = 0
                     self.successful_views += 1
-                    if (self.successful_views >= 15 and time.monotonic() - self.last_pace_change >= 60
+                    req_views = 8 if self.is_authenticated else 15
+                    req_secs = 20 if self.is_authenticated else 60
+                    if (self.successful_views >= req_views and time.monotonic() - self.last_pace_change >= req_secs
                             and self.network_gate.interval > self.minimum_request_interval):
                         self.network_gate.interval = max(self.minimum_request_interval, self.network_gate.interval / 2)
                         self.last_pace_change = time.monotonic()
