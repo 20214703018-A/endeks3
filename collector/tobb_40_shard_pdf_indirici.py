@@ -226,13 +226,17 @@ class TOBBSessionManager:
         exc._tobb_paced = True
         with self.network_gate.condition:
             self.transport_errors += 1
-            self.network_gate.interval = max(self.minimum_request_interval, min(5, self.network_gate.interval * 2))
-            self.network_gate.pause_until = time.monotonic() + 30
+            pause_secs = 8 if self.is_authenticated else 30
+            max_iv = 3 if self.is_authenticated else 5
+            self.network_gate.interval = max(self.minimum_request_interval, min(max_iv, self.network_gate.interval * 2))
+            self.network_gate.pause_until = time.monotonic() + pause_secs
             self.last_pace_change = time.monotonic()
             self.successful_views = 0
-            print(f'Source transport failure: {type(exc).__name__}; all routes paused 30s; request interval {self.network_gate.interval:g}s', flush=True)
+            print(f'Source transport failure: {type(exc).__name__}; all routes paused {pause_secs}s; request interval {self.network_gate.interval:g}s', flush=True)
 
     def _pdf_session(self):
+        if self.is_authenticated:
+            return self.session
         # Do not let parallel file responses mutate the authenticated viewer's
         # shared cookie jar. Reuse connections separately in each file worker.
         if not hasattr(self.pdf_sessions, 'session'):
