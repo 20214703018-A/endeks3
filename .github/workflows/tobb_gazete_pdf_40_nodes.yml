@@ -68,8 +68,12 @@ jobs:
             tesseract --version | head -1
             exit 0
           fi
-          sudo apt-get update -y
-          sudo apt-get install -y tesseract-ocr
+          for attempt in 1 2 3; do
+            sudo apt-get update -o Acquire::Retries=3 -y && sudo apt-get install -o Acquire::Retries=3 --fix-missing -y tesseract-ocr && break
+            sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu/|https://archive.ubuntu.com/ubuntu/|g; s|mirror+file:/etc/apt/apt-mirrors.txt|https://archive.ubuntu.com/ubuntu/|g' /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources 2>/dev/null || true
+            sleep 5
+          done
+          command -v tesseract
 
       - name: Bağımlılıkları Yükle
         run: |
