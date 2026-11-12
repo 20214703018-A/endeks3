@@ -186,7 +186,13 @@ def extract_all_people_and_names(block_text: str) -> list:
 
     def add_person(name: str, tckn: str = "", role: str = "", addr: str = "", share: str = "", ctx: str = ""):
         clean_nm = clean_line(name).strip(" ,;.:-/'\"()")
-        if not _is_valid_person_name(clean_nm):
+        clean_nm = re.sub(
+            r"^(?:.*?\b(?:Kimlik\s*(?:Numaral[ıi]|No['’`]?lu)|Uyruklu)\s*,?\s*)+",
+            "",
+            clean_nm,
+            flags=re.I,
+        ).strip(" ,;.:-/'\"()")
+        if "SERMAYE KARŞILIĞI" in clean_nm.upper() or not _is_valid_person_name(clean_nm):
             return
         norm_nm = clean_nm.upper()
         norm_tckn = clean_line(tckn)
@@ -972,6 +978,43 @@ def query_company_and_pages(db_path: Path, query_str: str, extract_pdf_dir: Path
             LIMIT 200
         """, params).fetchall()
     ]
+
+    # Henüz PDF'i indirilmemiş ama ana katalogda (2.21M ilan) bulunan kayıtları da sayfa numarasıyla ekle:
+    seen_page_keys = {(str(e.get("gazete_sayisi")), str(e.get("sayfa_no")), str(e.get("ticaret_sicil_no"))) for e in events}
+    if q.isdigit() and len(q) in (10, 16):
+        cat_where = "s.vkn = ? OR s.mersis_no LIKE ?"
+        cat_params = (q if len(q) == 10 else q[1:11], f"0{q}%" if len(q) == 10 else q)
+    else:
+        cat_where = "i.unvan LIKE ? OR i.ticaret_sicil_no = ?"
+        cat_params = (f"%{q}%", q)
+
+    catalog_rows = conn.execute(f"""
+        SELECT
+            s.mersis_no,
+            COALESCE(s.vkn, CASE WHEN s.mersis_no GLOB '0[0-9]*' AND LENGTH(s.mersis_no)=16 THEN SUBSTR(s.mersis_no, 2, 10) END) AS vkn,
+            i.ticaret_sicil_no, i.tsm_adi, i.unvan, i.ilan_turu, i.ilan_metni AS bilgi_ozeti,
+            s.tam_adres, s.il, s.ilce, s.sermaye_tl,
+            i.gazete_sayisi, i.sayfa_no, i.ilan_tarihi AS yayin_tarihi,
+            p.archive_url, p.pdf_member, p.ocr_durumu, p.sayfa_metni_zlib
+        FROM ticaret_sicil_gazetesi_ilanlari i
+        LEFT JOIN sirketler s
+            ON s.ticaret_sicil_no = i.ticaret_sicil_no AND s.tsm_adi = i.tsm_adi
+        LEFT JOIN gazete_sayfa_arsivi p
+            ON p.gazete_sayisi = i.gazete_sayisi AND p.sayfa_no = i.sayfa_no
+        WHERE {cat_where}
+        ORDER BY COALESCE(i.ilan_tarihi, '') ASC, CAST(i.gazete_sayisi AS INT) ASC
+        LIMIT 200
+    """, cat_params).fetchall()
+
+    for r in catalog_rows:
+        d = dict(r)
+        key = (str(d.get("gazete_sayisi")), str(d.get("sayfa_no")), str(d.get("ticaret_sicil_no")))
+        if key not in seen_page_keys:
+            seen_page_keys.add(key)
+            d["id"] = None
+            d["yetkililer_json"] = None
+            d["kaynak_tipi"] = "KATALOG_SAYFA_KAYDI"
+            events.append(d)
 
     person_matches = [
         dict(r) for r in conn.execute("""
