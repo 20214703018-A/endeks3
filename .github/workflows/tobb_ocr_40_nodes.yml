@@ -1,0 +1,177 @@
+name: "GEOPROP TOBB 40x PDF Tam Metin & İsim/Şirket OCR Matrisi"
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_seconds:
+        description: 'Shard başına maksimum çalışma süresi (saniye)'
+        required: true
+        default: '18000'
+      workers:
+        description: 'Runner başına paralel OCR iş parçacığı sayısı (4 vCPU)'
+        required: true
+        default: '4'
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: tobb_ocr_40_matrix
+  cancel-in-progress: false
+
+jobs:
+  ocr_shards:
+    name: "OCR Shard ${{ matrix.shard }}/40"
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      max-parallel: 40
+      matrix:
+        shard: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Tesseract OCR ve Türkçe Hızlı Dil Modelini Kur (tessdata_fast)
+        run: |
+          for attempt in 1 2 3; do
+            sudo apt-get update -o Acquire::Retries=3 -y && sudo apt-get install -o Acquire::Retries=3 --fix-missing -y tesseract-ocr tesseract-ocr-tur && break
+            sudo sed -i 's|http://azure.archive.ubuntu.com/ubuntu/|https://archive.ubuntu.com/ubuntu/|g; s|mirror+file:/etc/apt/apt-mirrors.txt|https://archive.ubuntu.com/ubuntu/|g' /etc/apt/sources.list /etc/apt/sources.list.d/*.list /etc/apt/sources.list.d/*.sources 2>/dev/null || true
+            sleep 5
+          done
+          mkdir -p tessdata_fast
+          curl -fsSL -o tessdata_fast/tur.traineddata https://github.com/tesseract-ocr/tessdata_fast/raw/main/tur.traineddata || cp /usr/share/tesseract-ocr/*/tessdata/tur.traineddata tessdata_fast/tur.traineddata
+          ls -lh tessdata_fast/tur.traineddata
+
+      - name: Python Bağımlılıklarını Yükle (PyMuPDF)
+        run: |
+          pip install pymupdf
+
+      - name: Sayfa İndeksini ve İşlenmiş Arşiv Kaydını İndir
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download warehouse-pdf-20 -p "tobb_training_pages.jsonl.gz" --clobber
+          gh release download warehouse-pdf-20 -p "tobb_ocr_processed_archives.txt.gz" --clobber || true
+          if [ -f "tobb_ocr_processed_archives.txt.gz" ]; then
+            gunzip -c tobb_ocr_processed_archives.txt.gz > tobb_ocr_processed_archives_${{ matrix.shard }}.txt
+          else
+            touch tobb_ocr_processed_archives_${{ matrix.shard }}.txt
+          fi
+
+      - name: Shard PDF Tam Metin, Şirket ve Kişi/İsim OCR İşlemini Çalıştır
+        run: |
+          python3 collector/tobb_sayfa_indeksli_sirket_veritabani.py \
+            --ocr-shard ${{ matrix.shard }} \
+            --num-shards 40 \
+            --pages-index tobb_training_pages.jsonl.gz \
+            --processed-log tobb_ocr_processed_archives_${{ matrix.shard }}.txt \
+            --output-sqlite ocr_shard_${{ matrix.shard }}_updates.sqlite \
+            --max-seconds "${{ inputs.max_seconds || '18000' }}" \
+            --workers "${{ inputs.workers || '4' }}" \
+            --tessdata-dir tessdata_fast
+
+      - name: OCR Shard Veritabanı ve İşlenen Arşiv Listesini Yükle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocr-shard-output-${{ matrix.shard }}
+          path: |
+            ocr_shard_${{ matrix.shard }}_updates.sqlite
+            tobb_ocr_processed_archives_${{ matrix.shard }}.txt
+          if-no-files-found: ignore
+          retention-days: 30
+
+  merge_ocr_and_retrigger:
+    name: "40 OCR Shard Veritabanını Birleştir ve Kalıcı Arşivle"
+    needs: [ocr_shards]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Bağımlılıkları Kur
+        run: |
+          pip install pymupdf
+
+      - name: Tüm OCR Shard Çıktılarını İndir
+        uses: actions/download-artifact@v4
+        with:
+          path: ocr_artifacts
+          pattern: ocr-shard-output-*
+
+      - name: Master SQLite Veritabanını İndir, Sayfa/İsim/OCR Kayıtlarını Birleştir ve Yayınla
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p warehouse/product
+          gh release download warehouse-pdf-20 -p "tobb_training_pages.jsonl.gz" --clobber
+          gh release download warehouse-pdf-20 -p "tobb_ocr_processed_archives.txt.gz" --clobber || true
+          if [ -f "tobb_ocr_processed_archives.txt.gz" ]; then
+            gunzip -f tobb_ocr_processed_archives.txt.gz
+          else
+            touch tobb_ocr_processed_archives.txt
+          fi
+
+          cat ocr_artifacts/*/tobb_ocr_processed_archives_*.txt >> tobb_ocr_processed_archives.txt 2>/dev/null || true
+          sort -u tobb_ocr_processed_archives.txt -o tobb_ocr_processed_archives.txt
+          PROCESSED_COUNT=$(wc -l < tobb_ocr_processed_archives.txt | tr -d ' ')
+          echo "✅ Toplam OCR tamamlanan arşiv paketi: $PROCESSED_COUNT"
+          gzip -c tobb_ocr_processed_archives.txt > tobb_ocr_processed_archives.txt.gz
+          gh release upload warehouse-pdf-20 tobb_ocr_processed_archives.txt.gz --clobber
+
+          gh release download warehouse-pdf-1 -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber || \
+          gh release download warehouse-latest -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber || true
+          if [ -f "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" ]; then
+            gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          fi
+
+          python3 collector/tobb_sayfa_indeksli_sirket_veritabani.py \
+            --init-from-catalog tobb_training_pages.jsonl.gz \
+            --db-path warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
+
+          python3 collector/tobb_sayfa_indeksli_sirket_veritabani.py \
+            --merge-dir ocr_artifacts \
+            --db-path warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
+
+          gzip -c warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
+          gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
+
+      - name: Kalan Arşiv Varsa 40x OCR İş Akışını Otomatik Yeniden Başlat
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TOTAL_ARCHIVES=$(python3 -c '
+          import gzip, json
+          s = set()
+          with gzip.open("tobb_training_pages.jsonl.gz", "rt", encoding="utf-8") as f:
+              for ln in f:
+                  a = json.loads(ln).get("archive")
+                  if a: s.add(a)
+          print(len(s))
+          ')
+          DONE_ARCHIVES=$(wc -l < tobb_ocr_processed_archives.txt | tr -d ' ')
+          echo "📊 OCR İlerleme: $DONE_ARCHIVES / $TOTAL_ARCHIVES arşiv paketi tamamlandı."
+          if [ "$DONE_ARCHIVES" -lt "$TOTAL_ARCHIVES" ]; then
+            echo "🔄 Kalan arşiv paketleri için 40 makine OCR matrisi yeniden tetikleniyor..."
+            gh workflow run tobb_ocr_40_nodes.yml
+          else
+            echo "🎉 Tüm mevcut PDF arşivlerinin OCR işlemi tamamlandı!"
+          fi

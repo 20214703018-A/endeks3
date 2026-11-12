@@ -134,10 +134,12 @@ class PacedSession(requests.Session):
     def send(self, request, **kwargs):
         # requests calls send again for automatic redirects, so those share
         # the same quota as login, viewer and file requests on all threads.
+        had_pooled_socket = self._has_pooled_socket
+        if self._has_pooled_socket and time.monotonic() - self.last_used >= 10.0:
+            self.close()
         wait_started = time.monotonic()
         self.gate.wait()
         paced_wait = time.monotonic() - wait_started
-        had_pooled_socket = self._has_pooled_socket
         try:
             try:
                 response = super().send(request, **kwargs)
@@ -235,8 +237,6 @@ class TOBBSessionManager:
             print(f'Source transport failure: {type(exc).__name__}; all routes paused {pause_secs}s; request interval {self.network_gate.interval:g}s', flush=True)
 
     def _pdf_session(self):
-        if self.is_authenticated:
-            return self.session
         # Do not let parallel file responses mutate the authenticated viewer's
         # shared cookie jar. Reuse connections separately in each file worker.
         if not hasattr(self.pdf_sessions, 'session'):
@@ -335,11 +335,13 @@ class TOBBSessionManager:
             return response, generation
         except requests.RequestException as exc:
             with self.request_gate:
+                if self.is_authenticated:
+                    self.session.close()
                 self.view_failures += 1
                 print(f'Viewer connection failure: {type(exc).__name__}; consecutive={self.view_failures}', flush=True)
                 # A failed TCP connection means the endpoint cannot currently
                 # be reached. Do not open more connections before cooling down.
-                failure_limit = 1 if isinstance(exc, requests.ConnectTimeout) else 3
+                failure_limit = 3 if self.is_authenticated else (1 if isinstance(exc, requests.ConnectTimeout) else 3)
                 if self.view_failures >= failure_limit:
                     self.failure_windows += 1
                     self.view_failures = 0
@@ -352,10 +354,12 @@ class TOBBSessionManager:
                         print(f'Source recovery request interval: {self.network_gate.interval:g}s', flush=True)
                     if self.failure_windows >= self.max_failure_windows:
                         self.source_stopped = 'SOURCE_UNAVAILABLE'
-                        self.retry_view_at = time.monotonic() + 600
+                        unavail_wait = 60 if self.is_authenticated else 600
+                        self.retry_view_at = time.monotonic() + unavail_wait
                         print(f'Viewer unavailable after {self.max_failure_windows} recovery windows; preserving completed files', flush=True)
                     else:
-                        cooldown = min(300, self.view_cooldown * 2**(self.failure_windows - 1))
+                        max_cd = 30 if self.is_authenticated else 300
+                        cooldown = min(max_cd, self.view_cooldown * 2**(self.failure_windows - 1))
                         self.retry_view_at = time.monotonic() + cooldown
                         print(f'Viewer cooldown: {cooldown}s; only one probe follows', flush=True)
             raise
@@ -538,7 +542,13 @@ class TOBBSessionManager:
                 pdf_url = pdf_rel if pdf_rel.startswith("http") else f"https://www.ticaretsicil.gov.tr{pdf_rel}"
                 try:
                     with self.network_gate.fast_scope():
-                        r_pdf = self._download_response(pdf_url, timeout=15, budget=90, pdf=True)
+                        try:
+                            r_pdf = self._download_response(pdf_url, timeout=15, budget=90, pdf=True)
+                        except requests.ConnectionError as exc:
+                            if isinstance(exc, requests.Timeout) or not self.is_authenticated:
+                                raise
+                            self._pdf_session().close()
+                            r_pdf = self._download_response(pdf_url, timeout=15, budget=90, pdf=True)
                     if r_pdf.status_code == 429:
                         self._source_limit(r_pdf)
                         return None, "SOURCE_THROTTLED"
@@ -623,7 +633,7 @@ def upload_bundle_to_release(bundle_path: Path, shard_id: int) -> str:
             break
         if buckets:
             bucket = buckets.popleft()
-        elif capacity_failure and not transient_failure:
+        elif capacity_failure:
             # Each shard grows its own series (2,42,82,... for shard 1).
             # Preferred buckets outside the initial range are reused above.
             bucket = f'warehouse-pdf-{shard_id + 1 + 40 * generation}'
