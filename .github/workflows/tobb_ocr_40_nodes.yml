@@ -181,5 +181,7 @@ jobs:
             echo "🔄 Kalan arşiv paketleri için 40 makine OCR matrisi yeniden tetikleniyor..."
             gh workflow run tobb_ocr_40_nodes.yml
           else
-            echo "🎉 Tüm mevcut PDF arşivlerinin OCR işlemi tamamlandı!"
+            echo "🎉 Tüm mevcut PDF arşivlerinin OCR işlemi tamamlandı! Turbo PDF indirme matrisi yeniden başlatılıyor..."
+            gh workflow enable tobb_gazete_pdf_40_nodes.yml || true
+            gh workflow run tobb_gazete_pdf_40_nodes.yml || true
           fi

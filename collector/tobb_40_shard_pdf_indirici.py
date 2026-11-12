@@ -304,7 +304,8 @@ class TOBBSessionManager:
                 if (self.failed_renewal and (self.persistent_source or len(self.failed_renewal) > 2 and self.failed_renewal[2] == 'network')
                         and self.failed_renewal[0] == self.session_generation):
                     eligible_at = max(eligible_at, self.failed_renewal[1] + 60)
-                if not self.renewing and self.active_views == 0 and now >= eligible_at:
+                max_active = 2 if self.is_authenticated else 1
+                if not self.renewing and self.active_views < max_active and now >= eligible_at:
                     self.next_view_at = now + self.view_interval
                     break
                 wait_for = max(0.01, eligible_at - now) if now < eligible_at else 1
@@ -325,7 +326,7 @@ class TOBBSessionManager:
                     self.failure_windows = 0
                     self.successful_views += 1
                     if self.is_authenticated and self.successful_views % 35 == 0:
-                        self.next_view_at = max(self.next_view_at, time.monotonic() + 3.5)
+                        self.next_view_at = max(self.next_view_at, time.monotonic() + 1.2)
                     if (self.successful_views >= 15 and time.monotonic() - self.last_pace_change >= 60
                             and self.network_gate.interval > self.minimum_request_interval):
                         self.network_gate.interval = max(self.minimum_request_interval, self.network_gate.interval / 2)
@@ -680,6 +681,9 @@ def upload_bundle_to_release(bundle_path: Path, shard_id: int) -> str:
             if 'file_count' in error or 'maximum number of release assets' in error:
                 _full_release_buckets.add(bucket)
                 capacity_failure = True
+                next_gen_bucket = f'warehouse-pdf-{shard_id + 1 + 40 * generation}'
+                generation += 1
+                buckets.appendleft(next_gen_bucket)
                 print(f'Archive bucket full: {bucket}; preserving existing files', flush=True)
             elif any(code in error for code in ('http 401', 'http 403', 'http 429', 'rate limit')):
                 break
@@ -931,6 +935,19 @@ def main():
                 len(optimized.content), (unvan or "")[:28], len(pdf_bytes))
 
     seen_pages = set()
+    catalog_gz = REPO_ROOT / "tobb_training_pages.jsonl.gz"
+    if catalog_gz.exists():
+        import gzip as _gzip
+        try:
+            with _gzip.open(catalog_gz, "rt", encoding="utf-8") as _cf:
+                for _ln in _cf:
+                    _obj = json.loads(_ln)
+                    _s, _p = str(_obj.get("gazete_sayisi") or "").strip(), str(_obj.get("sayfa_no") or "").strip()
+                    if _s and _p:
+                        seen_pages.add((_s, _p))
+            print(f"✅ Pre-loaded {len(seen_pages):,} already archived pages from {catalog_gz.name}", flush=True)
+        except Exception as _exc:
+            print(f"⚠️ Could not pre-load {catalog_gz.name}: {_exc}", flush=True)
     cursor_state = {"pass": 1, "last_id": 999999999}
 
     fatal_error = None
