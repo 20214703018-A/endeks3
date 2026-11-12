@@ -304,8 +304,7 @@ class TOBBSessionManager:
                 if (self.failed_renewal and (self.persistent_source or len(self.failed_renewal) > 2 and self.failed_renewal[2] == 'network')
                         and self.failed_renewal[0] == self.session_generation):
                     eligible_at = max(eligible_at, self.failed_renewal[1] + 60)
-                max_active = 2 if self.is_authenticated else 1
-                if not self.renewing and self.active_views < max_active and now >= eligible_at:
+                if not self.renewing and self.active_views == 0 and now >= eligible_at:
                     self.next_view_at = now + self.view_interval
                     break
                 wait_for = max(0.01, eligible_at - now) if now < eligible_at else 1
@@ -326,7 +325,7 @@ class TOBBSessionManager:
                     self.failure_windows = 0
                     self.successful_views += 1
                     if self.is_authenticated and self.successful_views % 35 == 0:
-                        self.next_view_at = max(self.next_view_at, time.monotonic() + 1.2)
+                        self.next_view_at = max(self.next_view_at, time.monotonic() + 2.5)
                     if (self.successful_views >= 15 and time.monotonic() - self.last_pace_change >= 60
                             and self.network_gate.interval > self.minimum_request_interval):
                         self.network_gate.interval = max(self.minimum_request_interval, self.network_gate.interval / 2)
@@ -342,7 +341,7 @@ class TOBBSessionManager:
                 print(f'Viewer connection failure: {type(exc).__name__}; consecutive={self.view_failures}', flush=True)
                 # A failed TCP connection means the endpoint cannot currently
                 # be reached. Do not open more connections before cooling down.
-                failure_limit = 3 if self.is_authenticated else (1 if isinstance(exc, requests.ConnectTimeout) else 3)
+                failure_limit = 1 if isinstance(exc, requests.ConnectTimeout) else 3
                 if self.view_failures >= failure_limit:
                     self.failure_windows += 1
                     self.view_failures = 0
@@ -355,11 +354,11 @@ class TOBBSessionManager:
                         print(f'Source recovery request interval: {self.network_gate.interval:g}s', flush=True)
                     if self.failure_windows >= self.max_failure_windows:
                         self.source_stopped = 'SOURCE_UNAVAILABLE'
-                        unavail_wait = 60 if self.is_authenticated else 600
+                        unavail_wait = 120 if self.is_authenticated else 600
                         self.retry_view_at = time.monotonic() + unavail_wait
                         print(f'Viewer unavailable after {self.max_failure_windows} recovery windows; preserving completed files', flush=True)
                     else:
-                        max_cd = 30 if self.is_authenticated else 300
+                        max_cd = 60 if self.is_authenticated else 300
                         cooldown = min(max_cd, self.view_cooldown * 2**(self.failure_windows - 1))
                         self.retry_view_at = time.monotonic() + cooldown
                         print(f'Viewer cooldown: {cooldown}s; only one probe follows', flush=True)
@@ -786,6 +785,8 @@ def main():
     parser.add_argument("--bundle-size", type=int, default=BUNDLE_SIZE)
     parser.add_argument("--request-interval", type=float, default=1.0,
                         help="Minimum seconds between all TOBB requests on this runner")
+    parser.add_argument("--startup-stagger", type=float, default=0.0,
+                        help="Seconds per shard index to stagger startup connections across runners")
     parser.add_argument("--recovery-windows", type=int, default=8,
                         help="Bounded recovery probes for transient source connection failures")
     parser.add_argument("--persistent-source", action="store_true",
@@ -796,6 +797,8 @@ def main():
         parser.error("shard/num-shards and limits must be positive and valid")
     if not 0 < args.request_interval <= 60:
         parser.error("request-interval must be between 0 and 60 seconds")
+    if not 0 <= args.startup_stagger <= 30:
+        parser.error("startup-stagger must be between 0 and 30 seconds")
     if not 1 <= args.recovery_windows <= 32:
         parser.error("recovery-windows must be between 1 and 32")
 
@@ -845,12 +848,21 @@ def main():
     mgr = TOBBSessionManager(account.email, account.password, TESSERACT_BIN)
     mgr.download_deadline = time.monotonic() + max(0, deadline - time.time())
     mgr.network_gate.interval = args.request_interval
+    if args.persistent_source and hasattr(mgr.network_gate, "fast_interval"):
+        mgr.network_gate.fast_interval = max(0.35, min(args.request_interval, 0.35))
     mgr.minimum_request_interval = args.request_interval
     mgr.view_interval = min(1.0, args.request_interval)
     mgr.max_failure_windows = args.recovery_windows
     mgr.persistent_source = args.persistent_source
-    print(f"Source request interval: {mgr.network_gate.interval:g}s; minimum={args.request_interval:g}s "
-          "(all routes and redirects)", flush=True)
+    fast_gate = getattr(mgr.network_gate, "fast_interval", None)
+    fast_info = f" (fast={fast_gate:g}s)" if fast_gate is not None else ""
+    print(f"Source request interval: {mgr.network_gate.interval:g}s{fast_info}; "
+          f"minimum={args.request_interval:g}s (all routes and redirects)", flush=True)
+    if args.startup_stagger > 0 and shard_id > 1 and time.time() < deadline:
+        stagger_secs = min(args.startup_stagger * (shard_id - 1), max(0.0, deadline - time.time()))
+        if stagger_secs > 0:
+            print(f"⏱️ Startup stagger: waiting {stagger_secs:.1f}s before TOBB login (shard {shard_id}/{num_shards})", flush=True)
+            time.sleep(stagger_secs)
     while True:
         mgr.auth_deadline = min(time.monotonic() + 60, mgr.download_deadline)
         if mgr.login():
