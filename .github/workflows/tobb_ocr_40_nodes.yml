@@ -150,8 +150,16 @@ jobs:
             --db-path warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
 
           gzip -c warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
-          gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
-          gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
+          rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
+          GZ_SIZE=$(stat -c%s warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz 2>/dev/null || stat -f%z warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz)
+          if [ "$GZ_SIZE" -lt 2000000000 ]; then
+            gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
+            gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
+          else
+            split -b 1800m -d warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_
+            gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* --clobber || true
+            gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* --clobber || true
+          fi
 
       - name: Kalan Arşiv Varsa 40x OCR İş Akışını Otomatik Yeniden Başlat
         if: always()

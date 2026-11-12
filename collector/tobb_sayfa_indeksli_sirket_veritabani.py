@@ -926,6 +926,10 @@ def merge_ocr_shard_databases(shards_dir: Path, master_db_path: Path) -> dict:
             """)
             conn.commit()
             conn.execute("DETACH DATABASE sh")
+            try:
+                shard_db.unlink()
+            except Exception:
+                pass
         except Exception as exc:
             print(f"⚠️ Shard merge hatası ({shard_db}): {exc}", flush=True)
             try:
