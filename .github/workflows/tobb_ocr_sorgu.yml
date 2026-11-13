@@ -14,7 +14,7 @@ on:
       anchor_cap:
         description: "Yalnızca ilk kelime eşleşmesi için saklanacak azami örnek"
         required: false
-        default: "40"
+        default: "100"
 
 permissions:
   contents: read
@@ -26,7 +26,8 @@ concurrency:
 jobs:
   query:
     name: "OCR Master SQLite Sorgula"
-    runs-on: ubuntu-latest
+    # Linux mining slotları (40x PDF/OCR) doluyken beklememek için ayrı macOS runner sınıfı kullanılır.
+    runs-on: macos-latest
     timeout-minutes: 30
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,24 +40,25 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Runner Diskini Temizle
+      - name: Runner Disk Alanını Hazırla
         run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL || true
+          df -h .
+          sudo rm -rf /Applications/Xcode*.app /usr/local/lib/android ~/Library/Android || true
           df -h .
 
-      - name: warehouse-ocr-index Master SQLite İndir ve Aç
+      - name: warehouse-ocr-index Master SQLite Doğrudan Aç
         run: |
-          gh release download warehouse-ocr-index -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz*" --clobber
-          if ls turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* >/dev/null 2>&1; then
-            cat turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* | gunzip -c > master_ocr.sqlite
-            rm -f turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_*
-          elif [ -f "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" ]; then
-            gunzip -c turkiye_ticaret_sicil_ve_sirketler.sqlite.gz > master_ocr.sqlite
-            rm -f turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
-          else
+          URLS=$(gh release view warehouse-ocr-index --json assets --jq '.assets | sort_by(.name)[] | select(.name | startswith("turkiye_ticaret_sicil_ve_sirketler.sqlite.gz")) | .url')
+          if [ -z "$URLS" ]; then
             echo "Master SQLite Release varlığı bulunamadı!"
             exit 1
           fi
+          (
+            for u in $URLS; do
+              echo "Streaming: $u" >&2
+              curl -fSL --retry 5 --retry-delay 3 "$u"
+            done
+          ) | gunzip -c > master_ocr.sqlite
           ls -lh master_ocr.sqlite
           df -h .
 

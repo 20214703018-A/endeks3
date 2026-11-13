@@ -168,6 +168,7 @@ def collect_db_stats(conn: sqlite3.Connection, tables: set) -> Dict[str, Any]:
         row = conn.execute("""
             SELECT
                 COUNT(*) AS toplam_sirket,
+                SUM(CASE WHEN kaynak = 'TOBB_PDF_OCR' THEN 1 ELSE 0 END) AS ocr_kokenli_sirket,
                 COUNT(DISTINCT UPPER(unvan)) AS tekil_unvan,
                 SUM(CASE WHEN mersis_no GLOB '0[0-9]*' AND LENGTH(mersis_no)=16 THEN 1 ELSE 0 END) AS gercek_mersis_sayisi,
                 SUM(CASE WHEN vkn GLOB '[0-9]*' AND LENGTH(vkn)=10 THEN 1 ELSE 0 END) AS on_haneli_vkn_sayisi,
@@ -186,6 +187,11 @@ def collect_db_stats(conn: sqlite3.Connection, tables: set) -> Dict[str, Any]:
     ):
         if tbl in tables:
             stats[f"{tbl}_toplam"] = conn.execute(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
+
+    if "sirket_bilgi_sayfa_indeksi" in tables:
+        stats["sirket_bilgi_sayfa_indeksi_ocr"] = conn.execute(
+            "SELECT COUNT(*) FROM sirket_bilgi_sayfa_indeksi WHERE COALESCE(kaynak_tipi, '') != 'MASTER_INDEX'"
+        ).fetchone()[0]
 
     if "gazete_sayfa_arsivi" in tables:
         row = conn.execute("""
@@ -381,6 +387,7 @@ def search_ocr_database(
     scan_full_text: bool = True,
     workers: int = 4,
     anchor_cap: int = 40,
+    ocr_only: bool = True,
 ) -> Dict[str, Any]:
     """OCR Master SQLite veritabanında çok katmanlı arama yürütür."""
     t0 = time.time()
@@ -392,6 +399,7 @@ def search_ocr_database(
     result: Dict[str, Any] = {
         "db_path": str(db_path),
         "db_size_bytes": db_path.stat().st_size if db_path.exists() else None,
+        "ocr_only": ocr_only,
         "tablolar": sorted(tables),
         "istatistikler": collect_db_stats(conn, tables) if include_stats else None,
         "sorgular": buckets,
@@ -399,14 +407,15 @@ def search_ocr_database(
     }
 
     if "sirketler" in tables:
+        sirketler_sql = "SELECT * FROM sirketler WHERE kaynak = 'TOBB_PDF_OCR'" if ocr_only else "SELECT * FROM sirketler"
         _scan_table_single_pass(
             conn,
-            "SELECT * FROM sirketler",
+            sirketler_sql,
             ["unvan", "faaliyet_konusu", "tam_adres"],
             specs, buckets, "sirketler", "sirketler_anchor_only_sayisi", anchor_cap,
         )
 
-    if "ticaret_sicil_gazetesi_ilanlari" in tables:
+    if (not ocr_only) and "ticaret_sicil_gazetesi_ilanlari" in tables:
         _scan_table_single_pass(
             conn,
             "SELECT * FROM ticaret_sicil_gazetesi_ilanlari",
@@ -415,9 +424,14 @@ def search_ocr_database(
         )
 
     if "sirket_bilgi_sayfa_indeksi" in tables:
+        sbsi_sql = (
+            "SELECT * FROM sirket_bilgi_sayfa_indeksi WHERE COALESCE(kaynak_tipi, '') != 'MASTER_INDEX'"
+            if ocr_only
+            else "SELECT * FROM sirket_bilgi_sayfa_indeksi"
+        )
         _scan_table_single_pass(
             conn,
-            "SELECT * FROM sirket_bilgi_sayfa_indeksi",
+            sbsi_sql,
             ["unvan", "bilgi_ozeti", "yetkililer_json"],
             specs, buckets, "sirket_bilgi_sayfa_indeksi", "sayfa_indeksi_anchor_only_sayisi", anchor_cap,
         )
@@ -462,7 +476,7 @@ def search_ocr_database(
             )
 
     conn2 = _open_ro(db_path)
-    _enrich_linked_records(conn2, tables, buckets)
+    _enrich_linked_records(conn2, tables if not ocr_only else (tables - {"sirket_ortaklari", "sirket_calisanlari"}), buckets)
     conn2.close()
 
     result["sure_saniye"] = round(time.time() - t0, 2)
@@ -496,6 +510,7 @@ def main() -> int:
     parser.add_argument("--queries", required=True, help="Virgülle ayrılmış arama terimleri")
     parser.add_argument("--no-stats", action="store_true", help="Genel veritabanı sayılarını hesaplama")
     parser.add_argument("--no-full-text", action="store_true", help="gazete_sayfa_arsivi zlib tam metin taramasını atla")
+    parser.add_argument("--include-pre-ocr", action="store_true", help="OCR öncesi HTML katalog kayıtlarını da dahil et (varsayılan: yalnızca OCR verileri)")
     parser.add_argument("--workers", type=int, default=4, help="Tam metin taraması için paralel süreç sayısı")
     parser.add_argument("--anchor-cap", type=int, default=40, help="Yalnızca ilk kelime eşleşmelerinde saklanacak örnek limiti")
     parser.add_argument("--output-json", type=str, default="ocr_sorgu_sonuclari.json")
@@ -510,6 +525,7 @@ def main() -> int:
         scan_full_text=not args.no_full_text,
         workers=args.workers,
         anchor_cap=args.anchor_cap,
+        ocr_only=not args.include_pre_ocr,
     )
 
     Path(args.output_json).write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")

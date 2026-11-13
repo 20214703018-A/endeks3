@@ -50,11 +50,15 @@ def test_search_ocr_database_end_to_end():
             );
         """)
         conn.execute(
-            "INSERT INTO sirketler (mersis_no, ticaret_sicil_no, tsm_adi, vkn, unvan, il, tam_adres) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            ("0178123456700001", "12345", "İSTANBUL", "1781234567", "BOHA DEMİR ÇELİK SANAYİ LİMİTED ŞİRKETİ", "İSTANBUL", "DİLOVASI OSB"),
+            "INSERT INTO sirketler (mersis_no, ticaret_sicil_no, tsm_adi, vkn, unvan, il, tam_adres, kaynak) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            ("0000000000000001", "TEST-1", "İSTANBUL", "0000000001", "ORNEK DEMİR ÇELİK TEST ANONİM ŞİRKETİ", "İSTANBUL", "TEST OSB", "TOBB_PDF_OCR"),
         )
-        raw_page_1 = "İSTANBUL TİCARET SİCİLİ MÜDÜRLÜĞÜ\nUnvan: Boha Demir Çelik Sanayi Ltd. Şti.\nMüdür: Ali Kaya"
-        raw_page_2 = "A.C.R. DEMİR ÇELİK İNŞAAT A.Ş. kuruluş ilanı.\nYönetim Kurulu Başkanı: Veli Demir"
+        conn.execute(
+            "INSERT INTO sirketler (mersis_no, ticaret_sicil_no, tsm_adi, vkn, unvan, il, tam_adres, kaynak) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            ("0000000000000002", "TEST-2", "İSTANBUL", "0000000002", "ORNEK DEMİR ÇELİK PREOCR", "İSTANBUL", "PREOCR", "ITO"),
+        )
+        raw_page_1 = "İSTANBUL TİCARET SİCİLİ MÜDÜRLÜĞÜ\nUnvan: Ornek Demir Çelik Test A.Ş.\nMüdür: Test Kisi Bir"
+        raw_page_2 = "A.B.C. DEMİR ÇELİK TEST LTD. kuruluş ilanı.\nYönetim Kurulu Başkanı: Test Kisi Iki"
         conn.execute(
             "INSERT INTO gazete_sayfa_arsivi (gazete_sayisi, sayfa_no, yayin_tarihi, tsm_adi, archive_url, pdf_member, sayfa_metni_zlib, ocr_durumu) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
             ("11001", "5", "2024-05-01", "İSTANBUL", "https://example.invalid/a.tar.gz", "g1.pdf", zlib.compress(raw_page_1.encode("utf-8")), 1),
@@ -67,23 +71,24 @@ def test_search_ocr_database_end_to_end():
             """INSERT INTO gazete_kisi_ve_isim_indeksi
             (kisi_adi_soyadi, tckn_veya_kimlik, gorevi_veya_rolu, bagli_unvan, gazete_sayisi, sayfa_no, archive_url, pdf_member)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-            ("ALİ KAYA", "123*****45", "ŞİRKET MÜDÜRÜ", "BOHA DEMİR ÇELİK SANAYİ LTD. ŞTİ.", "11001", "5", "https://example.invalid/a.tar.gz", "g1.pdf"),
+            ("TEST KISI BIR", "000*****00", "ŞİRKET MÜDÜRÜ", "ORNEK DEMİR ÇELİK TEST A.Ş.", "11001", "5", "https://example.invalid/a.tar.gz", "g1.pdf"),
         )
         conn.commit()
         conn.close()
 
         out = search_ocr_database(
             db_path=db_path,
-            raw_queries=["boha demir çelik", "acr demir çelik"],
-            workers=1,
+            raw_queries=["ornek demir çelik", "abc demir çelik"],
+            workers=2,
+            ocr_only=True,
         )
 
         assert out["taranan_sayfa_tam_metni"] == 2
-        boha = out["sorgular"]["boha demir çelik"]
-        acr = out["sorgular"]["acr demir çelik"]
-        assert len(boha["sirketler"]) == 1
-        assert len(boha["gazete_sayfa_arsivi_eslesmeleri"]) == 1
-        assert boha["gazete_sayfa_arsivi_eslesmeleri"][0]["_eslesme_seviyesi"] == "exact_all_tokens"
-        assert len(boha["gazete_kisi_ve_isim_indeksi"]) == 1
-        assert len(acr["gazete_sayfa_arsivi_eslesmeleri"]) == 1
-        assert acr["gazete_sayfa_arsivi_eslesmeleri"][0]["gazete_sayisi"] == "11002"
+        q1 = out["sorgular"]["ornek demir çelik"]
+        q2 = out["sorgular"]["abc demir çelik"]
+        assert len(q1["sirketler"]) == 1
+        assert len(q1["gazete_sayfa_arsivi_eslesmeleri"]) == 1
+        assert q1["gazete_sayfa_arsivi_eslesmeleri"][0]["_eslesme_seviyesi"] == "exact_all_tokens"
+        assert len(q1["gazete_kisi_ve_isim_indeksi"]) == 1
+        assert len(q2["gazete_sayfa_arsivi_eslesmeleri"]) == 1
+        assert q2["gazete_sayfa_arsivi_eslesmeleri"][0]["gazete_sayisi"] == "11002"
