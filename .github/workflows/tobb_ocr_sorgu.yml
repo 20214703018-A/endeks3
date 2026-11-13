@@ -1,0 +1,86 @@
+name: "GEOPROP TOBB OCR Master Veritabanı Sorgu"
+
+on:
+  workflow_dispatch:
+    inputs:
+      queries:
+        description: "Virgülle ayrılmış arama terimleri"
+        required: true
+        default: "boha demir çelik, acr demir çelik"
+      scan_full_text:
+        description: "503k sıkıştırılmış OCR sayfa tam metinlerini de tara"
+        type: boolean
+        default: true
+      anchor_cap:
+        description: "Yalnızca ilk kelime eşleşmesi için saklanacak azami örnek"
+        required: false
+        default: "40"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tobb-ocr-sorgu-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  query:
+    name: "OCR Master SQLite Sorgula"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Repoyu Klonla
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 Kur
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Runner Diskini Temizle
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL || true
+          df -h .
+
+      - name: warehouse-ocr-index Master SQLite İndir ve Aç
+        run: |
+          gh release download warehouse-ocr-index -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz*" --clobber
+          if ls turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* >/dev/null 2>&1; then
+            cat turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* | gunzip -c > master_ocr.sqlite
+            rm -f turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_*
+          elif [ -f "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" ]; then
+            gunzip -c turkiye_ticaret_sicil_ve_sirketler.sqlite.gz > master_ocr.sqlite
+            rm -f turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          else
+            echo "Master SQLite Release varlığı bulunamadı!"
+            exit 1
+          fi
+          ls -lh master_ocr.sqlite
+          df -h .
+
+      - name: OCR Veritabanında Sorgu Çalıştır
+        run: |
+          EXTRA_FLAG=""
+          if [ "${{ inputs.scan_full_text }}" != "true" ]; then
+            EXTRA_FLAG="--no-full-text"
+          fi
+          python3 collector/tobb_ocr_sorgu.py \
+            --db-path master_ocr.sqlite \
+            --queries "${{ inputs.queries }}" \
+            --workers 4 \
+            --anchor-cap "${{ inputs.anchor_cap }}" \
+            $EXTRA_FLAG \
+            --output-json ocr_sorgu_sonuclari.json \
+            --output-md ocr_sorgu_raporu.md
+          ls -lh ocr_sorgu_sonuclari.json ocr_sorgu_raporu.md
+
+      - name: Sorgu Sonuçlarını Artifact Olarak Yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocr-sorgu-sonuclari-${{ github.run_id }}
+          path: |
+            ocr_sorgu_sonuclari.json
+            ocr_sorgu_raporu.md
+          retention-days: 7
