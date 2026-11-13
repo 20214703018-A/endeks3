@@ -11,17 +11,26 @@ on:
         description: 'Runner başına paralel OCR iş parçacığı sayısı (4 vCPU)'
         required: true
         default: '4'
+      merge_run_ids:
+        description: 'Yalnızca belirtilen Run ID artifactlerini birleştir (ör. 43259257501,43311536925); boşsa OCR çalışır'
+        required: false
+        default: ''
+      skip_retrigger:
+        description: 'Birleştirme sonrası otomatik yeniden tetiklemeyi atla'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
   actions: write
 
 concurrency:
-  group: tobb_ocr_40_matrix
+  group: ${{ (inputs.merge_run_ids || '') != '' && format('tobb_ocr_merge_{0}', github.run_id) || 'tobb_ocr_40_matrix' }}
   cancel-in-progress: false
 
 jobs:
   ocr_shards:
+    if: ${{ (inputs.merge_run_ids || '') == '' }}
     name: "OCR Shard ${{ matrix.shard }}/40"
     runs-on: ubuntu-latest
     timeout-minutes: 330
@@ -59,8 +68,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          gh release download warehouse-ocr-index -p "tobb_training_pages.jsonl.gz" --clobber 2>/dev/null || \
           gh release download warehouse-pdf-20 -p "tobb_training_pages.jsonl.gz" --clobber
-          gh release download warehouse-pdf-20 -p "tobb_ocr_processed_archives.txt.gz" --clobber || true
+          gh release download warehouse-ocr-index -p "tobb_ocr_processed_archives.txt.gz" --clobber 2>/dev/null || \
+          gh release download warehouse-pdf-20 -p "tobb_ocr_processed_archives.txt.gz" --clobber 2>/dev/null || true
           if [ -f "tobb_ocr_processed_archives.txt.gz" ]; then
             gunzip -c tobb_ocr_processed_archives.txt.gz > tobb_ocr_processed_archives_${{ matrix.shard }}.txt
           else
@@ -93,9 +104,9 @@ jobs:
   merge_ocr_and_retrigger:
     name: "40 OCR Shard Veritabanını Birleştir ve Kalıcı Arşivle"
     needs: [ocr_shards]
-    if: always()
+    if: ${{ always() && (needs.ocr_shards.result != 'cancelled') }}
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
       - name: Repoyu Klonla
         uses: actions/checkout@v4
@@ -109,60 +120,103 @@ jobs:
         run: |
           pip install pymupdf
 
-      - name: Tüm OCR Shard Çıktılarını İndir
-        uses: actions/download-artifact@v4
-        with:
-          path: ocr_artifacts
-          pattern: ocr-shard-output-*
-
-      - name: Master SQLite Veritabanını İndir, Sayfa/İsim/OCR Kayıtlarını Birleştir ve Yayınla
+      - name: Disk Alanı Aç ve Master + OCR Shard Çıktılarını Birleştir
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_RUN_IDS: ${{ inputs.merge_run_ids || '' }}
         run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost /opt/hostedtoolcache/CodeQL || true
+          df -h
           mkdir -p warehouse/product
+
+          gh release download warehouse-ocr-index -p "tobb_training_pages.jsonl.gz" --clobber 2>/dev/null || \
           gh release download warehouse-pdf-20 -p "tobb_training_pages.jsonl.gz" --clobber
-          gh release download warehouse-pdf-20 -p "tobb_ocr_processed_archives.txt.gz" --clobber || true
+          gh release download warehouse-ocr-index -p "tobb_ocr_processed_archives.txt.gz" --clobber 2>/dev/null || \
+          gh release download warehouse-pdf-20 -p "tobb_ocr_processed_archives.txt.gz" --clobber 2>/dev/null || true
           if [ -f "tobb_ocr_processed_archives.txt.gz" ]; then
             gunzip -f tobb_ocr_processed_archives.txt.gz
           else
             touch tobb_ocr_processed_archives.txt
           fi
 
-          cat ocr_artifacts/*/tobb_ocr_processed_archives_*.txt >> tobb_ocr_processed_archives.txt 2>/dev/null || true
-          sort -u tobb_ocr_processed_archives.txt -o tobb_ocr_processed_archives.txt
-          PROCESSED_COUNT=$(wc -l < tobb_ocr_processed_archives.txt | tr -d ' ')
-          echo "✅ Toplam OCR tamamlanan arşiv paketi: $PROCESSED_COUNT"
-          gzip -c tobb_ocr_processed_archives.txt > tobb_ocr_processed_archives.txt.gz
-          gh release upload warehouse-pdf-20 tobb_ocr_processed_archives.txt.gz --clobber
-
-          gh release download warehouse-pdf-1 -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber || \
-          gh release download warehouse-latest -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber || true
-          if [ -f "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" ]; then
-            gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
-          fi
+          restore_master() {
+            for rel in warehouse-ocr-index warehouse-pdf-1 warehouse-latest; do
+              rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz*
+              if gh release download "$rel" -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_*" --dir warehouse/product/ --clobber 2>/dev/null; then
+                cat warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+                rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_*
+                gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+                echo "✅ Master SQLite ($rel multipart) geri yüklendi."
+                return 0
+              fi
+              if gh release download "$rel" -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber 2>/dev/null; then
+                gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+                echo "✅ Master SQLite ($rel single) geri yüklendi."
+                return 0
+              fi
+            done
+            return 1
+          }
+          restore_master || true
 
           python3 collector/tobb_sayfa_indeksli_sirket_veritabani.py \
             --init-from-catalog tobb_training_pages.jsonl.gz \
             --db-path warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
 
-          python3 collector/tobb_sayfa_indeksli_sirket_veritabani.py \
-            --merge-dir ocr_artifacts \
-            --db-path warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
+          if [ -n "$MERGE_RUN_IDS" ]; then
+            TARGET_RUNS=$(echo "$MERGE_RUN_IDS" | tr ',' ' ')
+          else
+            TARGET_RUNS="$GITHUB_RUN_ID"
+          fi
 
+          for RID in $TARGET_RUNS; do
+            echo "📥 Run $RID OCR shard çıktıları indiriliyor ve birleştiriliyor..."
+            for batch_start in 1 9 17 25 33; do
+              rm -rf ocr_batch && mkdir -p ocr_batch
+              batch_end=$((batch_start + 7))
+              for s in $(seq "$batch_start" "$batch_end"); do
+                gh run download "$RID" -n "ocr-shard-output-${s}" -D "ocr_batch/shard_${s}" 2>/dev/null || true
+              done
+              cat ocr_batch/*/tobb_ocr_processed_archives_*.txt >> tobb_ocr_processed_archives.txt 2>/dev/null || true
+              python3 collector/tobb_sayfa_indeksli_sirket_veritabani.py \
+                --merge-dir ocr_batch \
+                --db-path warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
+              rm -rf ocr_batch
+            done
+          done
+
+          sort -u tobb_ocr_processed_archives.txt -o tobb_ocr_processed_archives.txt
+          PROCESSED_COUNT=$(wc -l < tobb_ocr_processed_archives.txt | tr -d ' ')
+          echo "✅ Toplam OCR tamamlanan arşiv paketi: $PROCESSED_COUNT"
+          gzip -c tobb_ocr_processed_archives.txt > tobb_ocr_processed_archives.txt.gz
+
+          gh release create warehouse-ocr-index --title "TOBB OCR Index & Master Archive" --notes "OCR processed log and master SQLite" 2>/dev/null || true
+          gh release upload warehouse-ocr-index tobb_ocr_processed_archives.txt.gz --clobber
+
+          ls -lh warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
           gzip -c warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
           rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
           GZ_SIZE=$(stat -c%s warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz 2>/dev/null || stat -f%z warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz)
+          echo "📦 Sıkıştırılmış Master SQLite boyutu: $GZ_SIZE bayt"
           if [ "$GZ_SIZE" -lt 2000000000 ]; then
+            gh release upload warehouse-ocr-index warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
+            for p in $(gh release view warehouse-ocr-index --json assets --jq '.assets[].name | select(startswith("turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_"))' 2>/dev/null || true); do
+              gh release delete-asset warehouse-ocr-index "$p" -y || true
+            done
             gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
             gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
           else
             split -b 1800m -d warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_
-            gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* --clobber || true
-            gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* --clobber || true
+            rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+            gh release upload warehouse-ocr-index warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* --clobber
+            for p in $(gh release view warehouse-ocr-index --json assets --jq '.assets[].name | select(startswith("turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_"))' 2>/dev/null || true); do
+              [ -f "warehouse/product/$p" ] || gh release delete-asset warehouse-ocr-index "$p" -y || true
+            done
+            gh release delete-asset warehouse-ocr-index turkiye_ticaret_sicil_ve_sirketler.sqlite.gz -y 2>/dev/null || true
           fi
 
       - name: Kalan Arşiv Varsa 40x OCR İş Akışını Otomatik Yeniden Başlat
-        if: always()
+        if: ${{ success() && !inputs.skip_retrigger }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

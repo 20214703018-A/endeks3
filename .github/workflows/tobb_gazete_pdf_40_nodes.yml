@@ -83,12 +83,24 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost /opt/hostedtoolcache/CodeQL || true
           mkdir -p warehouse/product
+          gh release download warehouse-ocr-index -p "tobb_training_pages.jsonl.gz" --clobber 2>/dev/null || \
           gh release download warehouse-pdf-20 -p "tobb_training_pages.jsonl.gz" --clobber || true
-          gh release download warehouse-pdf-1 -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber || \
-          gh release download warehouse-latest -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber || true
-          if [ -f "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" ]; then
-            gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          for rel in warehouse-ocr-index warehouse-pdf-1 warehouse-latest; do
+            rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz*
+            if gh release download "$rel" -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_*" --dir warehouse/product/ --clobber 2>/dev/null; then
+              cat warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+              rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_*
+              gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+              break
+            fi
+            if gh release download "$rel" -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber 2>/dev/null; then
+              gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+              break
+            fi
+          done
+          if [ -f "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite" ]; then
             echo "✅ Master SQLite ambarı başarıyla geri yüklendi: $(ls -lh warehouse/product/*.sqlite)"
           fi
 
@@ -146,11 +158,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost /opt/hostedtoolcache/CodeQL || true
           mkdir -p warehouse/product
-          gh release download warehouse-pdf-1 -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber || \
-          gh release download warehouse-latest -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber || true
-          if [ -f "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" ]; then
-            gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+          for rel in warehouse-ocr-index warehouse-pdf-1 warehouse-latest; do
+            rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz*
+            if gh release download "$rel" -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_*" --dir warehouse/product/ --clobber 2>/dev/null; then
+              cat warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+              rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_*
+              gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+              break
+            fi
+            if gh release download "$rel" -p "turkiye_ticaret_sicil_ve_sirketler.sqlite.gz" --dir warehouse/product/ --clobber 2>/dev/null; then
+              gunzip -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+              break
+            fi
+          done
+          if [ -f "warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite" ]; then
             echo "✅ Master SQLite ambarı geri yüklendi: $(ls -lh warehouse/product/*.sqlite)"
           fi
 
@@ -183,10 +206,28 @@ jobs:
         run: |
           echo "📦 Master SQLite sıkıştırılıyor..."
           gzip -6 -c warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite > warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
-          echo "☁️ GitHub Release 'warehouse-pdf-1' ve 'warehouse-latest' içine yükleniyor..."
-          gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
-          gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
-          gh release upload warehouse-pdf-20 training_index/tobb_training_pages.jsonl.gz training_index/tobb_training_archives.jsonl.gz training_index/tobb_training_index_summary.json --clobber
+          rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite
+          GZ_SIZE=$(stat -c%s warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz 2>/dev/null || stat -f%z warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz)
+          echo "☁️ GitHub Release 'warehouse-ocr-index' (+ legacy mirror) içine yükleniyor (boyut=$GZ_SIZE)..."
+          gh release create warehouse-ocr-index --title "TOBB OCR Index & Master Archive" --notes "OCR processed log and master SQLite" 2>/dev/null || true
+          if [ "$GZ_SIZE" -lt 2000000000 ]; then
+            gh release upload warehouse-ocr-index warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber
+            for p in $(gh release view warehouse-ocr-index --json assets --jq '.assets[].name | select(startswith("turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_"))' 2>/dev/null || true); do
+              gh release delete-asset warehouse-ocr-index "$p" -y || true
+            done
+            gh release upload warehouse-pdf-1 warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
+            gh release upload warehouse-latest warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz --clobber || true
+          else
+            split -b 1800m -d warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_
+            rm -f warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz
+            gh release upload warehouse-ocr-index warehouse/product/turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_* --clobber
+            for p in $(gh release view warehouse-ocr-index --json assets --jq '.assets[].name | select(startswith("turkiye_ticaret_sicil_ve_sirketler.sqlite.gz.part_"))' 2>/dev/null || true); do
+              [ -f "warehouse/product/$p" ] || gh release delete-asset warehouse-ocr-index "$p" -y || true
+            done
+            gh release delete-asset warehouse-ocr-index turkiye_ticaret_sicil_ve_sirketler.sqlite.gz -y 2>/dev/null || true
+          fi
+          gh release upload warehouse-ocr-index training_index/tobb_training_pages.jsonl.gz training_index/tobb_training_archives.jsonl.gz training_index/tobb_training_index_summary.json --clobber
+          gh release upload warehouse-pdf-20 training_index/tobb_training_pages.jsonl.gz training_index/tobb_training_archives.jsonl.gz training_index/tobb_training_index_summary.json --clobber || true
           echo "✅ Master SQLite ve toplu eğitim dizini güncellendi."
 
       - name: Bir Sonraki Koşuyu Başlat (Otonom Kesintisiz Döngü)

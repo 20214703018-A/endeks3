@@ -631,6 +631,7 @@ def populate_page_index_from_existing_catalog(db_path: Path, pages_jsonl_gz: Pat
     """, (now_iso,))
     conn.commit()
 
+    conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
     total_pages = conn.execute("SELECT COUNT(*) FROM gazete_sayfa_arsivi").fetchone()[0]
     total_linked = conn.execute("SELECT COUNT(*) FROM sirket_bilgi_sayfa_indeksi").fetchone()[0]
     conn.close()
@@ -815,6 +816,10 @@ def run_ocr_shard(
                     flush=True
                 )
 
+    try:
+        conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    except Exception:
+        pass
     conn.close()
     return {
         "shard_id": shard_id,
@@ -834,6 +839,29 @@ def merge_ocr_shard_databases(shards_dir: Path, master_db_path: Path) -> dict:
     """
     conn = sqlite3.connect(str(master_db_path))
     ensure_page_linked_schema(conn)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS sirketler (
+            mersis_no TEXT PRIMARY KEY,
+            ticaret_sicil_no TEXT,
+            tsm_adi TEXT,
+            vkn TEXT,
+            unvan TEXT NOT NULL,
+            sirket_turu TEXT,
+            durum TEXT DEFAULT 'AKTIF',
+            sermaye_tl REAL,
+            kurulus_tarihi TEXT,
+            il TEXT,
+            ilce TEXT,
+            tam_adres TEXT,
+            faaliyet_konusu TEXT,
+            nace_kodu TEXT,
+            telefon TEXT,
+            web_sitesi TEXT,
+            kaynak TEXT NOT NULL,
+            guncellenme_tarihi TEXT NOT NULL
+        )
+    """)
+    conn.commit()
     merged_pages = 0
     merged_records = 0
     merged_people = 0
@@ -861,7 +889,7 @@ def merge_ocr_shard_databases(shards_dir: Path, master_db_path: Path) -> dict:
                     ocr_durumu = 1,
                     guncellenme_tarihi = excluded.guncellenme_tarihi
             """)
-            merged_pages += cur.rowcount
+            sh_pages = max(0, cur.rowcount)
 
             cur.execute("""
                 INSERT OR REPLACE INTO sirket_bilgi_sayfa_indeksi (
@@ -877,12 +905,13 @@ def merge_ocr_shard_databases(shards_dir: Path, master_db_path: Path) -> dict:
                     kaynak_tipi, guncellenme_tarihi
                 FROM sh.sirket_bilgi_sayfa_indeksi
             """)
-            merged_records += cur.rowcount
+            sh_records = max(0, cur.rowcount)
 
             # Kişi ve isim indeksini birleştir
             has_people_table = cur.execute(
                 "SELECT 1 FROM sh.sqlite_master WHERE type='table' AND name='gazete_kisi_ve_isim_indeksi'"
             ).fetchone()
+            sh_people = 0
             if has_people_table:
                 cur.execute("""
                     INSERT OR REPLACE INTO gazete_kisi_ve_isim_indeksi (
@@ -900,7 +929,7 @@ def merge_ocr_shard_databases(shards_dir: Path, master_db_path: Path) -> dict:
                         archive_url, pdf_member, cumle_baglami, guncellenme_tarihi
                     FROM sh.gazete_kisi_ve_isim_indeksi
                 """)
-                merged_people += cur.rowcount
+                sh_people = max(0, cur.rowcount)
 
             # Yeni keşfedilen gerçek şirketleri ve adres/VKN/sermaye bilgilerini sirketler tablosuna işle
             cur.execute("""
@@ -925,6 +954,9 @@ def merge_ocr_shard_databases(shards_dir: Path, master_db_path: Path) -> dict:
                     guncellenme_tarihi = excluded.guncellenme_tarihi
             """)
             conn.commit()
+            merged_pages += sh_pages
+            merged_records += sh_records
+            merged_people += sh_people
             conn.execute("DETACH DATABASE sh")
             try:
                 shard_db.unlink()
@@ -937,6 +969,10 @@ def merge_ocr_shard_databases(shards_dir: Path, master_db_path: Path) -> dict:
             except Exception:
                 pass
 
+    try:
+        conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    except Exception:
+        pass
     conn.close()
     return {
         "merged_pages": merged_pages,
