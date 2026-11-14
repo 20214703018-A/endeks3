@@ -1,0 +1,130 @@
+name: "GEOPROP Google KAPSAM — eksik sektörler + 973 ilçe + dini yapılar (40x)"
+
+# 14 Kas 2026 (kullanıcı: "spor salonları, fitness, pilates ve farklı sektörleri aradık mı? — evet güncelle"):
+# kanonikte 2,56 M işletme. Eksikler: (a) temel/ek karo setlerinde hiç aranmayan ~200 tür (fitness, spa, mimar, yazılım, kombi
+# servisi, fabrika, müteahhit, tarım…) → KARO_KATEGORILER_KAPSAM; (b) büyükşehir dışında karo yok, metin sorgusu ~160 sonuçta
+# tıkanır → 516 ilçede temel+ek türler de ilçe düzeyinde; (c) camiler ticari-olmayan süzgece takılıyor (2 bin / ~90 bin) →
+# dini yapılar KAMU_MOD=1 ile. Sorgular collector/kapsam_sorgulari.py ile üretilir (~280 bin + ~5 bin), aynı geçmiş tablosu
+# (30 gün yenileme) — artımlı. Sonuç ana ambara (warehouse-latest google_places_ve_yogunluk) birleşir → kanonik işletme/yer.
+
+on:
+  schedule:
+    - cron: '0 12 * * 3,6'   # Çar + Cmt 12:00 UTC (temel karo Pzt/Sal/Per/Cum 02:00, ek 07:30 ile çakışmasın)
+  workflow_dispatch:
+    inputs:
+      max_saniye:
+        description: 'Shard başına azami süre (saniye; kapsam sorguları)'
+        required: false
+        default: '14400'
+      sorgu_sayfa:
+        description: 'Sorgu başına en fazla sayfa (20 sonuç/sayfa)'
+        required: false
+        default: '8'
+
+permissions:
+  contents: write
+
+# Tarama makineleri (shard'lar) eskiden tüm iş akışı olarak 'geoprop-40-node' grubundaydı; şimdi yalnız ambara YAZAN
+# birleştirme işi o grupta (aşağıda). Böylece ek kategori iş akışı (google_karo_ek_40_makine.yml) aynı anda tarayabilir,
+# ama release'e yazmalar yine sırayla yapılır.
+
+env:
+  AMBAR_RELEASE: warehouse-latest
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  karo_shards:
+    name: "Kapsam Shard ${{ matrix.shard }}/40"
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      max-parallel: 34  # 6 makine anlık yoğunluk ölçümüne ayrılı
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: pip install -r requirements.txt
+
+      - name: Ana ambarı indir (artımlı tarama + ölçüm için)
+        run: |
+          mkdir -p warehouse/master warehouse/product
+          ops/ambar_indir.sh google_places_ve_yogunluk.sqlite warehouse/master
+
+      - name: Sorgu listeleri (kapsam + dini)
+        run: python collector/kapsam_sorgulari.py --cikti-dizini /tmp
+
+      - name: Kapsam taraması (eksik sektörler × 973 ilçe)
+        run: |
+          python collector/google_places_ve_yogunluk_toplayici.py \
+            --sorgu-dosyasi /tmp/kapsam_sorgulari.txt --shard ${{ matrix.shard }}/40 \
+            --sorgu-sayfa "${{ github.event.inputs.sorgu_sayfa || '8' }}" \
+            --gecmis-db warehouse/master/google_places_ve_yogunluk.sqlite \
+            --max-seconds "${{ github.event.inputs.max_saniye || '14400' }}"
+
+      - name: Dini yapılar (cami, cemevi, kilise… — ticari süzgeç kapalı)
+        env:
+          KAMU_MOD: "1"
+        run: |
+          python collector/google_places_ve_yogunluk_toplayici.py \
+            --sorgu-dosyasi /tmp/dini_sorgulari.txt --shard ${{ matrix.shard }}/40 \
+            --sorgu-sayfa "${{ github.event.inputs.sorgu_sayfa || '8' }}" \
+            --gecmis-db warehouse/master/google_places_ve_yogunluk.sqlite \
+            --max-seconds 2400
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: shard-kapsam-db-${{ matrix.shard }}
+          path: warehouse/product/*.sqlite
+          retention-days: 3
+          compression-level: 1
+
+  merge_and_publish:
+    name: "Karo shard'larını ana ambara ekle ve release'e yaz"
+    needs: [karo_shards]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: geoprop-40-node   # ambara yazan diğer iş akışlarıyla (detay, genel, ek karo) aynı anda yazmasın
+      cancel-in-progress: false
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Önceki ambarı indir
+        run: |
+          mkdir -p warehouse/product
+          ops/ambar_indir.sh google_places_ve_yogunluk.sqlite warehouse/product
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: shard-kapsam-db-*
+          path: temp_dbs/
+      - name: Birleştir ve gerçek artışı ölç
+        run: |
+          ONCE=$(python -c "import sqlite3; c=sqlite3.connect('warehouse/product/google_places_ve_yogunluk.sqlite'); print(c.execute('select count(*) from google_places_ticari_yogunluk').fetchone()[0])")
+          python geoprop/db_merger.py temp_dbs/ warehouse/product/
+          python - <<'EOF'
+          import sqlite3
+          c = sqlite3.connect("warehouse/product/google_places_ve_yogunluk.sqlite")
+          c.execute("CREATE INDEX IF NOT EXISTS idx_gp_latlon ON google_places_ticari_yogunluk(lat, lon)")
+          c.commit()
+          print("ana ambar işletme:", c.execute("select count(*) from google_places_ticari_yogunluk").fetchone()[0])
+          EOF
+          SONRA=$(python -c "import sqlite3; c=sqlite3.connect('warehouse/product/google_places_ve_yogunluk.sqlite'); print(c.execute('select count(*) from google_places_ticari_yogunluk').fetchone()[0])")
+          echo "📐 KAPSAM KOŞUSU GERÇEK ARTIŞ: $ONCE -> $SONRA (+$((SONRA-ONCE)) işletme)"
+          echo "### Kapsam koşusu: $ONCE → $SONRA (+$((SONRA-ONCE)) işletme)" >> "$GITHUB_STEP_SUMMARY"
+      - name: Kategori tamamla (gcid sözlüğüyle türü bilinmeyen eski kayıtlar)
+        run: python geoprop/kategori_tamamla.py warehouse/product/google_places_ve_yogunluk.sqlite | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Release'e yaz (gz)
+        run: |
+          ops/ambar_yukle.sh warehouse/product/google_places_ve_yogunluk.sqlite
+          gh release edit "$AMBAR_RELEASE" --repo "$GITHUB_REPOSITORY" --notes "Son güncelleme: $(date -u '+%Y-%m-%d %H:%M UTC') — kapsam koşusu ${{ github.run_id }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: warehouse-kapsam-${{ github.run_number }}
+          path: warehouse/product/google_places_ve_yogunluk.sqlite
+          retention-days: 14
+          compression-level: 1

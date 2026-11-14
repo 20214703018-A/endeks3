@@ -1367,8 +1367,52 @@ KARO_KATEGORILER_EK = [
     # yemek alt türleri
     "dönerci", "pizza", "burger", "çiğköfte", "balık restoranı", "kahve dükkanı", "su bayi", "tüp bayi",
 ]
-KARO_KATEGORI_SETLERI = {"temel": KARO_KATEGORILER, "ek": KARO_KATEGORILER_EK,
-                         "hepsi": KARO_KATEGORILER + [k for k in KARO_KATEGORILER_EK if k not in KARO_KATEGORILER]}
+# KAPSAM set (14 Kas 2026): kanonikte 2,56 M işletme; spor/bakım, meslek hizmetleri, usta-servis, üretim, B2B, tarım gibi
+# temel ve ek sette hiç aranmayan sektörler. collector/kapsam_sorgulari.py bununla 973 ilçe × tür metin sorgusu üretir
+# (google_kapsam_40_makine.yml); --mod karo --kategori-seti kapsam ile karolarda da çalışır.
+KARO_KATEGORILER_KAPSAM = [
+    # spor ve sağlıklı yaşam
+    "fitness", "crossfit", "kadın spor salonu", "reformer pilates", "tenis kulübü", "dans stüdyosu", "bale okulu",
+    "yüzme okulu", "binicilik", "golf", "squash", "basketbol sahası", "tırmanış salonu", "e-spor", "spor kulübü",
+    "boks salonu", "kick boks", "jiu jitsu", "tekvando", "karate",
+    # bakım ve estetik
+    "spa", "masaj salonu", "hamam", "sauna", "epilasyon", "lazer epilasyon", "tırnak salonu", "kaş kirpik",
+    "dövme", "estetik merkezi", "cilt bakımı", "solaryum", "diyetisyen", "saç ekimi",
+    # sağlık (ek sette olmayanlar)
+    "aile sağlığı merkezi", "ağız ve diş sağlığı", "ortodonti", "kulak burun boğaz", "kardiyoloji", "dermatoloji",
+    "çocuk doktoru", "kadın doğum", "işitme cihazı", "ortopedi", "evde bakım", "huzurevi", "rehabilitasyon merkezi",
+    "ambulans", "tıbbi cihaz", "ecza deposu", "acil veteriner",
+    # meslek ve iş hizmetleri
+    "mimarlık ofisi", "mühendislik", "iç mimar", "yazılım şirketi", "reklam ajansı", "dijital ajans", "danışmanlık",
+    "mali müşavir", "insan kaynakları", "tercüme bürosu", "patent", "hukuk bürosu", "arabulucu", "gümrük müşaviri",
+    "bilirkişi", "harita mühendisi", "yayınevi", "prodüksiyon", "çağrı merkezi", "güvenlik şirketi", "temizlik şirketi",
+    "ilaçlama", "organizasyon", "catering", "düğün organizasyon", "seyahat acentesi", "vize danışmanlık", "eğitim danışmanlık",
+    "bilgisayar kursu", "müzik kursu", "resim kursu", "yazılım kursu", "özel ders", "kreş", "rehabilitasyon",
+    # usta ve servis
+    "kombi servisi", "klima servisi", "beyaz eşya servisi", "televizyon tamiri", "su tesisatçısı", "doğalgaz tesisatı",
+    "marangoz", "demirci", "kaynakçı", "alüminyum doğrama", "pvc pencere", "cam ustası", "perde", "parke", "seramik",
+    "boya badana", "alçı", "çatı", "izolasyon", "asansör", "jeneratör", "güneş enerjisi", "güvenlik kamerası", "kepenk",
+    "anahtarcı", "mobilya tamiri", "döşemeci", "oto elektrik", "oto boya", "oto döşeme", "oto cam", "rot balans",
+    "egzoz", "çekici", "kaporta",
+    # üretim, sanayi, toptan
+    "fabrika", "atölye", "imalat", "tekstil atölyesi", "konfeksiyon", "kalıp", "torna", "cnc", "plastik", "ambalaj",
+    "metal", "döküm", "makine", "elektrik malzemeleri", "hırdavat", "kereste", "beton santrali", "hazır beton",
+    "prefabrik", "müteahhit", "inşaat şirketi", "hafriyat", "iş makinesi kiralama", "vinç", "lojistik", "antrepo",
+    "soğuk hava deposu", "gıda toptancısı", "içecek bayi", "et entegre", "un fabrikası", "zeytinyağı", "süt ürünleri",
+    "matbaa malzemeleri",
+    # tarım ve hayvancılık
+    "tarım makineleri", "fidancı", "tohum", "gübre", "seracılık", "çiftlik", "arıcılık", "su ürünleri", "veteriner ilaç",
+    # perakende (ek sette olmayanlar)
+    "telefon aksesuar", "bilgisayar mağazası", "outlet", "gelinlik", "abiye", "iç giyim", "bebek mağazası", "kırtasiye toptan",
+    "müzik aletleri", "bisiklet", "av malzemeleri", "kamp malzemeleri", "aydınlatma", "halı", "banyo", "mutfak",
+    "bahçe", "evcil hayvan kuaförü", "ikinci el eşya", "hurda", "geri dönüşüm", "e-ticaret deposu",
+    # konaklama, gıda, eğlence (ek sette olmayanlar)
+    "kamp alanı", "bungalov", "dağ evi", "çay bahçesi", "kahvehane", "lahmacun", "mantı", "ocakbaşı", "steakhouse",
+    "sushi", "vegan", "dondurmacı", "kokoreç", "midye", "simit", "paintball", "kaçış oyunu", "lunapark", "aquapark",
+    "hayvanat bahçesi", "müze", "sanat galerisi", "tiyatro",
+]
+KARO_KATEGORI_SETLERI = {"temel": KARO_KATEGORILER, "ek": KARO_KATEGORILER_EK, "kapsam": KARO_KATEGORILER_KAPSAM,
+                         "hepsi": list(dict.fromkeys(KARO_KATEGORILER + KARO_KATEGORILER_EK + KARO_KATEGORILER_KAPSAM))}
 KARO_BOYUT_DERECE_LAT = 0.0045          # ~500 m
 KARO_YARICAP_KM = 0.7                    # mahalle merkezine bu mesafedeki karolar taranır
 KARO_OLCEK = {0: 1200, 1: 600}           # derinlik -> viewport ölçeği (500 m, 250 m)
@@ -1391,13 +1435,14 @@ def karo_coz(q):
     except Exception:
         return None
 
-def get_karo_queries_by_shard(shard_id, total_shards=40, kategoriler=None, limit=None):
-    """Büyükşehir kentsel (tier 1) mahalle merkezlerinin çevresindeki 500 m karolar × kategori."""
+def get_karo_queries_by_shard(shard_id, total_shards=40, kategoriler=None, limit=None, tierler=(1,)):
+    """Kentsel mahalle merkezlerinin çevresindeki 500 m karolar × kategori. tierler: (1,) büyükşehir kentsel (varsayılan);
+    (1, 2) diğer illerin kentsel mahalleleri (il/ilçe merkezleri) dahil — 14 Kas 2026."""
     import math
     kategoriler = kategoriler or KARO_KATEGORILER
     hucreler = {}   # (i, j) -> (lat, lon, il, ilce, mah)
     for _key, il, ilce, mah, tier in load_mahalle_tiers():
-        if tier != 1:
+        if tier not in tierler:
             continue
         # merkez koordinatını JSON'dan al (load_mahalle_tiers koordinat döndürmüyor)
         hucreler.setdefault("_pending", []).append((il, ilce, mah, _key))
@@ -1512,6 +1557,8 @@ def main():
     parser.add_argument("--mod", choices=["liste", "karo", "hepsi"], default="liste",
                         help="liste: mahalle metin sorguları (varsayılan); karo: büyükşehir 500 m karo taraması; hepsi: ikisi")
     parser.add_argument("--karo-limit", type=int, default=None, help="(Test) shard başına en fazla N karo")
+    parser.add_argument("--karo-tier", type=str, default="1",
+                        help="Karo bölgesi: 1 = büyükşehir kentsel mahalleler; 1,2 = + diğer illerin kentsel mahalleleri")
     parser.add_argument("--kategori-seti", choices=sorted(KARO_KATEGORI_SETLERI), default="temel",
                         help="Karo taramasında aranacak kategori seti (temel: 57 eski · ek: gece hayatı + yeni türler · hepsi)")
     parser.add_argument("--sorgu-dosyasi", type=str, default=None,
@@ -1571,7 +1618,7 @@ def main():
             print(f"Shard {shard_id}/{total}: {len(initial_queries)} temel ticari & mahalle sorgusu yüklendi...")
         if args.mod in ("karo", "hepsi"):
             initial_queries += get_karo_queries_by_shard(shard_id, total, kategoriler=KARO_KATEGORI_SETLERI[args.kategori_seti],
-                                                         limit=args.karo_limit)
+                                                         limit=args.karo_limit, tierler=tuple(int(x) for x in args.karo_tier.split(",")))
     else:
         initial_queries = get_all_commercial_corridor_queries()
         print(f"Varsayılan Mod: {len(initial_queries)} ticari aks sorgulanıyor...")
