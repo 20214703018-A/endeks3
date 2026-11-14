@@ -135,10 +135,12 @@ class PacedSession(requests.Session):
         # requests calls send again for automatic redirects, so those share
         # the same quota as login, viewer and file requests on all threads.
         had_pooled_socket = self._has_pooled_socket
-        if self._has_pooled_socket and time.monotonic() - self.last_used >= 10.0:
+        if self._has_pooled_socket and time.monotonic() - self.last_used >= 4.0:
             self.close()
         wait_started = time.monotonic()
         self.gate.wait()
+        if self._has_pooled_socket and time.monotonic() - self.last_used >= 4.0:
+            self.close()
         paced_wait = time.monotonic() - wait_started
         try:
             try:
@@ -228,12 +230,17 @@ class TOBBSessionManager:
         exc._tobb_paced = True
         with self.network_gate.condition:
             self.transport_errors += 1
-            pause_secs = 8 if self.is_authenticated else 30
-            max_iv = 3 if self.is_authenticated else 5
+            if self.is_authenticated:
+                pause_secs = 2 if not isinstance(exc, requests.Timeout) else 4
+                max_iv = 1.5 if not isinstance(exc, requests.Timeout) else 2.0
+            else:
+                pause_secs = 30
+                max_iv = 5
             self.network_gate.interval = max(self.minimum_request_interval, min(max_iv, self.network_gate.interval * 2))
             self.network_gate.pause_until = time.monotonic() + pause_secs
             self.last_pace_change = time.monotonic()
-            self.successful_views = 0
+            if not self.is_authenticated or isinstance(exc, requests.Timeout):
+                self.successful_views = 0
             print(f'Source transport failure: {type(exc).__name__}; all routes paused {pause_secs}s; request interval {self.network_gate.interval:g}s', flush=True)
 
     def _pdf_session(self):
@@ -324,9 +331,11 @@ class TOBBSessionManager:
                     self.view_failures = 0
                     self.failure_windows = 0
                     self.successful_views += 1
-                    if self.is_authenticated and self.successful_views % 35 == 0:
-                        self.next_view_at = max(self.next_view_at, time.monotonic() + 2.5)
-                    if (self.successful_views >= 15 and time.monotonic() - self.last_pace_change >= 60
+                    if self.is_authenticated and self.successful_views % 50 == 0:
+                        self.next_view_at = max(self.next_view_at, time.monotonic() + 1.0)
+                    recover_views = 8 if self.is_authenticated else 15
+                    recover_secs = 20 if self.is_authenticated else 60
+                    if (self.successful_views >= recover_views and time.monotonic() - self.last_pace_change >= recover_secs
                             and self.network_gate.interval > self.minimum_request_interval):
                         self.network_gate.interval = max(self.minimum_request_interval, self.network_gate.interval / 2)
                         self.last_pace_change = time.monotonic()
@@ -341,25 +350,30 @@ class TOBBSessionManager:
                 print(f'Viewer connection failure: {type(exc).__name__}; consecutive={self.view_failures}', flush=True)
                 # A failed TCP connection means the endpoint cannot currently
                 # be reached. Do not open more connections before cooling down.
-                failure_limit = 1 if isinstance(exc, requests.ConnectTimeout) else 3
+                if isinstance(exc, requests.ConnectTimeout):
+                    failure_limit = 2 if self.is_authenticated else 1
+                else:
+                    failure_limit = 3
                 if self.view_failures >= failure_limit:
                     self.failure_windows += 1
                     self.view_failures = 0
                     self.successful_views = 0
                     previous_interval = self.network_gate.interval
+                    max_iv_view = 2.0 if self.is_authenticated else 5
                     if not getattr(exc, '_tobb_paced', False):
-                        self.network_gate.interval = max(self.minimum_request_interval, min(5, previous_interval * 2))
+                        self.network_gate.interval = max(self.minimum_request_interval, min(max_iv_view, previous_interval * 2))
                     self.last_pace_change = time.monotonic()
                     if self.network_gate.interval != previous_interval:
                         print(f'Source recovery request interval: {self.network_gate.interval:g}s', flush=True)
                     if self.failure_windows >= self.max_failure_windows:
                         self.source_stopped = 'SOURCE_UNAVAILABLE'
-                        unavail_wait = 120 if self.is_authenticated else 600
+                        unavail_wait = 25 if self.is_authenticated else 600
                         self.retry_view_at = time.monotonic() + unavail_wait
                         print(f'Viewer unavailable after {self.max_failure_windows} recovery windows; preserving completed files', flush=True)
                     else:
-                        max_cd = 60 if self.is_authenticated else 300
-                        cooldown = min(max_cd, self.view_cooldown * 2**(self.failure_windows - 1))
+                        base_cd = min(self.view_cooldown, 6) if self.is_authenticated else self.view_cooldown
+                        max_cd = 15 if self.is_authenticated else 300
+                        cooldown = min(max_cd, base_cd * 2**(self.failure_windows - 1))
                         self.retry_view_at = time.monotonic() + cooldown
                         print(f'Viewer cooldown: {cooldown}s; only one probe follows', flush=True)
             raise
